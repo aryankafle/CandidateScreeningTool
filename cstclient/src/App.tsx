@@ -4,7 +4,7 @@ import "./App.css"
 function App() {
   return (
     <div className="App">
-      node got me saying goodbye world instead of hello world
+      node got me saying goodbye world instead of hello world :(
     </div>
   )
 }
