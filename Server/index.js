@@ -9,6 +9,10 @@ app.get("/ping", (req, res) => {
     res.status(200).json({message: "pong"})
 });
 
+app.get("/", (req, res) => {
+    res.status(200).json({message: "Back-end Server"})
+})
+
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`)
 });
