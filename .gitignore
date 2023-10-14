@@ -18,8 +18,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-.pack
-.eslintcache
+cstclient\node_modules\.cache/
 
 npm-debug.log*
 yarn-debug.log*
