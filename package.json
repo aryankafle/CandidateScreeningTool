@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm start --prefix server",
     "client": "npm start --prefix cstclient",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server-install": "cd server && npm install",
+    "cstclient-install": "cd cstclient && npm install",
+    "full-install": "concurrently \"npm run server-install\" \"npm run cstclient-install\""
   }
 }
