@@ -10,7 +10,7 @@
     "server": "nodemon index.js"
   },
   "engines": {
-    "node": "16.17.1"
+    "node": ">=18.18.2"
   },
   "keywords": [],
   "author": "",
