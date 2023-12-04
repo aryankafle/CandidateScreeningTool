@@ -10,7 +10,7 @@ export const queryDatabase = () => {
     host: process.env.MYSQL_HOST,
     user: 'candidate',
     password: process.env.MYSQL_PASSWORD,
-    database: 'CST_DB'
+    database: 'capstone_2324_candidate'
   })
 
   db.connect((err) => {
