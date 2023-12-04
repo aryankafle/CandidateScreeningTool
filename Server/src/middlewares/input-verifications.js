@@ -1,4 +1,4 @@
-export default verifyOpenAIReqeust = (req, res, next) => {
+export const verifyOpenAIReqeust = (req, res, next) => {
 
     if(req.message) {
 

@@ -9,3 +9,9 @@ import {} from "../controllers/linkedIn.js"
 
 
 const router = express.Router();
+
+
+
+
+
+export default router;

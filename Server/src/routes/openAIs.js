@@ -23,3 +23,7 @@ router.use(verifyOpenAIReqeust);
 
 // Controller routing
 router.get("/ask-question", askQuestion)
+
+
+
+export default router;

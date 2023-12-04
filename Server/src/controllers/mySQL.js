@@ -1,10 +1,15 @@
-const mysql = require('mysql2')
-const express = require("express");
-const PORT = process.env.PORT || 3001
-const app = express();
-require("dotenv").config()
+import dotenv from "dotenv"
+import mysql from "mysql2"
 
-export default queryDatabase = () => {
+
+
+dotenv.config()
+
+
+
+
+
+export const queryDatabase = () => {
   const db = mysql.createConnection({
     host: process.env.MYSQL_HOST,
     user: 'candidate',
@@ -20,7 +25,3 @@ export default queryDatabase = () => {
       }
   });
 }
-
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`)
-});
