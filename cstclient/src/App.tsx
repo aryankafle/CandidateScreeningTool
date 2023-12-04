@@ -30,6 +30,14 @@ function App() {
     .catch((err) => {
       console.log("error", err);
     })
+
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/query-database`))
+    .then((res) => {
+      console.log("ressingtojn: ", res.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }, [])
 
   return (

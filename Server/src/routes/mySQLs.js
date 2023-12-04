@@ -6,7 +6,7 @@ import express from "express";
 import {
     queryDatabase
 
-} from "../controllers/mySQL.js";
+} from "../services/mySQL-db-cruds.js";
 
 
 
