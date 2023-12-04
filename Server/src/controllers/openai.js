@@ -11,10 +11,14 @@ const client = new OpenAI({
 
 
 export const askQuestion = async (req, res) => {
+  const query = req.query
+
   const question = {
-    messages: [{"role": "user", "content": req.message}],
+    messages: [{"role": "user", "content": query.message?.toString()}],
     model: "gpt-3.5-turbo",
   }
+
+  console.log("thinging", req.query)
 
   var GPTresponse;
   var tokensUsed;
@@ -46,10 +50,12 @@ export const askQuestion = async (req, res) => {
 
 
 
-  const reponseBody = {
-    answer: GPTresponse.choices[0].message.content,
-    tokensUsed: GPTresponse.usage.total_tokens 
+  const response = {
+    body: {
+      answer: responseMessage,
+      tokensUsed: tokensUsed
+    }
   }
 
-  return res.status(200).json(reponseBody);
+  return res.status(200).json(response.body);
 }

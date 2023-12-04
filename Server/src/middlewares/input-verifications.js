@@ -1,9 +1,9 @@
 export const verifyOpenAIReqeust = (req, res, next) => {
 
-    if(req.message) {
+    if(req.query.message) {
 
-        if(typeof req.message != "string") {
-            return res.send(422).message(`OpenAI Error: message type must be string. Cannot process a ${typeof req.message}.`)
+        if(typeof req.query.message != "string") {
+            return res.sendStatus(404).send("message not a string")
         }
         else {
             next();
@@ -11,7 +11,7 @@ export const verifyOpenAIReqeust = (req, res, next) => {
 
     }
     else {
-        return res.send(404).message("OpenAI Error: message not found.")
+        return res.sendStatus(404).send("message not found")
 
     }
     

@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import linkedInRoutes from "./routes/linkedIns.js"
 import mySQLRoutes from "./routes/mySQLs.js"
@@ -14,18 +15,21 @@ const PORT = process.env.PORT || 3001
 
 const app = express();
 
+app.use(cors());
+app.use(express.json());
+
 app.use("/linkedIn", linkedInRoutes)
 app.use("/mySQL", mySQLRoutes)
-app.use("/openAIRoutes", openAIRoutes)
+app.use("/openAI", openAIRoutes)
 
 app.get("/ping", (req, res) => {
     res.status(200).json({message: "pong"})
 });
 
 app.get("/", (req, res) => {
-    res.status(200).json({message: "Back-end Server"})
+    res.status(200).json({message: "Archnatin CST Back-end Server"})
 })
 
 app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`)
+    console.log(`Express is running and server is listening on ${PORT}`)
 });
