@@ -16,9 +16,9 @@ function App() {
   const [dbthing, setDbthing] = useState("Error: Database not connected to server.")
 
   useEffect(() => {
-    console.log("ip:", `${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`)
+    console.log("ip:", `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`)
     
-    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/test-database-connection`))
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/mySQL/test-database-connection`))
     .then((res) => {
       if(res.status == 200) {
         setDbthing("Database succesfully connected to server.");
@@ -27,7 +27,7 @@ function App() {
       console.log(err);
     })
 
-    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`, {
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`, {
       params: {
         message: "say hello world enthusiastically"
       }
@@ -41,7 +41,7 @@ function App() {
       console.log("error", err);
     })
 
-    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/query-database`))
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/mySQL/query-database`))
     .then((res) => {
       console.log("ressingtojn: ", res.data)
     })
