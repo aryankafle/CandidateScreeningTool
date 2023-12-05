@@ -60,5 +60,5 @@ export const askQuestion = async (req, res) => {
     }
   }
 
-  return res.json(response.body);
+  return res.status(200).send(response.body);
 }
