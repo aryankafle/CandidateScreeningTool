@@ -4,16 +4,16 @@ import express from "express";
 
 // Import from controllers
 import {
-    connectDatabase
+    testDatabaseConnection
 
-} from "../models/services/MySQL.service.js";
+} from "../controllers/mySQL.controller.js";
 
 
 
 const router = express.Router();
 
 // Controller routing
-router.get("/query-database", connectDatabase)
+router.get("/test-database-connection", testDatabaseConnection)
 
 
 

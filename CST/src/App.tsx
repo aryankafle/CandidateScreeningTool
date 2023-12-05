@@ -13,15 +13,15 @@ function App() {
   // Dummy Code for Plumbing Project
   const [openAIAnswer, setOpenAIAnswer] = useState("NO RESPONSE MESSAGE");
   const [openAITokensUsed, setOpenAITokensUsed] = useState("NO TOKENS USED DATA");
-  const [dbthing, setDbthing] = useState("nnooooo")
+  const [dbthing, setDbthing] = useState("Error: Database not connected to server.")
 
   useEffect(() => {
     console.log("ip:", `${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`)
     
-    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/query-database`))
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/test-database-connection`))
     .then((res) => {
       if(res.status == 200) {
-        setDbthing("yeahhhhhh");
+        setDbthing("Database succesfully connected to server.");
       }
     }).catch((err) => {
       console.log(err);
@@ -60,7 +60,7 @@ function App() {
         </Routes>
         <h1>Open AI Message: {openAIAnswer}</h1>
         <h1>Open AI TokensUsed: {openAITokensUsed}</h1>
-        <h1>Thing: {dbthing}</h1>
+        <h1>Server Connection Status: {dbthing}</h1>
     </>
   )
 }

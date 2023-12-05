@@ -47,7 +47,7 @@ export const askQuestion = async (req, res) => {
 
 
 
-  console.log(`ChatGPT request message: ${req.message}`)
+  console.log(`ChatGPT request message: ${req.query.message}`)
   console.log(`ChatGPT: Request used ${tokensUsed} tokens.`);
   console.log(`ChatGPT response message: ${responseMessage}`);
 
@@ -60,5 +60,5 @@ export const askQuestion = async (req, res) => {
     }
   }
 
-  return res.sendStatus(200).json(response.body);
+  return res.json(response.body);
 }
