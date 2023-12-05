@@ -6,13 +6,13 @@ import express from "express";
 import {
     askQuestion
 
-} from "../controllers/openai.controller.js";
+} from "../controllers/OpenAI.controller.js";
 
 // Import from middlewares
 import {
     verifyOpenAIReqeust
 
-} from "../middlewares/input-verifications.js"
+} from "../middlewares/InputVerifications.middleware.js"
 
 
 

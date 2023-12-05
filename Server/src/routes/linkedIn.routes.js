@@ -2,7 +2,7 @@ import express from "express"
 
 
 
-import {} from "../controllers/linkedin.controller.js"
+import {} from "../controllers/LinkedIn.controller.js"
 
 
 
