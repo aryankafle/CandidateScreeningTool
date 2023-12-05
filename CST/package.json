@@ -1,5 +1,5 @@
 {
-  "name": "cstclient",
+  "name": "CST",
   "version": "0.1.0",
   "private": true,
   "main": "src/index.tsx",
