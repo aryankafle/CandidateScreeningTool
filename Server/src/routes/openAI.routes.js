@@ -6,7 +6,7 @@ import express from "express";
 import {
     askQuestion
 
-} from "../controllers/openAI.js";
+} from "../controllers/openai.controller.js";
 
 // Import from middlewares
 import {

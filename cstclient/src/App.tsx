@@ -13,10 +13,20 @@ function App() {
   // Dummy Code for Plumbing Project
   const [openAIAnswer, setOpenAIAnswer] = useState("NO RESPONSE MESSAGE");
   const [openAITokensUsed, setOpenAITokensUsed] = useState("NO TOKENS USED DATA");
+  const [dbthing, setDbthing] = useState("nnooooo")
 
   useEffect(() => {
     console.log("ip:", `${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`)
     
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/mySQL/query-database`))
+    .then((res) => {
+      if(res.status == 200) {
+        setDbthing("yeahhhhhh");
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+
     trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST_IP}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`, {
       params: {
         message: "say hello world enthusiastically"
@@ -50,6 +60,7 @@ function App() {
         </Routes>
         <h1>Open AI Message: {openAIAnswer}</h1>
         <h1>Open AI TokensUsed: {openAITokensUsed}</h1>
+        <h1>Thing: {dbthing}</h1>
     </>
   )
 }

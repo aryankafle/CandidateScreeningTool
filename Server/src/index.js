@@ -2,9 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import linkedInRoutes from "./routes/linkedIns.js"
-import mySQLRoutes from "./routes/mySQLs.js"
-import openAIRoutes from "./routes/openAIs.js"
+import linkedInRoutes from "./routes/linkedIn.routes.js"
+import mySQLRoutes from "./routes/mySQL.routes.js"
+import openAIRoutes from "./routes/openAI.routes.js"
 
 
 
