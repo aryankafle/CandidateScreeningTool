@@ -25,9 +25,10 @@ function App() {
       console.log(err);
     })
 
-    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question`, {
+    trackPromise(axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
       params: {
-        message: "say hello world enthusiastically"
+        message: "say hello world enthusiastically",
+        role: "user"
       }
     }))
     .then((res) => {

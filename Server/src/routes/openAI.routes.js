@@ -4,7 +4,7 @@ import express from "express";
 
 // Import from controllers
 import {
-    askQuestion
+    askQuestionWithRole
 
 } from "../controllers/OpenAI.controller.js";
 
@@ -22,7 +22,7 @@ const router = express.Router();
 router.use(verifyOpenAIReqeust);
 
 // Controller routing
-router.get("/ask-question", askQuestion)
+router.get("/ask-question-with-role", askQuestionWithRole)
 
 
 
