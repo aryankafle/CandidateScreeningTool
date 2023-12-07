@@ -6,7 +6,7 @@ import express from "express";
 import {
     testDatabaseConnection
 
-} from "../controllers/mySQL.controller.js";
+} from "../controllers/MySQL.controller.js";
 
 
 
