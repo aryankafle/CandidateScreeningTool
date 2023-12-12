@@ -1,5 +1,5 @@
-import dbConnection from "../database/MySQL.database.js"
+import { connectDatabase } from "../models/services/MySQL.service.js"
 
 export const testDatabaseConnection = async (req, res) => {
-    return dbConnection ? res.json({message: "Connected to Database"}) : res.json({message: "Error Connecting to Database"})
+    return connectDatabase() ? res.status(200).send({message: "Connected to Database"}) : res.status(404).send({message: "Error Connecting to Database"})
 }

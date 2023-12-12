@@ -1,6 +1,6 @@
 import dbConnection from "../../database/MySQL.database.js"
 
-export async function connectDatabase(sql, params) {
-
+export const connectDatabase = async () => {
+    console.log(!!dbConnection)
     return dbConnection
 }
