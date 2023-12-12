@@ -1,4 +1,3 @@
-import dotenv from "dotenv"
 import { queryAI } from "../models/services/OpenAIQuery.service.js"
 
 
