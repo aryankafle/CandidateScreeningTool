@@ -17,7 +17,7 @@ function App() {
   const getOpenAITest = async () => {
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
       params: {
-        message: "Say hello world with extreme enthusiasm.",
+        message: "Say hello world with extreme enthusiasm. Use less than 100 tokens.",
         role: "user"
       }
     })
