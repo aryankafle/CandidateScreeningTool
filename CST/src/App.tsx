@@ -2,7 +2,6 @@ import {Routes, Route, BrowserRouter } from "react-router-dom";
 import PageNotFoundPopup from './components/PageNotFoundPopup';
 
 import Home from "./router/Home.routes";
-import NavBar from "./components/NavBar";
 
 import SplashScreen from "./pages/SplashScreen"
 import Test from "./test/App.test"
