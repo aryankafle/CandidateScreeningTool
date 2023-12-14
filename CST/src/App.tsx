@@ -1,10 +1,10 @@
-import {Routes, Route, BrowserRouter } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 import PageNotFoundPopup from './components/PageNotFoundPopup';
 
 import Home from "./router/Home.routes";
 
 import SplashScreen from "./pages/SplashScreen"
-import Test from "./test/App.test"
+import Test from "./test/App.api.test"
 
 function App() {
 return (
