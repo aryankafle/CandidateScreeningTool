@@ -6,6 +6,7 @@ import PageNotFoundPopup from './components/PageNotFoundPopup';
 import axios from "axios";
 import { useQuery } from "react-query"
 import { useEffect, useState } from "react";
+import Test from "./test/App.test"
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
         <Routes>
           <Route index element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/test" element={<Test />} />
           <Route path="*" element={<PageNotFoundPopup />} />
         </Routes>
     </>

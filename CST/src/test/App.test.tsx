@@ -43,7 +43,7 @@ function App() {
     staleTime: Infinity,
     cacheTime: Infinity
   })
-
+  
   useEffect(() => {    
     setOpenAIAnswer(openAIQuery.data?.answer)
     setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
@@ -52,12 +52,6 @@ function App() {
 
   return (
     <>
-        <NavBar />
-        <Routes>
-          <Route index element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="*" element={<PageNotFoundPopup />} />
-        </Routes>
         <h1>Open AI Message: {openAIAnswer}</h1>
         <h1>Open AI TokensUsed: {openAITokensUsed}</h1>
         <h1>Server Connection Status: {dbConnectionTest}</h1>
