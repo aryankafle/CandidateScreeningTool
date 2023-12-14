@@ -6,6 +6,8 @@ import Home from "./router/HomeTab";
 import NavBar from "./components/NavBar";
 
 import SplashScreen from "./pages/SplashScreen.index.tsx"
+import Test from "./test/App.test"
+import { trackPromise } from "react-promise-tracker"
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
           <Route path = "/" element = {<SplashScreen></SplashScreen>}>
             <Route index element={<Login />} />
             <Route path="/home" element={<Home />} />
+          <Route path="/test" element={<Test />} />
             <Route path="*" element={<PageNotFoundPopup />} />
           </Route>
         </Routes>
