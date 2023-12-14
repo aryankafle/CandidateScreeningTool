@@ -1,8 +1,8 @@
 import {Routes, Route } from "react-router-dom";
-import Login from "./pages/LoginPage/Login.index";
-import Home from "./router/HomeTab";
-import NavBar from "./components/NavBar";
-import PageNotFoundPopup from './components/PageNotFoundPopup';
+import Login from "../pages/LoginPage/Login.index";
+import Home from "../router/HomeTab";
+import NavBar from "../components/NavBar";
+import PageNotFoundPopup from '../components/PageNotFoundPopup';
 import axios from "axios";
 import { useQuery } from "react-query"
 import { useEffect, useState } from "react";
@@ -58,6 +58,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="*" element={<PageNotFoundPopup />} />
         </Routes>
+        <h1>Open AI Message: {openAIAnswer}</h1>
+        <h1>Open AI TokensUsed: {openAITokensUsed}</h1>
+        <h1>Server Connection Status: {dbConnectionTest}</h1>
     </>
   )
 }
