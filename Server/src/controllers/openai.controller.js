@@ -1,57 +1,19 @@
-import dotenv from "dotenv"
-import OpenAI from "openai"
-
-dotenv.config()
-
-
-
-const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+import { queryAI } from "../models/services/OpenAIQuery.service.js"
 
 
 
 
 
-export const askQuestion = async (req, res) => {
+export const askQuestionWithRole = async (req, res) => {
   const query = req.query
+  const GPTresponse = await queryAI(query.message, query.role);
 
-  const question = {
-    messages: [{"role": "user", "content": query.message?.toString()}],
-    model: "gpt-3.5-turbo",
-  }
-
-  console.log("thinging", req.query)
-
-  var GPTresponse;
-  var tokensUsed;
-  var responseMessage;
-
-
-
-  //add await before client if nothing else works (DONT DO THIS ANYONE ELSE)
-  try {
-    GPTresponse = await client.chat.completions.create(question)
-  }
-  catch (err) {
-    console.log(err.message)
-  }
-
-  try {
-    responseMessage = GPTresponse.choices[0].message.content;
-    tokensUsed = GPTresponse.usage.total_tokens
-  }
-  catch (err) {
-    console.log(err.message)
-  }
-
-
+  const tokensUsed = GPTresponse.usage.total_tokens;
+  const responseMessage = GPTresponse.choices[0].message.content;
 
   console.log(`ChatGPT request message: ${req.query.message}`)
   console.log(`ChatGPT: Request used ${tokensUsed} tokens.`);
   console.log(`ChatGPT response message: ${responseMessage}`);
-
-
 
   const response = {
     body: {

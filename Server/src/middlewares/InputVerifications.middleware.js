@@ -1,9 +1,9 @@
 export const verifyOpenAIReqeust = (req, res, next) => {
 
-    if(req.query.message) {
+    if(req.query.message && req.query.role) {
 
-        if(typeof req.query.message != "string") {
-            return res.sendStatus(404).send("message not a string")
+        if((typeof req.query.message != "string") || (typeof req.query.role != "string")) {
+            return res.status(404).send("message not a string")
         }
         else {
             next();
@@ -11,7 +11,7 @@ export const verifyOpenAIReqeust = (req, res, next) => {
 
     }
     else {
-        return res.sendStatus(404).send("message not found")
+        return res.status(404).send("message not found")
 
     }
     
