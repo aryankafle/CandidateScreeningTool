@@ -1,13 +1,30 @@
 import { useSQL, viewSQL, checkDatabaseConnection } from "../../database/sql.util.js"
 
-export const connectDatabase = async () => {
+export const connectDatabase = () => {
     return checkDatabaseConnection
 }
 
-export const addToDatabase = async () => {
+export const addRow = (row, table) => {
     
 }
 
-export const viewDabase = async () => {
+export const addColumn = (row, table) => {
+    
+}
+
+export const addRow = (row, table) => {
+    
+}
+
+
+export const removeFromDatabase = (table, colum, row, object) => {
+
+}
+
+export const viewDabase = () => {
+    return viewSQL(null, null)
+}
+
+export const viewTable = async () => {
     return viewSQL(null, null)
 }
