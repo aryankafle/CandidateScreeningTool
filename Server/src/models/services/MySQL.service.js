@@ -1,30 +1,7 @@
-import { useSQL, viewSQL, checkDatabaseConnection } from "../../database/sql.util.js"
+import { useSQL, viewSQL } from "../../database/mysql.util.js"
 
-export const connectDatabase = () => {
+import { checkDatabaseConnection } from  "../../database/mysql.database.js"
+
+export const testDatabaseConnection = () => {
     return checkDatabaseConnection
-}
-
-export const addRow = (row, table) => {
-    
-}
-
-export const addColumn = (row, table) => {
-    
-}
-
-export const addRow = (row, table) => {
-    
-}
-
-
-export const removeFromDatabase = (table, colum, row, object) => {
-
-}
-
-export const viewDabase = () => {
-    return viewSQL(null, null)
-}
-
-export const viewTable = async () => {
-    return viewSQL(null, null)
 }

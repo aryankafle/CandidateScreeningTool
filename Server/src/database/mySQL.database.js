@@ -11,3 +11,40 @@ connection.connect(( err ) => {
 })
 
 export default connection;
+
+export const checkDatabaseConnection = () => {
+    return !!dbConnection
+}
+
+export const addRow = (row, table) => {
+    
+}
+
+export const addColumn = (column, table) => {
+    
+}
+
+export const addItem = (row, column, table) => {
+    
+}
+
+
+export const removeRow = (table, colum, row, object) => {
+
+}
+
+export const removeColumn = () => {
+
+}
+
+export const removeItem = () => {
+    
+}
+
+export const viewDabase = () => {
+    return viewSQL(null, null)
+}
+
+export const viewTable = async () => {
+    return viewSQL(null, null)
+}

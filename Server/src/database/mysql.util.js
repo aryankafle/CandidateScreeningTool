@@ -1,5 +1,3 @@
-import dbConnection from "./mysql.database.js"
-
 /*
 DO NOT use this function within a controller
 This is to avoid potential SQL injections
@@ -21,8 +19,4 @@ export const viewSQL = (db, sql) => {
             }
         }
     })
-}
-
-export const checkDatabaseConnection = () => {
-    return !!dbConnection
 }
