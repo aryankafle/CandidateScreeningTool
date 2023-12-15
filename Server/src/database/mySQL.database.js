@@ -1,5 +1,6 @@
 import mySQL from "mysql2"
 import mySQLConfig from "../config/mysql.config.js"
+import { useSQL, viewSQL } from "../../database/mysql.util.js"
 
 const connection = await mySQL.createConnection(mySQLConfig.db)
 connection.connect(( err ) => {
@@ -16,35 +17,6 @@ export const checkDatabaseConnection = () => {
     return !!dbConnection
 }
 
-export const addRow = (row, table) => {
-    
-}
-
-export const addColumn = (column, table) => {
-    
-}
-
-export const addItem = (row, column, table) => {
-    
-}
-
-
-export const removeRow = (table, colum, row, object) => {
-
-}
-
-export const removeColumn = () => {
-
-}
-
-export const removeItem = () => {
-    
-}
-
-export const viewDabase = () => {
-    return viewSQL(null, null)
-}
-
-export const viewTable = async () => {
+export const viewFullDatabase = () => {
     return viewSQL(null, null)
 }

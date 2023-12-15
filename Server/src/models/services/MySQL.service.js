@@ -1,7 +1,5 @@
-import { useSQL, viewSQL } from "../../database/mysql.util.js"
-
-import { checkDatabaseConnection } from  "../../database/mysql.database.js"
+import * as database from 'database/mysql.database.js'; 
 
 export const testDatabaseConnection = () => {
-    return checkDatabaseConnection
+    return database.checkDatabaseConnection()
 }
