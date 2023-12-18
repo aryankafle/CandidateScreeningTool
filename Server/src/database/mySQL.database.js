@@ -1,6 +1,6 @@
 import mySQL from "mysql2"
 import mySQLConfig from "../config/mysql.config.js"
-import { useSQL, viewSQL } from "../../database/mysql.util.js"
+import { useSQL, viewSQL } from "./mysql.util.js"
 
 const connection = await mySQL.createConnection(mySQLConfig.db)
 connection.connect(( err ) => {
@@ -11,10 +11,8 @@ connection.connect(( err ) => {
     }
 })
 
-export default connection;
-
 export const checkDatabaseConnection = () => {
-    return !!dbConnection
+    return !!connection
 }
 
 export const viewFullDatabase = () => {

@@ -4,7 +4,7 @@ import express from "express";
 
 // Import from controllers
 import {
-    testDatabaseConnection
+    testMySQLDatabaseConnection
 
 } from "../controllers/MySQL.controller.js";
 
@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 // Controller routing
-router.get("/test-database-connection", testDatabaseConnection)
+router.get("/test-database-connection", testMySQLDatabaseConnection)
 
 
 
