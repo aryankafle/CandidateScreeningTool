@@ -1,7 +1,7 @@
 function PageNotFoundPopup() {
     return (
       <>
-  
+        Page not found
       </>
     )
   }

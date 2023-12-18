@@ -2,7 +2,7 @@ import {Routes, Route } from "react-router-dom";
 import PageNotFoundPopup from './components/PageNotFoundPopup';
 
 import Home from "./router/Home.routes";
-import Login from "./router/Auth.routes";
+import Auth from "./router/Auth.routes";
 import Filter from "./router/Filter.routes"
 import Results from "./router/Results.routes"
 
@@ -14,10 +14,10 @@ return (
       <Routes>
         <Route path = "/">
           <Route index element={<SplashScreen />} />
-          <Route path="/login"></Route>
+          <Route path="/login" element={<Auth />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/filter"></Route>
-          <Route path="/results"></Route>
+          <Route path="/filter" element={<Filter />} />
+          <Route path="/results" element={<Results />} />
         ` <Route path="/test" element={<Test />} />
           <Route path="*" element={<PageNotFoundPopup />} />
         </Route>
