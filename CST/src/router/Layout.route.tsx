@@ -9,9 +9,9 @@ This component is rendered on all routes.
 const Layout = () => {
   return (
     <>
-    
-
-      <Outlet />
+        <Header />  
+        <Outlet />
+        <Footer />
     </>
   )
 };
