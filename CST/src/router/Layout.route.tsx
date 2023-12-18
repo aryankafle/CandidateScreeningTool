@@ -10,8 +10,15 @@ const Layout = () => {
   return (
     <div>
       <Header />
-      <Outlet />
-      <Footer />
+      <div>
+          <div className="bg-white dark:bg-gray-800 absolute w-full h-[90px] bg-gray-800">
+            
+          </div>
+          <div className="absolute">
+            <Outlet />
+          </div>
+        <Footer />
+      </div>
     </div>
   )
 };
