@@ -1,13 +1,13 @@
-import { Outlet, Link } from "react-router-dom";
-import Footer from '../components/FooterComponent'
-import Header from '../components/HeaderComponent'
-import Background from '../components/BackgroundComponent'
+import { Outlet } from "react-router-dom";
+import Footer from '../../components/FooterComponent'
+import Header from '../../components/HeaderComponent'
+import Background from '../../components/BackgroundComponent'
 
 /*
 This component is rendered on all routes.
 */
 
-const Layout = () => {
+const DecoratedLayout = () => {
   return (
     <div>
       <Header />
@@ -24,4 +24,4 @@ const Layout = () => {
   )
 };
 
-export default Layout;
+export default DecoratedLayout;
