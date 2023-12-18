@@ -1,6 +1,6 @@
 const HeaderComponent = () => {
 
-    return <>Header Component</>
+    return <div>Header Component</div>
 }
 
 export default HeaderComponent
