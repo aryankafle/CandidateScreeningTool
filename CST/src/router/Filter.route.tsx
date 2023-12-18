@@ -1,9 +1,9 @@
 const FilterRoutes = () => {
 
     return (
-        <div>
-            filter routes
-        </div>
+    <div className="absolute w-screen h-screen">
+        
+    </div>
     )
 }
 export default FilterRoutes
