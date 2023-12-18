@@ -1,5 +1,5 @@
 import {Routes, Route } from "react-router-dom";
-import PageNotFoundPopup from './components/PageNotFoundPopup';
+import PageNotFoundPopup from './pages/PageNotFoundScreen';
 
 import Home from "./router/Home.routes";
 import Auth from "./router/Auth.routes";
