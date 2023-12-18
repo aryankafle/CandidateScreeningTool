@@ -1,4 +1,3 @@
-import PageNotFoundPopup from '../components/PageNotFoundPopup';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query"
@@ -41,9 +40,9 @@ function App() {
   })
 
   useEffect(() => {    
-    setOpenAIAnswer(openAIQuery.data?.answer)
-    setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
-    setDbConnectionTest(mySQLQuery.data?.message)
+    openAIQuery.data?.answer && setOpenAIAnswer(openAIQuery.data?.answer)
+    openAIQuery.data?.tokensUsed && setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
+    mySQLQuery.data?.message && setDbConnectionTest(mySQLQuery.data?.message)
   }, [openAIQuery, mySQLQuery])
 
   return (
