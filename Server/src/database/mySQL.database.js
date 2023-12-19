@@ -15,6 +15,9 @@ export const checkDatabaseConnection = () => {
     return !!connection
 }
 
+/*
+does not work yet
+*/
 export const viewFullDatabase = () => {
     return viewSQL(null, null)
 }
