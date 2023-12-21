@@ -25,7 +25,7 @@ return (
         <Route element={<BaseLayout />}>
           <Route index element={<SplashScreen />} />
           <Route path="/login" element={<AuthRoutes />} />
-          <Route path="/home" element={<HomeRoutes />} />
+          <Route path="/home/*" element={<HomeRoutes />} />
         ` <Route path="/test" element={<TestScreen />} />
           <Route path="*" element={<PageNotFoundScreen />} />
         </Route>

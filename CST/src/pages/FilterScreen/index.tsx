@@ -1,4 +1,4 @@
-const FilterRoutes = () => {
+const FilterScreen = () => {
 
     return (
         <div>
@@ -7,4 +7,4 @@ const FilterRoutes = () => {
         
     )
 }
-export default FilterRoutes
+export default FilterScreen
