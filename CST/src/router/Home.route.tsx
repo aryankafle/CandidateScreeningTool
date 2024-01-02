@@ -28,8 +28,8 @@ const HomeRoutes = () => {
                             dark:bg-gray dark:text-white dark:hover:bg-red
                             flex py-[75px] grow justify-center`
                         :
-                            `bg-white text-black hover:bg-blue 
-                            dark:bg-black dark:text-white dark:hover:bg-gray
+                            `bg-white text-black hover:bg-red
+                            dark:bg-black dark:text-white dark:hover:bg-red
                             flex py-[75px] grow justify-center`
                      }
                      onClick={handleResumeUploadClick}>
@@ -43,8 +43,8 @@ const HomeRoutes = () => {
                             dark:bg-gray dark:text-white dark:hover:bg-red
                             flex py-[75px] grow justify-center`
                         :
-                            `bg-white text-black hover:bg-blue 
-                            dark:bg-black dark:text-white dark:hover:bg-gray
+                            `bg-white text-black hover:bg-red
+                            dark:bg-black dark:text-white dark:hover:bg-red
                             flex py-[75px] grow justify-center`
                      }
                      onClick={handleSavedListsClick}>
