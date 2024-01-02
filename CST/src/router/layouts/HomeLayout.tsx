@@ -52,7 +52,7 @@ const HomeLayout = () => {
             <div className="flex flex-grow">
                 <Outlet />
             </div>
-            
+            <Footer />
         </div>
         
     )

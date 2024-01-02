@@ -24,7 +24,9 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {file: string}) => {
         return (
-            <div>
+            <div className="text-black
+                            dark:text-white
+                            text-center">
                 {props.file}
             </div>
         )
@@ -32,11 +34,11 @@ const ResumeUploadScreen = () => {
 
     return (
         <div className="dark:bg-blue bg-white
-                        w-screen">
+                        w-screen flex flex-col">
             <div className="flex justify-center">
                 <button className="dark:border-white dark:text-white
                                     border-black text-black
-                                    border-[1px] flex justify-between gap-[0.5rem] px-[0.7rem]"
+                                    border-[0.1rem] flex justify-between gap-[0.5rem] px-[0.7rem] mt-[2rem]"
                     onClick={handleUploadClick} >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUpload}></IonIcon>
                     <div>
@@ -44,8 +46,10 @@ const ResumeUploadScreen = () => {
                     </div>
                 </button>
             </div>
-            <div>
-                <ol>
+            <div className="flex justify-center pt-[4rem]">
+                <ol className="border-black
+                                dark:border-white
+                                border-[0.1rem] w-[35rem] h-[50rem] overflow-y-scroll">
                     {uploadedFiles.map((file : string) => <FileCard file={file}></FileCard>)}
                 </ol>
             </div>
