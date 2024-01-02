@@ -1,5 +1,6 @@
 import { Callback } from "mongodb"
 import { ReactNode, createContext, useState } from "react"
+import { Context } from "vm"
 
 
 
@@ -13,15 +14,15 @@ export const AppContext = createContext<AppContextType>({ })
 
 type FileContextType = {
     uploadedFiles: string[]
-    setUploadedFiles: React.Dispatch<React.SetStateAction<string[]>> | Callback
+    setUploadedFiles: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const FileContextInitialValues = {
-    uploadedFiles: [],
-    setUploadedFiles: () => {}
+const FileContextInitial = {
+    uploadedFiles: [] as string[],
+    setUploadedFiles: {} as React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export const FileContext = createContext<FileContextType | undefined>({ })
+export const FileContext = createContext<FileContextType>(FileContextInitial)
 
 
 
@@ -29,7 +30,7 @@ export const FileContext = createContext<FileContextType | undefined>({ })
 
 const AppContextProvider = (props: { children : ReactNode }) => {
 
-    const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
+    const [uploadedFiles, setUploadedFiles] = useState([] as string[])
     
     
 
