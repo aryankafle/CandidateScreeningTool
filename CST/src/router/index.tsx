@@ -6,15 +6,20 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 import HomeRoutes from "./Home.route";
 import AuthRoutes from "./Auth.route";
 
-
-
 import FilterScreen from "../pages/FilterScreen"
 import ResultsScreen from "./Results.route"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
-import BaseLayout from "./layouts/BaseLayout"
-import DecoratedLayout from "./layouts/DecoratedLayout";
-import HomeLayout from "./layouts/HomeLayout";
+
+
+
+import BaseLayout from "../layouts/BaseLayout"
+import DecoratedLayout from "../layouts/DecoratedLayout";
+import HomeLayout from "../layouts/HomeLayout";
+
+
+
+
 
 function Router() {
     return (

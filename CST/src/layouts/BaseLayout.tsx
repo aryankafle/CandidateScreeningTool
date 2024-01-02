@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Footer from '../../components/FooterComponent'
-import Header from '../../components/HeaderComponent'
+import Footer from '../components/FooterComponent'
+import Header from '../components/HeaderComponent'
 
 /*
 This component is rendered on all routes.

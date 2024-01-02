@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import Header from '../../components/HeaderComponent'
-import Footer from '../../components/FooterComponent'
+import Header from '../components/HeaderComponent'
+import Footer from '../components/FooterComponent'
 
 
 const HomeLayout = () => {
