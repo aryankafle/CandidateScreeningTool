@@ -1,29 +1,70 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUpload } from 'ionicons/icons';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FileContext } from "../../context";
 import { useNavigate } from "react-router-dom";
+import { upload } from "@testing-library/user-event/dist/upload";
 
 const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
     
+
+    
     const fileContext = useContext(FileContext)
     const uploadedFiles = fileContext.uploadedFiles
     const setUploadedFiles = fileContext.setUploadedFiles
 
+    const [selectedFiles, setSelectedFiles] = useState([] as string[])
+    const [previouslySelected, setPreviouslySelected] = useState("")
+
+
+
 
 
     function handleUploadClick() {
-        const file = "new file"
-        
+        const file = "new file " + Math.floor(Math.random() * 100)
         alert("uploading new files")
-        setUploadedFiles([...uploadedFiles, file])
+
+        const uniqueFiles = [...new Set([...uploadedFiles, file])]
+        setUploadedFiles(uniqueFiles)
     }
 
     function handleAddFiltersClick() {
         navigate("/filter")
     }
+    
+    function handleRemoveFileFromSelect(file : string) {
+        const temp = selectedFiles.filter((val) => file != val)
+        setSelectedFiles(temp)
+    }
+
+    function handleAddFileToSelect(file : string) {
+        setSelectedFiles([file])
+        setPreviouslySelected(file)
+    }
+
+    function handleShiftClickSelect(file : string) {
+        if(selectedFiles.length < 1) {
+            handleAddFileToSelect(file);
+        }
+        else if(file === previouslySelected) {
+            handleRemoveFileFromSelect(file)
+        }
+        else {
+            const uploadIndex = uploadedFiles.indexOf(file)
+            const previousUploadIndex = uploadedFiles.indexOf(previouslySelected)
+
+            if(uploadIndex < previousUploadIndex) {
+                const temp = uploadedFiles.slice(uploadIndex, previousUploadIndex < uploadedFiles.length ? previousUploadIndex+1 : undefined)
+                setSelectedFiles(temp)
+            } else {
+                const temp = uploadedFiles.slice(previousUploadIndex, uploadIndex < uploadedFiles.length ? uploadIndex+1 : undefined)
+                setSelectedFiles(temp)
+            }
+        }
+    }
+
 
 
 
@@ -31,12 +72,34 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {file: string}) => {
         return (
-            <div className="text-black
-                            dark:text-white
-                            text-center">
-                {props.file}
-            </div>
+            selectedFiles.includes(props.file) ? 
+                <div className="text-red
+                                    dark:text-red
+                                    text-center">
+                        <button onClick={() => {handleRemoveFileFromSelect(props.file)}}>
+                            <div>
+                                {props.file}
+                            </div>
+                        </button>
+                </div>
+            :
+                <div className="text-black
+                                    dark:text-white
+                                    text-center">
+                        <button onClick={(e) => {
+                                if(e.shiftKey) {
+                                    handleShiftClickSelect(props.file)
+                                } else {
+                                    handleAddFileToSelect(props.file)
+                                }
+                            }}>
+                            <div>
+                                {props.file}
+                            </div>
+                        </button>
+                </div>
         )
+        
     }
 
     return (
@@ -57,7 +120,7 @@ const ResumeUploadScreen = () => {
                 <ol className="border-black
                                 dark:border-white
                                 border-[0.1rem] w-[35rem] h-[40rem] overflow-y-scroll">
-                    {uploadedFiles.map((file : string) => <FileCard file={file}></FileCard>)}
+                    {uploadedFiles.map((file : string, index : number) => <li key={index}><FileCard file={file}></FileCard></li>)}
                 </ol>
             </div>
             <div className="flex justify-center">
