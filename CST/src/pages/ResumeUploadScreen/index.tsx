@@ -119,7 +119,7 @@ const ResumeUploadScreen = () => {
             <div className="flex flex-grow justify-center mt-[1.5rem]">
                 <ol className="border-black
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] overflow-y-scroll">
+                                border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><FileCard file={file}></FileCard></li>)}
                 </ol>
             </div>
