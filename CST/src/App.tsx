@@ -12,8 +12,9 @@ import FilterScreen from "./pages/FilterScreen"
 import ResultsScreen from "./router/Results.route"
 import SplashScreen from "./pages/SplashScreen"
 import TestScreen from "./test/App.api.test"
-import BaseLayout from "./router/layouts/BaseLayout.route"
+import BaseLayout from "./router/layouts/BaseLayout"
 import DecoratedLayout from "./router/layouts/DecoratedLayout";
+import HomeLayout from "./router/layouts/HomeLayout";
 
 function App() {
 return (
@@ -25,9 +26,11 @@ return (
         <Route element={<BaseLayout />}>
           <Route index element={<SplashScreen />} />
           <Route path="/login" element={<AuthRoutes />} />
-          <Route path="/home/*" element={<HomeRoutes />} />
         ` <Route path="/test" element={<TestScreen />} />
           <Route path="*" element={<PageNotFoundScreen />} />
+        </Route>
+        <Route element={<HomeLayout />}>
+            <Route path="/home/*" element={<HomeRoutes />} />
         </Route>
       </Routes>
   )
