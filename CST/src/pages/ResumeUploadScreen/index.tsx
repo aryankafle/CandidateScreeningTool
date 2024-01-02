@@ -103,7 +103,7 @@ const ResumeUploadScreen = () => {
     }
 
     return (
-        <div className="dark:bg-blue bg-white
+        <div className="dark:bg-blue bg-white justify-center
                         w-screen flex flex-col">
             <div className="flex justify-center">
                 <button className="dark:border-white dark:text-white
@@ -116,10 +116,10 @@ const ResumeUploadScreen = () => {
                     </div>
                 </button>
             </div>
-            <div className="flex justify-center mt-[1.5rem]">
+            <div className="flex flex-grow justify-center mt-[1.5rem]">
                 <ol className="border-black
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] h-[43vh] overflow-y-scroll">
+                                border-[0.1rem] w-[35rem] overflow-y-scroll">
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><FileCard file={file}></FileCard></li>)}
                 </ol>
             </div>
