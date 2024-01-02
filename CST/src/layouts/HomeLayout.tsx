@@ -26,11 +26,11 @@ const HomeLayout = () => {
                         currentTab === "resume-upload" ?
                             `bg-gray text-black hover:bg-red 
                             dark:bg-gray dark:text-white dark:hover:bg-red
-                            flex py-[75px] grow justify-center`
+                            flex py-[1rem] grow justify-center`
                         :
                             `bg-white text-black hover:bg-red
                             dark:bg-black dark:text-white dark:hover:bg-red
-                            flex py-[75px] grow justify-center`
+                            flex py-[1rem] grow justify-center`
                      }
                      onClick={handleResumeUploadClick}>
                     Resume Upload
@@ -39,11 +39,11 @@ const HomeLayout = () => {
                         currentTab === "saved-lists" ?
                             `bg-gray text-black hover:bg-red 
                             dark:bg-gray dark:text-white dark:hover:bg-red
-                            flex py-[75px] grow justify-center`
+                            flex py-[1rem] grow justify-center`
                         :
                             `bg-white text-black hover:bg-red
                             dark:bg-black dark:text-white dark:hover:bg-red
-                            flex py-[75px] grow justify-center`
+                            flex py-[1rem] grow justify-center`
                      }
                      onClick={handleSavedListsClick}>
                     Saved Lists

@@ -2,8 +2,6 @@ import { Route, Routes } from "react-router-dom"
 import ViewSavedLists from "../pages/ViewSavedListsScreen"
 import ResumeUpload from "../pages/ResumeUploadScreen"
 
-import PageNotFoundPopup from "../pages/PageNotFoundScreen"
-
 const HomeRoutes = () => {
     return (
         <>

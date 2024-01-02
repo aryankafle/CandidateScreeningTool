@@ -108,7 +108,7 @@ const ResumeUploadScreen = () => {
             <div className="flex justify-center">
                 <button className="dark:border-white dark:text-white
                                     border-black text-black
-                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[2rem]"
+                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick} >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUpload}></IonIcon>
                     <div>
@@ -116,17 +116,17 @@ const ResumeUploadScreen = () => {
                     </div>
                 </button>
             </div>
-            <div className="flex justify-center mt-[4rem]">
+            <div className="flex justify-center mt-[1.5rem]">
                 <ol className="border-black
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] h-[40rem] overflow-y-scroll">
+                                border-[0.1rem] w-[35rem] h-[43vh] overflow-y-scroll">
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><FileCard file={file}></FileCard></li>)}
                 </ol>
             </div>
             <div className="flex justify-center">
                 <button className="dark:border-white dark:text-white
                                     border-black text-black
-                                    flex justify-center p-[1rem] mt-[4rem] border-[0.1rem]"
+                                    flex justify-center p-[1rem] mb-[1.5rem] mt-[1.5rem] border-[0.1rem]"
                         onClick={handleAddFiltersClick}>
                     Add Filters to Uploaded Files
                 </button>
