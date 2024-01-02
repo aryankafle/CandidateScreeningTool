@@ -2,7 +2,6 @@ import { Route, Routes, useNavigate } from "react-router-dom"
 import ViewSavedLists from "../pages/ViewSavedListsScreen"
 import ResumeUpload from "../pages/ResumeUploadScreen"
 
-import HomeNavBar from "../components/HomeNavBar"
 import PageNotFoundPopup from "../pages/PageNotFoundScreen"
 
 const HomeRoutes = () => {
