@@ -1,9 +1,7 @@
 const BackgroundComponent = () => {
 
     return (
-        <div className="w-full h-[90px] bg-white dark:bg-gray-800 text-black dark:text-white">
-            Background Component
-        </div>
+        <div className="w-full h-[10rem] bg-blue dark:bg-green text-white dark:text-black"/>
     )
 }
 

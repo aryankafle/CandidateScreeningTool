@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Footer from '../components/FooterComponent'
 import Header from '../components/HeaderComponent'
 import Background from '../components/BackgroundComponent'
+import Root from '../components/LayoutRootComponent'
 
 /*
 This component is rendered on all routes.
@@ -9,18 +10,18 @@ This component is rendered on all routes.
 
 const DecoratedLayout = () => {
   return (
-    <div>
+    <>
       <Header />
-      <div>
-          <div className="w-full absolute">
-            <Background />
-          </div>  
-          <div className="absolute">
-            <Outlet />
-          </div>
+      <Root>
+        <div className="w-full absolute z-[-1]">
+          <Background />
+        </div>
+        <div className="flex flex-grow border-red border-[0.2rem]">
+          <Outlet />
+        </div>
         <Footer />
-      </div>
-    </div>
+      </Root>
+    </>
   )
 };
 
