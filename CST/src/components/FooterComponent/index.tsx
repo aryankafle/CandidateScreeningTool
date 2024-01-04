@@ -3,10 +3,9 @@ const FooterComponent = () => {
     return (
         <footer className="
                         bg-gray text-black
-                        dark:bg-black dark:text-white" >
-            <div className="p-[0.2rem]">
+                        dark:bg-black dark:text-white
+                        p-[0.2rem]" >
                 Footer Component
-            </div>
         </footer>
     )
 }

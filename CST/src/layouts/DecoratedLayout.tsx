@@ -11,15 +11,17 @@ This component is rendered on all routes.
 const DecoratedLayout = () => {
   return (
     <>
-      <Header />
       <Root>
-        <div className="w-full absolute z-[-1]">
-          <Background />
+        <Header />
+        <div className="flex flex-col flex-grow">
+          <div className="w-full absolute z-[-1]">
+            <Background />
+          </div>
+          <div className="flex flex-grow border-red border-[0.2rem]">
+            <Outlet />
+          </div>
+          <Footer />
         </div>
-        <div className="flex flex-grow border-red border-[0.2rem]">
-          <Outlet />
-        </div>
-        <Footer />
       </Root>
     </>
   )
