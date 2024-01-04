@@ -1,7 +1,7 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUpload } from 'ionicons/icons';
+import { cloudUploadOutline } from 'ionicons/icons';
 import { useContext, useState } from "react";
-import FileContext from "../../context/FileContext";
+import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 
 const ResumeUploadScreen = () => {
@@ -13,6 +13,7 @@ const ResumeUploadScreen = () => {
     const fileContext = useContext(FileContext)
     const uploadedFiles = fileContext.uploadedFiles
     const setUploadedFiles = fileContext.setUploadedFiles
+    const setChosenFiles = fileContext.setUploadedFiles
 
     const [selectedFiles, setSelectedFiles] = useState([] as string[])
     const [previouslySelected, setPreviouslySelected] = useState("")
@@ -30,6 +31,9 @@ const ResumeUploadScreen = () => {
     }
 
     function handleAddFiltersClick() {
+        setChosenFiles(uploadedFiles)
+        setUploadedFiles([])
+        setSelectedFiles([])
         navigate("/filter")
     }
 
@@ -143,7 +147,7 @@ const ResumeUploadScreen = () => {
                                     border-black text-black
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick} >
-                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUpload}></IonIcon>
+                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline}></IonIcon>
                     <div>
                         Upload New Files
                     </div>

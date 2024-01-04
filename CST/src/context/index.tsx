@@ -1,5 +1,5 @@
-import { ReactNode, createContext, useState } from "react"
-import FileContext from "./FileContext"
+import { ReactNode, createContext } from "react"
+import FileContextProvider from "./FileContext"
 
 
 
@@ -15,14 +15,12 @@ export const AppContext = createContext<AppContextType>({ })
 
 
 const AppContextProvider = (props: { children : ReactNode }) => {
-
-    const [uploadedFiles, setUploadedFiles] = useState([] as string[])
     
     return (
         <AppContext.Provider value={{ }}>
-            <FileContext.Provider value={{uploadedFiles, setUploadedFiles}}>
+            <FileContextProvider>
                 {props.children}
-            </FileContext.Provider>
+            </FileContextProvider>
         </AppContext.Provider>
     )
 

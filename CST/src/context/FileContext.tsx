@@ -1,4 +1,4 @@
-import { createContext } from "react"
+import { ReactNode, createContext, useState } from "react"
 
 
 
@@ -6,18 +6,35 @@ import { createContext } from "react"
 
 type FileContextType = {
     uploadedFiles: string[]
+    chosenFiles: string[]
     setUploadedFiles: React.Dispatch<React.SetStateAction<string[]>>
+    setChosenFiles: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const FileContextInitial = {
     uploadedFiles: [] as string[],
-    setUploadedFiles: {} as React.Dispatch<React.SetStateAction<string[]>>
+    chosenFiles: [] as string[],
+    setUploadedFiles: {} as React.Dispatch<React.SetStateAction<string[]>>,
+    setChosenFiles: {} as React.Dispatch<React.SetStateAction<string[]>>
 }
 
 
 
 
 
-const FileContext = createContext<FileContextType>(FileContextInitial)
+export const FileContext = createContext<FileContextType>(FileContextInitial)
 
-export default FileContext
+const FileContextProvider = (props: { children : ReactNode }) => {
+
+    const [uploadedFiles, setUploadedFiles] = useState([] as string[])
+    const [chosenFiles, setChosenFiles] = useState([] as string[])
+    
+    return (
+        <FileContext.Provider value={{uploadedFiles, chosenFiles, setUploadedFiles, setChosenFiles}}>
+            {props.children}
+        </FileContext.Provider>
+    )
+
+}
+
+export default FileContextProvider
