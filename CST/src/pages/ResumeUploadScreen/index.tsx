@@ -1,6 +1,6 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUploadOutline } from 'ionicons/icons';
-import { useContext, useState } from "react";
+import { Key, useContext, useEffect, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,29 @@ const ResumeUploadScreen = () => {
 
 
 
+    useEffect(() => {
+        const keyDownHandler = (e : KeyboardEvent) => {
+            if(e.key === 'Delete') {
+                e.preventDefault()
+
+                if(selectedFiles.length > 0)  {
+                    handleRemoveSelectionFromUpload()
+                }
+            }
+        }
+
+        document.addEventListener('keydown', keyDownHandler);
+
+        return () => {
+            document.removeEventListener('keydown', keyDownHandler)
+        }
+    }, [])
+
+
+
+    
+
+
     function handleUploadClick() {
         const file = "new file " + Math.floor(Math.random() * 100)
         alert("uploading new files")
@@ -39,11 +62,13 @@ const ResumeUploadScreen = () => {
 
 
 
-    function handleRemoveFileFromUpload(file : string) {
-        handleRemoveFileFromSelect(file)
 
-        const temp = uploadedFiles.filter((val) => file !== val)
+    function handleRemoveSelectionFromUpload() {
+        
+        const temp = uploadedFiles.filter((val) => !selectedFiles.includes(val))
+
         setUploadedFiles(temp)
+        setSelectedFiles([])
     }
 
 
@@ -96,11 +121,8 @@ const ResumeUploadScreen = () => {
 
     const FileCard =  (props: {file: string}) => {
         return (
-            <div className="flex flex-row justify-between px-[2rem]">
+            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
                 {props.file}
-                <div onClick={() => {handleRemoveFileFromUpload(props.file); console.log("")}}>
-                    remove
-                </div>
             </div>
         )
     }
@@ -129,15 +151,14 @@ const ResumeUploadScreen = () => {
                             } else {
                                 handleAddFileToSelect(props.file)
                             }
-                        }}
-                        onDragOver={(e) => {
-                            console.log("drag")
                         }}>
                         <FileCard file={props.file}/>
                 </div>
         )
         
     }
+
+
 
     return (
         <div className="dark:bg-blue bg-white justify-center
@@ -153,12 +174,26 @@ const ResumeUploadScreen = () => {
                     </div>
                 </button>
             </div>
-            <div className="flex flex-grow justify-center mt-[1.5rem]">
-                <ol className="border-black
+            <div className="flex flex-grow flex-col mt-[1.5rem]">
+                <ol className="border-black self-center flex-grow
                                 dark:border-white
                                 border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
                 </ol>
+                {
+                selectedFiles.length > 0 ?
+                    <>
+                    <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { handleRemoveSelectionFromUpload(); } }>
+                            Remove Selected Files
+                    </div>
+                    <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { setSelectedFiles([]) } }>
+                                Clear Selection
+                    </div>
+                    </>
+                :
+                    <></>
+                }
+                
             </div>
             <div className="flex justify-center">
                 <button className="dark:border-white dark:text-white
