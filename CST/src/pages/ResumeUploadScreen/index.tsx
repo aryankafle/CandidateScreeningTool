@@ -1,9 +1,8 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUpload } from 'ionicons/icons';
 import { useContext, useState } from "react";
-import { FileContext } from "../../context";
+import FileContext from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
-import { upload } from "@testing-library/user-event/dist/upload";
 
 const ResumeUploadScreen = () => {
 
