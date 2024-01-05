@@ -1,10 +1,18 @@
+import React from "react";
 const ViewSavedListsScreen = () => {
 
-    return (
+
+    function LinkTextBox(){
+            <div className="w-72">
+                <input> label="Username" </input> 
+            </div>
+    }
+    return(
         <div>
-            savedlsits
+            grr
         </div>
-        
     )
+    
+    
 }
 export default ViewSavedListsScreen
