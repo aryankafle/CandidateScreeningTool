@@ -32,7 +32,7 @@ function Router() {
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
                 <Route path="/login" element={<AuthRoutes />} />
-            ` <Route path="/test" element={<TestScreen />} />
+            `   <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
             <Route element={<HomeLayout />}>
