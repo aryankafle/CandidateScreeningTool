@@ -169,9 +169,7 @@ const ResumeUploadScreen = () => {
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick} >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline}></IonIcon>
-                    <div>
-                        Upload New Files
-                    </div>
+                    Upload New Files
                 </button>
             </div>
             <div className="flex flex-grow flex-col mt-[1.5rem]">
@@ -183,15 +181,15 @@ const ResumeUploadScreen = () => {
                 {
                 selectedFiles.length > 0 ?
                     <>
-                    <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { handleRemoveSelectionFromUpload(); } }>
-                            Remove Selected Files
-                    </div>
-                    <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { setSelectedFiles([]) } }>
-                                Clear Selection
-                    </div>
+                        <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { handleRemoveSelectionFromUpload(); } }>
+                                Remove Selected Files
+                        </div>
+                        <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { setSelectedFiles([]) } }>
+                                    Clear Selection
+                        </div>
                     </>
                 :
-                    <></>
+                    <div className="p-[2.1rem]" />
                 }
                 
             </div>
