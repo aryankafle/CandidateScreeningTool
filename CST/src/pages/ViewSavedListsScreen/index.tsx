@@ -3,7 +3,10 @@ import { Key, useContext, useEffect, useState } from "react";
 
 
 const ViewSavedListsScreen = () => {
-    
+    const [nameInput, setNameInput] = useState("");
+    const onChange = (str: string) => {
+        setNameInput(str);
+    };
 
     // const LinkBox = (InputProps: {className: string, label: string}) => {
     //     return (
@@ -18,22 +21,30 @@ const ViewSavedListsScreen = () => {
         placeholder: string;
         name: string;
         value?: string;
-      };
-      function Input({ onChange, name, placeholder, value = "" }: Props) {
+       // onkeypress: (event: React.KeyboardEventHandler<HTMLElement>) => void;
+    };
+    function Input({ onChange, name, placeholder, value = "" }: Props) {
         return (
-          <input
+            <input
             onChange={event => onChange(event.target.value)}
             name={name}
             placeholder={placeholder}
             value={value}
-          />
+            />
         );
-      }
-    const [nameInput, setNameInput] = useState("");
-    const onChange = (str: string) => {
-        setNameInput(str);
-    };
-
+    }
+    // function handleEnterKey(e){ 
+    //     if(e.keyCode == 13){ // enter pressed
+    //         try{
+    //             e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    
+    //             //DO ALTERNATE ACTION RATHER THAN SEND ENTER
+    
+    //         }catch(err){
+    //             console.log(err.message); 
+    //         }
+    //     }
+    // }
 
     return(
         //<div>
@@ -43,12 +54,10 @@ const ViewSavedListsScreen = () => {
                     name="name"
                     placeholder="Enter your name"
                     value={nameInput}
+                    //onkeypress= "handleEnterKey(event)"
                 />
             </form>
-        //</div>
-        // <div>
-        //     <LinkBox className = "gruh" label = "buh"></LinkBox>
-        // </div>
+
     )
     
     
