@@ -1,8 +1,9 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline } from 'ionicons/icons';
-import { Key, useContext, useEffect, useState } from "react";
+import { cloudUploadOutline, toggle } from 'ionicons/icons';
+import { useContext, useEffect, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
+import { Files } from "openai/resources";
 
 const ResumeUploadScreen = () => {
 
@@ -12,151 +13,199 @@ const ResumeUploadScreen = () => {
     
     const fileContext = useContext(FileContext)
     const uploadedFiles = fileContext.uploadedFiles
+
     const setUploadedFiles = fileContext.setUploadedFiles
     const setChosenFiles = fileContext.setUploadedFiles
 
-    const [selectedFiles, setSelectedFiles] = useState([] as string[])
-    const [previouslySelected, setPreviouslySelected] = useState("")
 
 
+
+
+    class FileSelection {
+        #file: File
+        isSelected: boolean
+
+        constructor(file : File) {
+            this.#file = file
+            this.isSelected = false
+        }
+
+        get fileName() {
+            return this.#file.name
+        }
+
+        get file(){
+            return this.#file
+        }
+
+        toString() {
+            
+        }
+    }
+
+
+
+    const [fileSelections, setFileSelections] = useState([] as FileSelection[])
+    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
+
+    // Runs once after page render
+    function initFileSelections() {
+        setFileSelections(uploadedFiles.map((file) => {return new FileSelection(file)}))
+    }
 
 
 
     useEffect(() => {
-        const keyDownHandler = (e : KeyboardEvent) => {
-            if(e.key === 'Delete') {
-                e.preventDefault()
-
-                if(selectedFiles.length > 0)  {
-                    handleRemoveSelectionFromUpload()
-                }
-            }
-        }
-
-        document.addEventListener('keydown', keyDownHandler);
-
-        return () => {
-            document.removeEventListener('keydown', keyDownHandler)
+        return ()  => {
+            initFileSelections()
         }
     }, [])
 
 
 
-    
+
+
+    function handleKeyDown(event : KeyboardEvent) {
+        if(event.key === "Delete") {
+            removeCurrentSelectionFromUpload();
+        }
+        else if(event.ctrlKey) {
+            if(event.key === "a") {
+                selectAll()
+            }
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [])
+
+
+
 
 
     function handleUploadClick() {
-        const file = "new file " + Math.floor(Math.random() * 100)
-        alert("uploading new files")
-
-        const uniqueFiles = [...new Set([...uploadedFiles, file])]
-        setUploadedFiles(uniqueFiles)
+        setUploadedFiles([...uploadedFiles])
     }
 
     function handleAddFiltersClick() {
+        const uploadedFiles = fileSelections.map((fileSelection) => {return fileSelection.file})
+        setUploadedFiles(uploadedFiles)
         setChosenFiles(uploadedFiles)
-        setUploadedFiles([])
-        setSelectedFiles([])
+
+        clearSelection()
+        
         navigate("/filter")
     }
 
 
-
-
-    function handleRemoveSelectionFromUpload() {
-        
-        const temp = uploadedFiles.filter((val) => !selectedFiles.includes(val))
-
-        setUploadedFiles(temp)
-        setSelectedFiles([])
-    }
-
-
     
-    function handleRemoveFileFromSelect(file : string) {
-        const temp = selectedFiles.filter((val) => file !== val)
-        setSelectedFiles(temp)
+
+
+    function toggleFileFromSelection(fileIndex : number) {
+        fileSelections[fileIndex].isSelected = !fileSelections[fileIndex].isSelected
     }
 
-    function handleAddFileToSelect(file : string) {
-        setSelectedFiles([file])
-        setPreviouslySelected(file)
+    function clearSelection() {
+        setFileSelections(fileSelections.map((fileSelection) => {
+            
+            fileSelection.isSelected = false;
+
+            return fileSelection
+
+        }))
     }
 
-    function handleCtrlKeySelect(file : string) {
-        setSelectedFiles([...selectedFiles, file])
-        setPreviouslySelected(file)
+    function selectAll() {
+        setFileSelections(fileSelections.map((fileSelection) => {
+            
+            fileSelection.isSelected = true;
+
+            return fileSelection
+
+        }))
     }
 
-    function handleShiftClickSelect(file : string) {
-        if(selectedFiles.length < 1) {
-            handleAddFileToSelect(file);
-        }
-        else if(file === previouslySelected) {
-            handleRemoveFileFromSelect(file)
+
+
+    function removeCurrentSelectionFromUpload() {
+        setUploadedFiles(fileSelections.filter((fileSelection) => { return fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
+
+        initFileSelections()
+    }
+
+
+
+    function handleClickSelect(fileIndex : number) {
+        clearSelection();
+
+        toggleFileFromSelection(fileIndex)
+    }
+
+    function handleCtrlKeySelect(fileIndex : number) {
+        toggleFileFromSelection(fileIndex)
+    }
+
+    function handleShiftClickSelect(fileIndex : number) {
+        if(fileSelections[previouslySelectedIndex].isSelected) {
+            if(fileIndex < previouslySelectedIndex) {
+                for(let i = fileIndex; i < previouslySelectedIndex; i++) {
+                    fileSelections[fileIndex].isSelected = true
+                }
+            }
+            else {
+                for(let i = fileIndex; i > previouslySelectedIndex; i--) {
+                    fileSelections[fileIndex].isSelected = true
+                }
+            }
         }
         else {
-            const uploadIndex = uploadedFiles.indexOf(file)
-            const previousUploadIndex = uploadedFiles.indexOf(previouslySelected)
-            
-            var temp;
-
-            if(uploadIndex < previousUploadIndex) {
-                temp = uploadedFiles.slice(uploadIndex, previousUploadIndex < uploadedFiles.length ? previousUploadIndex+1 : undefined)
-                
-            } else {
-                temp = uploadedFiles.slice(previousUploadIndex, uploadIndex < uploadedFiles.length ? uploadIndex+1 : undefined)
-            }
-
-            const combined = [...selectedFiles, ...temp]
-            const uniqueCombined = [...new Set(combined)]
-            setSelectedFiles(uniqueCombined)
+            handleClickSelect(fileIndex)
         }
-
-        setPreviouslySelected(file)
     }
 
 
 
 
-    const FileCard =  (props: {file: string}) => {
+
+    const FileCard = (props: {fileIndex: number}) => {
         return (
-            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
-                {props.file}
+            <div className={
+                        fileSelections[props.fileIndex].isSelected ?
+                            `text-red border-red
+                            dark:text-red dark:border-red
+                            text-center border-[0.1rem] flex-grow cursor-pointer select-none`
+                        :   
+                            `text-black border-black
+                            dark:text-white dark:border-white
+                            text-center border-[0.1rem] flex-grow cursor-pointer select-none`
+                    }
+                    onClick={(e) => {
+                        if(e.shiftKey) {
+                            handleShiftClickSelect(props.fileIndex)
+                        }
+                        else if (e.ctrlKey) {
+                            handleCtrlKeySelect(props.fileIndex)
+                        }
+                        else {
+                            handleClickSelect(props.fileIndex)
+                        }
+
+                        setPreviouslySelectedIndex(props.fileIndex)
+                    }}>
+                    <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
+                        {fileSelections[props.fileIndex].fileName}
+                    </div>
             </div>
-        )
-    }
-
-    const ListCard = (props: {file: string}) => {
-        return (
-            selectedFiles.includes(props.file) ? 
-                <div className="text-red border-red
-                                dark:text-red dark:border-red
-                                text-center border-[0.1rem] flex-grow cursor-pointer select-none"
-                        onClick={(e) => {
-                            handleRemoveFileFromSelect(props.file)
-                        }}>
-                    <FileCard file={props.file}/>
-                </div>
-
-            :
-                <div className="text-black border-black
-                                    dark:text-white dark:border-white
-                                    text-center border-[0.1rem] flex-grow cursor-pointer select-none"
-                        onClick={(e) => {
-                            if(e.shiftKey && !e.ctrlKey) {
-                                handleShiftClickSelect(props.file)
-                            } else if (e.ctrlKey && !e.shiftKey) {
-                                handleCtrlKeySelect(props.file)
-                            } else {
-                                handleAddFileToSelect(props.file)
-                            }
-                        }}>
-                        <FileCard file={props.file}/>
-                </div>
         )
         
     }
+
+
 
 
 
@@ -176,15 +225,15 @@ const ResumeUploadScreen = () => {
                 <ol className="border-black self-center flex-grow
                                 dark:border-white
                                 border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
-                    {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
+                    {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
                 </ol>
                 {
-                selectedFiles.length > 0 ?
+                fileSelections.length > 0 ?
                     <>
-                        <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { handleRemoveSelectionFromUpload(); } }>
+                        <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { removeCurrentSelectionFromUpload(); } }>
                                 Remove Selected Files
                         </div>
-                        <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { setSelectedFiles([]) } }>
+                        <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { clearSelection() } }>
                                     Clear Selection
                         </div>
                     </>
