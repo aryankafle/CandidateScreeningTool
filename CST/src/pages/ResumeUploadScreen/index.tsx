@@ -1,9 +1,8 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline, toggle } from 'ionicons/icons';
+import { cloudUploadOutline } from 'ionicons/icons';
 import { useContext, useEffect, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
-import { Files } from "openai/resources";
 
 const ResumeUploadScreen = () => {
 
