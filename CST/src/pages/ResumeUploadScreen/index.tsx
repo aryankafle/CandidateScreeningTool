@@ -239,9 +239,9 @@ const ResumeUploadScreen = () => {
 
     return (
         <div className="dark:bg-blue bg-white justify-center
-                        w-screen flex flex-col">
+                        flex w-screen flex-col">
             <div className="flex justify-center">
-                <Button className="dark:border-white dark:text-white
+                <Button className=" dark:border-white dark:text-white
                                     border-black text-black
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick} >
@@ -250,10 +250,10 @@ const ResumeUploadScreen = () => {
                     <input hidden ref={hiddenFileInput} type="file" multiple onChange={(event) => {handleFileUpload(event)}}/>
                 </Button>
             </div>
-            <div className="flex flex-grow flex-col mt-[1.5rem]">
+            <div className="flex flex-grow flex-col mt-[1.5rem] overflow-x-auto">
                 <ol className="border-black self-center flex-grow
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
+                                border-[0.1rem] max-h-[80vh] min-h-[8rem] overflow-y-scroll min-w-[35rem] w-[60vw]">
                     {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
                 </ol>
                 {
@@ -273,7 +273,7 @@ const ResumeUploadScreen = () => {
                         </div>
                     </>
                 :
-                    <div className="p-[2.1rem]" />
+                    <div className="p-[2rem]" />
                 }
                 
             </div>
