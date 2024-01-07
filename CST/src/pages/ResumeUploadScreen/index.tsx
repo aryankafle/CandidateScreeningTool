@@ -207,8 +207,6 @@ const ResumeUploadScreen = () => {
 
 
 
-
-
     return (
         <div className="dark:bg-blue bg-white justify-center
                         w-screen flex flex-col">
