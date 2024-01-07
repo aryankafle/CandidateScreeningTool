@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/ImprovedButtonComponent'
+import DocumentView from "../../components/DocumentView";
 
 const ResumeUploadScreen = () => {
 
@@ -240,6 +241,8 @@ const ResumeUploadScreen = () => {
     return (
         <div className="dark:bg-blue bg-white justify-center
                         flex w-screen flex-col">
+
+            <DocumentView files={uploadedFiles} index={0}/>
             <div className="flex justify-center">
                 <Button className=" dark:border-white dark:text-white
                                     border-black text-black
@@ -247,7 +250,7 @@ const ResumeUploadScreen = () => {
                     onClick={handleUploadClick} >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline}></IonIcon>
                     Upload Files
-                    <input hidden ref={hiddenFileInput} type="file" multiple onChange={(event) => {handleFileUpload(event)}}/>
+                    <input accept=".doc,.docx,.pdf,.png,.jpg" hidden ref={hiddenFileInput} type="file" multiple onChange={(event) => {handleFileUpload(event)}}/>
                 </Button>
             </div>
             <div className="flex flex-grow flex-col mt-[1.5rem] overflow-x-auto">
