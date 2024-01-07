@@ -8,18 +8,20 @@ type DocumentViewProps = {
 
 type DocumentViewState = {
     files: File[]
+    index: number
 }
 
 class DocumentView extends Component<DocumentViewProps, DocumentViewState> {
     public readonly state : DocumentViewState = {
-        files: []
+        files: this.props.files,
+        index: this.props.index
     }
 
     
 
     componentDidUpdate(prevProps : DocumentViewProps) {
         if(prevProps.files !== this.props.files) {
-          this.setState({files: this.props.files});
+          this.setState({files: this.props.files, index: this.props.index});
         }
     }
 
@@ -29,10 +31,12 @@ class DocumentView extends Component<DocumentViewProps, DocumentViewState> {
             fileName: file.name,
         }))
 
-        return (    
+        console.log(selectedDocs[this.state.index]);
+
+        return (
             <DocViewer
                 documents={ selectedDocs }
-                initialActiveDocument={ selectedDocs[this.props.index] }
+                activeDocument={ selectedDocs[this.state.index] }
                 pluginRenderers={ DocViewerRenderers }
             />
         )
