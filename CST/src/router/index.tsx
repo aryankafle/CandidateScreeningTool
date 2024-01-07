@@ -3,8 +3,8 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 
-import HomeRoutes from "./homeRouter";
-import AuthRoutes from "./authRouter";
+import HomeRoutes from "./HomeRouter";
+import AuthRoutes from "./AuthRouter";
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -32,7 +32,7 @@ function Router() {
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
                 <Route path="/login" element={<AuthRoutes />} />
-            ` <Route path="/test" element={<TestScreen />} />
+            `   <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
             <Route element={<HomeLayout />}>
