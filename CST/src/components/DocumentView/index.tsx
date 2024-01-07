@@ -25,13 +25,13 @@ class DocumentView extends Component<DocumentViewProps, DocumentViewState> {
         }
     }
 
+    
+
     render() {
         const selectedDocs = this.state.files.map((file) => ({
             uri: window.URL.createObjectURL(file),
             fileName: file.name,
         }))
-
-        console.log(selectedDocs[this.state.index]);
 
         return (
             <DocViewer

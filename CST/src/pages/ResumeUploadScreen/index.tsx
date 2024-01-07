@@ -181,14 +181,30 @@ const ResumeUploadScreen = () => {
 
 
     function handleFileUpload(event : React.ChangeEvent<HTMLInputElement>) {
+
         if(!event.target.files) return;
+        
+        
+
+        
+
+        const eventFiles = [...event.target.files]
+
+        const fileNames = uploadedFiles.map((file) => file.name)
+        const uniqueFiles = [...uploadedFiles]
 
 
 
-        const tempFiles = [...uploadedFiles, ...event.target.files]
-        const uniqueFiles = [...new Set(tempFiles)]
+        eventFiles.forEach(file => {
+            if(!fileNames.includes(file.name)) {
+                uniqueFiles.push(file)
+            }
+        });
+
+
 
         setUploadedFiles(uniqueFiles)
+        
     }
 
 
