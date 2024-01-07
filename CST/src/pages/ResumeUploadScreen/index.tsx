@@ -254,4 +254,5 @@ const ResumeUploadScreen = () => {
         
     )
 }
+
 export default ResumeUploadScreen
