@@ -4,7 +4,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/ImprovedButtonComponent'
-import DocumentView from "../../components/DocumentView";
+import DocumentView from '../../components/DocumentView';
+import Modal from '../../components/Modal';
 
 const ResumeUploadScreen = () => {
 
@@ -12,14 +13,17 @@ const ResumeUploadScreen = () => {
 
 
 
+
+
     const hiddenFileInput = useRef<HTMLInputElement>(null)
-    
-
-
-
     
     const fileContext = useContext(FileContext)
     const [uploadedFiles, setUploadedFiles] = useState(fileContext.uploadedFiles)
+
+
+
+    const [showModal, setShowModal] = useState(false)
+
 
 
 
@@ -50,6 +54,7 @@ const ResumeUploadScreen = () => {
 
     const [fileSelections, setFileSelections] = useState([] as FileSelection[])
     const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
+    const [currentlySelectedIndex, setCurrentlySelectedIndex] = useState(0)
 
     // Runs once after page render
     function initFileSelections() {
@@ -128,9 +133,9 @@ const ResumeUploadScreen = () => {
     }
 
     function removeCurrentSelectionFromUpload() {
-        console.log(fileSelections)
-        console.log(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
         setUploadedFiles(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
+        setCurrentlySelectedIndex(0)
+        setPreviouslySelectedIndex(0)
     }
 
 
@@ -207,30 +212,37 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {fileIndex: number}) => {
         return (
-            <div className={
-                    fileSelections[props.fileIndex].isSelected ?
-                            `text-red border-red
-                             dark:text-red dark:border-red
-                             border-[0.1rem] flex-grow select-none cursor-pointer`
-                        :   
-                            `text-black border-black
-                             dark:text-white dark:border-white
-                             border-[0.1rem] flex-grow select-none cursor-pointer`
-                    }
-                    onClick={(e) => {
-                        if(e.shiftKey) {
-                            handleShiftClickSelect(props.fileIndex)
-                        }
-                        else if (e.ctrlKey) {
-                            handleCtrlKeySelect(props.fileIndex)
-                        }
-                        else {
-                            handleClickSelect(props.fileIndex)
-                        }
+            <div className="border-black dark:text-black
+                            dark:border-white dark:text-white
+                            flex flex-row border-[0.1rem] px-[2rem]">
+                <div className={fileSelections[props.fileIndex].isSelected ?
+                    `text-red border-red
+                    dark:text-red
+                    flex-grow select-none cursor-pointer`
+                :
+                    `text-black border-black
+                    dark:text-white
+                    flex-grow select-none cursor-pointer`}
+                onClick={(e) => {
+                    setCurrentlySelectedIndex(props.fileIndex)
 
-                        setPreviouslySelectedIndex(props.fileIndex)
-                    }}>
-                    {fileSelections[props.fileIndex].fileName}
+                    if (e.shiftKey) {
+                        handleShiftClickSelect(props.fileIndex);
+                    }
+                    else if (e.ctrlKey) {
+                        handleCtrlKeySelect(props.fileIndex);
+                    }
+                    else {
+                        handleClickSelect(props.fileIndex);
+                    }
+
+                    setPreviouslySelectedIndex(props.fileIndex);
+                } }>
+                {fileSelections[props.fileIndex].fileName}
+                </div>
+                <div className="cursor-pointer select-none" onClick={() => { setShowModal(true); setCurrentlySelectedIndex(props.fileIndex)} }>
+                    Open File
+                </div>
             </div>
         )
         
@@ -242,7 +254,12 @@ const ResumeUploadScreen = () => {
         <div className="dark:bg-blue bg-white justify-center
                         flex w-screen flex-col">
 
-            <DocumentView files={uploadedFiles} index={0}/>
+            
+            {showModal && <Modal className="bg-blue mx-[12.5vw] h-[75vh]" handleClose={() => {setShowModal(false)}}>
+
+                    <DocumentView files={uploadedFiles} index={currentlySelectedIndex}/>
+                </Modal>
+            }
             <div className="flex justify-center">
                 <Button className=" dark:border-white dark:text-white
                                     border-black text-black
