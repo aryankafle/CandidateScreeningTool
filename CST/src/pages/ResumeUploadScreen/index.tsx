@@ -257,13 +257,19 @@ const ResumeUploadScreen = () => {
                     {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
                 </ol>
                 {
-                fileSelections.length > 0 ?
+                fileSelections.some((fileSelection) => fileSelection.isSelected) ?
                     <>
-                        <div className="pt-[1rem] self-center " onClick={() => { removeCurrentSelectionFromUpload(); } }>
-                                Remove Selected Files
+                        <div className="text-black
+                                        dark: text-white
+                                        pt-[1rem] self-center"
+                            onClick={() => { removeCurrentSelectionFromUpload(); } }>
+                                        Remove Selected Files
                         </div>
-                        <div className="pt-[0.2rem] self-center " onClick={() => { clearSelection() } }>
-                                    Clear Selection
+                        <div className="text-black
+                                        dark: text-white
+                                        self-center"
+                            onClick={() => { clearSelection(); } }>
+                                        Clear Selection
                         </div>
                     </>
                 :
