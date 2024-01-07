@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import Button from "../ImprovedButtonComponent"
 
 
 const NavBar = () => {
@@ -18,32 +19,32 @@ const NavBar = () => {
 
     return (
         <div className="flex justify-between">
-            <button className={
+            <Button className={
                     currentTab === "resume-upload" ?
                         `bg-gray text-black hover:bg-red 
                         dark:bg-gray dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center`
+                        flex py-[1rem] grow justify-center `
                     :
                         `bg-white text-black hover:bg-red
                         dark:bg-black dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center`
+                        flex py-[1rem] grow justify-center `
                     }
                     onClick={handleResumeUploadClick}>
                 Resume Upload
-            </button>
-            <button className={
+            </Button>
+            <Button className={
                     currentTab === "saved-lists" ?
                         `bg-gray text-black hover:bg-red 
                         dark:bg-gray dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center`
+                        flex py-[1rem] grow justify-center `
                     :
                         `bg-white text-black hover:bg-red
                         dark:bg-black dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center`
+                        flex py-[1rem] grow justify-center `
                     }
                     onClick={handleSavedListsClick}>
                 Saved Lists
-            </button>
+            </Button>
         </div>
         
     )
