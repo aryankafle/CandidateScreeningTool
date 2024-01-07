@@ -3,13 +3,13 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 
-import HomeRoutes from "./HomeRouter";
-import AuthRoutes from "./AuthRouter";
+import HomeRoutes from "./homeRouter";
+import AuthRoutes from "./authRouter";
 
 import FilterScreen from "../pages/FilterScreen"
-import ResultsScreen from "./ResultsRouter"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
+import ResultsScreen from "../pages/ResultsScreen"
 
 
 
