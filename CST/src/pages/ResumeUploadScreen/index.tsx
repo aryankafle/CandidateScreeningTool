@@ -1,22 +1,24 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUploadOutline } from 'ionicons/icons';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
-import { FilePond, registerPlugin } from 'react-filepond'
+import Button from '../../components/ImprovedButtonComponent'
 
 const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
+
+
+
+    const hiddenFileInput = useRef<HTMLInputElement>(null)
     
+
+
 
     
     const fileContext = useContext(FileContext)
-    const uploadedFiles = fileContext.uploadedFiles
-
-    const setUploadedFiles = fileContext.setUploadedFiles
-    const setChosenFiles = fileContext.setUploadedFiles
-
+    const [uploadedFiles, setUploadedFiles] = useState(fileContext.uploadedFiles)
 
 
 
@@ -50,16 +52,18 @@ const ResumeUploadScreen = () => {
 
     // Runs once after page render
     function initFileSelections() {
-        setFileSelections(uploadedFiles.map((file) => {return new FileSelection(file)}))
+        const _init = uploadedFiles.map((file) => {return new FileSelection(file)})
+        setFileSelections([..._init])
     }
 
-
-
+    /*
+        error disabled because this callback is supposed to be static
+    */
     useEffect(() => {
-        return ()  => {
-            initFileSelections()
-        }
-    }, [])
+        initFileSelections()
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [uploadedFiles])
 
 
 
@@ -69,6 +73,9 @@ const ResumeUploadScreen = () => {
         if(event.key === "Delete") {
             removeCurrentSelectionFromUpload();
         }
+        else if(event.key === "Escape") {
+            clearSelection()
+        }
         else if(event.ctrlKey) {
             if(event.key === "a") {
                 selectAll()
@@ -76,74 +83,67 @@ const ResumeUploadScreen = () => {
         }
     }
 
+    /*
+        error disabled because this callback is supposed to be static
+    */
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown)
         }
-    }, [])
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fileSelections])
 
 
 
-
-
-    function handleUploadClick() {
-        setUploadedFiles([...uploadedFiles])
-    }
-
-    function handleAddFiltersClick() {
-        const uploadedFiles = fileSelections.map((fileSelection) => {return fileSelection.file})
-        setUploadedFiles(uploadedFiles)
-        setChosenFiles(uploadedFiles)
-
-        clearSelection()
-        
-        navigate("/filter")
-    }
-
-
-    
 
 
     function toggleFileFromSelection(fileIndex : number) {
-        fileSelections[fileIndex].isSelected = !fileSelections[fileIndex].isSelected
+        const _temp = fileSelections
+        _temp[fileIndex].isSelected = !_temp[fileIndex].isSelected
+        setFileSelections([..._temp])
     }
 
     function clearSelection() {
-        setFileSelections(fileSelections.map((fileSelection) => {
-            
-            fileSelection.isSelected = false;
+        const _noneSelected = [...fileSelections]
 
-            return fileSelection
+        for(let i = 0; i < _noneSelected.length; i++) {
+            _noneSelected[i].isSelected = false
+        }
 
-        }))
+        setFileSelections([..._noneSelected])
     }
 
     function selectAll() {
-        setFileSelections(fileSelections.map((fileSelection) => {
-            
-            fileSelection.isSelected = true;
+        const _allSelected = [...fileSelections]
 
-            return fileSelection
+        for(let i = 0; i < _allSelected.length; i++) {
+            _allSelected[i].isSelected = true
+        }
 
-        }))
+        setFileSelections([..._allSelected])
     }
-
-
 
     function removeCurrentSelectionFromUpload() {
-        setUploadedFiles(fileSelections.filter((fileSelection) => { return fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
-
-        initFileSelections()
+        console.log(fileSelections)
+        console.log(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
+        setUploadedFiles(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
     }
+
+
 
 
 
     function handleClickSelect(fileIndex : number) {
-        clearSelection();
-
-        toggleFileFromSelection(fileIndex)
+        if(fileSelections[fileIndex].isSelected) {
+            toggleFileFromSelection(fileIndex)
+        }
+        else {
+            clearSelection()
+            toggleFileFromSelection(fileIndex)
+        }
     }
 
     function handleCtrlKeySelect(fileIndex : number) {
@@ -153,19 +153,51 @@ const ResumeUploadScreen = () => {
     function handleShiftClickSelect(fileIndex : number) {
         if(fileSelections[previouslySelectedIndex].isSelected) {
             if(fileIndex < previouslySelectedIndex) {
-                for(let i = fileIndex; i < previouslySelectedIndex; i++) {
-                    fileSelections[fileIndex].isSelected = true
+                for(let i = fileIndex; i <= previouslySelectedIndex; i++) {
+                    fileSelections[i].isSelected = true
                 }
             }
             else {
-                for(let i = fileIndex; i > previouslySelectedIndex; i--) {
-                    fileSelections[fileIndex].isSelected = true
+                for(let i = fileIndex; i >= previouslySelectedIndex; i--) {
+                    fileSelections[i].isSelected = true
                 }
             }
         }
         else {
-            handleClickSelect(fileIndex)
+            for(let i = 0; i <= fileIndex; i++) {
+                fileSelections[i].isSelected = true
+            }
         }
+
+        setFileSelections([...fileSelections])
+    }
+
+
+
+    function handleFileUpload(event : React.ChangeEvent<HTMLInputElement>) {
+        if(!event.target.files) return;
+
+
+
+        const tempFiles = [...uploadedFiles, ...event.target.files]
+        const uniqueFiles = [...new Set(tempFiles)]
+
+        setUploadedFiles(uniqueFiles)
+    }
+
+
+
+    const handleUploadClick = () => {
+        if(hiddenFileInput.current){
+            hiddenFileInput.current.click()
+        }
+    }
+
+    function handleAddFiltersClick() {
+        const uploadedFiles = fileSelections.map((fileSelection) => {return fileSelection.file})
+        setUploadedFiles(uploadedFiles)
+        
+        navigate("/filter")
     }
 
 
@@ -175,14 +207,14 @@ const ResumeUploadScreen = () => {
     const FileCard = (props: {fileIndex: number}) => {
         return (
             <div className={
-                        fileSelections[props.fileIndex].isSelected ?
+                    fileSelections[props.fileIndex].isSelected ?
                             `text-red border-red
                             dark:text-red dark:border-red
-                            text-center border-[0.1rem] flex-grow cursor-pointer select-none`
+                            border-[0.1rem] flex-grow select-none cursor-pointer`
                         :   
                             `text-black border-black
                             dark:text-white dark:border-white
-                            text-center border-[0.1rem] flex-grow cursor-pointer select-none`
+                            border-[0.1rem] flex-grow select-none cursor-pointer`
                     }
                     onClick={(e) => {
                         if(e.shiftKey) {
@@ -197,9 +229,7 @@ const ResumeUploadScreen = () => {
 
                         setPreviouslySelectedIndex(props.fileIndex)
                     }}>
-                    <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
-                        {fileSelections[props.fileIndex].fileName}
-                    </div>
+                    {fileSelections[props.fileIndex].fileName}
             </div>
         )
         
@@ -211,13 +241,14 @@ const ResumeUploadScreen = () => {
         <div className="dark:bg-blue bg-white justify-center
                         w-screen flex flex-col">
             <div className="flex justify-center">
-                <button className="dark:border-white dark:text-white
+                <Button className="dark:border-white dark:text-white
                                     border-black text-black
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick} >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline}></IonIcon>
-                    Upload New Files
-                </button>
+                    Upload Files
+                    <input hidden ref={hiddenFileInput} type="file" multiple onChange={(event) => {handleFileUpload(event)}}/>
+                </Button>
             </div>
             <div className="flex flex-grow flex-col mt-[1.5rem]">
                 <ol className="border-black self-center flex-grow
@@ -228,10 +259,10 @@ const ResumeUploadScreen = () => {
                 {
                 fileSelections.length > 0 ?
                     <>
-                        <div className="pt-[1rem] self-center cursor-pointer select-none" onClick={() => { removeCurrentSelectionFromUpload(); } }>
+                        <div className="pt-[1rem] self-center " onClick={() => { removeCurrentSelectionFromUpload(); } }>
                                 Remove Selected Files
                         </div>
-                        <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { clearSelection() } }>
+                        <div className="pt-[0.2rem] self-center " onClick={() => { clearSelection() } }>
                                     Clear Selection
                         </div>
                     </>
@@ -241,12 +272,12 @@ const ResumeUploadScreen = () => {
                 
             </div>
             <div className="flex justify-center">
-                <button className="dark:border-white dark:text-white
+                <Button className="dark:border-white dark:text-white
                                     border-black text-black
                                     flex justify-center p-[1rem] mb-[4rem] mt-[1.5rem] border-[0.1rem]"
                         onClick={handleAddFiltersClick}>
                     Add Filters to Uploaded Files
-                </button>
+                </Button>
             </div>
         </div>
         
