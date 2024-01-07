@@ -209,12 +209,12 @@ const ResumeUploadScreen = () => {
             <div className={
                     fileSelections[props.fileIndex].isSelected ?
                             `text-red border-red
-                            dark:text-red dark:border-red
-                            border-[0.1rem] flex-grow select-none cursor-pointer`
+                             dark:text-red dark:border-red
+                             border-[0.1rem] flex-grow select-none cursor-pointer`
                         :   
                             `text-black border-black
-                            dark:text-white dark:border-white
-                            border-[0.1rem] flex-grow select-none cursor-pointer`
+                             dark:text-white dark:border-white
+                             border-[0.1rem] flex-grow select-none cursor-pointer`
                     }
                     onClick={(e) => {
                         if(e.shiftKey) {
@@ -251,7 +251,7 @@ const ResumeUploadScreen = () => {
                 </Button>
             </div>
             <div className="flex flex-grow flex-col mt-[1.5rem] overflow-x-auto">
-                <ol className="border-black self-center flex-grow
+                <ol className=" border-black self-center flex-grow
                                 dark:border-white
                                 border-[0.1rem] max-h-[80vh] min-h-[8rem] overflow-y-scroll min-w-[35rem] w-[60vw]">
                     {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
@@ -278,7 +278,7 @@ const ResumeUploadScreen = () => {
                 
             </div>
             <div className="flex justify-center">
-                <Button className="dark:border-white dark:text-white
+                <Button className=" dark:border-white dark:text-white
                                     border-black text-black
                                     flex justify-center p-[1rem] mb-[4rem] mt-[1.5rem] border-[0.1rem]"
                         onClick={handleAddFiltersClick}>
