@@ -4,7 +4,7 @@ const FooterComponent = () => {
         <footer className="
                         bg-gray text-black
                         dark:bg-black dark:text-white
-                        p-[0.2rem]" >
+                        p-[0.2rem] select-none" >
                 Footer Component
         </footer>
     )
