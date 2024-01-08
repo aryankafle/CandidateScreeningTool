@@ -6,8 +6,14 @@ const ResultsScreen = () => {
 
     return(
         <div>
-            <h1>Here are some great candidates based on your needs:</h1>
-            
+            <div className="m-10 p-6 mx-auto bg-white rounded-r-lg flex items-center text-2xl">
+                <div className="flex-shrink-0">
+                    <h1 className="">Here are some great candidates based on your needs:</h1>
+                </div>
+            </div>
+            <div>
+                
+            </div>
         </div>
     );
 }
