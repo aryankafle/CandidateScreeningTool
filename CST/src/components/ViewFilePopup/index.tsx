@@ -16,7 +16,7 @@ const ViewFilePopup : React.FC<ViewFilePopupProps> = ({ uploadedFiles, currently
             <Button className="flex self-end py-[0.3rem] px-[0.6rem] " onClick={onXClicked}>
                 <IonIcon color="white" icon={backspaceOutline} size="large"></IonIcon>
             </Button>
-            <div className="flex flex-col flex-grow overflow-y-clip">
+            <div className="flex flex-col self-center flex-grow overflow-y-clip mb-[0.6rem] w-[79vw]">
                 <DocumentView files={uploadedFiles} index={currentlySelectedIndex}/>
             </div>
         </div>
