@@ -5,10 +5,10 @@ const ResultsScreen = () => {
     const candidates = []; //temporary placeholder for the filtered candidates 
 
     return(
-        <div>
-            <div className="m-10 p-6 mx-auto bg-white rounded-r-lg flex items-center text-2xl">
-                <div className="flex-shrink-0">
-                    <h1 className="">Here are some great candidates based on your needs:</h1>
+        <div className="dark:bg-blue bg-white w-screen">
+            <div className="my-10 max-w-screen-sm p-6 bg-white rounded-r-full flex basis-1/2 place-content-center">
+                <div className="text-2xl">
+                    <h1>Here are some great candidates based on your needs:</h1>
                 </div>
             </div>
             <div>
