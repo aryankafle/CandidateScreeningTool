@@ -29,7 +29,7 @@ class Modal extends Component<ModalProps & { children?: ReactNode }> {
     
 
     componentDidUpdate(prevProps : ModalState) {
-        if(prevProps != this.props) {
+        if(prevProps !== this.props) {
             this.setState(
                 {
                     onClose: this.props.onClose,
