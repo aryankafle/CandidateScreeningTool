@@ -3,8 +3,8 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 
-import HomeRoutes from "./homeRouter";
-import AuthRoutes from "./authRouter";
+import HomeRoutes from "./HomeRouter";
+import AuthRoutes from "./AuthRouter";
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
