@@ -4,8 +4,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/ImprovedButtonComponent'
-import DocumentView from '../../components/DocumentView';
 import Modal from '../../components/Modal';
+import ViewFilePopup from "../../components/ViewFilePopup";
 
 const ResumeUploadScreen = () => {
 
@@ -256,7 +256,7 @@ const ResumeUploadScreen = () => {
                 } }>
                 {fileSelections[props.fileIndex].fileName}
                 </div>
-                <div className="cursor-pointer select-none" onClick={() => { setShowModal(true); setCurrentlySelectedIndex(props.fileIndex)} }>
+                <div className="cursor-pointer select-none" onClick={() => { setShowModal(!showModal); setCurrentlySelectedIndex(props.fileIndex)} }>
                     Open File
                 </div>
             </div>
@@ -271,11 +271,9 @@ const ResumeUploadScreen = () => {
                         flex w-screen flex-col">
 
             
-            {showModal && <Modal className="bg-blue mx-[12.5vw] h-[75vh]" handleClose={() => {setShowModal(false)}}>
-
-                    <DocumentView files={uploadedFiles} index={currentlySelectedIndex}/>
-                </Modal>
-            }
+            <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
+                <ViewFilePopup onXClicked={()=>{setShowModal(false)}} uploadedFiles={uploadedFiles} currentlySelectedIndex={currentlySelectedIndex}></ViewFilePopup>
+            </Modal>
             <div className="flex justify-center">
                 <Button className=" dark:border-white dark:text-white
                                     border-black text-black
