@@ -12,10 +12,7 @@ type ModalState = {
 }
 
 class Modal extends Component<ModalProps & { children?: ReactNode }> {
-    
-    
-    
-    
+        
     public readonly state : ModalState = {
         handleClose: this.props.handleClose,
         className: this.props.className
@@ -55,6 +52,7 @@ class Modal extends Component<ModalProps & { children?: ReactNode }> {
                 </div>
         </Portal>
     }
+    
 }
 
 
