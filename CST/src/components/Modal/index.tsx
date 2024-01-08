@@ -1,6 +1,5 @@
 import React, { ReactNode, Component } from "react";
 import Portal from "../Portal";
-import { toggle } from "ionicons/icons";
 
 type ModalProps = {
     onClose : () => void

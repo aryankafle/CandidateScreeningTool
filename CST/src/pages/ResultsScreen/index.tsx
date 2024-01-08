@@ -1,5 +1,3 @@
-import { isNamedTupleMember } from "typescript";
-
 const ResultsScreen = () => {
 
     const candidates = []; //temporary placeholder for the filtered candidates 
