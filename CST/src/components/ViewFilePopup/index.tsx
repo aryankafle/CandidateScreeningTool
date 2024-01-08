@@ -3,13 +3,13 @@ import Button from "../ImprovedButtonComponent"
 import { IonIcon } from "@ionic/react"
 import { backspaceOutline } from 'ionicons/icons';
 
-type ViewFileProps = {
+type ViewFilePopupProps = {
     uploadedFiles : File[]
     currentlySelectedIndex : number
     onXClicked : () => void
 }
 
-const ViewFilePopup : React.FC<ViewFileProps> = ({ uploadedFiles, currentlySelectedIndex, onXClicked}) => {
+const ViewFilePopup : React.FC<ViewFilePopupProps> = ({ uploadedFiles, currentlySelectedIndex, onXClicked}) => {
     return (
         <div className="bg-white dark:bg-blue
                         flex flex-col flex-grow m-[10vw]">
