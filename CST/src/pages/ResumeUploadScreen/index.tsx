@@ -290,32 +290,40 @@ const ResumeUploadScreen = () => {
                                 border-[0.1rem] max-h-[80vh] min-h-[8rem] overflow-y-scroll min-w-[35rem] w-[60vw]">
                     {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
                 </ol>
-                {
-                fileSelections.some((fileSelection) => fileSelection.isSelected) ?
-                    <>
-                        <div className="text-black
-                                        dark: text-white
-                                        pt-[1rem] self-center"
-                            onClick={() => { removeCurrentSelectionFromUpload(); } }>
-                                        Remove Selected Files
+                <div className="h-[5rem]
+                                text-black
+                                dark: text-white
+                                self-center">
+                    {
+                    fileSelections.some((fileSelection) => fileSelection.isSelected) ?
+                        <div className="flex flex-col my-[1rem]">
+                            <Button className="text-black
+                                            dark: text-white
+                                            flex-grow self-center"
+                                onClick={() => { removeCurrentSelectionFromUpload(); } }>
+                                            Remove Selected Files
+                            </Button>
+                            <Button className="text-black
+                                            dark: text-white
+                                            flex-grow self-center"
+                                onClick={() => { clearSelection(); } }>
+                                            Clear Selection
+                            </Button>
                         </div>
-                        <div className="text-black
-                                        dark: text-white
-                                        self-center"
-                            onClick={() => { clearSelection(); } }>
-                                        Clear Selection
-                        </div>
-                    </>
-                :
-                    <div className="p-[2rem]" />
-                }
+                    :
+                        <Button onClick={() => selectAll()} className="my-[1.5rem]">
+                            Select All
+                        </Button>
+                    }
+                </div>
+                
                 
             </div>
             <div className="flex justify-center">
                 <Button className=" dark:border-white dark:text-white
                                     border-black text-black
-                                    flex justify-center p-[1rem] mb-[4rem] mt-[1.5rem] border-[0.1rem]"
-                        onClick={handleAddFiltersClick}>
+                                    flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
+                        onClick={()=>handleAddFiltersClick()}>
                     Add Filters to Uploaded Files
                 </Button>
             </div>
