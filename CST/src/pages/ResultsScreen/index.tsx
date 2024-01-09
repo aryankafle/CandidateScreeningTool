@@ -20,7 +20,7 @@ const ResultsScreen = () => {
     function generateCandidates(){
         for (let i = 0; i < 10; i++){
             var r = 'A';
-            if (i%2 == 0){
+            if (i%2 === 0){
                 r = 'B';
             }
             candidates.push(new Candidate('Bob' + i, r))
