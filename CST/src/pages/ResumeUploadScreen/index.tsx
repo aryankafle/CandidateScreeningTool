@@ -195,14 +195,6 @@ const ResumeUploadScreen = () => {
                 }
                 
             </div>
-            <div className="flex justify-center">
-                <button className="dark:border-white dark:text-white
-                                    border-black text-black
-                                    flex justify-center p-[1rem] mb-[4rem] mt-[1.5rem] border-[0.1rem]"
-                        onClick={handleAddFiltersClick}>
-                    Add Filters to Uploaded Files
-                </button>
-            </div>
         </div>
         
         
