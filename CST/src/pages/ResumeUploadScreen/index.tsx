@@ -1,20 +1,47 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUploadOutline } from 'ionicons/icons';
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/ImprovedButtonComponent'
 import Modal from '../../components/Modal';
 import ViewFilePopup from "../../components/ViewFilePopup";
 
+
+
+
+
+class FileSelection {
+    #file: File
+    isSelected: boolean
+
+    constructor(file : File) {
+        this.#file = file
+        this.isSelected = false
+    }
+
+    get fileName() {
+        return this.#file.name
+    }
+
+    get file(){
+        return this.#file
+    }
+
+    toString() {
+        
+    }
+}
+
+
+
+
+
 const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
-
     
-    const {uploadedFiles, setUploadedFiles} = useContext(FileContext)
-
-
+    const fileContext = useContext(FileContext)
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -22,41 +49,19 @@ const ResumeUploadScreen = () => {
 
 
 
-
-
-    class FileSelection {
-        #file: File
-        isSelected: boolean
-
-        constructor(file : File) {
-            this.#file = file
-            this.isSelected = false
-        }
-
-        get fileName() {
-            return this.#file.name
-        }
-
-        get file(){
-            return this.#file
-        }
-
-        toString() {
-            
-        }
-    }
-
-
-
     const [fileSelections, setFileSelections] = useState([] as FileSelection[])
     const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
     const [currentlySelectedIndex, setCurrentlySelectedIndex] = useState(0)
 
+
+
+
+
     // Runs once after page render
-    function initFileSelections() {
-        const _init = uploadedFiles.map((file) => {return new FileSelection(file)})
+    const initFileSelections = useCallback(() => {
+        const _init = fileContext.uploadedFiles.map((file) => {return new FileSelection(file)})
         setFileSelections([..._init])
-    }
+    }, [fileContext])
 
     /*
         error disabled because this callback is supposed to be static
@@ -64,41 +69,46 @@ const ResumeUploadScreen = () => {
     useEffect(() => {
         initFileSelections()
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [uploadedFiles])
+    }, [initFileSelections])
 
 
 
 
 
-    function handleKeyDown(event : KeyboardEvent) {
-        if(event.key === "Delete") {
-            removeCurrentSelectionFromUpload();
-        }
-        else if(event.key === "Escape") {
-            clearSelection()
-        }
-        else if(event.ctrlKey) {
-            if(event.key === "a") {
-                selectAll()
-            }
-        }
-    }
+    const clearSelection = useCallback(() => {
 
-    /*
-        error disabled because this callback is supposed to be static
-    */
-    useEffect(() => {
-        window.addEventListener("keydown", handleKeyDown)
+        const _noneSelected = [...fileSelections]
 
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown)
+        for(let i = 0; i < _noneSelected.length; i++) {
+            _noneSelected[i].isSelected = false
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setFileSelections([..._noneSelected])
+
+    }, [fileSelections])
+
+    const selectAll = useCallback(() => {
+
+        const _allSelected = [...fileSelections]
+
+        for(let i = 0; i < _allSelected.length; i++) {
+            _allSelected[i].isSelected = true
+        }
+
+        setFileSelections([..._allSelected])
+
     }, [fileSelections])
 
 
+
+    const removeCurrentSelectionFromUpload = useCallback(() => {
+
+        fileContext.setUploadedFiles(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
+        
+        setCurrentlySelectedIndex(0)
+        setPreviouslySelectedIndex(0)
+
+    }, [fileSelections, fileContext])
 
 
 
@@ -108,36 +118,22 @@ const ResumeUploadScreen = () => {
         setFileSelections([..._temp])
     }
 
-    function clearSelection() {
-        const _noneSelected = [...fileSelections]
 
-        for(let i = 0; i < _noneSelected.length; i++) {
-            _noneSelected[i].isSelected = false
+
+
+
+    const handleUploadClick = () => {
+        if(hiddenFileInput.current){
+            hiddenFileInput.current.click()
         }
-
-        setFileSelections([..._noneSelected])
     }
 
-    function selectAll() {
-        const _allSelected = [...fileSelections]
-
-        for(let i = 0; i < _allSelected.length; i++) {
-            _allSelected[i].isSelected = true
-        }
-
-        setFileSelections([..._allSelected])
+    function handleAddFiltersClick() {
+        const files = fileSelections.map((fileSelection) => {return fileSelection.file})
+        fileContext.setUploadedFiles(files)
+        
+        navigate("/filter")
     }
-
-    function removeCurrentSelectionFromUpload() {
-        setUploadedFiles(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
-        console.log(uploadedFiles)
-        setCurrentlySelectedIndex(0)
-        setPreviouslySelectedIndex(0)
-    }
-
-
-
-
 
     function handleClickSelect(fileIndex : number) {
         if(fileSelections[fileIndex].isSelected) {
@@ -177,20 +173,43 @@ const ResumeUploadScreen = () => {
 
 
 
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        
+        if(event.key === "Delete") {
+            removeCurrentSelectionFromUpload();
+        }
+        else if(event.key === "Escape") {
+            clearSelection()
+        }
+        else if(event.ctrlKey) {
+            if(event.key === "a") {
+                selectAll()
+            }
+        }
+
+    }, [removeCurrentSelectionFromUpload, clearSelection, selectAll])
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
+
+
+
     function handleFileUpload(event : React.ChangeEvent<HTMLInputElement>) {
 
         if(!event.target.files) return;
-        
-        
 
-        
+
+
+        const fileNames = fileContext.uploadedFiles.map((file) => file.name)
+        const uniqueFiles = [...fileContext.uploadedFiles]
 
         const eventFiles = [...event.target.files]
-
-        const fileNames = uploadedFiles.map((file) => file.name)
-        const uniqueFiles = [...uploadedFiles]
-
-
 
         eventFiles.forEach(file => {
             if(!fileNames.includes(file.name)) {
@@ -200,23 +219,8 @@ const ResumeUploadScreen = () => {
 
 
 
-        setUploadedFiles(uniqueFiles)
+        fileContext.setUploadedFiles(uniqueFiles)
         
-    }
-
-
-
-    const handleUploadClick = () => {
-        if(hiddenFileInput.current){
-            hiddenFileInput.current.click()
-        }
-    }
-
-    function handleAddFiltersClick() {
-        const uploadedFiles = fileSelections.map((fileSelection) => {return fileSelection.file})
-        setUploadedFiles(uploadedFiles)
-        
-        navigate("/filter")
     }
 
 
@@ -269,7 +273,7 @@ const ResumeUploadScreen = () => {
 
             
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                <ViewFilePopup onXClicked={()=>{setShowModal(false)}} uploadedFiles={uploadedFiles} currentlySelectedIndex={currentlySelectedIndex}></ViewFilePopup>
+                <ViewFilePopup onXClicked={()=>{setShowModal(false)}} uploadedFiles={fileContext.uploadedFiles} currentlySelectedIndex={currentlySelectedIndex}></ViewFilePopup>
             </Modal>
             <div className="flex justify-center">
                 <Button className=" dark:border-white dark:text-white
@@ -325,9 +329,6 @@ const ResumeUploadScreen = () => {
                 </Button>
             </div>
         </div>
-        
-        
-        
     )
 }
 
