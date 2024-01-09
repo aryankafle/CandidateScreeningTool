@@ -10,6 +10,11 @@ const ResultsScreen = () => {
             this.name = name;
             this.rank = rank;
         }
+
+        get getRank(){
+            return this.rank;
+        }
+        
     }
     var candidates = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
