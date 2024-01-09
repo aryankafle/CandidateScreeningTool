@@ -96,7 +96,7 @@ const ResumeUploadScreen = () => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [fileSelections])
 
 
 
@@ -130,6 +130,7 @@ const ResumeUploadScreen = () => {
 
     function removeCurrentSelectionFromUpload() {
         setUploadedFiles(fileSelections.filter((fileSelection) => { return !fileSelection.isSelected }).map((fileSelection) => fileSelection.file))
+        console.log(uploadedFiles)
         setCurrentlySelectedIndex(0)
         setPreviouslySelectedIndex(0)
     }
