@@ -312,7 +312,7 @@ const ResumeUploadScreen = () => {
                         </div>
                     :
                         <Button onClick={() => selectAll()} className="my-[1.5rem]">
-                            Select All
+                            { fileSelections.length > 0 ? "Select All" : ""}
                         </Button>
                     }
                 </div>
