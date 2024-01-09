@@ -1,5 +1,3 @@
-import { isNamedTupleMember } from "typescript";
-
 const ResultsScreen = () => {
 
     class Candidate
