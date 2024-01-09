@@ -32,7 +32,7 @@ const ResultsScreen = () => {
         }
     }
 
-    //const mappedCandidates = candidates.map((candidates)=><li>{candidates}</li>)
+    const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
     
     return(
         <div className="dark:bg-blue bg-white w-screen">
