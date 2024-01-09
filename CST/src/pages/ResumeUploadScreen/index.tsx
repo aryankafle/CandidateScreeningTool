@@ -11,16 +11,12 @@ const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
 
-
+    
+    const {uploadedFiles, setUploadedFiles} = useContext(FileContext)
 
 
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
-    
-    const fileContext = useContext(FileContext)
-    const [uploadedFiles, setUploadedFiles] = useState(fileContext.uploadedFiles)
-
-
 
     const [showModal, setShowModal] = useState(false)
 
@@ -100,7 +96,7 @@ const ResumeUploadScreen = () => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fileSelections])
+    }, [])
 
 
 
