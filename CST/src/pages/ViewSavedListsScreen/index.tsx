@@ -16,6 +16,7 @@ const ViewSavedPacksScreen = () => {
     const onChange = (str: string) => {
         setNameInput(str);
     };
+    
     const [uploadedFiles, setUploadedFiles] = useState([] as string[])
     const [selectedFiles, setSelectedFiles] = useState([] as string[])
     // const packContext = useContext(PackContext)
@@ -28,12 +29,12 @@ const ViewSavedPacksScreen = () => {
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
-        const pack = "Pack " + Math.floor(Math.random() * 100)
+        //const pack = nameInput + Math.floor(Math.random() * 100)
 
-        const uniqueFiles = [...new Set([...uploadedFiles, pack])]
+        const uniqueFiles = [...new Set([...uploadedFiles, nameInput])]
         
         console.log('Value ', nameInput)
-        
+        setNameInput("");
         setUploadedFiles(uniqueFiles)
     }
     const FileCard =  (props: {file: string}) => {
