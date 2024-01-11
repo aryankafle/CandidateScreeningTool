@@ -21,10 +21,15 @@ const BackButton = (props: ButtonProps) => {
 
 
     return (
-        <Button onClick={() => {
-            navigate(props.toRoute)
-        }}>
-            <IonIcon icon={arrowBackOutline} size="1rem"/>
+        <Button 
+            className=" dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
+                        border-black text-black bg-white hover:bg-gray active:bg-blue
+                        rounded-md justify-center border-[0.1rem] w-[4rem] flex p-[0.5rem]"
+            onClick={() => {
+                navigate(props.toRoute)
+            }}
+        >
+            <IonIcon icon={arrowBackOutline} size="small"/>
         </Button>
     );
 
