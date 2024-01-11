@@ -48,7 +48,9 @@ const ResultsScreen = () => {
     
     const ResultsCard = ({candidate} : {candidate:Candidate}) => {
         return(
-            <div className="border-black text-black dark:border-white dark:text-white flex flex-row border-[0.1rem] px-[2rem]">
+            <div className="border-black text-black 
+                            dark:border-white dark:text-white 
+                            flex flex-row border-[0.1rem] px-[2rem]">
                 {candidate.getName + ' ' + candidate.getRank}
             </div>
         )
@@ -61,7 +63,7 @@ const ResultsScreen = () => {
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
             </div>
-            <div className="flex">
+            <div className="flex justify-center">
                 <ol className="space-y-5">
                     {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
                 </ol>
