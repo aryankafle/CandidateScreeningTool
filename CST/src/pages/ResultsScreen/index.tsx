@@ -1,4 +1,6 @@
 import ResultsComponent from "../../components/ResultsComponent";
+import React from "react";
+
 
 const ResultsScreen = () => {
     class Candidate
@@ -16,8 +18,19 @@ const ResultsScreen = () => {
 
         get getRank(){
             return this.rank;
+        } 
+    }
+
+    function getCandidateImage(candidate: Candidate){
+        if (candidate.getRank === 'A'){
+            return(
+                <img src={"/assets/a-rating"} alt="A"></img>
+            );
+        }else{
+            return(
+                <img src={"/assets/b-rating"} alt="B"></img>
+            );
         }
-        
     }
 
     function generateCandidates(){
@@ -33,13 +46,13 @@ const ResultsScreen = () => {
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
     
-    const ResultsCard = () => {
+    const ResultsCard = (candidate: Candidate) => {
         <div className="flex flex-row box-border">
-
+            
         </div>
     }
 
-    //const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
+    const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
     
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
@@ -50,7 +63,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex">
                 <ol className="space-y-5">
-                    {candidates.map(Candidate => <li>{Candidate.getName + ' ' + Candidate.getRank}</li>)}
+                    {mappedCandidates}
                 </ol>
             </div>
         </div>
