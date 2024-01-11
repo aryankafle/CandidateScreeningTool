@@ -1,5 +1,5 @@
-import Button from "../ImprovedButtonComponent"
-import { Navigate, useNavigate } from "react-router-dom";
+import NavButton from "../NavButton"
+import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 
@@ -7,30 +7,28 @@ import { arrowBackOutline } from "ionicons/icons";
 
 
 
-type ButtonProps = {
+type BackButtonProps = {
     toRoute : string
 }
 
 
 
 
-const BackButton = (props: ButtonProps) => {
+const BackButton = (props: BackButtonProps) => {
 
     const navigate = useNavigate()
 
 
 
     return (
-        <Button 
+        <NavButton 
             className=" dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                         border-black text-black bg-white hover:bg-gray active:bg-blue
-                        rounded-md justify-center border-[0.1rem] w-[4rem] flex p-[0.5rem]"
-            onClick={() => {
-                navigate(props.toRoute)
-            }}
+                        w-[3rem]"
+            toRoute={props.toRoute}
         >
             <IonIcon icon={arrowBackOutline} size="small"/>
-        </Button>
+        </NavButton>
     );
 
 }
