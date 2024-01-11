@@ -1,4 +1,3 @@
-import ResultsComponent from "../../components/ResultsComponent";
 import React from "react";
 
 
