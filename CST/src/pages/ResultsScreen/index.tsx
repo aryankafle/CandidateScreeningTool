@@ -47,7 +47,7 @@ const ResultsScreen = () => {
     generateCandidates();
     
     const ResultsCard = (candidate: Candidate) => {
-        <div className="flex flex-row box-border">
+        <div className="flex flex-row box-content p">
             
         </div>
     }
