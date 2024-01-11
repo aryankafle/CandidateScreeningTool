@@ -1,5 +1,8 @@
-const ResultsScreen = () => {
+import ResultsComponent from "../../components/ResultsComponent";
+import React from "react";
 
+
+const ResultsScreen = () => {
     class Candidate
     {
         name: string;
@@ -9,34 +12,59 @@ const ResultsScreen = () => {
             this.rank = rank;
         }
 
+        get getName(){
+            return this.name;
+        }
+
         get getRank(){
             return this.rank;
-        }
-        
+        } 
     }
-    var candidates = []; //temporary placeholder for the filtered candidates 
-    generateCandidates();
-    
+
+    function getCandidateImage(candidate: Candidate){
+        if (candidate.getRank === 'A'){
+            return(
+                <img src={"/assets/a-rating"} alt="A"></img>
+            );
+        }else{
+            return(
+                <img src={"/assets/b-rating"} alt="B"></img>
+            );
+        }
+    }
+
     function generateCandidates(){
         for (let i = 0; i < 10; i++){
             var r = 'A';
-            if (i%2 == 0){
+            if (i%2 === 0){
                 r = 'B';
             }
             candidates.push(new Candidate('Bob' + i, r))
         }
     }
 
+    var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
+    generateCandidates();
+    
+    const ResultsCard = (candidate: Candidate) => {
+        <div className="flex flex-row box-content p">
+            
+        </div>
+    }
 
+    const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
+    
     return(
-        <div className="dark:bg-blue bg-white w-screen">
-            <div className="my-10 max-w-screen-sm p-6 bg-white rounded-r-full flex basis-1/2 place-content-center">
-                <div className="text-2xl">
+        <div className="dark:bg-blue bg-white w-screen text-2xl">
+            <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
+                <div>
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
             </div>
-            <div>
-                
+            <div className="flex">
+                <ol className="space-y-5">
+                    {mappedCandidates}
+                </ol>
             </div>
         </div>
     );
