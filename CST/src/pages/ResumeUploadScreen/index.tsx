@@ -270,8 +270,6 @@ const ResumeUploadScreen = () => {
     return (
         <div className="dark:bg-blue bg-white justify-center
                         flex w-screen flex-col">
-
-            
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                 <ViewFilePopup onXClicked={()=>{setShowModal(false)}} uploadedFiles={fileContext.uploadedFiles} currentlySelectedIndex={currentlySelectedIndex}></ViewFilePopup>
             </Modal>
