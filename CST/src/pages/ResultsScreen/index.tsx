@@ -46,10 +46,12 @@ const ResultsScreen = () => {
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
     
-    const ResultsCard = (candidate: Candidate) => {
-        <div className="border-black text-black dark:border-white dark:text-white flex flex-row border-[0.1rem] px-[2rem]">
-            {candidate.getName}
-        </div>
+    const ResultsCard = ({candidate} : {candidate:Candidate}) => {
+        return(
+            <div className="border-black text-black dark:border-white dark:text-white flex flex-row border-[0.1rem] px-[2rem]">
+                {candidate.getName + ' ' + candidate.getRank}
+            </div>
+        )
     }
     
     return(
@@ -61,7 +63,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex">
                 <ol className="space-y-5">
-                    {/* {candidates.map((Candidate)=><li><ResultsCard {...Candidate}></ResultsCard></li>)} */}
+                    {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
                 </ol>
             </div>
         </div>
