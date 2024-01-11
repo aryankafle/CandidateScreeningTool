@@ -47,12 +47,10 @@ const ResultsScreen = () => {
     generateCandidates();
     
     const ResultsCard = (candidate: Candidate) => {
-        <div className="flex flex-row box-content p">
-            
+        <div className="border-black text-black dark:border-white dark:text-white flex flex-row border-[0.1rem] px-[2rem]">
+            {candidate.getName}
         </div>
     }
-
-    const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
     
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
@@ -63,7 +61,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex">
                 <ol className="space-y-5">
-                    {mappedCandidates}
+                    {/* {candidates.map((Candidate)=><li><ResultsCard {...Candidate}></ResultsCard></li>)} */}
                 </ol>
             </div>
         </div>
