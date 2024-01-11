@@ -18,7 +18,7 @@ const FilterScreen = () => {
                     <NavButton
                             className=" dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                         border-black text-black bg-white hover:bg-gray active:bg-blue"
-                            toRoute="/results-page"
+                            toRoute="/results"
                     >
                         <IonIcon
                             icon={colorWandOutline}
