@@ -23,11 +23,11 @@ const ResultsScreen = () => {
     function getCandidateImage(candidate: Candidate){
         if (candidate.getRank === 'A'){
             return(
-                <img src={"/assets/a-rating"} alt="A"></img>
+                <img src={"../assets/a-rating.png"} alt="A"></img>
             );
         }else{
             return(
-                <img src={"/assets/b-rating"} alt="B"></img>
+                <img src={"../assets/b-rating.png"} alt="B"></img>
             );
         }
     }
@@ -44,7 +44,7 @@ const ResultsScreen = () => {
 
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
-    
+
     const ResultsCard = ({candidate} : {candidate:Candidate}) => {
         return(
             <div className="border-black text-black 
@@ -54,7 +54,12 @@ const ResultsScreen = () => {
             </div>
         )
     }
-    
+
+    const showIndividualCandidate = () => {
+        console.log("button clicked")
+    }
+
+
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
             <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
@@ -64,7 +69,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex justify-center">
                 <ol className="space-y-5">
-                    {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
+                    {candidates.map((Candidate)=><><button className="hover:bg-green" onClick={showIndividualCandidate}><ResultsCard candidate={Candidate}></ResultsCard></button><br/></>)}
                 </ol>
             </div>
         </div>
