@@ -69,7 +69,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex justify-center">
                 <ol className="space-y-5">
-                    {candidates.map((Candidate)=><><button className="hover:bg-green" onClick={showIndividualCandidate}><ResultsCard candidate={Candidate}></ResultsCard></button><br/></>)}
+                    {candidates.map((Candidate)=><li className="hover:bg-green" onClick={showIndividualCandidate}><ResultsCard candidate={Candidate}></ResultsCard></li>)}
                 </ol>
             </div>
         </div>
