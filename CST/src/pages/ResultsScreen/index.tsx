@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from '../../components/Modal';
 
 
 const ResultsScreen = () => {
+    const [showModal, setShowModal] = useState(false);
+
     class Candidate
     {
         name: string;
@@ -49,7 +52,8 @@ const ResultsScreen = () => {
         return(
             <div className="border-black text-black 
                             dark:border-white dark:text-white 
-                            flex flex-row border-[0.1rem] px-[2rem]">
+                            flex flex-row border-[0.1rem] px-[2rem]"
+                            onClick={() => {setShowModal(!showModal)}}>
                 {candidate.getName + ' ' + candidate.getRank}
             </div>
         )
@@ -62,6 +66,9 @@ const ResultsScreen = () => {
 
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
+            <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
+                hello
+            </Modal>
             <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
                 <div>
                     <h1>Here are some great candidates based on your needs:</h1>
