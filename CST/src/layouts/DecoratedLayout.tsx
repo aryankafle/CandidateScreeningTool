@@ -8,11 +8,11 @@ const DecoratedLayout = () => {
   return (
     <>
       <Root>
+        <div className="w-full absolute z-[-1]">
+          <Background />
+        </div>
         <Header />
         <div className="flex flex-col flex-grow">
-          <div className="w-full absolute z-[-1]">
-            <Background />
-          </div>
           <div className="flex flex-grow">
             <Outlet />
           </div>
