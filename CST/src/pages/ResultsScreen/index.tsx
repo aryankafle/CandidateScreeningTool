@@ -26,11 +26,11 @@ const ResultsScreen = () => {
     function getCandidateImage(candidate: Candidate){
         if (candidate.getRank === 'A'){
             return(
-                <img src={"../assets/a-rating.png"} alt="A"></img>
+                <img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>
             );
         }else{
             return(
-                <img src={"../assets/b-rating.png"} alt="B"></img>
+                <img className='flex items-center w-10' src={`/assets/b-rating.png`} alt="B png" width=''></img>
             );
         }
     }
@@ -52,9 +52,9 @@ const ResultsScreen = () => {
         return(
             <div className="border-black text-black 
                             dark:border-white dark:text-white 
-                            flex flex-row border-[0.1rem] px-[2rem]"
-                            onClick={() => {setShowModal(!showModal)}}>
-                {candidate.getName + ' ' + candidate.getRank}
+                            flex flex-row border-[0.1rem] px-[2rem] p-2">
+                    <>{candidate.getName}</>
+                    {getCandidateImage(candidate)}
             </div>
         )
     }
