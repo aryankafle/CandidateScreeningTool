@@ -1,4 +1,3 @@
-import ResultsComponent from "../../components/ResultsComponent";
 import React from "react";
 
 
@@ -46,13 +45,15 @@ const ResultsScreen = () => {
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
     
-    const ResultsCard = (candidate: Candidate) => {
-        <div className="flex flex-row box-content p">
-            
-        </div>
+    const ResultsCard = ({candidate} : {candidate:Candidate}) => {
+        return(
+            <div className="border-black text-black 
+                            dark:border-white dark:text-white 
+                            flex flex-row border-[0.1rem] px-[2rem]">
+                {candidate.getName + ' ' + candidate.getRank}
+            </div>
+        )
     }
-
-    const mappedCandidates = candidates.map((Candidate)=><li>{Candidate.getName + ' ' + Candidate.getRank}</li>)
     
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
@@ -61,9 +62,9 @@ const ResultsScreen = () => {
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
             </div>
-            <div className="flex">
+            <div className="flex justify-center">
                 <ol className="space-y-5">
-                    {mappedCandidates}
+                    {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
                 </ol>
             </div>
         </div>
