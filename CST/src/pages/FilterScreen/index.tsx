@@ -1,8 +1,11 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { FileContext } from "../../context/FileContext"
 import HeaderButtons from "../../components/FilterScreenHeaderButtons"
 import InputBox from "../../components/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
+import { closeCircleOutline } from "ionicons/icons";
+import { moveOutline } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
 
 
 
@@ -36,7 +39,12 @@ const FilterScreen = () => {
     const filterContext = useContext(FilterContext)
 
 
-
+    useEffect(() => {
+        filterContext.setSelectedFilters([
+            new DummyFilter(4),
+            new DummyFilter(5)
+        ])
+    }, [])
 
 
     const FilterLayerOptions = () => {
@@ -50,10 +58,12 @@ const FilterScreen = () => {
 
 
 
+
+
     const FilterLayerList = () => {
 
         return (
-            <div className="flex flex-grow flex-col">
+            <div className="flex flex-grow flex-col overflow-auto select-none">
                 <ol>
                     {filterContext.selectedFilters.map((filter) => (
                         <FilterLayerCard filter={filter}></FilterLayerCard>
@@ -68,8 +78,21 @@ const FilterScreen = () => {
     const FilterLayerCard = (props: {filter : Filter}) => {
 
         return (
-            <div>
-                
+            <div className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
+                            py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] flex-grow pl-[1.5rem] mb-[0.6rem] justify-between pr-[2.5rem]">
+                <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
+                    {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
+                </div>
+                <div className="flex flex-row gap-[0.7rem]">
+                    <IonIcon
+                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        onClick={() => {}}
+                    />
+                    <IonIcon 
+                        className="cursor-pointer text-[2rem]" icon={moveOutline}
+                        onClick={() => {}}
+                    />
+                </div>
             </div>
         )
     }
