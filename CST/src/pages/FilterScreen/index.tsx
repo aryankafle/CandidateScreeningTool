@@ -1,7 +1,30 @@
-import { ChangeEvent, useContext } from "react"
+import { useContext } from "react"
 import { FileContext } from "../../context/FileContext"
 import HeaderButtons from "../../components/FilterScreenHeaderButtons"
 import InputBox from "../../components/InputBox"
+import { FilterContext, Filter } from "../../context/FilterContext";
+
+
+
+
+
+class KeywordBiasFilter extends Filter {
+    
+    constructor(keyword : string) {
+        super("Keyword Bias", `Keyword Bias: ${keyword}`)
+    }
+
+}
+
+
+
+class DummyFilter extends Filter {
+
+    constructor(quantity : number) {
+        super("Work Experience", "Years of Work Experience", quantity)
+    }
+
+}
 
 
 
@@ -10,6 +33,7 @@ import InputBox from "../../components/InputBox"
 const FilterScreen = () => {
 
     const fileContext = useContext(FileContext)
+    const filterContext = useContext(FilterContext)
 
 
 
@@ -18,7 +42,7 @@ const FilterScreen = () => {
     const FilterLayerOptions = () => {
 
         return (
-            <div>
+            <div className="flex-grow flex flex-col">
                 filter options
             </div>
         )
@@ -29,30 +53,58 @@ const FilterScreen = () => {
     const FilterLayerList = () => {
 
         return (
-            <div>
-                filter list
+            <div className="flex flex-grow flex-col">
+                <ol>
+                    {filterContext.selectedFilters.map((filter) => (
+                        <FilterLayerCard filter={filter}></FilterLayerCard>
+                    ))}
+                </ol>
             </div>
         )
     }
+
+
+
+    const FilterLayerCard = (props: {filter : Filter}) => {
+
+        return (
+            <div>
+                
+            </div>
+        )
+    }
+
+
 
 
 
     const FilterLayerColumn = () => {
 
         return (
-            <div className="w-[40vw] max-w-[40rem] border-[5px]">
-                <div>Find your desired candidates.</div>
-                <div>Current Filter Layers:</div>
+            <div className="flex flex-col gap-[2rem] w-[40vw] max-w-[40rem]">
+                <div
+                    className="bg-[gray] dark:bg-blue text-[2.5rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                >
+                    Find your desired candidates.
+                </div>
+                <div
+                    className="bg-[gray] dark:bg-blue text-[1.8rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                >
+                    Current Filter Layers:
+                </div>
                 <FilterLayerList></FilterLayerList> 
             </div>
         )
     }
 
+
+
     const AddFiltersColumn = () => {
 
         return (
-            <div className="flex-grow border-[5px]">
-                <div>Filters</div>
+            <div className="bg-[gray] dark:bg-blue
+                            flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
+                <div className="self-center text-[5rem]">Filters</div>
                 <FilterLayerOptions></FilterLayerOptions>
                 <InputBox 
                         title={"Keyword Bias"} placeholder={"Full-stack Development"}
@@ -62,6 +114,8 @@ const FilterScreen = () => {
             </div>
         )
     }
+
+
 
 
 
