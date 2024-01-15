@@ -1,7 +1,6 @@
 import { QueryClient,  QueryClientProvider } from "react-query"
 import AppContextProvider from "./context"
 import Router from "./router"
-import { SortableContext as SortableContextProvider} from '@dnd-kit/sortable'
 
 const queryClient = new QueryClient();
 
