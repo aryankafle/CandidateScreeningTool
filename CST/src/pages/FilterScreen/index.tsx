@@ -1,9 +1,8 @@
-import { useRef, useState, useContext, useEffect } from "react"
-import { FileContext } from "../../context/FileContext"
+import { useRef, useContext, useEffect } from "react"
 import HeaderButtons from "../../components/FilterScreenHeaderButtons"
 import InputBox from "../../components/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
-import { closeCircleOutline, filter } from "ionicons/icons";
+import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 
@@ -100,7 +99,6 @@ const FilterScreen = () => {
 
 
 
-        
 
 
 
