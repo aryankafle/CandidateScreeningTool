@@ -21,7 +21,7 @@ const ResultsScreen = () => {
 
         get getRank(){
             return this.rank;
-        } 
+        }
     }
 
     function getCandidateImage(candidate: Candidate){
@@ -49,16 +49,28 @@ const ResultsScreen = () => {
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
 
-    const ResultsCard = ({candidate} : {candidate:Candidate}) => {
+
+    const ResultsCard = (props: {candidateIndex: number}) => {
         return(
-            <div className="border-black text-black 
-                            dark:border-white dark:text-white 
-                            flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
-                    <>{candidate.getName}</>
-                    {getCandidateImage(candidate)}
-            </div>
+          <div className="border-black text-black 
+                         dark:border-white dark:text-white 
+                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
+              {candidates[props.candidateIndex].getName}
+              {getCandidateImage(candidates[props.candidateIndex])}
+         </div>
         )
     }
+
+    // const ResultsCard = ({candidate} : {candidate:Candidate}) => {
+    //     return(
+    //         <div className="border-black text-black 
+    //                         dark:border-white dark:text-white 
+    //                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
+    //                 <>{candidate.getName}</>
+    //                 {getCandidateImage(candidate)}
+    //         </div>
+    //     )
+    // }
 
     const showIndividualCandidate = () => {
         console.log("button clicked")
@@ -77,7 +89,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex justify-center">
                 <ol className="space-y-5">
-                    {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
+                    {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
                 </ol>
             </div>
         </div>
