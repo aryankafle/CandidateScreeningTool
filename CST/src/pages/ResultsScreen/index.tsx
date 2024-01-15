@@ -53,7 +53,7 @@ const ResultsScreen = () => {
         return(
             <div className="border-black text-black 
                             dark:border-white dark:text-white 
-                            flex flex-row border-[0.1rem] px-[2rem] p-2">
+                            flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
                     <>{candidate.getName}</>
                     {getCandidateImage(candidate)}
             </div>
