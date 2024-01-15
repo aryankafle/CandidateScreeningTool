@@ -14,6 +14,10 @@ export abstract class Filter {
         this.description = description
         this.quantity = quantity
     }
+    
+    toString() {
+        return `${this.name}: ${this.quantity} ${this.description}`
+    }
 }
 
 
