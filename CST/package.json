@@ -5,6 +5,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.14.1",
+    "@dnd-kit/core": "^6.1.0",
     "@ionic/react": "^7.6.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -18,7 +19,6 @@
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
-    "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-promise-tracker": "^2.1.1",
     "react-query": "^3.39.3",
