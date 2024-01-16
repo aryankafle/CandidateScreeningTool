@@ -73,8 +73,8 @@ const ViewSavedPacksScreen = () => {
 
 
     return(
-       <div className="dark:bg-blue bg-white justify-center
-                        w-screen flex flex-col">
+       <div className=" dark:bg-blue bg-white justify-center
+                        flex flex-grow flex-col">
             
             <form onSubmit = {handleSubmit}>
                 <div className="flex justify-center p-[0.9rem]">
