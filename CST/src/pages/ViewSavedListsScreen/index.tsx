@@ -1,6 +1,6 @@
 import {useState } from "react";
 import Input from '../../components/TextBox'
-//import { PackContext } from "../../context/PackContext";
+import { PackContext } from "../../context/PackContext";
 let nextId = 0;
 
 const ViewSavedPacksScreen = () => {
@@ -71,7 +71,7 @@ const ViewSavedPacksScreen = () => {
     }
       
 
-    
+
     return(
        <div className="dark:bg-blue bg-white justify-center
                         w-screen flex flex-col">
