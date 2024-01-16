@@ -29,9 +29,13 @@ function Router() {
             <Route element={<DecoratedLayout />}>
                 <Route  path="/filter"
                         element={
-                            <div className="w-screen flex flex-col min-h-[20rem] overflow-auto">
-                                <HeaderButtons />
-                                <FilterScreen />
+                            <div className="h-full w-full flex flex-col overflow-clip">
+                                <div className="flex flex-col flex-shrink">
+                                    <HeaderButtons />
+                                </div>
+                                <div className="flex flex-col flex-grow overflow-clip">
+                                    <FilterScreen />
+                                </div>
                             </div>
                         }
                 />
