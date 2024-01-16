@@ -96,15 +96,26 @@ const ViewSavedPacksScreen = () => {
         //<div>
        <div className="dark:bg-blue bg-white justify-center
                         w-screen flex flex-col">
+            
             <form onSubmit = {handleSubmit}>
-                <Input
-                    onChange={onChange}
-                    name="name"
-                    placeholder="Enter your name"
-                    value={nameInput}
-                    //onkeypress= "handleEnterKey(event)"
-                />    
-                <button type="submit">Submit</button> 
+                <div className="flex justify-center p-[0.9rem]">
+                    <Input
+                        onChange={onChange}
+                        name="name"
+                        placeholder="Enter Link"
+                        value={nameInput}/>  
+                </div> 
+                <div className="flex justify-center">
+                    <button className="dark:border-white dark:text-white
+                                    border-black text-black
+                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
+                    type="submit">
+                        <div> 
+                            Submit Link
+                        </div>
+                        
+                    </button> 
+                </div>
             </form >
             <div className="flex flex-grow flex-col mt-[1.5rem]">
                 <ol className="border-black self-center flex-grow
@@ -113,44 +124,6 @@ const ViewSavedPacksScreen = () => {
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
                 </ol>
             </div>
-            {/* <button onClick = {() => {
-                setArtists([ ...artists, {id: nextId++, name :name}]);
-                
-            
-            }}> Add </button>
-            <ul> */}
-            
-       
-            
-            {/* <div className="flex justify-center">
-            <button className="dark:border-white dark:text-white
-                                border-black text-black
-                                border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                onClick={handleUploadClick} >
-                <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline}></IonIcon>
-                <div>
-                    Upload New Packs
-                </div>
-            </button>
-        </div> */}
-            {/* <div className="flex flex-grow flex-col mt-[1.5rem]">
-                <ol className="border-black self-center flex-grow
-                                dark:border-white
-                                border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
-                    {uploadedPacks.map((pack : string, index : number) => <li key={index}><ListCard pack={pack}></ListCard></li>)}
-                </ol>
-                {
-                selectedPacks.length > 0 ?
-                    <>
-                    <div className="pt-[0.2rem] self-center cursor-pointer select-none" onClick={() => { setSelectedPacks([]) } }>
-                                Clear Selection
-                    </div>
-                    </>
-                :
-                    <></>
-                }
-                
-            </div> */}
         </div>
 
     )
