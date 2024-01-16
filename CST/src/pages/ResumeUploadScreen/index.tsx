@@ -269,7 +269,7 @@ const ResumeUploadScreen = () => {
 
     return (
         <div className="dark:bg-blue bg-white justify-center
-                        flex w-screen flex-col">
+                        flex flex-col flex-grow">
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                 <ViewFilePopup onXClicked={()=>{setShowModal(false)}} uploadedFiles={fileContext.uploadedFiles} currentlySelectedIndex={currentlySelectedIndex}></ViewFilePopup>
             </Modal>
@@ -283,10 +283,10 @@ const ResumeUploadScreen = () => {
                     <input accept=".doc,.docx,.pdf,.png,.jpg" hidden ref={hiddenFileInput} type="file" multiple onChange={(event) => {handleFileUpload(event)}}/>
                 </Button>
             </div>
-            <div className="flex flex-grow flex-col mt-[1.5rem] overflow-x-auto">
+            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
                 <ol className=" border-black self-center flex-grow
                                 dark:border-white
-                                border-[0.1rem] max-h-[80vh] min-h-[8rem] overflow-y-scroll min-w-[35rem] w-[60vw]">
+                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
                     {fileSelections.map((_selectableFile : FileSelection, index : number) => <li key={index}><FileCard fileIndex={index}></FileCard></li>)}
                 </ol>
                 <div className="h-[5rem]
