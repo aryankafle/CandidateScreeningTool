@@ -5,6 +5,7 @@ import ResultsDescriptionPopup from "../../components/ResultDescriptionPopup";
 
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
+    const [selectedResult, setSelectedResult] = useState(0);
 
     class Candidate
     {
@@ -54,7 +55,7 @@ const ResultsScreen = () => {
         return(
           <div className="border-black text-black 
                          dark:border-white dark:text-white 
-                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
+                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal); setSelectedResult(props.candidateIndex)}}>
               {candidates[props.candidateIndex].getName}
               {getCandidateImage(candidates[props.candidateIndex])}
          </div>
