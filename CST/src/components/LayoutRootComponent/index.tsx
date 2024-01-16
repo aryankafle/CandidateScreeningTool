@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 const Root = (props: {children : ReactNode}) => {
   return (
-    <div className="w-screen h-screen flex flex-col justify-between overflow-auto">
+    <div className="w-screen h-screen flex flex-col overflow-auto">
        {props.children}
     </div>
   )
