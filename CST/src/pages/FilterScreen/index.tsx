@@ -249,12 +249,9 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="w-screen flex flex-col min-h-[20rem] overflow-auto">
-            <HeaderButtons />
-            <div className="justify-between gap-[1rem] flex-grow flex flex-row">
-                <FilterLayerColumn />
-                <AddFiltersColumn />
-            </div>
+        <div className="justify-between gap-[1rem] flex-grow flex flex-row">
+            <FilterLayerColumn />
+            <AddFiltersColumn />
         </div>
     )
 

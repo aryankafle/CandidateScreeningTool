@@ -16,6 +16,7 @@ import ResultsScreen from "../pages/ResultsScreen"
 import BaseLayout from "../layouts/BaseLayout"
 import DecoratedLayout from "../layouts/DecoratedLayout";
 import HomeLayout from "../layouts/HomeLayout";
+import HeaderButtons from "../components/FilterScreenHeaderButtons";
 
 
 
@@ -26,7 +27,14 @@ function Router() {
         <BrowserRouter>
             <Routes>
             <Route element={<DecoratedLayout />}>
-                <Route path="/filter" element={<FilterScreen />} />
+                <Route  path="/filter"
+                        element={
+                            <div className="w-screen flex flex-col min-h-[20rem] overflow-auto">
+                                <HeaderButtons />
+                                <FilterScreen />
+                            </div>
+                        }
+                />
                 <Route path="/results" element={<ResultsScreen />} />
             </Route>
             <Route element={<BaseLayout />}>
