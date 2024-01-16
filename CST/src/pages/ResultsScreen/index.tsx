@@ -76,9 +76,7 @@ const ResultsScreen = () => {
 
             </Modal>
             <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
-                <div>
-                    <h1>Here are some great candidates based on your needs:</h1>
-                </div>
+                <h1>Here are some great candidates based on your needs:</h1>
             </div>
             <div className="flex justify-center">
                 <ol className="space-y-5">
