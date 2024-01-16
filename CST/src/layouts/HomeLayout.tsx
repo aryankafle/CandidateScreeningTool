@@ -8,8 +8,10 @@ const HomeLayout = () => {
     return (
         <Root>
             <Header />
-            <NavBar />
-            <div className="flex flex-grow">
+            <div className="flex flex-col flex-shrink">
+                <NavBar />
+            </div>
+            <div className="flex flex-col flex-grow overflow-auto">
                 <Outlet />
             </div>
             <Footer />
