@@ -61,17 +61,6 @@ const ResultsScreen = () => {
         )
     }
 
-    // const ResultsCard = ({candidate} : {candidate:Candidate}) => {
-    //     return(
-    //         <div className="border-black text-black 
-    //                         dark:border-white dark:text-white 
-    //                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal)}}>
-    //                 <>{candidate.getName}</>
-    //                 {getCandidateImage(candidate)}
-    //         </div>
-    //     )
-    // }
-
     const showIndividualCandidate = () => {
         console.log("button clicked")
     }
