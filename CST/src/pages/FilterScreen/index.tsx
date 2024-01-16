@@ -91,7 +91,7 @@ const FilterScreen = () => {
     const FilterLayerList = () => {
 
         return (
-            <div className="flex flex-col select-none h-[51vh]">
+            <div className="flex flex-col select-none h-[50vh]">
                 <ol className="flex flex-col overflow-auto">
                     {filterContext.selectedFilters.map((filter, index) => (
                         <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
