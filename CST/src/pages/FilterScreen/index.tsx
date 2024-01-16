@@ -91,8 +91,8 @@ const FilterScreen = () => {
     const FilterLayerList = () => {
 
         return (
-            <div className="flex flex-grow flex-col overflow-auto select-none">
-                <ol>
+            <div className="flex flex-col select-none h-[51vh]">
+                <ol className="flex flex-col overflow-auto">
                     {filterContext.selectedFilters.map((filter, index) => (
                         <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
                     ))}
@@ -182,14 +182,14 @@ const FilterScreen = () => {
     const FilterLayerColumn = () => {
 
         return (
-            <div className="flex flex-col gap-[2rem] w-[40vw] max-w-[40rem]">
+            <div className="flex flex-col h-full gap-[1rem] min-w-[15rem] max-w-[30rem] w-[45vw]">
                 <div
-                    className="bg-[gray] dark:bg-blue text-[2.5rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                    className="flex flex-grow flex-col justify-center bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
                 >
                     Find your desired candidates.
                 </div>
                 <div
-                    className="bg-[gray] dark:bg-blue text-[1.8rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                    className="bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
                 >
                     Current Filter Layers:
                 </div>
