@@ -91,13 +91,14 @@ const FilterScreen = () => {
     const FilterLayerList = () => {
 
         return (
-            <div className="flex flex-col select-none h-[50vh]">
-                <ol className="flex flex-col overflow-auto">
+            <div className="relative flex h-full mr-[2rem]">
+                <ol className="flex flex-grow flex-col">
                     {filterContext.selectedFilters.map((filter, index) => (
                         <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
                     ))}
                 </ol>
             </div>
+            
         )
     }
 
@@ -151,27 +152,30 @@ const FilterScreen = () => {
 
 
         return (
-            <div draggable className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
-                            py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] flex-grow pl-[1.5rem] mb-[0.6rem] justify-between pr-[2.5rem]">
-                <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
-                    {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                </div>
-                <div className="flex flex-row gap-[0.7rem]">
-                    <IonIcon
-                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                        onClick={handleXClicked}
-                    />
-                    <IonIcon
-                        draggable
-                        onDragStart={handleDragStart}
-                        onDragEnter={handleDragEnter}
-                        onDragEnd={handleDragEnd}
-                        onDragOver={handleDragOver}
-                        className="cursor-pointer text-[2rem]" icon={moveOutline}
-                        onClick={() => {}}
-                    />
+            <div className="relative">
+                <div draggable className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[0.6rem] justify-between pr-[2.5rem]">
+                    <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
+                        {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
+                    </div>
+                    <div className="flex flex-row gap-[0.7rem]">
+                        <IonIcon
+                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                            onClick={handleXClicked}
+                        />
+                        <IonIcon
+                            draggable
+                            onDragStart={handleDragStart}
+                            onDragEnter={handleDragEnter}
+                            onDragEnd={handleDragEnd}
+                            onDragOver={handleDragOver}
+                            className="cursor-pointer text-[2rem]" icon={moveOutline}
+                            onClick={() => {}}
+                        />
+                    </div>
                 </div>
             </div>
+
         )
     }
 
@@ -182,18 +186,23 @@ const FilterScreen = () => {
     const FilterLayerColumn = () => {
 
         return (
-            <div className="flex flex-col h-full gap-[1rem] min-w-[15rem] max-w-[30rem] w-[45vw]">
+            <div className="flex flex-col flex-grow gap-[1rem] min-w-[15rem] max-w-[30rem] w-[45vw]">
                 <div
-                    className="flex flex-grow flex-col justify-center bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Find your desired candidates.
                 </div>
                 <div
-                    className="bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Current Filter Layers:
                 </div>
-                <FilterLayerList></FilterLayerList> 
+                <div className="relative flex flex-grow overflow-clip">
+                    <div className="w-full h-full overflow-y-auto overflow-x-clip">
+                        <FilterLayerList></FilterLayerList> 
+                        <div className="select-none absolute bottom-0 z-[10] w-full h-[10%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
+                    </div>
+                </div>
             </div>
         )
     }
@@ -249,7 +258,7 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="justify-between gap-[1rem] flex-grow flex flex-row">
+        <div className="flex h-full flex-row space-x-[2rem]">
             <FilterLayerColumn />
             <AddFiltersColumn />
         </div>
