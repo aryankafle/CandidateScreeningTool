@@ -70,7 +70,7 @@ const ResultsScreen = () => {
         <div className="dark:bg-blue bg-white w-screen text-2xl">
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                 <>
-                <ResultsDescriptionPopup selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+                <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
                 
                 </>
 
