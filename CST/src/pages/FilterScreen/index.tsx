@@ -166,7 +166,7 @@ const FilterScreen = () => {
     const FilterLayerColumn = () => {
 
         return (
-            <div className="flex flex-col gap-[2rem] w-[40vw] max-w-[40rem]">
+            <div className="flex flex-col gap-[1rem] min-w-[17rem] w-[40vw]">
                 <div
                     className="bg-[gray] dark:bg-blue text-[2.5rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-y-clip overflow-x-auto"
                 >
