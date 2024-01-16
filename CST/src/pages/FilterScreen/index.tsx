@@ -1,10 +1,11 @@
-import { useRef, useContext, useEffect } from "react"
+import { useState, useRef, useContext, useEffect } from "react"
 import HeaderButtons from "../../components/FilterScreenHeaderButtons"
 import InputBox from "../../components/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
+import Button from "../../components/ImprovedButtonComponent";
 
 
 
@@ -23,7 +24,13 @@ class KeywordBiasFilter extends Filter {
 class DummyFilter extends Filter {
 
     constructor(quantity : number) {
-        super("Work Experience", "Years of Work Experience", quantity)
+        if(quantity !== 0) {
+            super("Work Experience", "Years of Work Experience", quantity)
+        }
+
+        else {
+            throw new RangeError("Quantity must be a positive integer.")
+        }
     }
 
 }
@@ -63,7 +70,16 @@ const FilterScreen = () => {
 
         return (
             <div className="flex-grow flex flex-col">
-                filter options
+                <Button
+                    className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                    onClick={
+                        () => {
+                            filterContext.setSelectedFilters([...filterContext.selectedFilters, new DummyFilter(Math.floor(Math.random() * 9) + 1)])
+                        }
+                    }
+                >
+                    Click to add new filter
+                </Button>
             </div>
         )
     }
@@ -186,6 +202,18 @@ const FilterScreen = () => {
 
     const AddFiltersColumn = () => {
 
+        const [keywordBias, setKeywordBias] = useState("")
+
+        function checkIfValidKeyword(str : string) {
+
+            if(str) {
+                return true
+            }
+
+            return false
+
+        }
+
         return (
             <div className="bg-[gray] dark:bg-blue
                             flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
@@ -193,8 +221,24 @@ const FilterScreen = () => {
                 <FilterLayerOptions></FilterLayerOptions>
                 <InputBox 
                         title={"Keyword Bias"} placeholder={"Full-stack Development"}
-                        onChange={() => {}}
-                        errorFunction={(string) => {return ""}}
+                        onSubmit={
+                            (event) => {
+                                if(checkIfValidKeyword(keywordBias)) {
+                                    const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
+
+                                    if(!filterContext.selectedFilters.some((filter) => filter.equals(keywordFilter))) {
+                                        filterContext.setSelectedFilters([...filterContext.selectedFilters, keywordFilter])
+                                    }
+                                }
+                            }
+                        }
+                        onChange={
+                            (event) => {
+                                setKeywordBias(event.target.value)
+                            }
+                        }
+                        errorFunction={(string) => {return ""}
+                    }
                 />
             </div>
         )

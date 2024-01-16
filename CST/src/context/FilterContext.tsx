@@ -15,8 +15,18 @@ export abstract class Filter {
         this.quantity = quantity
     }
     
-    toString() {
+    public toString() {
         return `${this.name}: ${this.quantity} ${this.description}`
+    }
+
+    public equals(obj: Object) {
+        const filter = obj as Filter
+
+        if(filter) {
+            return filter.name === this.name && filter.description === this.description && filter.quantity === this.quantity
+        }
+
+        return false
     }
 }
 

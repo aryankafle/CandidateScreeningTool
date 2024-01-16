@@ -1,4 +1,5 @@
 import React from "react";
+import _ from 'lodash'
 
 
 
@@ -8,7 +9,8 @@ type NavButtonProps = {
     title : string
     placeholder : string
     errorFunction? : (val : string) => string
-    onChange : (e : React.ChangeEvent<HTMLInputElement>) => void
+    onChange? : (e : React.ChangeEvent<HTMLInputElement>) => void
+    onSubmit? : (e : React.FormEvent<HTMLFormElement>) => void
 }
 
 
@@ -17,6 +19,8 @@ type NavButtonState = {
     errorFunction? : (val : string) => string
     errorMessage? : string
     currentInput : string
+    onChange? : (e : React.ChangeEvent<HTMLInputElement>) => void
+    onSubmit? : (e : React.FormEvent<HTMLFormElement>) => void
 }
 
 
@@ -28,13 +32,19 @@ class InputBox extends React.Component<NavButtonProps> {
         errorFunction: this.props.errorFunction,
         errorMessage: "",
         currentInput: "",
+        onChange: this.props.onChange,
+        onSubmit: this.props.onSubmit
     }
 
     
 
     componentDidUpdate(prevProps : NavButtonProps) {
-        if(prevProps.errorFunction !== this.props.errorFunction) {
-          this.setState({errorFunction: this.props.errorFunction});
+        if(!_.isEqual(prevProps, this.props)) {
+            this.setState({
+                errorFunction: this.props.errorFunction,
+                onChange: this.props.onChange,
+                onSubmit: this.props.onSubmit
+            });
         }
     }
 
@@ -53,6 +63,10 @@ class InputBox extends React.Component<NavButtonProps> {
                             currentInput: this.state.currentInput
                         })
                     }
+
+                    if(this.state.onSubmit) {
+                        this.state.onSubmit(event);
+                    }
                 }
             }>
                 <div className="relative h-[4rem] min-w-[200px]">
@@ -70,7 +84,10 @@ class InputBox extends React.Component<NavButtonProps> {
                                 errorFunction: this.state.errorFunction,
                                 currentInput: event.target.value
                             })
-                            this.props.onChange(event)
+
+                            if(this.state.onChange) {
+                                this.state.onChange(event)
+                            }
                         }}
                         className="text-[1rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-8 pb-0 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" />
                     <span className="text-red">{this.state.errorMessage}</span>
