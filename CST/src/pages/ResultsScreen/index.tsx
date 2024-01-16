@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from '../../components/Modal';
+import ResultsDescriptionPopup from "../../components/ResultDescriptionPopup";
 
 
 const ResultsScreen = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedResult, setSelectedResult] = useState(0);
+
     class Candidate
     {
         name: string;
@@ -17,17 +22,17 @@ const ResultsScreen = () => {
 
         get getRank(){
             return this.rank;
-        } 
+        }
     }
 
     function getCandidateImage(candidate: Candidate){
         if (candidate.getRank === 'A'){
             return(
-                <img src={"/assets/a-rating"} alt="A"></img>
+                <img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>
             );
         }else{
             return(
-                <img src={"/assets/b-rating"} alt="B"></img>
+                <img className='flex items-center w-10' src={`/assets/b-rating.png`} alt="B png" width=''></img>
             );
         }
     }
@@ -44,19 +49,29 @@ const ResultsScreen = () => {
 
     var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
     generateCandidates();
-    
-    const ResultsCard = ({candidate} : {candidate:Candidate}) => {
+
+
+    const ResultsCard = (props: {candidateIndex: number}) => {
         return(
-            <div className="border-black text-black 
-                            dark:border-white dark:text-white 
-                            flex flex-row border-[0.1rem] px-[2rem]">
-                {candidate.getName + ' ' + candidate.getRank}
-            </div>
+          <div className="border-black text-black 
+                         dark:border-white dark:text-white 
+                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal); setSelectedResult(props.candidateIndex)}}>
+              {candidates[props.candidateIndex].getName}
+              {getCandidateImage(candidates[props.candidateIndex])}
+         </div>
         )
     }
-    
+
+    const showIndividualCandidate = () => {
+        console.log("button clicked")
+    }
+
+
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
+            <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
+                <ResultsDescriptionPopup selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+            </Modal>
             <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
                 <div>
                     <h1>Here are some great candidates based on your needs:</h1>
@@ -64,7 +79,7 @@ const ResultsScreen = () => {
             </div>
             <div className="flex justify-center">
                 <ol className="space-y-5">
-                    {candidates.map((Candidate)=><li><ResultsCard candidate={Candidate}></ResultsCard></li>)}
+                    {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
                 </ol>
             </div>
         </div>
