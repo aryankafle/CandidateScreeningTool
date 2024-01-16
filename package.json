@@ -13,5 +13,8 @@
     "server-install": "cd server && npm install",
     "CST-install": "cd CST && npm install",
     "full-install": "concurrently \"npm run server-install\" \"npm run CST-install\""
+  },
+  "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.8"
   }
 }
