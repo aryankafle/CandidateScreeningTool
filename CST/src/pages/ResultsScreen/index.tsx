@@ -67,7 +67,8 @@ const ResultsScreen = () => {
     }
 
     return(
-        <div className="dark:bg-blue bg-white w-screen text-2xl">
+        <div className="dark:bg-blue bg-white
+                        text-2xl flex flex-col flex-grow">
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                 <>
                 <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
@@ -75,7 +76,7 @@ const ResultsScreen = () => {
                 </>
 
             </Modal>
-            <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
+            <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                 <h1>Here are some great candidates based on your needs:</h1>
             </div>
             <div className="flex justify-center">
