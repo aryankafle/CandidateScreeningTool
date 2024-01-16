@@ -6,7 +6,10 @@ import ResultsDescriptionPopup from "../../components/ResultDescriptionPopup";
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedResult, setSelectedResult] = useState(0);
-
+    
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    };
     class Candidate
     {
         name: string;
@@ -55,22 +58,22 @@ const ResultsScreen = () => {
         return(
           <div className="border-black text-black 
                          dark:border-white dark:text-white 
-                         flex flex-row border-[0.1rem] px-[2rem] p-2" onClick={() => { setShowModal(!showModal); setSelectedResult(props.candidateIndex)}}>
+                         flex flex-row border-[0.1rem] px-[2rem] p-2" 
+                onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
               {candidates[props.candidateIndex].getName}
               {getCandidateImage(candidates[props.candidateIndex])}
          </div>
         )
     }
 
-    const showIndividualCandidate = () => {
-        console.log("button clicked")
-    }
-
-
     return(
         <div className="dark:bg-blue bg-white w-screen text-2xl">
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                <ResultsDescriptionPopup selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+                <>
+                <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+                
+                </>
+
             </Modal>
             <div className="my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full flex basis-1/2 place-content-center">
                 <div>
