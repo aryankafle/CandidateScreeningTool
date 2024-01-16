@@ -7,9 +7,9 @@ import HomeRoutes from "./homeRouter";
 import AuthRoutes from "./authRouter";
 
 import FilterScreen from "../pages/FilterScreen"
-import ResultsScreen from "./resultsRouter"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
+import ResultsScreen from "../pages/ResultsScreen"
 
 
 
@@ -32,7 +32,7 @@ function Router() {
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
                 <Route path="/login" element={<AuthRoutes />} />
-            ` <Route path="/test" element={<TestScreen />} />
+            `   <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
             <Route element={<HomeLayout />}>
