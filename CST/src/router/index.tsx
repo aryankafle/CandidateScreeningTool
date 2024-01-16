@@ -6,6 +6,8 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 import HomeRoutes from "./HomeRouter";
 import AuthRoutes from "./AuthRouter";
 
+
+
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
@@ -23,6 +25,7 @@ import HeaderButtons from "../components/FilterScreenHeaderButtons";
 
 
 function Router() {
+
     return (
         <BrowserRouter>
             <Routes>

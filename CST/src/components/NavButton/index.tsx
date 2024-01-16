@@ -14,7 +14,6 @@ type NavButtonProps = {
 
 
 
-
 const NavButton = (props: NavButtonProps) => {
 
     const navigate = useNavigate()

@@ -6,39 +6,43 @@ import _ from 'lodash'
 
 
 type NavButtonProps = {
+
     title : string
     placeholder : string
     errorFunction? : (val : string) => string
     onChange? : (e : React.ChangeEvent<HTMLInputElement>) => void
     onSubmit? : (e : React.FormEvent<HTMLFormElement>) => void
+
 }
 
-
-
 type NavButtonState = {
+
     errorFunction? : (val : string) => string
     errorMessage? : string
     currentInput : string
     onChange? : (e : React.ChangeEvent<HTMLInputElement>) => void
     onSubmit? : (e : React.FormEvent<HTMLFormElement>) => void
-}
 
+}
 
 
 
 class InputBox extends React.Component<NavButtonProps> {
     
     public readonly state : NavButtonState = {
+
         errorFunction: this.props.errorFunction,
         errorMessage: "",
         currentInput: "",
         onChange: this.props.onChange,
         onSubmit: this.props.onSubmit
+
     }
 
     
 
     componentDidUpdate(prevProps : NavButtonProps) {
+
         if(!_.isEqual(prevProps, this.props)) {
             this.setState({
                 errorFunction: this.props.errorFunction,
@@ -46,6 +50,7 @@ class InputBox extends React.Component<NavButtonProps> {
                 onSubmit: this.props.onSubmit
             });
         }
+        
     }
 
     

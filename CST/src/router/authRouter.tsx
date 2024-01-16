@@ -6,4 +6,5 @@ const authRoutes = () => {
         </div>
     )
 }
+
 export default authRoutes

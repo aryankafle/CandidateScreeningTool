@@ -1,5 +1,4 @@
 import NavButton from "../NavButton"
-import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 
@@ -14,11 +13,8 @@ type BackButtonProps = {
 
 
 
+
 const BackButton = (props: BackButtonProps) => {
-
-    const navigate = useNavigate()
-
-
 
     return (
         <NavButton 

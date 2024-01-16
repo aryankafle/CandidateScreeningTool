@@ -5,13 +5,17 @@ import { ReactNode, createContext, useState } from "react"
 
 
 type FileContextType = {
+
     uploadedFiles: File[]
     setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>
+
 }
 
 const FileContextInitial = {
+
     uploadedFiles: [] as File[],
     setUploadedFiles: {} as React.Dispatch<React.SetStateAction<File[]>>,
+
 }
 
 

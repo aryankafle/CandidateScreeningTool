@@ -30,9 +30,6 @@ const HeaderButtons = () => {
             </div>
         </div>
     )
-
 }
-
-
 
 export default HeaderButtons

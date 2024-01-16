@@ -26,7 +26,6 @@ const AppContextProvider = (props: { children : ReactNode }) => {
             </FileContextProvider>
         </AppContext.Provider>
     )
-
 }
 
 export default AppContextProvider

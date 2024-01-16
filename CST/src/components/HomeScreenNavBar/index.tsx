@@ -3,19 +3,33 @@ import { useState } from "react"
 import Button from "../ImprovedButtonComponent"
 
 
+
+
+
 const NavBar = () => {
+
     const navigate = useNavigate()
     const [currentTab, setCurrentTab] = useState("resume-upload")
+
+
+
+
 
     function handleResumeUploadClick() {
         navigate("/home/resume-upload")
         setCurrentTab("resume-upload")
     }
 
+
+
     function handleSavedListsClick() {
         navigate("/home/saved-lists")
         setCurrentTab("saved-lists")
     }
+
+
+
+
 
     return (
         <div className="flex justify-between">
@@ -46,7 +60,6 @@ const NavBar = () => {
                 Saved Lists
             </Button>
         </div>
-        
     )
 }
 

@@ -4,6 +4,11 @@ import ResumeUpload from "../pages/ResumeUploadScreen"
 import PageNotFoundScreen from "../pages/PageNotFoundScreen"
 import ResultsScreen from "../pages/ResultsScreen"
 
+
+
+
+
+
 const HomeRoutes = () => {
     return (
         <>
@@ -18,4 +23,5 @@ const HomeRoutes = () => {
         
     )
 }
+
 export default HomeRoutes

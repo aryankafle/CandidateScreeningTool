@@ -4,6 +4,8 @@ type ResultDescriptionPopupProps = {
     onXClicked : () => void
 }
 
+
+
 const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({selectedResultName, onXClicked}) => {
     return(
         <div className="flex w-screen items-center justify-center">
@@ -11,8 +13,7 @@ const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({select
                 {selectedResultName}
                 <button className='' onClick={onXClicked}>CLOSE</button>
             </div>
-        </div>
-        
+        </div>  
     )
 }
 
