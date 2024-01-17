@@ -91,12 +91,14 @@ const FilterScreen = () => {
     const FilterLayerList = () => {
 
         return (
-            <div className="relative flex h-full mr-[2rem]">
+            <div className="relative flex flex-col h-full mr-[2rem]">
+                <div className="pb-[1.5rem]"/>
                 <ol className="flex flex-grow flex-col">
                     {filterContext.selectedFilters.map((filter, index) => (
                         <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
                     ))}
                 </ol>
+                <div className="pb-[3rem]"/>
             </div>
             
         )
@@ -186,21 +188,22 @@ const FilterScreen = () => {
     const FilterLayerColumn = () => {
 
         return (
-            <div className="flex flex-col gap-[1rem] min-w-[17rem] w-[40vw]">
+            <div className="flex flex-col min-w-[17rem] w-[40vw]">
                 <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[2rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Find your desired candidates.
                 </div>
                 <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Current Filter Layers:
                 </div>
                 <div className="relative flex flex-grow overflow-clip">
                     <div className="w-full h-full overflow-y-auto overflow-x-clip">
+                        <div className="select-none absolute top-0 z-[10] w-full h-[2%] bg-[linear-gradient(0deg,rgba(0,0,0,0)_0%,white_70%)]" />
                         <FilterLayerList></FilterLayerList> 
-                        <div className="select-none absolute bottom-0 z-[10] w-full h-[10%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
+                        <div className="select-none absolute bottom-0 z-[10] w-full h-[5%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
                     </div>
                 </div>
             </div>
