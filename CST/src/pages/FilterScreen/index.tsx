@@ -156,7 +156,7 @@ const FilterScreen = () => {
         return (
             <div className="relative">
                 <div draggable className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[0.6rem] justify-between pr-[2.5rem]">
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                     <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
                         {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
                     </div>
@@ -190,12 +190,12 @@ const FilterScreen = () => {
         return (
             <div className="flex flex-col min-w-[17rem] w-[40vw]">
                 <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[2rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Find your desired candidates.
                 </div>
                 <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
+                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
                 >
                     Current Filter Layers:
                 </div>
