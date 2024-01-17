@@ -3,6 +3,10 @@ import Footer from '../components/FooterComponent'
 import Header from '../components/HeaderComponent'
 import Root from '../components/LayoutRootComponent'
 
+
+
+
+
 const Layout = () => {
   return (
     <Root>

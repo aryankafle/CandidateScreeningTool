@@ -4,6 +4,10 @@ import Footer from '../components/FooterComponent'
 import NavBar from "../components/HomeScreenNavBar"
 import Root from "../components/LayoutRootComponent"
 
+
+
+
+
 const HomeLayout = () => {
     return (
         <Root>
