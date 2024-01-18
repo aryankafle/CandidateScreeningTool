@@ -75,7 +75,7 @@ const ResultsScreen = () => {
             <div className="flex justify-center">
                 <div className="text-2xl">
                     <h1 className="flex justify-center">List Name</h1>
-                    <input type="text" />
+                    <input type="text" className="bg-gray rounded-md"/>
                 </div>
             </div>
         )
@@ -100,8 +100,14 @@ const ResultsScreen = () => {
             </div>  
             <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
                 {showSidePanel ?
-                    <div className="flex justify-center">
-                        <SaveListInfo></SaveListInfo>
+                    <div className="flex flex-row justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>
+                        <div>
+                            <h1 className="flex justify-center">List Name</h1>
+                            <p>empty field if new list, defaults to previously set list name if saved list</p>
+                            <h1 className="flex justify-center">Description</h1>
+                            <p>description of list that either the user can input, or read from previous input</p>
+                        </div>
+                        
                     </div>
                 :
                     <div>
