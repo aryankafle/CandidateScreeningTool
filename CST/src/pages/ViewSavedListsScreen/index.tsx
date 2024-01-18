@@ -1,6 +1,7 @@
 import {useState } from "react";
 import Input from '../../components/TextBox'
 import { PackContext } from "../../context/PackContext";
+import {Link} from 'react-router-dom'
 let nextId = 0;
 
 const ViewSavedPacksScreen = () => {
@@ -34,7 +35,8 @@ const ViewSavedPacksScreen = () => {
     }
 
     function sendToLink(file : string) {
-        //YADA YADA do something with routing here to send link brrrrr
+        //setNameInput(file);
+        window.location.href = file;
     }
 
 
