@@ -14,8 +14,11 @@ const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({select
         <div className="flex w-screen items-center justify-center">
             <div className="flex justify-center bg-white w-3/4 rounded-lg text-2xl">
                 {selectedResultName}
-                <IonIcon className="cursor-pointer text-[2rem]" icon={closeCircleOutline}                     
-                onClick={onXClicked}/>
+                <div className="text-right">
+                    <IonIcon className="cursor-pointer text-[2rem] text-left hover:text-red" icon={closeCircleOutline}                     
+                    onClick={onXClicked}/>
+                </div>
+                
             </div>
         </div>  
     )
