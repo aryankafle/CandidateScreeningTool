@@ -9,16 +9,16 @@ const clientId = "29931420007-dp18uidt963gicfb6niv4maf74p26le9.apps.googleuserco
 
 const LoginScreen = () => {
 
-    useEffect(() => {
-        function start(){
-            gapi.client.init({
-                clientId: clientId,
-                scope: ""
-            })
-        }
+    // useEffect(() => {
+    //     function start(){
+    //         gapi.client.init({
+    //             clientId: clientId,
+    //             scope: ""
+    //         })
+    //     }
     
-    gapi.load ('client:auth2', start)
-    });
+    // gapi.load ('client:auth2', start)
+    // });
     return (
         <div>
             <LoginButton />
