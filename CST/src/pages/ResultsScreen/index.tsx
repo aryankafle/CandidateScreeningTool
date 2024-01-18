@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from '../../components/Modal';
 import ResultsDescriptionPopup from "../../components/ResultDescriptionPopup";
+import { bookmarkOutline } from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
 
 
 const ResultsScreen = () => {
@@ -80,6 +82,9 @@ const ResultsScreen = () => {
                 <ol className="space-y-5">
                     {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
                 </ol>
+            </div>
+            <div className="flex justify-end">
+                <IonIcon icon={bookmarkOutline}></IonIcon>
             </div>
         </div>
     );
