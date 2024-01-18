@@ -35,7 +35,6 @@ const ViewSavedPacksScreen = () => {
     }
 
     function sendToLink(file : string) {
-        //setNameInput(file);
         window.location.href = file;
     }
 

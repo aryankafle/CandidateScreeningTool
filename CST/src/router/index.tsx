@@ -20,7 +20,8 @@ import BaseLayout from "../layouts/BaseLayout"
 import DecoratedLayout from "../layouts/DecoratedLayout";
 import HomeLayout from "../layouts/HomeLayout";
 import HeaderButtons from "../components/FilterScreenHeaderButtons";
-
+//Keep in mind I rerouted the LoginScreen to the login page instead of Auth Router
+//we need to change this later
 
 
 
