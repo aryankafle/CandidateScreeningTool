@@ -84,7 +84,7 @@ const ResultsScreen = () => {
                 </ol>
             </div>
             <div className="flex justify-end">
-                <IonIcon icon={bookmarkOutline}></IonIcon>
+                <IonIcon className="bg-white p-3 mt-10" icon={bookmarkOutline}></IonIcon>
             </div>
         </div>
     );
