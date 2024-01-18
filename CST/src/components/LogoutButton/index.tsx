@@ -1,12 +1,10 @@
 import {googleLogout} from '@react-oauth/google'
 
 
-function Logout(){
+const Logout = () => {
     
       
-    return <button onClick={() => googleLogout()}>
-            Sign out with Google 🚀
-        </button>
+    googleLogout();
     
 }
 export default Logout

@@ -1,7 +1,6 @@
 import LoginButton from '../../components/LoginButton'
 import LogoutButton from '../../components/LogoutButton'
 const LoginScreen = () => {
-
     // useEffect(() => {
     //     function start(){
     //         gapi.client.init({
@@ -15,7 +14,10 @@ const LoginScreen = () => {
     return (
         <div>
             <LoginButton />
-            <LogoutButton />
+            <button 
+                onClick = {LogoutButton}>
+                    logout
+            </button>
         </div>
         
     )
