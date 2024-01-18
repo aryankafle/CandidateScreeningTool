@@ -70,7 +70,7 @@ const ResultsScreen = () => {
         )
     }
 
-    const SaveListInfo = (props: {candidateIndex: number}) => {
+    const SaveListInfo = () => {
         return (
             <div>
                 hello
