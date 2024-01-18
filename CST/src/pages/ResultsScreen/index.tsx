@@ -71,20 +71,23 @@ const ResultsScreen = () => {
 
     return (
         <div className="dark:bg-blue bg-white
-                        text-2xl flex flex-col flex-grow overflow-scroll" >
-            <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
-            </Modal>
-            <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
-                <h1>Here are some great candidates based on your needs:</h1>
+                        text-2xl flex flex-row 
+                        flex-grow overflow-scroll">
+            <div className="flex flex-col flex-grow overflow-scroll" >
+                <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
+                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+                </Modal>
+                <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
+                    <h1>Here are some great candidates based on your needs:</h1>
+                </div>
+                <div className="flex justify-center">
+                    <ol className="space-y-5">
+                        {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
+                    </ol>
+                </div>
             </div>
-            <div className="flex justify-center">
-                <ol className="space-y-5">
-                    {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
-                </ol>
-            </div>
-            <div className="flex justify-end">
-                <IonIcon className="bg-white p-3 mt-10" icon={bookmarkOutline}></IonIcon>
+            <div className="w-1/4 h-screen bg-white">
+                sidebar
             </div>
         </div>
     );

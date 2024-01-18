@@ -5,3 +5,5 @@ const SaveListSlidePanel = () => {
         </div>
     )
 }
+
+export default SaveListSlidePanel
