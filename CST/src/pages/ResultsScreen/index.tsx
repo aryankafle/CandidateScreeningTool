@@ -71,7 +71,7 @@ const ResultsScreen = () => {
 
     return (
         <div className="dark:bg-blue bg-white
-                        text-2xl flex flex-col flex-grow">
+                        text-2xl flex flex-col flex-grow overflow-scroll" >
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                 <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
             </Modal>
