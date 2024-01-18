@@ -70,6 +70,14 @@ const ResultsScreen = () => {
         )
     }
 
+    const SaveListInfo = (props: {candidateIndex: number}) => {
+        return (
+            <div>
+                hello
+            </div>
+        )
+    }
+
     return (
         <div className="dark:bg-blue bg-white
                         text-2xl flex flex-row 
