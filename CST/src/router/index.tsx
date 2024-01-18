@@ -4,7 +4,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 import HomeRoutes from "./HomeRouter";
-import AuthRoutes from "./AuthRouter";
+//import AuthRoutes from "./AuthRouter";
 
 
 
