@@ -72,8 +72,11 @@ const ResultsScreen = () => {
 
     const SaveListInfo = () => {
         return (
-            <div>
-                hello
+            <div className="flex justify-center">
+                <div className="text-2xl">
+                    <h1 className="flex justify-center">List Name</h1>
+                    <input type="text" />
+                </div>
             </div>
         )
     }
@@ -95,14 +98,14 @@ const ResultsScreen = () => {
                     </ol>
                 </div>
             </div>  
-            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`} onClick={()=>setShowSidePanel(!showSidePanel)}>
+            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
                 {showSidePanel ?
-                    <div>
-                        hello
+                    <div className="flex justify-center">
+                        <SaveListInfo></SaveListInfo>
                     </div>
                 :
                     <div>
-                        goodbye
+                        <IonIcon className="cursor-pointer text-[3rem] p-5" icon={bookmarkOutline} onClick={()=>setShowSidePanel(!showSidePanel)}></IonIcon>
                     </div>
                 }
             </div>
