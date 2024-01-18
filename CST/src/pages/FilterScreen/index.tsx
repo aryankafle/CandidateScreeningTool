@@ -1,11 +1,15 @@
-import { useState, useRef, useContext, useEffect } from "react"
-import HeaderButtons from "../../components/FilterScreenHeaderButtons"
+import { useState, useContext, useEffect } from "react"
 import InputBox from "../../components/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/ImprovedButtonComponent";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities"
+import { filter } from "lodash";
+import { createPortal } from "react-dom";
 
 
 
@@ -14,7 +18,7 @@ import Button from "../../components/ImprovedButtonComponent";
 class KeywordBiasFilter extends Filter {
     
     constructor(keyword : string) {
-        super("Keyword Bias", `Keyword Bias: ${keyword}`)
+        super(`Keyword Bias: ${keyword}`)
     }
 
 }
@@ -25,7 +29,7 @@ class DummyFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Work Experience", "Years of Work Experience", quantity)
+            super("Years of Work Experience", quantity)
         }
 
         else {
@@ -42,11 +46,6 @@ class DummyFilter extends Filter {
 const FilterScreen = () => {
 
     const filterContext = useContext(FilterContext)
-
-
-
-    const draggedFilter = useRef<number>(0)
-    const draggedOverFilter = useRef<number>(0)
 
 
 
@@ -68,18 +67,71 @@ const FilterScreen = () => {
 
     const FilterLayerOptions = () => {
 
+        const [keywordBias, setKeywordBias] = useState<string>("")
+
+
+
+        const isDuplicateFilter = (filter : Filter) => {
+            return filterContext.selectedFilters.some((filterObj) => filterObj.equals(filter))
+        } 
+
+        const isValidKeyword = (str : string) => {
+
+            if(str) {
+                return true
+            }
+
+            return false
+
+        }
+
+
+
         return (
-            <div className="flex-grow flex flex-col">
-                <Button
-                    className="flex flex-col flex-shrink w-fit border-[0.1rem]"
-                    onClick={
-                        () => {
-                            filterContext.setSelectedFilters([...filterContext.selectedFilters, new DummyFilter(Math.floor(Math.random() * 9) + 1)])
+            <div className="flex flex-col flex-grow">
+                <div className="flex-grow">
+                    <Button
+                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        onClick={
+                            () => {
+
+                                const dummyFilter : Filter = new DummyFilter(Math.floor(Math.random() * 9) + 1)
+
+                                console.log(dummyFilter)
+
+                                if(!isDuplicateFilter(dummyFilter)) {
+                                    filterContext.setSelectedFilters([...filterContext.selectedFilters, dummyFilter])    
+                                }
+
+                            }
                         }
-                    }
-                >
-                    Click to add new filter
-                </Button>
+                    >
+                        Click to add new filter
+                    </Button>
+                </div>
+                <div className="flex flex-col flex-shrink">
+                    <InputBox 
+                            title={"Keyword Bias"} placeholder={"Full-stack Development"}
+                            onSubmit={
+                                (event) => {
+                                    if(isValidKeyword(keywordBias)) {
+                                        const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
+
+                                        if(!isDuplicateFilter(keywordFilter)) {
+                                            filterContext.setSelectedFilters([...filterContext.selectedFilters, keywordFilter])
+                                        }
+                                    }
+                                }
+                            }
+                            onChange={
+                                (event) => {
+                                    setKeywordBias(event.target.value)
+                                }
+                            }
+                            errorFunction={(string) => {return ""}
+                        }
+                    />
+                </div>
             </div>
         )
     }
@@ -90,24 +142,107 @@ const FilterScreen = () => {
 
     const FilterLayerList = () => {
 
-        return (
-            <div className="relative flex flex-col h-full mr-[2rem]">
-                <div className="pb-[1.5rem]"/>
-                <ol className="flex flex-grow flex-col">
-                    {filterContext.selectedFilters.map((filter, index) => (
-                        <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
-                    ))}
-                </ol>
-                <div className="pb-[3rem]"/>
-            </div>
+        const [activeFilter, setActiveFilter] = useState<Filter>()
+
+        const sensors = useSensors(
+            useSensor(PointerSensor, {
+                activationConstraint: {
+                    distance: 3
+                }
+            })
+        )
+
+
+
+        function onDragStart(event : DragStartEvent) {
+            if(event.active.data.current?.type === "Column") {
+                setActiveFilter(event.active.data.current.filter)
+                return;
+            }
+            console.log(event)
+        }
+
+        function onDragEnd(event : DragEndEvent) {
+
+            const { active, over } = event
+
+            if(!over) return;
+
+            const activeFilterId = active.id
+            const overFilterId = over.id
+
+            if(activeFilterId !== overFilterId) {
+                filterContext.setSelectedFilters((filters) => {
+                    const activeFilterIndex = filters.findIndex((filter) => filter.id === activeFilterId)
+
+                    const overColumnIndex = filters.findIndex((filter) => filter.id === overFilterId)
+
+                    return arrayMove(filters, activeFilterIndex, overColumnIndex)
+                })
+            }
             
+        }
+
+
+
+
+
+        return (
+            <div 
+            className="w-full h-full overflow-y-auto overflow-x-clip"
+            >
+                <div className="select-none absolute top-0 z-[10] w-full h-[2%] bg-[linear-gradient(0deg,rgba(0,0,0,0)_0%,white_70%)]" />
+                <div className="flex flex-col h-full mr-[2rem]">
+                    <div className="pb-[1.5rem]"/>
+                    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors}>
+                        <SortableContext items={filterContext.selectedFilters}>
+                                <ol className="flex flex-grow flex-col">
+                                    {filterContext.selectedFilters.map((filter, index) => (
+                                        <FilterLayerCard key={filter.id} filter={filter}></FilterLayerCard>
+                                    ))}
+                                </ol>
+                        </SortableContext>
+                        {
+                            createPortal(
+                                (
+                                    <DragOverlay>
+                                        {activeFilter &&
+                                            <FilterLayerCard key={activeFilter.id} filter={activeFilter}></FilterLayerCard>
+                                        }
+                                    </DragOverlay>
+                                ),
+                                document.body
+                            )
+                        }
+                    </DndContext>
+                    <div className="pb-[3rem]"/>
+                </div>
+                <div className="select-none absolute bottom-0 z-[10] w-full h-[5%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
+            </div>
         )
     }
 
 
 
-    const FilterLayerCard = (props: {filter : Filter, index : number}) => {
+    const FilterLayerCard = (props: {key : UniqueIdentifier, filter : Filter}) => {
 
+        const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+            id: props.filter.id,
+            data: {
+                type: "Filter",
+                filter
+            }
+        })
+
+        const style = {
+            transition,
+            transform: CSS.Transform.toString(transform)
+        }
+
+
+
+
+        
         function handleXClicked() {
 
             const temp = [...filterContext.selectedFilters].filter((filter) => {return filter !== props.filter})
@@ -120,59 +255,26 @@ const FilterScreen = () => {
 
 
 
-
-        const handleDragStart : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            
-            draggedFilter.current = props.index
-
-        }
-
-        const handleDragEnter : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            
-            draggedOverFilter.current = props.index
-
-        }
-
-        const handleDragEnd : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-
-            const tempFilters = [...filterContext.selectedFilters]
-            const swappingFilter = tempFilters[draggedFilter.current]
-
-            tempFilters[draggedFilter.current] = tempFilters[draggedOverFilter.current]
-            tempFilters[draggedOverFilter.current] = swappingFilter
-
-            filterContext.setSelectedFilters(tempFilters)
-
-        }
-
-        const handleDragOver : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            event.preventDefault()
-        }
-
-
-
-
-
         return (
-            <div className="relative">
-                <div draggable className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
+            <div 
+                style={style}
+                ref={setNodeRef}
+            >
+                <div 
+                    className=" bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
                                 py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                     <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
                         {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
                     </div>
-                    <div className="flex flex-row gap-[0.7rem]">
+                    <div className="select-none flex flex-row gap-[0.7rem]">
                         <IonIcon
                             className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
                             onClick={handleXClicked}
                         />
                         <IonIcon
-                            draggable
-                            onDragStart={handleDragStart}
-                            onDragEnter={handleDragEnter}
-                            onDragEnd={handleDragEnd}
-                            onDragOver={handleDragOver}
                             className="cursor-pointer text-[2rem]" icon={moveOutline}
-                            onClick={() => {}}
+                            {...attributes}
+                            {...listeners}
                         />
                     </div>
                 </div>
@@ -200,11 +302,7 @@ const FilterScreen = () => {
                     Current Filter Layers:
                 </div>
                 <div className="relative flex flex-grow overflow-clip">
-                    <div className="w-full h-full overflow-y-auto overflow-x-clip">
-                        <div className="select-none absolute top-0 z-[10] w-full h-[2%] bg-[linear-gradient(0deg,rgba(0,0,0,0)_0%,white_70%)]" />
-                        <FilterLayerList></FilterLayerList> 
-                        <div className="select-none absolute bottom-0 z-[10] w-full h-[5%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
-                    </div>
+                    <FilterLayerList></FilterLayerList> 
                 </div>
             </div>
         )
@@ -214,44 +312,11 @@ const FilterScreen = () => {
 
     const AddFiltersColumn = () => {
 
-        const [keywordBias, setKeywordBias] = useState("")
-
-        function checkIfValidKeyword(str : string) {
-
-            if(str) {
-                return true
-            }
-
-            return false
-
-        }
-
         return (
             <div className="bg-[gray] dark:bg-blue
                             flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
                 <div className="self-center text-[5rem]">Filters</div>
                 <FilterLayerOptions></FilterLayerOptions>
-                <InputBox 
-                        title={"Keyword Bias"} placeholder={"Full-stack Development"}
-                        onSubmit={
-                            (event) => {
-                                if(checkIfValidKeyword(keywordBias)) {
-                                    const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
-
-                                    if(!filterContext.selectedFilters.some((filter) => filter.equals(keywordFilter))) {
-                                        filterContext.setSelectedFilters([...filterContext.selectedFilters, keywordFilter])
-                                    }
-                                }
-                            }
-                        }
-                        onChange={
-                            (event) => {
-                                setKeywordBias(event.target.value)
-                            }
-                        }
-                        errorFunction={(string) => {return ""}
-                    }
-                />
             </div>
         )
     }
