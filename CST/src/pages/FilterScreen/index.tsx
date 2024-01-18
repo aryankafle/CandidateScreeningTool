@@ -1,15 +1,15 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext, useMemo } from 'react';
 import InputBox from "../../components/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/ImprovedButtonComponent";
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core"
-import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities"
-import { filter } from "lodash";
 import { createPortal } from "react-dom";
+import React from 'react';
 
 
 
@@ -48,22 +48,16 @@ const FilterScreen = () => {
     const filterContext = useContext(FilterContext)
 
 
-
-
-
-    useEffect(() => {
-        filterContext.setSelectedFilters([
-            new DummyFilter(4),
-            new DummyFilter(5),
-            new DummyFilter(6),
-            new DummyFilter(8),
-            new DummyFilter(1)
-        ])
-    }, [])
-
-
-
     
+    const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
+
+    const [activeFilter, setActiveFilter] = useState<Filter>()
+
+    const filterIds = useMemo(() => filterList.map(filter => filter.id), [filterList])
+
+
+
+
 
     const FilterLayerOptions = () => {
 
@@ -72,7 +66,7 @@ const FilterScreen = () => {
 
 
         const isDuplicateFilter = (filter : Filter) => {
-            return filterContext.selectedFilters.some((filterObj) => filterObj.equals(filter))
+            return filterList.some((filterObj) => filterObj.equals(filter))
         } 
 
         const isValidKeyword = (str : string) => {
@@ -89,18 +83,18 @@ const FilterScreen = () => {
 
         return (
             <div className="flex flex-col flex-grow">
-                <div className="flex-grow">
+                <div className="flex-grow overflow-auto">
                     <Button
                         className="flex flex-col flex-shrink w-fit border-[0.1rem]"
                         onClick={
                             () => {
 
-                                const dummyFilter : Filter = new DummyFilter(Math.floor(Math.random() * 9) + 1)
+                                const dummyFilter : Filter = new DummyFilter(Math.floor(Math.random() * 99999999999) + 1)
 
-                                console.log(dummyFilter)
+                                console.log("Dumb Filter: ", dummyFilter)
 
                                 if(!isDuplicateFilter(dummyFilter)) {
-                                    filterContext.setSelectedFilters([...filterContext.selectedFilters, dummyFilter])    
+                                    setFilterList([...filterList, dummyFilter])    
                                 }
 
                             }
@@ -118,7 +112,7 @@ const FilterScreen = () => {
                                         const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
 
                                         if(!isDuplicateFilter(keywordFilter)) {
-                                            filterContext.setSelectedFilters([...filterContext.selectedFilters, keywordFilter])
+                                            setFilterList([...filterList, keywordFilter])
                                         }
                                     }
                                 }
@@ -142,8 +136,6 @@ const FilterScreen = () => {
 
     const FilterLayerList = () => {
 
-        const [activeFilter, setActiveFilter] = useState<Filter>()
-
         const sensors = useSensors(
             useSensor(PointerSensor, {
                 activationConstraint: {
@@ -154,12 +146,15 @@ const FilterScreen = () => {
 
 
 
+
+
         function onDragStart(event : DragStartEvent) {
+
             if(event.active.data.current?.type === "Column") {
                 setActiveFilter(event.active.data.current.filter)
                 return;
             }
-            console.log(event)
+
         }
 
         function onDragEnd(event : DragEndEvent) {
@@ -168,13 +163,14 @@ const FilterScreen = () => {
 
             if(!over) return;
 
+
+
             const activeFilterId = active.id
             const overFilterId = over.id
 
             if(activeFilterId !== overFilterId) {
-                filterContext.setSelectedFilters((filters) => {
+                setFilterList((filters) => {
                     const activeFilterIndex = filters.findIndex((filter) => filter.id === activeFilterId)
-
                     const overColumnIndex = filters.findIndex((filter) => filter.id === overFilterId)
 
                     return arrayMove(filters, activeFilterIndex, overColumnIndex)
@@ -189,16 +185,15 @@ const FilterScreen = () => {
 
         return (
             <div 
-            className="w-full h-full overflow-y-auto overflow-x-clip"
+            className="w-full h-full"
             >
-                <div className="select-none absolute top-0 z-[10] w-full h-[2%] bg-[linear-gradient(0deg,rgba(0,0,0,0)_0%,white_70%)]" />
                 <div className="flex flex-col h-full mr-[2rem]">
                     <div className="pb-[1.5rem]"/>
-                    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors}>
-                        <SortableContext items={filterContext.selectedFilters}>
+                    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors} autoScroll={false}>
+                        <SortableContext items={filterIds}>
                                 <ol className="flex flex-grow flex-col">
-                                    {filterContext.selectedFilters.map((filter, index) => (
-                                        <FilterLayerCard key={filter.id} filter={filter}></FilterLayerCard>
+                                    {filterList.map((filter) => (
+                                        <FilterLayerCard key={filter.id} filter={filter} />
                                     ))}
                                 </ol>
                         </SortableContext>
@@ -207,7 +202,7 @@ const FilterScreen = () => {
                                 (
                                     <DragOverlay>
                                         {activeFilter &&
-                                            <FilterLayerCard key={activeFilter.id} filter={activeFilter}></FilterLayerCard>
+                                            <FilterLayerCard key={activeFilter.id} filter={activeFilter} />
                                         }
                                     </DragOverlay>
                                 ),
@@ -217,20 +212,31 @@ const FilterScreen = () => {
                     </DndContext>
                     <div className="pb-[3rem]"/>
                 </div>
-                <div className="select-none absolute bottom-0 z-[10] w-full h-[5%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
             </div>
         )
     }
 
 
 
-    const FilterLayerCard = (props: {key : UniqueIdentifier, filter : Filter}) => {
+    const FilterLayerCard = (props: {filter : Filter}) => {
 
-        const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+        function handleXClicked() {
+
+            const temp = [...filterList].filter((filter) => {return filter !== props.filter})
+                                
+            setFilterList(temp)
+            
+        }
+
+
+
+
+
+        const { setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
             id: props.filter.id,
             data: {
                 type: "Filter",
-                filter
+                filter: props.filter
             }
         })
 
@@ -243,82 +249,65 @@ const FilterScreen = () => {
 
 
         
-        function handleXClicked() {
-
-            const temp = [...filterContext.selectedFilters].filter((filter) => {return filter !== props.filter})
-                                
-            filterContext.setSelectedFilters(temp)
-            
-        }
-
-
-
-
-
-        return (
-            <div 
-                style={style}
-                ref={setNodeRef}
-            >
+        if(isDragging) {
+            return (
                 <div 
-                    className=" bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                    <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
-                        {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
+                    style={style}
+                    ref={setNodeRef}
+                    >
+                    <div 
+                        className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
+                                    py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                        <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                            <h3 className=''>
+                                {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
+                            </h3>
+                        </div>
+                        <div className="flex flex-row gap-[0.7rem]">
+                            <IonIcon
+                                className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                                onClick={handleXClicked}
+                            />
+                            <IonIcon
+                                className="cursor-pointer text-[2rem]" icon={moveOutline}
+                                {...attributes}
+                                {...listeners}
+                            />
+                        </div>
                     </div>
-                    <div className="select-none flex flex-row gap-[0.7rem]">
-                        <IonIcon
-                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                            onClick={handleXClicked}
-                        />
-                        <IonIcon
-                            className="cursor-pointer text-[2rem]" icon={moveOutline}
-                            {...attributes}
-                            {...listeners}
-                        />
+                </div>
+            )
+        }
+        else {
+            return (
+                <div 
+                    style={style}
+                    ref={setNodeRef}
+                >
+                    <div 
+                        className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
+                                    py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                        <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                            <h3 className=''>
+                                {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
+                            </h3>
+                        </div>
+                        <div className="flex flex-row gap-[0.7rem]">
+                            <IonIcon
+                                className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                                onClick={handleXClicked}
+                            />
+                            <IonIcon
+                                className="cursor-pointer text-[2rem]" icon={moveOutline}
+                                {...attributes}
+                                {...listeners}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-
-        )
-    }
-
-
-
-
-
-    const FilterLayerColumn = () => {
-
-        return (
-            <div className="flex flex-col min-w-[17rem] w-[40vw]">
-                <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
-                >
-                    Find your desired candidates.
-                </div>
-                <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
-                >
-                    Current Filter Layers:
-                </div>
-                <div className="relative flex flex-grow overflow-clip">
-                    <FilterLayerList></FilterLayerList> 
-                </div>
-            </div>
-        )
-    }
-
-
-
-    const AddFiltersColumn = () => {
-
-        return (
-            <div className="bg-[gray] dark:bg-blue
-                            flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
-                <div className="self-center text-[5rem]">Filters</div>
-                <FilterLayerOptions></FilterLayerOptions>
-            </div>
-        )
+    
+            )
+        }
     }
 
 
@@ -326,9 +315,31 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="flex h-full flex-row space-x-[2rem]">
-            <FilterLayerColumn />
-            <AddFiltersColumn />
+        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+            <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
+                <div className='sticky flex flex-col z-[1] top-0'>
+                    <div
+                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
+                    >
+                        Find your desired candidates.
+                    </div>
+                    <div
+                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem]"
+                    >
+                        Current Filter Layers:
+                    </div>
+                </div>
+                <div className="flex flex-col select-none">
+                    <FilterLayerList></FilterLayerList> 
+                </div>
+            </div>
+            <div className='sticky top-0 flex flex-grow'>
+                <div className="bg-[gray] dark:bg-blue
+                                flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
+                    <div className="self-center text-[5rem]">Filters</div>
+                    <FilterLayerOptions></FilterLayerOptions>
+                </div>
+            </div> 
         </div>
     )
 
