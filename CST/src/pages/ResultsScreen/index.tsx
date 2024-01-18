@@ -7,6 +7,7 @@ import { IonIcon } from "@ionic/react";
 
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
+    const [showSidePanel, setShowSidePanel] = useState(true);
     const [selectedResult, setSelectedResult] = useState(0);
     
     const toggleModal = () => {
@@ -85,9 +86,9 @@ const ResultsScreen = () => {
                         {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
                     </ol>
                 </div>
-            </div>
-            <div className="w-1/4 h-screen bg-white">
-                sidebar
+            </div>  
+            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
+                <IonIcon className="text-[3rem]" icon={bookmarkOutline}></IonIcon>
             </div>
         </div>
     );
