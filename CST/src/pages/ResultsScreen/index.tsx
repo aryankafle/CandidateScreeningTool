@@ -87,8 +87,8 @@ const ResultsScreen = () => {
                     </ol>
                 </div>
             </div>  
-            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-start` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
-                <IonIcon className="text-[3rem]" onClick={()=>setShowSidePanel(!showSidePanel)} icon={bookmarkOutline}></IonIcon>
+            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`} >
+                hello
             </div>
         </div>
     );
