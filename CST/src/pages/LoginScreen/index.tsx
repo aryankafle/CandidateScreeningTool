@@ -1,8 +1,13 @@
+import LoginButton from '../../components/LoginButton'
+import LogoutButton from '../../components/LogoutButton'
 const LoginScreen = () => {
-
     return (
         <div>
-            CST
+            <LoginButton />
+            <button 
+                onClick = {LogoutButton}>
+                    logout
+            </button>
         </div>
         
     )

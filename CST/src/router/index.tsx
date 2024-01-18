@@ -12,6 +12,7 @@ import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
 import ResultsScreen from "../pages/ResultsScreen"
+import LoginScreen from "../pages/LoginScreen"
 
 
 
@@ -19,7 +20,8 @@ import BaseLayout from "../layouts/BaseLayout"
 import DecoratedLayout from "../layouts/DecoratedLayout";
 import HomeLayout from "../layouts/HomeLayout";
 import HeaderButtons from "../components/FilterScreenHeaderButtons";
-
+//Keep in mind I rerouted the LoginScreen to the login page instead of Auth Router
+//we need to change this later
 
 
 
@@ -46,7 +48,7 @@ function Router() {
             </Route>
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
-                <Route path="/login" element={<AuthRoutes />} />
+                <Route path="/login" element={<LoginScreen />} />
             `   <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
