@@ -10,7 +10,7 @@ const ResultsScreen = () => {
     const toggleModal = () => {
         setShowModal(!showModal);
     };
-    
+
     class Candidate
     {
         name: string;
@@ -67,7 +67,7 @@ const ResultsScreen = () => {
         )
     }
 
-    return(
+    return (
         <div className="dark:bg-blue bg-white
                         text-2xl flex flex-col flex-grow">
             <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
