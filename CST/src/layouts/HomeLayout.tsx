@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom"
-import Header from '../components/HeaderComponent'
-import Footer from '../components/FooterComponent'
-import NavBar from "../components/HomeScreenNavBar"
-import Root from "../components/LayoutRootComponent"
+import Header from '../components/UI/HeaderComponent'
+import Footer from '../components/UI/FooterComponent'
+import NavBar from "../components/UI/HomeScreenNavBar"
+import Root from "../components/UI/LayoutRootComponent"
 
 
 

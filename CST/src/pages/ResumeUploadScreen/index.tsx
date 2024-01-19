@@ -3,9 +3,9 @@ import { cloudUploadOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from "../../context/FileContext";
 import { useNavigate } from "react-router-dom";
-import Button from '../../components/ImprovedButtonComponent'
-import Modal from '../../components/Modal';
-import ViewFilePopup from "../../components/ViewFilePopup";
+import Button from '../../components/buttons/ImprovedButtonComponent'
+import Modal from '../../components/modals/Modal';
+import ViewFilePopup from "../../components/modals/ViewFilePopup";
 
 
 

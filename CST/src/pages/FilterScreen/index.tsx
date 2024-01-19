@@ -1,10 +1,10 @@
 import { useState, useContext, useMemo } from 'react';
-import InputBox from "../../components/InputBox"
+import InputBox from "../../components/forms/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
-import Button from "../../components/ImprovedButtonComponent";
+import Button from "../../components/buttons/ImprovedButtonComponent";
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities"

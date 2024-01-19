@@ -19,8 +19,8 @@ import LoginScreen from "../pages/LoginScreen"
 import BaseLayout from "../layouts/BaseLayout"
 import DecoratedLayout from "../layouts/DecoratedLayout";
 import HomeLayout from "../layouts/HomeLayout";
-import HeaderButtons from "../components/FilterScreenHeaderButtons";
-import BackButton from "../components/BackButton";
+import HeaderButtons from "../components/UI/FilterScreenHeaderButtons";
+import BackButton from "../components/buttons/BackButton";
 //Keep in mind I rerouted the LoginScreen to the login page instead of Auth Router
 //we need to change this later
 
