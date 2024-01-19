@@ -1,5 +1,5 @@
-import DocumentView from "../DocumentView";
-import Button from "../ImprovedButtonComponent"
+import DocumentView from "../../views/DocumentView";
+import Button from "../../buttons/ImprovedButtonComponent"
 import { IonIcon } from "@ionic/react"
 import { backspaceOutline } from 'ionicons/icons';
 

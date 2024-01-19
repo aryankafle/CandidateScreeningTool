@@ -1,7 +1,7 @@
-import BackButton from "../BackButton"
+import BackButton from "../../buttons/BackButton"
 import { IonIcon } from "@ionic/react"
 import { colorWandOutline } from "ionicons/icons"
-import NavButton from "../NavButton"
+import NavButton from "../../buttons/NavButton"
 
 
 
