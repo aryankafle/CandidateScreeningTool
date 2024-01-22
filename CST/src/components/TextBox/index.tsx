@@ -9,7 +9,7 @@ type Props = {
 
 const Input = ({
     
-    
+
     onChange,
     placeholder,
     name,
