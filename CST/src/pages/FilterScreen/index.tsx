@@ -120,13 +120,14 @@ const FilterScreen = () => {
         )
     }
 
+    
 
     const FilterLayerCard = (props: {item : Filter, isDragging : boolean}) => {
 
         function handleXClicked() {
 
             const temp = [...filterList].filter((filter) => {return filter !== props.item})
-                                
+            
             setFilterList(temp)
             
         }
