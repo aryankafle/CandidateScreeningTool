@@ -1,19 +1,19 @@
 import { ReactNode, createContext, useState } from "react"
+import { UniquelyIdentified } from "../utils/UniquelyIdentified";
 
 
 
 
 
-export abstract class Filter {
+export abstract class Filter extends UniquelyIdentified{
 
     public readonly description;
-    public readonly id;
     public readonly quantity?
 
 
 
     constructor(description : string, quantity? : number) {
-        this.id = crypto.randomUUID()
+        super();
         this.description = description
         this.quantity = quantity
     }
