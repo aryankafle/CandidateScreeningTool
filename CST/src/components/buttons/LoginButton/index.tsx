@@ -1,6 +1,6 @@
-import {GoogleLogin} from '@react-oauth/google'
+import { GoogleLogin } from '@react-oauth/google'
 //import {useState } from "react";
-const clientId = "29931420007-dp18uidt963gicfb6niv4maf74p26le9.apps.googleusercontent.com"
+const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID
 
 function Login(){
     //const [JWT, setJWT] = useState(null)

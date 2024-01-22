@@ -1,5 +1,5 @@
 import {useState } from "react";
-import Input from '../../components/TextBox'
+import Input from '../../components/forms/TextBox'
 import { PackContext } from "../../context/PackContext";
 import {Link} from 'react-router-dom'
 let nextId = 0;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Modal from '../../components/Modal';
-import ResultsDescriptionPopup from "../../components/ResultDescriptionPopup";
+import Modal from '../../components/modals/Modal';
+import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
 import { bookmarkOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 

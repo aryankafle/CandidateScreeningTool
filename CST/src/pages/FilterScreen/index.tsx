@@ -1,11 +1,11 @@
-import { useState, useRef, useContext, useEffect } from "react"
-import HeaderButtons from "../../components/FilterScreenHeaderButtons"
-import InputBox from "../../components/InputBox"
+import { useState, useContext, useMemo } from 'react';
+import InputBox from "../../components/forms/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
-import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
-import Button from "../../components/ImprovedButtonComponent";
+import Button from "../../components/buttons/ImprovedButtonComponent";
+import React from 'react';
+import DraggableList from '../../components/views/DraggableList/';
 
 
 
@@ -14,7 +14,7 @@ import Button from "../../components/ImprovedButtonComponent";
 class KeywordBiasFilter extends Filter {
     
     constructor(keyword : string) {
-        super("Keyword Bias", `Keyword Bias: ${keyword}`)
+        super(`Keyword Bias: ${keyword}`)
     }
 
 }
@@ -25,7 +25,7 @@ class DummyFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Work Experience", "Years of Work Experience", quantity)
+            super("Years of Work Experience", quantity)
         }
 
         else {
@@ -43,180 +43,23 @@ const FilterScreen = () => {
 
     const filterContext = useContext(FilterContext)
 
-
-
-    const draggedFilter = useRef<number>(0)
-    const draggedOverFilter = useRef<number>(0)
+    const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
 
 
 
 
-
-    useEffect(() => {
-        filterContext.setSelectedFilters([
-            new DummyFilter(4),
-            new DummyFilter(5),
-            new DummyFilter(6),
-            new DummyFilter(8),
-            new DummyFilter(1)
-        ])
-    }, [])
-
-
-
-    
 
     const FilterLayerOptions = () => {
 
-        return (
-            <div className="flex-grow flex flex-col">
-                <Button
-                    className="flex flex-col flex-shrink w-fit border-[0.1rem]"
-                    onClick={
-                        () => {
-                            filterContext.setSelectedFilters([...filterContext.selectedFilters, new DummyFilter(Math.floor(Math.random() * 9) + 1)])
-                        }
-                    }
-                >
-                    Click to add new filter
-                </Button>
-            </div>
-        )
-    }
+        const [keywordBias, setKeywordBias] = useState<string>("")
 
 
 
+        const isDuplicateFilter = (filter : Filter) => {
+            return filterList.some((filterObj) => filterObj.equals(filter))
+        } 
 
-
-    const FilterLayerList = () => {
-
-        return (
-            <div className="relative flex flex-col h-full mr-[2rem]">
-                <div className="pb-[1.5rem]"/>
-                <ol className="flex flex-grow flex-col">
-                    {filterContext.selectedFilters.map((filter, index) => (
-                        <FilterLayerCard filter={filter} index={index}></FilterLayerCard>
-                    ))}
-                </ol>
-                <div className="pb-[3rem]"/>
-            </div>
-            
-        )
-    }
-
-
-
-    const FilterLayerCard = (props: {filter : Filter, index : number}) => {
-
-        function handleXClicked() {
-
-            const temp = [...filterContext.selectedFilters].filter((filter) => {return filter !== props.filter})
-                                
-            filterContext.setSelectedFilters(temp)
-            
-        }
-
-
-
-
-
-
-        const handleDragStart : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            
-            draggedFilter.current = props.index
-
-        }
-
-        const handleDragEnter : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            
-            draggedOverFilter.current = props.index
-
-        }
-
-        const handleDragEnd : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-
-            const tempFilters = [...filterContext.selectedFilters]
-            const swappingFilter = tempFilters[draggedFilter.current]
-
-            tempFilters[draggedFilter.current] = tempFilters[draggedOverFilter.current]
-            tempFilters[draggedOverFilter.current] = swappingFilter
-
-            filterContext.setSelectedFilters(tempFilters)
-
-        }
-
-        const handleDragOver : React.DragEventHandler<HTMLIonIconElement> = (event) => {
-            event.preventDefault()
-        }
-
-
-
-
-
-        return (
-            <div className="relative">
-                <div draggable className="bg-red dark:bg-gray rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                    <div className="flex flex-col justify-center text-[1.2rem] overflow-wrap">
-                        {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                    </div>
-                    <div className="flex flex-row gap-[0.7rem]">
-                        <IonIcon
-                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                            onClick={handleXClicked}
-                        />
-                        <IonIcon
-                            draggable
-                            onDragStart={handleDragStart}
-                            onDragEnter={handleDragEnter}
-                            onDragEnd={handleDragEnd}
-                            onDragOver={handleDragOver}
-                            className="cursor-pointer text-[2rem]" icon={moveOutline}
-                            onClick={() => {}}
-                        />
-                    </div>
-                </div>
-            </div>
-
-        )
-    }
-
-
-
-
-
-    const FilterLayerColumn = () => {
-
-        return (
-            <div className="flex flex-col min-w-[17rem] w-[40vw]">
-                <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
-                >
-                    Find your desired candidates.
-                </div>
-                <div
-                    className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem] overflow-wrap"
-                >
-                    Current Filter Layers:
-                </div>
-                <div className="relative flex flex-grow overflow-clip">
-                    <div className="w-full h-full overflow-y-auto overflow-x-clip">
-                        <div className="select-none absolute top-0 z-[10] w-full h-[2%] bg-[linear-gradient(0deg,rgba(0,0,0,0)_0%,white_70%)]" />
-                        <FilterLayerList></FilterLayerList> 
-                        <div className="select-none absolute bottom-0 z-[10] w-full h-[5%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,white_70%)]" />
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-
-
-    const AddFiltersColumn = () => {
-
-        const [keywordBias, setKeywordBias] = useState("")
-
-        function checkIfValidKeyword(str : string) {
+        const isValidKeyword = (str : string) => {
 
             if(str) {
                 return true
@@ -226,34 +69,95 @@ const FilterScreen = () => {
 
         }
 
-        return (
-            <div className="bg-[gray] dark:bg-blue
-                            flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
-                <div className="self-center text-[5rem]">Filters</div>
-                <FilterLayerOptions></FilterLayerOptions>
-                <InputBox 
-                        title={"Keyword Bias"} placeholder={"Full-stack Development"}
-                        onSubmit={
-                            (event) => {
-                                if(checkIfValidKeyword(keywordBias)) {
-                                    const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
 
-                                    if(!filterContext.selectedFilters.some((filter) => filter.equals(keywordFilter))) {
-                                        filterContext.setSelectedFilters([...filterContext.selectedFilters, keywordFilter])
+
+        return (
+            <div className="flex flex-col flex-grow">
+                <div className="flex-grow overflow-auto">
+                    <Button
+                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        onClick={
+                            () => {
+
+                                const dummyFilter : Filter = new DummyFilter(Math.floor(Math.random() * 99999999999) + 1)
+
+                                console.log("Dumb Filter: ", dummyFilter)
+
+                                if(!isDuplicateFilter(dummyFilter)) {
+                                    setFilterList([...filterList, dummyFilter])    
+                                }
+
+                            }
+                        }
+                    >
+                        Click to add new filter
+                    </Button>
+                </div>
+                <div className="flex flex-col flex-shrink">
+                    <InputBox 
+                            title={"Keyword Bias"} placeholder={"Full-stack Development"}
+                            onSubmit={
+                                (event) => {
+                                    if(isValidKeyword(keywordBias)) {
+                                        const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
+
+                                        if(!isDuplicateFilter(keywordFilter)) {
+                                            setFilterList([...filterList, keywordFilter])
+                                        }
                                     }
                                 }
                             }
-                        }
-                        onChange={
-                            (event) => {
-                                setKeywordBias(event.target.value)
+                            onChange={
+                                (event) => {
+                                    setKeywordBias(event.target.value)
+                                }
                             }
+                            errorFunction={(string) => {return ""}
                         }
-                        errorFunction={(string) => {return ""}
-                    }
-                />
+                    />
+                </div>
             </div>
         )
+    }
+
+    
+
+    const FilterLayerCard = (props: {item : Filter, isDragging : boolean}) => {
+
+        function handleXClicked() {
+
+            const temp = [...filterList].filter((filter) => {return filter !== props.item})
+            
+            setFilterList(temp)
+            
+        }
+
+
+
+        return props.isDragging ? 
+                <div 
+                    className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
+                    </div>
+                    <IonIcon
+                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        onClick={handleXClicked}
+                    />
+                </div>
+            :
+                <div 
+                    className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
+                    </div>
+                    <IonIcon
+                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        onClick={handleXClicked}
+                    />
+                </div>
     }
 
 
@@ -261,9 +165,38 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="flex h-full flex-row space-x-[2rem]">
-            <FilterLayerColumn />
-            <AddFiltersColumn />
+        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+            <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
+                <div className='sticky flex flex-col z-[1] top-0'>
+                    <div
+                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
+                    >
+                        Find your desired candidates.
+                    </div>
+                    <div
+                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem]"
+                    >
+                        Current Filter Layers:
+                    </div>
+                </div>
+                <div className="flex flex-col select-none">
+                    <div className="pb-[1.5rem]"/>
+                    <DraggableList
+                        uniqueIDItems={filterList}
+                        setUniqueIDItems={setFilterList}
+                        ItemCard={FilterLayerCard}
+                        className="flex flex-grow flex-col"
+                    />
+                    <div className="pb-[3rem]"/>
+                </div>
+            </div>
+            <div className='sticky top-0 flex flex-grow'>
+                <div className="bg-[gray] dark:bg-blue
+                                flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
+                    <div className="self-center text-[5rem]">Filters</div>
+                    <FilterLayerOptions />
+                </div>
+            </div> 
         </div>
     )
 

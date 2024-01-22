@@ -1,5 +1,5 @@
-import LoginButton from '../../components/LoginButton'
-import LogoutButton from '../../components/LogoutButton'
+import LoginButton from '../../components/buttons/LoginButton'
+import LogoutButton from '../../components/buttons/LogoutButton'
 import  axios  from 'axios';
 import {useState } from "react";
 

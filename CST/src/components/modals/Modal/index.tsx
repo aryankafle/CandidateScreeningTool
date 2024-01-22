@@ -42,7 +42,7 @@ class Modal extends Component<ModalProps & { children?: ReactNode }> {
 
     
 
-    componentDidUpdate(prevProps : ModalState) {
+    componentDidUpdate(prevProps : ModalProps) {
 
         if(!_.isEqual(prevProps, this.props)) {
             this.setState(

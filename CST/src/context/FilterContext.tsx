@@ -1,19 +1,19 @@
 import { ReactNode, createContext, useState } from "react"
+import { UniquelyIdentified } from "../utils/UniquelyIdentified";
 
 
 
 
 
-export abstract class Filter {
+export abstract class Filter extends UniquelyIdentified{
 
     public readonly description;
-    public readonly name
     public readonly quantity?
 
 
 
-    constructor(name : string, description : string, quantity? : number) {
-        this.name = name
+    constructor(description : string, quantity? : number) {
+        super();
         this.description = description
         this.quantity = quantity
     }
@@ -22,18 +22,35 @@ export abstract class Filter {
 
     public toString() {
 
-        return `${this.name}: ${this.quantity} ${this.description}`
+        return `${this.id}: ${this.quantity} ${this.description}`
 
     }
 
 
 
+    /* For content-level deep comparisons of Filters */
     public equals(obj: Object) {
         
         const filter = obj as Filter
 
         if(filter) {
-            return filter.name === this.name && filter.description === this.description && filter.quantity === this.quantity
+            
+            return filter.description === this.description && filter.quantity === this.quantity
+        }
+
+        return false
+
+    }
+
+
+
+    /* For id-level deep comparisons of Filters */
+    public is(obj: Object) {
+        
+        const filter = obj as Filter
+
+        if(filter) {
+            return filter.id === this.id && filter.description === this.description && filter.quantity === this.quantity
         }
 
         return false
