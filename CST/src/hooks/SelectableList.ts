@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Dispatch<React.SetStateAction<ItemType[]>>) => {
 
-    type ItemSelection = {
+    interface ItemSelection {
         item: ItemType,
         isSelected: boolean
     }
@@ -31,10 +31,10 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
 
 
 
-    const toggleFileFromSelection = useCallback((fileIndex : number) => {
+    const toggleItemFromSelection = useCallback((itemindex : number) => {
 
         const _temp = selectableItems
-        _temp[fileIndex].isSelected = !_temp[fileIndex].isSelected
+        _temp[itemindex].isSelected = !_temp[itemindex].isSelected
         setSelectableItems([..._temp])
 
     }, [selectableItems])
@@ -85,47 +85,47 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
 
 
 
-    const handleClickSelect = useCallback((fileIndex : number) => {
-        setPreviouslySelectedIndex(fileIndex);
+    const handleClickSelect = useCallback((itemindex : number) => {
+        setPreviouslySelectedIndex(itemindex);
 
-        if(selectableItems[fileIndex].isSelected) {
-            toggleFileFromSelection(fileIndex)
+        if(selectableItems[itemindex].isSelected) {
+            toggleItemFromSelection(itemindex)
         }
         else {
             clearSelection()
-            toggleFileFromSelection(fileIndex)
+            toggleItemFromSelection(itemindex)
         }
-    }, [clearSelection, selectableItems, toggleFileFromSelection])
+    }, [clearSelection, selectableItems, toggleItemFromSelection])
 
 
 
-    const handleCtrlKeySelect = useCallback((fileIndex : number) => {
-        setPreviouslySelectedIndex(fileIndex);
-        toggleFileFromSelection(fileIndex)
-    }, [toggleFileFromSelection])
+    const handleCtrlKeySelect = useCallback((itemindex : number) => {
+        setPreviouslySelectedIndex(itemindex);
+        toggleItemFromSelection(itemindex)
+    }, [toggleItemFromSelection])
 
 
 
-    const handleShiftClickSelect = useCallback((fileIndex : number) => {
+    const handleShiftClickSelect = useCallback((itemindex : number) => {
         if(selectableItems[previouslySelectedIndex].isSelected) {
-            if(fileIndex < previouslySelectedIndex) {
-                for(let i = fileIndex; i <= previouslySelectedIndex; i++) {
+            if(itemindex < previouslySelectedIndex) {
+                for(let i = itemindex; i <= previouslySelectedIndex; i++) {
                     selectableItems[i].isSelected = true
                 }
             }
             else {
-                for(let i = fileIndex; i >= previouslySelectedIndex; i--) {
+                for(let i = itemindex; i >= previouslySelectedIndex; i--) {
                     selectableItems[i].isSelected = true
                 }
             }
         }
         else {
-            for(let i = 0; i <= fileIndex; i++) {
+            for(let i = 0; i <= itemindex; i++) {
                 selectableItems[i].isSelected = true
             }
         }
 
-        setPreviouslySelectedIndex(fileIndex);
+        setPreviouslySelectedIndex(itemindex);
         setSelectableItems([...selectableItems])
     }, [previouslySelectedIndex, selectableItems])
 
@@ -179,7 +179,7 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
         handleCtrlKeySelect,
         handleShiftClickSelect,
 
-        toggleFileFromSelection,
+        toggleItemFromSelection,
 
         clearSelection,
         selectAll,
