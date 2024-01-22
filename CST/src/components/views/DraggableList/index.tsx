@@ -1,7 +1,7 @@
+import { DndContext, DragEndEvent, PointerSensor, SensorDescriptor, SensorOptions, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { UniquelyIdentified } from "../../../utils/UniquelyIdentified"
-import { DndContext, DragEndEvent, DragOverlay, PointerSensor, SensorDescriptor, SensorOptions, useSensor, useSensors } from "@dnd-kit/core"
-import { SortableContext, arrayMove } from "@dnd-kit/sortable"
-import { createPortal } from "react-dom"
 
 
 
@@ -11,15 +11,16 @@ type DraggableListProps = {
 
     uniqueIDItems : UniquelyIdentified[]
     setUniqueIDItems : React.Dispatch<React.SetStateAction<any[]>>
-    children : React.ReactNode
     sensors? : SensorDescriptor<SensorOptions>[]
     autoScroll? : boolean
+    ItemCard : React.FC<{ item : any, isDragging : boolean}>
+    className? : string
 
 }
 
 
 
-const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableListProps) => {
+const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps) => {
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -55,6 +56,55 @@ const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableLi
 
 
 
+    const ItemCard = (props: {item : UniquelyIdentified, ItemCard : React.FC<{ item : UniquelyIdentified, isDragging : boolean}>}) => {
+
+        const ItemCard = props.ItemCard
+
+        const { setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
+            id: props.item.id,
+            data: {
+                item: props.item
+            }
+        })
+
+
+
+        const style = {
+            transition,
+            transform: CSS.Transform.toString(transform)
+        }
+
+
+
+
+        
+        if(isDragging) {
+            return (
+                <div 
+                    style={style}
+                    ref={setNodeRef}
+                    className="cursor-grabbing"
+                >
+                    <ItemCard item={props.item} isDragging/>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div 
+                    style={style}
+                    ref={setNodeRef}
+                    {...attributes}
+                    {...listeners}
+                    className="cursor-grab"
+                >
+                    <ItemCard item={props.item} isDragging={false}/>
+                </div>
+    
+            )
+        }
+    }
+
 
     
     return (
@@ -64,11 +114,15 @@ const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableLi
             autoScroll={props.autoScroll ? props.autoScroll : true}
         >
             <SortableContext items={props.uniqueIDItems.map((uniquelyID) => {return {id: uniquelyID.id}})}>
-                {props.children}
+                <ol className={props.className}>
+                    {props.uniqueIDItems.map((item) => (
+                        <ItemCard key={item.id} item={item} ItemCard={props.ItemCard} />
+                    ))}
+                </ol>
             </SortableContext>
         </DndContext>
     )
 
 }
 
-export default DraggableListWrapper
+export default DraggableList

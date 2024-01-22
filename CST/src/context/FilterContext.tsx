@@ -5,7 +5,7 @@ import { UniquelyIdentified } from "../utils/UniquelyIdentified";
 
 
 
-export abstract class Filter extends UniquelyIdentified {
+export abstract class Filter extends UniquelyIdentified{
 
     public readonly description;
     public readonly quantity?

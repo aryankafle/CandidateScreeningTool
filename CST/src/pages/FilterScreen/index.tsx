@@ -2,13 +2,10 @@ import { useState, useContext, useMemo } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
-import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities"
 import React from 'react';
-import DraggableListWrapper from '../../components/views/DraggableList/';
+import DraggableList from '../../components/views/DraggableList/';
 
 
 
@@ -124,14 +121,11 @@ const FilterScreen = () => {
     }
 
 
-
-
-
-    const FilterLayerCard = (props: {filter : Filter}) => {
+    const FilterLayerCard = (props: {item : Filter, isDragging : boolean}) => {
 
         function handleXClicked() {
 
-            const temp = [...filterList].filter((filter) => {return filter !== props.filter})
+            const temp = [...filterList].filter((filter) => {return filter !== props.item})
                                 
             setFilterList(temp)
             
@@ -139,70 +133,30 @@ const FilterScreen = () => {
 
 
 
-
-
-        const { setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
-            id: props.filter.id,
-            data: {
-                item: props.filter
-            }
-        })
-
-
-
-        const style = {
-            transition,
-            transform: CSS.Transform.toString(transform)
-        }
-
-
-
-
-        
-        if(isDragging) {
-            return (
+        return props.isDragging ? 
                 <div 
-                    style={style}
-                    ref={setNodeRef}
-                    className="cursor-grabbing"
-                >
-                    <div className="bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
-                                    py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                        <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                            {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                        </div>
-                        <IonIcon
-                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                            onClick={handleXClicked}
-                        />
+                    className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
                     </div>
+                    <IonIcon
+                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        onClick={handleXClicked}
+                    />
                 </div>
-            )
-        }
-        else {
-            return (
+            :
                 <div 
-                    style={style}
-                    ref={setNodeRef}
-                    {...attributes}
-                    {...listeners}
-                    className="cursor-grab"
-                >
-                    <div 
-                        className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
-                                    py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                        <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                            {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                        </div>
-                        <IonIcon
-                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                            onClick={handleXClicked}
-                        />
+                    className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
+                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
                     </div>
+                    <IonIcon
+                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        onClick={handleXClicked}
+                    />
                 </div>
-    
-            )
-        }
     }
 
 
@@ -226,16 +180,12 @@ const FilterScreen = () => {
                 </div>
                 <div className="flex flex-col select-none">
                     <div className="pb-[1.5rem]"/>
-                        <DraggableListWrapper
-                            uniqueIDItems={filterList}
-                            setUniqueIDItems={setFilterList}
-                        >
-                            <ol className="flex flex-grow flex-col">
-                                {filterList.map((filter) => (
-                                    <FilterLayerCard key={filter.id} filter={filter} />
-                                ))}
-                            </ol>
-                        </DraggableListWrapper>
+                    <DraggableList
+                        uniqueIDItems={filterList}
+                        setUniqueIDItems={setFilterList}
+                        ItemCard={FilterLayerCard}
+                        className="flex flex-grow flex-col"
+                    />
                     <div className="pb-[3rem]"/>
                 </div>
             </div>
