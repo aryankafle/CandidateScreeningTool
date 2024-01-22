@@ -35,7 +35,7 @@ const ResumeUploadScreen = () => {
         // handleCtrlKeySelect,
         // handleShiftClickSelect,
 
-        // toggleFileFromSelection,
+        // toggleItemFromSelection,
 
         clearSelection,
         selectAll,
