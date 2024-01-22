@@ -1,66 +1,97 @@
-import React, { Component } from "react"
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer"
+import React, { Component, useState } from "react"
 import _ from "lodash"
+import { UniquelyIdentified } from "../../../utils/UniquelyIdentified"
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, SensorDescriptor, SensorOptions, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, arrayMove } from "@dnd-kit/sortable"
+import { createPortal } from "react-dom"
+import { Draggable } from "react-beautiful-dnd"
 
 
 
 
 
-type DocumentViewProps = {
+type DraggableListProps = {
 
-    files : File[]
-    index: number
+    uniqueIDItems : UniquelyIdentified[]
+    setUniqueIDItems : React.Dispatch<React.SetStateAction<any[]>>
+    children : React.ReactNode
+    sensors? : SensorDescriptor<SensorOptions>[]
 
 }
 
-type DocumentViewState = {
-
-    files: File[]
-    index: number
-
-}
 
 
-
-class DocumentView extends Component<DocumentViewProps, DocumentViewState> {
+const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableListProps) => {
     
-    public readonly state : DocumentViewState = {
+    const [activeItem, setActiveItem] = useState<UniquelyIdentified>()
 
-        files: this.props.files,
-        index: this.props.index
 
-    }
 
-    
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 10
+            }
+        })
+    )
 
-    componentDidUpdate(prevProps : DocumentViewProps) {
 
-        if(!_.isEqual(prevProps.files, this.props.files)) {
-          this.setState({files: this.props.files, index: this.props.index});
+
+
+
+    const onDragStart = (event : DragStartEvent) => {
+
+        if(event.active.data.current?.type === "Item") {
+            setActiveItem(event.active.data.current.filter)
+            return;
         }
 
     }
 
-    
-
-    render() {
-
-        const selectedDocs = this.state.files.map((file) => ({
-            uri: window.URL.createObjectURL(file),
-            fileName: file.name,
-        }))
 
 
+    const onDragEnd = (event : DragEndEvent) => {
 
-        return (
-            <DocViewer
-                documents={ selectedDocs }
-                activeDocument={ selectedDocs[this.state.index] }
-                pluginRenderers={ DocViewerRenderers }
-            />
-        )
+        const { active, over } = event
+
+        if(!over) return;
+
+
+
+        const activeFilterId = active.id
+        const overFilterId = over.id
+
+        if(activeFilterId !== overFilterId) {
+            props.setUniqueIDItems((filters) => {
+                const activeFilterIndex = filters.findIndex((filter) => filter.id === activeFilterId)
+                const overColumnIndex = filters.findIndex((filter) => filter.id === overFilterId)
+
+                return arrayMove(filters, activeFilterIndex, overColumnIndex)
+            })
+        }
+
+        setActiveItem(undefined)
+        
     }
+
+
+
+
+    
+    return (
+        <DndContext
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            sensors={props.sensors ? props.sensors : sensors}
+            autoScroll={false}
+        >
+            <SortableContext items={props.uniqueIDItems.map((uniquelyID) => {return {id: uniquelyID.id}})}>
+                {props.children}
+            </SortableContext>
+            { createPortal(activeItem && <DragOverlay />, document.body) }
+        </DndContext>
+    )
 
 }
 
-export default DocumentView
+export default DraggableListWrapper
