@@ -184,35 +184,27 @@ const FilterScreen = () => {
 
 
         return (
-            <div 
-            className="w-full h-full"
-            >
-                <div className="flex flex-col h-full mr-[2rem]">
-                    <div className="pb-[1.5rem]"/>
-                    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors} autoScroll={false}>
-                        <SortableContext items={filterIds}>
-                                <ol className="flex flex-grow flex-col">
-                                    {filterList.map((filter) => (
-                                        <FilterLayerCard key={filter.id} filter={filter} />
-                                    ))}
-                                </ol>
-                        </SortableContext>
-                        {
-                            createPortal(
-                                (
-                                    <DragOverlay>
-                                        {activeFilter &&
-                                            <FilterLayerCard key={activeFilter.id} filter={activeFilter} />
-                                        }
-                                    </DragOverlay>
-                                ),
-                                document.body
-                            )
-                        }
-                    </DndContext>
-                    <div className="pb-[3rem]"/>
-                </div>
-            </div>
+            <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors} autoScroll={false}>
+                <SortableContext items={filterIds}>
+                    <ol className="flex flex-grow flex-col">
+                        {filterList.map((filter) => (
+                            <FilterLayerCard key={filter.id} filter={filter} />
+                        ))}
+                    </ol>
+                </SortableContext>
+                {
+                    createPortal(
+                        (
+                            <DragOverlay>
+                                {activeFilter &&
+                                    <FilterLayerCard key={activeFilter.id} filter={activeFilter} />
+                                }
+                            </DragOverlay>
+                        ),
+                        document.body
+                    )
+                }
+            </DndContext>
         )
     }
 
@@ -254,7 +246,7 @@ const FilterScreen = () => {
                 <div 
                     style={style}
                     ref={setNodeRef}
-                    >
+                >
                     <div 
                         className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
                                     py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
@@ -330,7 +322,9 @@ const FilterScreen = () => {
                     </div>
                 </div>
                 <div className="flex flex-col select-none">
-                    <FilterLayerList></FilterLayerList> 
+                    <div className="pb-[1.5rem]"/>
+                        <FilterLayerList />
+                    <div className="pb-[3rem]"/>
                 </div>
             </div>
             <div className='sticky top-0 flex flex-grow'>
