@@ -144,7 +144,6 @@ const FilterScreen = () => {
         const { setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
             id: props.filter.id,
             data: {
-                type: "Item",
                 item: props.filter
             }
         })
@@ -165,23 +164,17 @@ const FilterScreen = () => {
                 <div 
                     style={style}
                     ref={setNodeRef}
+                    className="cursor-grabbing"
                 >
                     <div className="bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
                                     py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                         <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
                             {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
                         </div>
-                        <div className="flex flex-row gap-[0.7rem]">
-                            <IonIcon
-                                className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                                onClick={handleXClicked}
-                            />
-                            <IonIcon
-                                className="cursor-pointer text-[2rem]" icon={moveOutline}
-                                {...attributes}
-                                {...listeners}
-                            />
-                        </div>
+                        <IonIcon
+                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                            onClick={handleXClicked}
+                        />
                     </div>
                 </div>
             )
@@ -191,26 +184,20 @@ const FilterScreen = () => {
                 <div 
                     style={style}
                     ref={setNodeRef}
+                    {...attributes}
+                    {...listeners}
+                    className="cursor-grab"
                 >
                     <div 
                         className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
                                     py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                         <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                            <h3 className=''>
-                                {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                            </h3>
+                            {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
                         </div>
-                        <div className="flex flex-row gap-[0.7rem]">
-                            <IonIcon
-                                className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                                onClick={handleXClicked}
-                            />
-                            <IonIcon
-                                className="cursor-pointer text-[2rem]" icon={moveOutline}
-                                {...attributes}
-                                {...listeners}
-                            />
-                        </div>
+                        <IonIcon
+                            className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                            onClick={handleXClicked}
+                        />
                     </div>
                 </div>
     
@@ -256,7 +243,7 @@ const FilterScreen = () => {
                 <div className="bg-[gray] dark:bg-blue
                                 flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
                     <div className="self-center text-[5rem]">Filters</div>
-                    <FilterLayerOptions></FilterLayerOptions>
+                    <FilterLayerOptions />
                 </div>
             </div> 
         </div>

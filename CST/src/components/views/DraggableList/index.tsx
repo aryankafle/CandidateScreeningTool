@@ -1,10 +1,7 @@
-import React, { Component, useState } from "react"
-import _ from "lodash"
 import { UniquelyIdentified } from "../../../utils/UniquelyIdentified"
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, SensorDescriptor, SensorOptions, useSensor, useSensors } from "@dnd-kit/core"
+import { DndContext, DragEndEvent, DragOverlay, PointerSensor, SensorDescriptor, SensorOptions, useSensor, useSensors } from "@dnd-kit/core"
 import { SortableContext, arrayMove } from "@dnd-kit/sortable"
 import { createPortal } from "react-dom"
-import { Draggable } from "react-beautiful-dnd"
 
 
 
@@ -16,16 +13,13 @@ type DraggableListProps = {
     setUniqueIDItems : React.Dispatch<React.SetStateAction<any[]>>
     children : React.ReactNode
     sensors? : SensorDescriptor<SensorOptions>[]
+    autoScroll? : boolean
 
 }
 
 
 
 const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableListProps) => {
-    
-    const [activeItem, setActiveItem] = useState<UniquelyIdentified>()
-
-
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -34,19 +28,6 @@ const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableLi
             }
         })
     )
-
-
-
-
-
-    const onDragStart = (event : DragStartEvent) => {
-
-        if(event.active.data.current?.type === "Item") {
-            setActiveItem(event.active.data.current.filter)
-            return;
-        }
-
-    }
 
 
 
@@ -69,8 +50,6 @@ const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableLi
                 return arrayMove(filters, activeFilterIndex, overColumnIndex)
             })
         }
-
-        setActiveItem(undefined)
         
     }
 
@@ -80,15 +59,13 @@ const DraggableListWrapper : React.FC<DraggableListProps> = (props : DraggableLi
     
     return (
         <DndContext
-            onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             sensors={props.sensors ? props.sensors : sensors}
-            autoScroll={false}
+            autoScroll={props.autoScroll ? props.autoScroll : true}
         >
             <SortableContext items={props.uniqueIDItems.map((uniquelyID) => {return {id: uniquelyID.id}})}>
                 {props.children}
             </SortableContext>
-            { createPortal(activeItem && <DragOverlay />, document.body) }
         </DndContext>
     )
 
