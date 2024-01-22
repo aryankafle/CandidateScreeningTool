@@ -191,7 +191,7 @@ const ResumeUploadScreen = () => {
                         (selectable, index : number) => (
                             <FileCard
                                 index={index}
-                                key={index}
+                                key={selectable.id}
                             />
                         ))}
                 </ol>

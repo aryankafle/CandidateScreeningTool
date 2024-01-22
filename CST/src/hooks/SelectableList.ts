@@ -1,10 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
+import { UniquelyIdentified } from "../utils/UniquelyIdentified";
 
 export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Dispatch<React.SetStateAction<ItemType[]>>) => {
 
-    interface ItemSelection {
-        item: ItemType,
-        isSelected: boolean
+    class ItemSelection extends UniquelyIdentified {
+
+        public readonly item : ItemType
+
+        public isSelected : boolean
+        
+
+
+        constructor(item : ItemType, isSelected : boolean) {
+            super()
+            this.item = item
+            this.isSelected = isSelected
+        }
+
     }
 
 
@@ -16,8 +28,9 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
     useEffect(() => {
 
         setSelectableItems(list.map((item) => {
-                return {item: item, isSelected: selectableItems.some(selection => selection.item === item && selection.isSelected)} as ItemSelection
-            }
+                return new ItemSelection(
+                    item,
+                    selectableItems.some(selection => selection.item === item && selection.isSelected))}
         ))
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
