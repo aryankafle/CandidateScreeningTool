@@ -5,11 +5,10 @@ import { closeCircleOutline } from "ionicons/icons";
 import { moveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
-import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities"
-import { createPortal } from "react-dom";
 import React from 'react';
+import DraggableListWrapper from '../../components/views/DraggableList/';
 
 
 
@@ -47,13 +46,7 @@ const FilterScreen = () => {
 
     const filterContext = useContext(FilterContext)
 
-
-    
     const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
-
-    const [activeFilter, setActiveFilter] = useState<Filter>()
-
-    const filterIds = useMemo(() => filterList.map(filter => filter.id), [filterList])
 
 
 
@@ -134,82 +127,6 @@ const FilterScreen = () => {
 
 
 
-    const FilterLayerList = () => {
-
-        const sensors = useSensors(
-            useSensor(PointerSensor, {
-                activationConstraint: {
-                    distance: 3
-                }
-            })
-        )
-
-
-
-
-
-        function onDragStart(event : DragStartEvent) {
-
-            if(event.active.data.current?.type === "Column") {
-                setActiveFilter(event.active.data.current.filter)
-                return;
-            }
-
-        }
-
-        function onDragEnd(event : DragEndEvent) {
-
-            const { active, over } = event
-
-            if(!over) return;
-
-
-
-            const activeFilterId = active.id
-            const overFilterId = over.id
-
-            if(activeFilterId !== overFilterId) {
-                setFilterList((filters) => {
-                    const activeFilterIndex = filters.findIndex((filter) => filter.id === activeFilterId)
-                    const overColumnIndex = filters.findIndex((filter) => filter.id === overFilterId)
-
-                    return arrayMove(filters, activeFilterIndex, overColumnIndex)
-                })
-            }
-            
-        }
-
-
-
-
-
-        return (
-            <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} sensors={sensors} autoScroll={false}>
-                <SortableContext items={filterIds}>
-                    <ol className="flex flex-grow flex-col">
-                        {filterList.map((filter) => (
-                            <FilterLayerCard key={filter.id} filter={filter} />
-                        ))}
-                    </ol>
-                </SortableContext>
-                {
-                    createPortal(
-                        (
-                            <DragOverlay>
-                                {activeFilter &&
-                                    <FilterLayerCard key={activeFilter.id} filter={activeFilter} />
-                                }
-                            </DragOverlay>
-                        ),
-                        document.body
-                    )
-                }
-            </DndContext>
-        )
-    }
-
-
-
     const FilterLayerCard = (props: {filter : Filter}) => {
 
         function handleXClicked() {
@@ -227,10 +144,12 @@ const FilterScreen = () => {
         const { setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
             id: props.filter.id,
             data: {
-                type: "Filter",
-                filter: props.filter
+                type: "Item",
+                item: props.filter
             }
         })
+
+
 
         const style = {
             transition,
@@ -247,13 +166,10 @@ const FilterScreen = () => {
                     style={style}
                     ref={setNodeRef}
                 >
-                    <div 
-                        className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
+                    <div className="bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
                                     py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                         <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                            <h3 className=''>
-                                {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
-                            </h3>
+                            {`${props.filter.quantity ? props.filter.quantity : ""} ${props.filter.description}`}
                         </div>
                         <div className="flex flex-row gap-[0.7rem]">
                             <IonIcon
@@ -323,7 +239,16 @@ const FilterScreen = () => {
                 </div>
                 <div className="flex flex-col select-none">
                     <div className="pb-[1.5rem]"/>
-                        <FilterLayerList />
+                        <DraggableListWrapper
+                            uniqueIDItems={filterList}
+                            setUniqueIDItems={setFilterList}
+                        >
+                            <ol className="flex flex-grow flex-col">
+                                {filterList.map((filter) => (
+                                    <FilterLayerCard key={filter.id} filter={filter} />
+                                ))}
+                            </ol>
+                        </DraggableListWrapper>
                     <div className="pb-[3rem]"/>
                 </div>
             </div>
