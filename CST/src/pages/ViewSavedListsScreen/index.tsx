@@ -2,8 +2,6 @@ import {useState } from "react";
 import Input from '../../components/forms/TextBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import Button from '../../components/buttons/ImprovedButtonComponent'
-let nextId = 0;
-
 const ViewSavedPacksScreen = () => {
     
 
@@ -44,18 +42,17 @@ const ViewSavedPacksScreen = () => {
     const FileCard =  (props: {file: string}) => {
         return (
             <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
-                <div
-                    // className={
-                    //         selectableItems[props.file].isSelected ?
-                    //             `text-red border-red
-                    //             dark:text-red
-                    //             flex-grow select-none cursor-pointer`
-                    //         :
-                    //             `text-black border-black
-                    //             dark:text-white
-                    //             flex-grow select-none cursor-pointer`
-                    //     }
-                >
+                <div>
+                    {/* className={
+                            selectableItems[props.index].isSelected ?
+                                `text-red border-red
+                                dark:text-red
+                                flex-grow select-none cursor-pointer`
+                            :
+                                `text-black border-black
+                                dark:text-white
+                                flex-grow select-none cursor-pointer`
+                        } */}
                     {props.file}
                 </div>
                 <div
