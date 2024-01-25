@@ -15,7 +15,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="29931420007-dp18uidt963gicfb6niv4maf74p26le9.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID as string}>
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
           <Router />
