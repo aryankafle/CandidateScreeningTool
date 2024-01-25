@@ -1,19 +1,11 @@
 import {useState } from "react";
 import Input from '../../components/forms/TextBox'
-import { PackContext } from "../../context/PackContext";
-import {Link} from 'react-router-dom'
+import { useSelectableList } from "../../hooks/SelectableList";
+import Button from '../../components/buttons/ImprovedButtonComponent'
 let nextId = 0;
 
 const ViewSavedPacksScreen = () => {
     
-    type FileContextType = {
-        uploadedFiles: string[]
-        chosenFiles: string[]
-        setUploadedFiles: React.Dispatch<React.SetStateAction<string[]>>
-        setChosenFiles: React.Dispatch<React.SetStateAction<string[]>>
-    }
-
-
 
     const [nameInput, setNameInput] = useState("");
     const onChange = (str: string) => {
@@ -23,9 +15,18 @@ const ViewSavedPacksScreen = () => {
     const [uploadedFiles, setUploadedFiles] = useState([] as string[])
     const [selectedFiles, setSelectedFiles] = useState([] as string[])
     
+    const {
 
+        selectableItems,
 
+        clearSelection,
+        selectAll,
+        removeCurrentSelectionFromList,
 
+    } = useSelectableList<string>(uploadedFiles, setUploadedFiles)
+
+    const [showModal, setShowModal] = useState(false)
+    const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
@@ -42,11 +43,27 @@ const ViewSavedPacksScreen = () => {
 
     const FileCard =  (props: {file: string}) => {
         return (
-            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden"
-                onClick={(e) => {
-                    sendToLink(props.file)
-                }}>
-                {props.file}
+            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
+                <div
+                    // className={
+                    //         selectableItems[props.file].isSelected ?
+                    //             `text-red border-red
+                    //             dark:text-red
+                    //             flex-grow select-none cursor-pointer`
+                    //         :
+                    //             `text-black border-black
+                    //             dark:text-white
+                    //             flex-grow select-none cursor-pointer`
+                    //     }
+                >
+                    {props.file}
+                </div>
+                <div
+                    className="cursor-pointer select-none"
+                    onClick={() => {sendToLink(props.file)}}
+                >
+                    Open Link
+                </div>
             </div>
         )
     }
@@ -104,6 +121,37 @@ const ViewSavedPacksScreen = () => {
                     {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
                 </ol>
             </div>
+            <div className="h-[5rem]
+                                text-black
+                                dark: text-white
+                                self-center">
+                    {selectableItems.some((selectable) => selectable.isSelected) ?
+                        <div className="flex flex-col my-[1rem]">
+                            <Button
+                                className=" text-black
+                                            dark: text-white
+                                            flex-grow self-center"
+                                onClick={() => { removeCurrentSelectionFromList(); } }
+                            >
+                                            Remove Selected Files
+                            </Button>
+                            <Button
+                                className=" text-black
+                                            dark: text-white
+                                            flex-grow self-center"
+                                onClick={() => { clearSelection(); } }
+                            >
+                                            Clear Selection
+                            </Button>
+                        </div>
+                    :
+                        <Button onClick={() => selectAll()}
+                                className="my-[1.5rem]"
+                        >
+                            { selectableItems.length > 0 ? "Select All" : ""}
+                        </Button>
+                    }
+                </div>
         </div>
 
     )
