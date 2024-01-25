@@ -101,7 +101,7 @@ const ResultsScreen = () => {
             <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
                 {showSidePanel ?
                     <div className="w-full">
-                            <h1 className="flex justify-center">List Name</h1>
+                            <h1 className="flex justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>List Name</h1>
                             <input type="text" className="flex justify-center bg-gray" />
                             <h1 className="flex justify-center">Description</h1>
                             <input type="text" className="flex justify-center bg-gray" />
