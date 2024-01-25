@@ -98,16 +98,13 @@ const ResultsScreen = () => {
                     </ol>
                 </div>
             </div>  
-            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
+            <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
                 {showSidePanel ?
-                    <div className="flex flex-row justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>
-                        <div>
+                    <div className="w-full">
                             <h1 className="flex justify-center">List Name</h1>
-                            <p>empty field if new list, defaults to previously set list name if saved list</p>
+                            <input type="text" className="flex justify-center bg-gray" />
                             <h1 className="flex justify-center">Description</h1>
-                            <p>description of list that either the user can input, or read from previous input</p>
-                        </div>
-                        
+                            <input type="text" className="flex justify-center bg-gray" />
                     </div>
                 :
                     <div>
