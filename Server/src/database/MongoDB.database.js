@@ -1,4 +1,4 @@
-import client from "./config/MongoDB.config.js"
+import client from "../config/MongoDB.config.js"
 
 const connection = await client.connect(async (err) => {
     if(err) {

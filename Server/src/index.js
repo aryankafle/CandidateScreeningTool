@@ -5,6 +5,7 @@ import cors from "cors";
 import linkedInRoutes from "./routes/LinkedIn.routes.js"
 import mySQLRoutes from "./routes/MySQL.routes.js"
 import openAIRoutes from "./routes/OpenAI.routes.js"
+import MongoDBRoutes from "./routes/MongoDB.routes.js"
 
 
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use("/linkedIn", linkedInRoutes)
 app.use("/mySQL", mySQLRoutes)
 app.use("/openAI", openAIRoutes)
+app.use("/mongoDB", MongoDBRoutes)
 
 
 

@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 // Controller routing
-router.get("/test-database-connection", testMongoDatabaseConnection)
+router.get("/test-mongoDB-connection", testMongoDatabaseConnection)
 
 
 
