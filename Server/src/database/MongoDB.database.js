@@ -1,4 +1,17 @@
-import client from "../config/MongoDB.config.js"
+import mongoConfig from "../config/MongoDB.config.js"
+import { MongoClient } from 'mongodb';
+
+
+
+
+
+const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
+
+var isConnected = false;
+
+
+
+
 
 const connection = async () => {
     try {
@@ -6,6 +19,7 @@ const connection = async () => {
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
+        isConnected = true
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
       } finally {
         // Ensures that the client will close when you finish/error
@@ -13,6 +27,8 @@ const connection = async () => {
       }
 }
 
+connection()
+
 export const checkMongoDBConnection = () => {
-    return !!connection
+    return isConnected
 }
