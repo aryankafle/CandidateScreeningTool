@@ -2,17 +2,23 @@ import {useState } from "react";
 import Input from '../../components/forms/TextBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import Button from '../../components/buttons/ImprovedButtonComponent'
+
+
+
+
+
 const ViewSavedPacksScreen = () => {
-    
 
     const [nameInput, setNameInput] = useState("");
-    const onChange = (str: string) => {
-        setNameInput(str);
-    };
 
     const [uploadedFiles, setUploadedFiles] = useState([] as string[])
+
     const [selectedFiles, setSelectedFiles] = useState([] as string[])
-    
+
+    const [showModal, setShowModal] = useState(false)
+
+    const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
+
     const {
 
         selectableItems,
@@ -23,8 +29,13 @@ const ViewSavedPacksScreen = () => {
 
     } = useSelectableList<string>(uploadedFiles, setUploadedFiles)
 
-    const [showModal, setShowModal] = useState(false)
-    const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
+
+
+
+
+    const onChange = (str: string) => {
+        setNameInput(str);
+    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
@@ -38,7 +49,7 @@ const ViewSavedPacksScreen = () => {
     }
 
 
-
+    
     const FileCard =  (props: {file: string}) => {
         return (
             <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
