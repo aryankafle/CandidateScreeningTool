@@ -7,18 +7,18 @@ import Button from '../../components/buttons/ImprovedButtonComponent'
 
 
 
-const ViewSavedPacksScreen = () => {
+const ViewSavedListsScreen = () => {
 
     const [nameInput, setNameInput] = useState("");
 
     const [uploadedFiles, setUploadedFiles] = useState([] as string[])
 
-    const [selectedFiles, setSelectedFiles] = useState([] as string[])
+    //const [selectedFiles, setSelectedFiles] = useState([] as string[])
 
     const [showModal, setShowModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
-
+    
     const {
 
         selectableItems,
@@ -53,11 +53,11 @@ const ViewSavedPacksScreen = () => {
 
 
     
-    const FileCard =  (props: {file: string}) => {
+    const FileCard =  (props: {file: string, index: number}) => {
         return (
             <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
-                <div>
-                    {/* className={
+                <div 
+                    className={
                             selectableItems[props.index].isSelected ?
                                 `text-red border-red
                                 dark:text-red
@@ -66,7 +66,11 @@ const ViewSavedPacksScreen = () => {
                                 `text-black border-black
                                 dark:text-white
                                 flex-grow select-none cursor-pointer`
-                        } */}
+                        }
+                        onClick={(event) => {
+                            handleSelectionOnClick(event, props.index)
+                        }}
+                >
                     {props.file}
                 </div>
                 <div
@@ -79,25 +83,23 @@ const ViewSavedPacksScreen = () => {
         )
     }
 
-    const ListCard = (props: {file: string}) => {
-        return (
-            selectedFiles.includes(props.file) ? 
-                <div className="text-red border-red
-                                dark:text-red dark:border-red
-                                text-center border-[0.1rem] flex-grow cursor-pointer select-none">
-                                
-                    <FileCard file={props.file}/>
-                </div>
-
-            :
-                <div className="text-black border-black
-                                    dark:text-white dark:border-white
-                                    text-center border-[0.1rem] flex-grow cursor-pointer select-none">
-                        <FileCard file={props.file}/>
-                </div>
-        )
-        
-    }
+    // const ListCard = (props: {index:number}) => {
+    //     return (
+    //         <div>
+    //             className={
+    //                 selectableItems[props.index].isSelected ?
+    //                     `text-red border-red
+    //                     dark:text-red
+    //                     flex-grow select-none cursor-pointer`
+    //                 :
+    //                     `text-black border-black
+    //                     dark:text-white
+    //                     flex-grow select-none cursor-pointer`
+    //             }
+    //             <FileCard file = {props.index.toString()}/>
+    //             </div>
+    //     )       
+    // }
       
 
 
@@ -129,7 +131,13 @@ const ViewSavedPacksScreen = () => {
                 <ol className="border-black self-center flex-grow
                                 dark:border-white
                                 border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
-                    {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
+                        {selectableItems.map(
+                        (selectable, index : number) => (
+                            <FileCard
+                                index = {index}
+                                file = {"wadjakjew"}
+                            />
+                        ))}
                 </ol>
             </div>
             <div className="h-[5rem]
@@ -169,4 +177,4 @@ const ViewSavedPacksScreen = () => {
            
     
 }
-export default ViewSavedPacksScreen
+export default ViewSavedListsScreen
