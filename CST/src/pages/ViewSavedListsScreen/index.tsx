@@ -26,6 +26,9 @@ const ViewSavedPacksScreen = () => {
         clearSelection,
         selectAll,
         removeCurrentSelectionFromList,
+        
+        handleSelectionOnKeyDown,
+        handleSelectionOnClick
 
     } = useSelectableList<string>(uploadedFiles, setUploadedFiles)
 
