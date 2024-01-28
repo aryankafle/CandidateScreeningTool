@@ -13,8 +13,6 @@ const ViewSavedListsScreen = () => {
 
     const [uploadedFiles, setUploadedFiles] = useState([] as string[])
 
-    //const [selectedFiles, setSelectedFiles] = useState([] as string[])
-
     const [showModal, setShowModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
@@ -27,7 +25,7 @@ const ViewSavedListsScreen = () => {
         selectAll,
         removeCurrentSelectionFromList,
         
-        handleSelectionOnKeyDown,
+        //handleSelectionOnKeyDown,
         handleSelectionOnClick
 
     } = useSelectableList<string>(uploadedFiles, setUploadedFiles)
@@ -82,24 +80,6 @@ const ViewSavedListsScreen = () => {
             </div>
         )
     }
-
-    // const ListCard = (props: {index:number}) => {
-    //     return (
-    //         <div>
-    //             className={
-    //                 selectableItems[props.index].isSelected ?
-    //                     `text-red border-red
-    //                     dark:text-red
-    //                     flex-grow select-none cursor-pointer`
-    //                 :
-    //                     `text-black border-black
-    //                     dark:text-white
-    //                     flex-grow select-none cursor-pointer`
-    //             }
-    //             <FileCard file = {props.index.toString()}/>
-    //             </div>
-    //     )       
-    // }
       
 
 
@@ -132,10 +112,10 @@ const ViewSavedListsScreen = () => {
                                 dark:border-white
                                 border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
                         {selectableItems.map(
-                        (selectable, index : number) => (
+                        (selectable, index : number, uploadedFiles) => (
                             <FileCard
                                 index = {index}
-                                file = {"wadjakjew"}
+                                file = {uploadedFiles[index].item}
                             />
                         ))}
                 </ol>
