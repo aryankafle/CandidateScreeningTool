@@ -63,7 +63,7 @@ const ResultsScreen = () => {
             if (i%2 === 0){
                 r = 'B';
             }
-            candidates.push(new Candidate('Bob' + i, r, "description", []))
+            candidates.push(new Candidate('Bob' + i, r, "description", ["5 years working experience", "college diploma"]))
         }
     }
 
@@ -100,8 +100,9 @@ const ResultsScreen = () => {
                         flex-grow overflow-scroll">
             <div className="flex flex-col flex-grow overflow-scroll" >
                 <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName
-                        }></ResultsDescriptionPopup>
+                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedFilters={candidates[selectedResult].getFilters}
+                    selectedDescription={candidates[selectedResult].getDescription}
+                    ></ResultsDescriptionPopup>
                 </Modal>
                 <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                     <h1>Here are some great candidates based on your needs:</h1>
