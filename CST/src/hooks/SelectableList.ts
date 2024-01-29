@@ -20,6 +20,14 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
     }
 
 
+    
+    const getItemsFromSelections = (selections : ItemSelection[]) => {
+
+        return selections.map((selection) => selection.item)
+
+    }
+
+
 
 
 
@@ -40,16 +48,20 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
 
     const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
 
-    const getAllSelected = () => {
+    const getAllSelectedItems = () => {
 
-        return selectableItems.filter((selectable) => selectable.isSelected)
+        return getItemsFromSelections(selectableItems.filter((selectable) => selectable.isSelected))
     
     }
 
-    const getAllNotSelected = () => {
+    const getAllNotSelectedItems = () => {
 
-        return selectableItems.filter((selectable) => !selectable.isSelected)
+        return getItemsFromSelections(selectableItems.filter((selectable) => !selectable.isSelected))
     
+    }
+
+    const getAllItems = () => {
+        return getItemsFromSelections(selectableItems)
     }
 
     const amountSelected = () => {
@@ -212,10 +224,10 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
     return {
 
         selectableItems,
-        setSelectableItems,
 
-        getAllSelected,
-        getAllNotSelected,
+        getAllItems,
+        getAllSelectedItems,
+        getAllNotSelectedItems,
         amountSelected,
         anySelected,
 
