@@ -6,7 +6,7 @@ dotenv.config();
 
 
 
-console.log(process.env.MONGODB_ACCESS_URI)
+
 const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
 
 var isConnected = false;
