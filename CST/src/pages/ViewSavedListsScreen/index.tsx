@@ -50,7 +50,7 @@ const ViewSavedListsScreen = () => {
         })
     }
 
-    const handleRemove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleRemove = () => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
 
         if(confirmation) {
@@ -81,6 +81,9 @@ const ViewSavedListsScreen = () => {
 
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        if(event.key === "Delete") {
+            handleRemove()
+        }
         handleSelectionOnKeyDown(event)
     }, [handleSelectionOnKeyDown])
 
@@ -165,7 +168,7 @@ const ViewSavedListsScreen = () => {
                         <div className="flex flex-col gap-[0.5rem]">
                             <div
                                 className="select-none cursor-pointer"
-                                onClick={handleRemove}
+                                onClick={() => { handleRemove() }}
                             >
                                 Delete Current Selection
                             </div>
@@ -177,6 +180,7 @@ const ViewSavedListsScreen = () => {
                             </div>
                         </div>
                     :
+                        selectableItems.length > 0 &&
                         <div
                             className="select-none cursor-pointer"
                             onClick={() => {selectAll()}}
