@@ -42,4 +42,8 @@ export class Result {
 
         return gradeEnum
     }
+
+    get resume() { return this.#resumeFile }
+    get applicant() { return this.#applicant }
+    get summary() { return this.#summary }
 }
