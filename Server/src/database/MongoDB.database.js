@@ -1,5 +1,7 @@
 import mongoConfig from "../config/MongoDB.config.js"
 import { MongoClient } from 'mongodb';
+import dotenv from "dotenv"
+dotenv.config()
 
 
 

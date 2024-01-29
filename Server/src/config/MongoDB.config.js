@@ -1,6 +1,8 @@
-import dotenv from "dotenv"
 import { ServerApiVersion } from 'mongodb';
-dotenv.config()
+
+
+
+
 
 const mongoConfig = {
   serverApi: {
