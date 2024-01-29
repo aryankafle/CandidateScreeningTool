@@ -1,113 +1,196 @@
-import {useState } from "react";
-import Input from '../../components/forms/TextBox'
-import { PackContext } from "../../context/PackContext";
-import {Link} from 'react-router-dom'
-let nextId = 0;
-
-const ViewSavedPacksScreen = () => {
-    
-    type FileContextType = {
-        uploadedFiles: string[]
-        chosenFiles: string[]
-        setUploadedFiles: React.Dispatch<React.SetStateAction<string[]>>
-        setChosenFiles: React.Dispatch<React.SetStateAction<string[]>>
-    }
+import { useEffect, useCallback, useContext, useState } from "react";
+import Input from '../../components/forms/InputBox'
+import { useSelectableList } from "../../hooks/SelectableList";
+import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import _ from "lodash"
 
 
+
+
+
+const ViewSavedListsScreen = () => {
+
+    const {savedLists, setSavedLists} = useContext(SavedListsContext)
 
     const [nameInput, setNameInput] = useState("");
-    const onChange = (str: string) => {
-        setNameInput(str);
+
+    const {
+
+        selectableItems,
+
+        selectAll,
+        removeCurrentSelectionFromList,
+        
+        handleSelectionOnKeyDown,
+        handleSelectionOnClick
+
+    } = useSelectableList<SavedList>(savedLists, setSavedLists)
+
+
+
+
+
+    const onChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.value) {
+            setNameInput(event.target.value);
+        }
     };
-
-    const [uploadedFiles, setUploadedFiles] = useState([] as string[])
-    const [selectedFiles, setSelectedFiles] = useState([] as string[])
-    
-
-
-
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
-        const uniqueFiles = [...new Set([...uploadedFiles, nameInput])]
-        setNameInput("");
-        setUploadedFiles(uniqueFiles)
+        
+        setSavedLists((savedLists) => {
+            const dummySavedList = new SavedList(nameInput, "", [])
+
+            if(savedLists.some(savedList => SavedList.isEqual(savedList, dummySavedList))) {
+                return savedLists
+            }
+
+            return [...savedLists, dummySavedList]
+        })
     }
 
-    function sendToLink(file : string) {
-        window.location.href = file;
+    const handleRemove = () => {
+        let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
+
+        if(confirmation) {
+            removeCurrentSelectionFromList()
+        }
+    }
+
+    const handleCreateCombinedList = (event: React.MouseEvent<HTMLDivElement>) => {
+        let name = prompt("Name of Combined List") || undefined
+        let description = prompt("Description of Combined List") || undefined
+
+        const newList = SavedList.combine(selectableItems.filter((selectable) => selectable.isSelected).map(selectable => selectable.item), name, description)
+        setSavedLists((savedLists) => {
+            if(savedLists.some(savedList => SavedList.isEqual(savedList, newList))) {
+                return savedLists
+            }
+
+            return [...savedLists, newList]
+        })
+    }
+
+    
+
+    function sendToList(list : SavedList) {
+        alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
     }
 
 
 
-    const FileCard =  (props: {file: string}) => {
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        if(event.key === "Delete") {
+            handleRemove()
+        }
+        handleSelectionOnKeyDown(event)
+    }, [handleSelectionOnKeyDown])
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
+
+
+
+
+    
+    const SavedListCard =  (props: {savedList : SavedList, index: number}) => {
         return (
-            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden"
-                onClick={(e) => {
-                    sendToLink(props.file)
-                }}>
-                {props.file}
+            <div className="border-black text-black
+                            dark:border-white dark:text-white
+                            flex flex-row border-[0.1rem] px-[2rem] justify-between">
+                <div 
+                    className={
+                            selectableItems[props.index].isSelected ?
+                                `text-red border-red
+                                dark:text-red
+                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
+                            :
+                                `text-black border-black
+                                dark:text-white
+                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
+                        }
+                        onClick={(event) => {
+                            handleSelectionOnClick(event, props.index)
+                        }}
+                >
+                    {props.savedList.listName}
+                </div>
+                <div
+                    className="cursor-pointer select-none w-[20%]"
+                    onClick={() => {sendToList(props.savedList)}}
+                >
+                    Open List
+                </div>
             </div>
         )
-    }
-
-    const ListCard = (props: {file: string}) => {
-        return (
-            selectedFiles.includes(props.file) ? 
-                <div className="text-red border-red
-                                dark:text-red dark:border-red
-                                text-center border-[0.1rem] flex-grow cursor-pointer select-none">
-                                
-                    <FileCard file={props.file}/>
-                </div>
-
-            :
-                <div className="text-black border-black
-                                    dark:text-white dark:border-white
-                                    text-center border-[0.1rem] flex-grow cursor-pointer select-none">
-                        <FileCard file={props.file}/>
-                </div>
-        )
-        
     }
       
 
 
     return(
        <div className=" dark:bg-blue bg-white justify-center
-                        flex flex-grow flex-col">
-            
-            <form onSubmit = {handleSubmit}>
-                <div className="flex justify-center p-[0.9rem]">
-                    <Input
-                        onChange={onChange}
-                        name="name"
-                        placeholder="Enter Link"
-                        value={nameInput}/>  
-                </div> 
-                <div className="flex justify-center">
-                    <button className="dark:border-white dark:text-white
-                                    border-black text-black
-                                    border-[0.1rem] flex justify-between gap-[0.5erm] p-[0.7rem] mt-[0.4rem]"
-                    type="submit">
-                        <div> 
-                            Submit Link
-                        </div>
-                        
-                    </button> 
-                </div>
-            </form >
-            <div className="flex flex-grow flex-col mt-[1.5rem]">
-                <ol className="border-black self-center flex-grow
+                        flex flex-grow flex-col pb-[10rem]">
+            <div className="flex pt-[1rem] justify-center w-full">
+                <Input
+                    onChange={onChange}
+                    onSubmit={handleSubmit}
+                    title="Enter External List"
+                    placeholder="Enter Link"    
+                />
+            </div>
+            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
+                <ol className=" border-black self-center flex-grow
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
-                    {uploadedFiles.map((file : string, index : number) => <li key={index}><ListCard file={file}></ListCard></li>)}
+                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
+                        {selectableItems.map(
+                            (selectable, index : number) => (
+                                <SavedListCard
+                                    index = {index}
+                                    savedList = {selectable.item}
+                                />
+                            ))}
                 </ol>
+            </div>
+            <div className="pt-[2rem] h-[5rem]
+                            text-black
+                            dark: text-white
+                            self-center
+                            text-center">
+                {
+                    selectableItems.some(selectableItem => selectableItem.isSelected) ?
+                        <div className="flex flex-col gap-[0.5rem]">
+                            <div
+                                className="select-none cursor-pointer"
+                                onClick={() => { handleRemove() }}
+                            >
+                                Delete Current Selection
+                            </div>
+                            <div
+                                className="select-none cursor-pointer"
+                                onClick={handleCreateCombinedList}
+                            >
+                                Create Combined List from Selection
+                            </div>
+                        </div>
+                    :
+                        selectableItems.length > 0 &&
+                        <div
+                            className="select-none cursor-pointer"
+                            onClick={() => {selectAll()}}
+                        >
+                            Select All
+                        </div>
+                }
             </div>
         </div>
 
     )
-           
-    
 }
-export default ViewSavedPacksScreen
+export default ViewSavedListsScreen

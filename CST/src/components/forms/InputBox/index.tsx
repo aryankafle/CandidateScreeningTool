@@ -74,7 +74,7 @@ class InputBox extends React.Component<NavButtonProps> {
                     }
                 }
             }>
-                <div className="relative h-[4rem] min-w-[200px]">
+                <div className="select-none relative h-[4rem] min-w-[200px]">
                     <label
                         className="after:content[' '] pointer-events-none absolute left-0  -top-2.5 flex h-full w-full select-none !overflow-visible truncate text-[2rem] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-gray-500 after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:after:scale-x-100 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                         {this.props.title}

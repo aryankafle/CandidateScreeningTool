@@ -4,16 +4,16 @@ import express from "express";
 
 // Import from controllers
 import {
-    testMySQLDatabaseConnection
+    testMongoDatabaseConnection
 
-} from "../controllers/MySQL.controller.js";
+} from "../controllers/MongoDB.controller.js";
 
 
 
 const router = express.Router();
 
 // Controller routing
-router.get("/test-database-connection", testMySQLDatabaseConnection)
+router.get("/test-mongoDB-connection", testMongoDatabaseConnection)
 
 
 

@@ -1,6 +1,5 @@
 import {googleLogout} from '@react-oauth/google'
 
-
 const Logout = () => {
     
       
