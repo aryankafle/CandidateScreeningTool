@@ -118,7 +118,7 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="border-black dark:text-black
+            <div className="border-black text-black
                             dark:border-white dark:text-white
                             flex flex-row border-[0.1rem] px-[2rem]">
                 <div 
