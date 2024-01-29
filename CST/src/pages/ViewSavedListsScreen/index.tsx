@@ -1,7 +1,9 @@
-import {useState } from "react";
-import Input from '../../components/forms/TextBox'
+import {ChangeEvent, useContext, useState } from "react";
+import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import Button from '../../components/buttons/ImprovedButtonComponent'
+import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import _ from "lodash"
 
 
 
@@ -9,14 +11,10 @@ import Button from '../../components/buttons/ImprovedButtonComponent'
 
 const ViewSavedListsScreen = () => {
 
+    const {savedLists, setSavedLists} = useContext(SavedListsContext)
+
     const [nameInput, setNameInput] = useState("");
 
-    const [uploadedFiles, setUploadedFiles] = useState([] as string[])
-
-    const [showModal, setShowModal] = useState(false)
-
-    const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
-    
     const {
 
         selectableItems,
@@ -28,54 +26,87 @@ const ViewSavedListsScreen = () => {
         //handleSelectionOnKeyDown,
         handleSelectionOnClick
 
-    } = useSelectableList<string>(uploadedFiles, setUploadedFiles)
+    } = useSelectableList<SavedList>(savedLists, setSavedLists)
 
 
 
 
 
-    const onChange = (str: string) => {
-        setNameInput(str);
+    const onChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.value) {
+            setNameInput(event.target.value);
+        }
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
-        const uniqueFiles = [...new Set([...uploadedFiles, nameInput])]
-        setNameInput("");
-        setUploadedFiles(uniqueFiles)
+        
+        setSavedLists((savedLists) => {
+            const dummySavedList = new SavedList(nameInput, "", [])
+
+            if(savedLists.some(savedList => SavedList.isEqual(savedList, dummySavedList))) {
+                return savedLists
+            }
+
+            return [...savedLists, dummySavedList]
+        })
     }
 
-    function sendToLink(file : string) {
-        window.location.href = file;
+    const handleRemove = (event: React.MouseEvent<HTMLDivElement>) => {
+        let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
+
+        if(confirmation) {
+            removeCurrentSelectionFromList()
+        }
+    }
+
+    const handleCreateCombinedList = (event: React.MouseEvent<HTMLDivElement>) => {
+        let name = prompt("Name of Combined List") || undefined
+        let description = prompt("Description of Combined List") || undefined
+
+        const newList = SavedList.combine(selectableItems.filter((selectable) => selectable.isSelected).map(selectable => selectable.item), name, description)
+        setSavedLists((savedLists) => {
+            if(savedLists.some(savedList => SavedList.isEqual(savedList, newList))) {
+                return savedLists
+            }
+
+            return [...savedLists, newList]
+        })
+    }
+
+    function sendToList(list : SavedList) {
+        alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
     }
 
 
     
-    const FileCard =  (props: {file: string, index: number}) => {
+    const SavedListCard =  (props: {savedList : SavedList, index: number}) => {
         return (
-            <div className="flex flex-row justify-between px-[2rem] overflow-x-hidden">
+            <div className="border-black text-black
+                            dark:border-white dark:text-white
+                            flex flex-row border-[0.1rem] px-[2rem] justify-between">
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
                                 `text-red border-red
                                 dark:text-red
-                                flex-grow select-none cursor-pointer`
+                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
                             :
                                 `text-black border-black
                                 dark:text-white
-                                flex-grow select-none cursor-pointer`
+                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
                         }
                         onClick={(event) => {
                             handleSelectionOnClick(event, props.index)
                         }}
                 >
-                    {props.file}
+                    {props.savedList.listName}
                 </div>
                 <div
-                    className="cursor-pointer select-none"
-                    onClick={() => {sendToLink(props.file)}}
+                    className="cursor-pointer select-none w-[20%]"
+                    onClick={() => {sendToList(props.savedList)}}
                 >
-                    Open Link
+                    Open List
                 </div>
             </div>
         )
@@ -85,76 +116,60 @@ const ViewSavedListsScreen = () => {
 
     return(
        <div className=" dark:bg-blue bg-white justify-center
-                        flex flex-grow flex-col">
-            
-            <form onSubmit = {handleSubmit}>
-                <div className="flex justify-center p-[0.9rem]">
-                    <Input
-                        onChange={onChange}
-                        name="name"
-                        placeholder="Enter Link"
-                        value={nameInput}/>  
-                </div> 
-                <div className="flex justify-center">
-                    <button className="dark:border-white dark:text-white
-                                    border-black text-black
-                                    border-[0.1rem] flex justify-between gap-[0.5erm] p-[0.7rem] mt-[0.4rem]"
-                    type="submit">
-                        <div> 
-                            Submit Link
-                        </div>
-                        
-                    </button> 
-                </div>
-            </form >
-            <div className="flex flex-grow flex-col mt-[1.5rem]">
-                <ol className="border-black self-center flex-grow
+                        flex flex-grow flex-col pb-[10rem]">
+            <div className="flex pt-[1rem] justify-center w-full">
+                <Input
+                    onChange={onChange}
+                    onSubmit={handleSubmit}
+                    title="Enter External List"
+                    placeholder="Enter Link"    
+                />
+            </div>
+            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
+                <ol className=" border-black self-center flex-grow
                                 dark:border-white
-                                border-[0.1rem] w-[35rem] max-h-[50vh] min-h-[8rem] overflow-y-scroll">
+                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
                         {selectableItems.map(
-                        (selectable, index : number, uploadedFiles) => (
-                            <FileCard
-                                index = {index}
-                                file = {uploadedFiles[index].item}
-                            />
-                        ))}
+                            (selectable, index : number) => (
+                                <SavedListCard
+                                    index = {index}
+                                    savedList = {selectable.item}
+                                />
+                            ))}
                 </ol>
             </div>
-            <div className="h-[5rem]
-                                text-black
-                                dark: text-white
-                                self-center">
-                    {selectableItems.some((selectable) => selectable.isSelected) ?
-                        <div className="flex flex-col my-[1rem]">
-                            <Button
-                                className=" text-black
-                                            dark: text-white
-                                            flex-grow self-center"
-                                onClick={() => { removeCurrentSelectionFromList(); } }
+            <div className="pt-[2rem] h-[5rem]
+                            text-black
+                            dark: text-white
+                            self-center
+                            text-center">
+                {
+                    selectableItems.some(selectableItem => selectableItem.isSelected) ?
+                        <div className="flex flex-col gap-[0.5rem]">
+                            <div
+                                className="select-none cursor-pointer"
+                                onClick={handleRemove}
                             >
-                                            Remove Selected Files
-                            </Button>
-                            <Button
-                                className=" text-black
-                                            dark: text-white
-                                            flex-grow self-center"
-                                onClick={() => { clearSelection(); } }
+                                Delete Current Selection
+                            </div>
+                            <div
+                                className="select-none cursor-pointer"
+                                onClick={handleCreateCombinedList}
                             >
-                                            Clear Selection
-                            </Button>
+                                Create Combined List from Selection
+                            </div>
                         </div>
                     :
-                        <Button onClick={() => selectAll()}
-                                className="my-[1.5rem]"
+                        <div
+                            className="select-none cursor-pointer"
+                            onClick={() => {selectAll()}}
                         >
-                            { selectableItems.length > 0 ? "Select All" : ""}
-                        </Button>
-                    }
-                </div>
+                            Select All
+                        </div>
+                }
+            </div>
         </div>
 
     )
-           
-    
 }
 export default ViewSavedListsScreen
