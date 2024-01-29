@@ -18,9 +18,14 @@ const ResultsScreen = () => {
     {
         name: string;
         rank: string;
-        constructor(name: string, rank: string){
+        description: string;
+        filters: string[];
+
+        constructor(name: string, rank: string, description: string, filters: string[]){
             this.name = name;
             this.rank = rank;
+            this.description = description;
+            this.filters = filters;
         }
 
         get getName(){
@@ -29,6 +34,14 @@ const ResultsScreen = () => {
 
         get getRank(){
             return this.rank;
+        }
+
+        get getDescription(){
+            return this.description;
+        }
+
+        get getFilters(){
+            return this.filters;
         }
     }
 
@@ -50,7 +63,7 @@ const ResultsScreen = () => {
             if (i%2 === 0){
                 r = 'B';
             }
-            candidates.push(new Candidate('Bob' + i, r))
+            candidates.push(new Candidate('Bob' + i, r, "description", ["5 years working experience", "college diploma"]))
         }
     }
 
@@ -87,7 +100,9 @@ const ResultsScreen = () => {
                         flex-grow overflow-scroll">
             <div className="flex flex-col flex-grow overflow-scroll" >
                 <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedResultName={candidates[selectedResult].getName}></ResultsDescriptionPopup>
+                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedFilters={candidates[selectedResult].getFilters}
+                    selectedDescription={candidates[selectedResult].getDescription}
+                    ></ResultsDescriptionPopup>
                 </Modal>
                 <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                     <h1>Here are some great candidates based on your needs:</h1>
@@ -98,16 +113,17 @@ const ResultsScreen = () => {
                     </ol>
                 </div>
             </div>  
-            <div className={showSidePanel ? `flex flex-row w-2/5 h-screen bg-white justify-center` : `flex flex-row w-1/10 h-screen bg-white justify-center`}>
+            <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
                 {showSidePanel ?
-                    <div className="flex flex-row justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>
-                        <div>
-                            <h1 className="flex justify-center">List Name</h1>
-                            <p>empty field if new list, defaults to previously set list name if saved list</p>
+                    <div className="w-full">
+                            <h1 className="flex justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>List Name</h1>
+                            <div className="flex justify-center">
+                                <input className="bg-gray" type="text" />
+                            </div>
                             <h1 className="flex justify-center">Description</h1>
-                            <p>description of list that either the user can input, or read from previous input</p>
-                        </div>
-                        
+                            <div className="flex justify-center">
+                                <input className="bg-gray" type="text" />
+                            </div>
                     </div>
                 :
                     <div>
