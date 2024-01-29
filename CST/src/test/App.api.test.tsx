@@ -20,8 +20,8 @@ function App() {
     return response.data;
   }
 
-  const getMySQLTest = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/mySQL/test-database-connection`)
+  const getMongoDBTest = async () => {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/mongoDB/test-mongoDB-connection`)
 
     return response.data
   }
@@ -32,9 +32,9 @@ function App() {
     staleTime: Infinity,
     cacheTime: Infinity
   })
-  const mySQLQuery = useQuery({
-    queryKey: ['post', 'mySQL', 'testQuery'],
-    queryFn: getMySQLTest,
+  const MongoDBQuery = useQuery({
+    queryKey: ['post', 'MongoDB', 'testQuery'],
+    queryFn: getMongoDBTest,
     staleTime: Infinity,
     cacheTime: Infinity
   })
@@ -42,8 +42,8 @@ function App() {
   useEffect(() => {    
     openAIQuery.data?.answer && setOpenAIAnswer(openAIQuery.data?.answer)
     openAIQuery.data?.tokensUsed && setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
-    mySQLQuery.data?.message && setDbConnectionTest(mySQLQuery.data?.message)
-  }, [openAIQuery, mySQLQuery])
+    MongoDBQuery.data?.message && setDbConnectionTest(MongoDBQuery.data?.message)
+  }, [openAIQuery, MongoDBQuery])
 
   return (
     <>
