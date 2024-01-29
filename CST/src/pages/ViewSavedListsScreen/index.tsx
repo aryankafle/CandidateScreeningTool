@@ -1,7 +1,6 @@
-import {ChangeEvent, useContext, useState } from "react";
+import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
-import Button from '../../components/buttons/ImprovedButtonComponent'
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 import _ from "lodash"
 
@@ -19,11 +18,10 @@ const ViewSavedListsScreen = () => {
 
         selectableItems,
 
-        clearSelection,
         selectAll,
         removeCurrentSelectionFromList,
         
-        //handleSelectionOnKeyDown,
+        handleSelectionOnKeyDown,
         handleSelectionOnClick
 
     } = useSelectableList<SavedList>(savedLists, setSavedLists)
@@ -74,9 +72,28 @@ const ViewSavedListsScreen = () => {
         })
     }
 
+    
+
     function sendToList(list : SavedList) {
         alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
     }
+
+
+
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        handleSelectionOnKeyDown(event)
+    }, [handleSelectionOnKeyDown])
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
+
+
 
 
     
