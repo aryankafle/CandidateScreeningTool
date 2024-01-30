@@ -1,4 +1,4 @@
-import {openAICllient} from "../inits/OpenAI.init.js"
+import {openAICllient} from "../../inits/OpenAI.init.js"
 import openaiConfig from "../../config/openai.config.js"
 
 export const queryAI = async (message, role) => {
