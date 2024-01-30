@@ -17,6 +17,7 @@ const ResultsScreen = () => {
     };
 
     var savedList = new SavedList("Coders", "theres some cool coders in here", []);
+    let candidatesList = savedList.orderedResumeList;
     var isPreviouslySaved = false;
 
     class Candidate
@@ -62,6 +63,21 @@ const ResultsScreen = () => {
         }
     }
 
+    function getCandidateImage1(result: Result){
+        switch(result.grade.toString()){
+            case "A":{
+                return(<img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>);
+            } 
+            case "B":{
+                return(<img className='flex items-center w-10' src={`/assets/B-rating.png`} alt="B png"></img>);
+            }
+                
+            
+        }
+
+        
+    }
+
     function generateCandidates(){
         for (let i = 0; i < 10; i++){
             var r = 'A';
@@ -87,6 +103,20 @@ const ResultsScreen = () => {
          </div>
         )
     }
+    const ResultsC = (props: {candidateIndex: number}) => {
+        return(
+          <div className="border-black text-black 
+                         dark:border-white dark:text-white 
+                         flex flex-row border-[0.1rem] px-[2rem] p-2" 
+                onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
+              {candidatesList[props.candidateIndex].applicant.name}
+              {getCandidateImage(candidates[props.candidateIndex])}
+         </div>
+        )
+    }
+
+
+    
 
     const SaveListInfo = () => {
         return (
@@ -118,9 +148,9 @@ const ResultsScreen = () => {
                             {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
                         </ol>
                     :
-                    <ol className="space-y-5">
-                        {savedList.orderedResumeList.map((result: Result, index)=> <li></li>)}
-                    </ol>
+                        <ol className="space-y-5">
+                            {candidatesList.map((result: Result, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
+                        </ol>
                     }
                     
                 </div>

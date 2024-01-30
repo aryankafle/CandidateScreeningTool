@@ -35,6 +35,7 @@ export class Result {
         this.#summary = summary;
     }
 
+    get applicant() {return this.#applicant}
     get exactScore() { return this.#score}
     get grade() {
         const scoreRangeOfOneLetterGrade = Result.MAX_SCORE / 5
