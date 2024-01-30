@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from '../../components/modals/Modal';
 import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
+import { SavedList } from "../../context/SavedListsContext";
+import { Result } from "../../utils/Result";
 import { bookmarkOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 
@@ -13,6 +15,9 @@ const ResultsScreen = () => {
     const toggleModal = () => {
         setShowModal(!showModal);
     };
+
+    var savedList = new SavedList("Coders", "theres some cool coders in here", []);
+    var isPreviouslySaved = false;
 
     class Candidate
     {
@@ -108,9 +113,16 @@ const ResultsScreen = () => {
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
                 <div className="flex justify-center">
+                    {isPreviouslySaved? 
+                        <ol className="space-y-5">
+                            {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
+                        </ol>
+                    :
                     <ol className="space-y-5">
-                        {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
+                        {savedList.orderedResumeList.map((result: Result, index)=> <li></li>)}
                     </ol>
+                    }
+                    
                 </div>
             </div>  
             <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
