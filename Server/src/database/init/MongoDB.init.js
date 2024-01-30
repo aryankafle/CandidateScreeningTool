@@ -9,7 +9,7 @@ dotenv.config();
 
 const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
 
-export var isConnected = false;
+var isConnected = false;
 
 
 
@@ -29,4 +29,4 @@ const connection = async () => {
       }
 }
 
-export default connection
+export default {connection, client, isConnected}
