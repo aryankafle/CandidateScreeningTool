@@ -1,5 +1,4 @@
-import connection from "./init/MongoDB.init.js"
-import { isConnected } from "./init/MongoDB.init.js"
+import { isConnected, connection } from "../inits/MongoDB.init.js"
 
 
 
