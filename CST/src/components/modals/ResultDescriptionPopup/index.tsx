@@ -1,6 +1,5 @@
 import { IonIcon } from "@ionic/react"
 import { closeCircleOutline } from 'ionicons/icons';
-import { Filter } from "../../../context/FilterContext";
 import { Result } from "../../../utils/Result";
 
 type ResultDescriptionPopupProps = {
@@ -11,8 +10,8 @@ type ResultDescriptionPopupProps = {
 
 
 const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({selectedResult, onXClicked}) => {
-    var filters = selectedResult.applicant
-    //var formattedFilters = selectedFilters.map((filter, index) => <p className="flex m-1 border-double">{selectedFilters.at(index)}</p>);
+    var filters = selectedResult.filters;
+    var formattedFilters = filters.map((filter, index) => <p className="flex m-1 border-double">{filters.at(index)?.toString()}</p>);
 
     return(
         <div className="flex w-screen items-center justify-center">
@@ -22,7 +21,7 @@ const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({select
                     onClick={onXClicked}/>
                 </div>
                 <div className="flex ">
-                    {/* {formattedFilters} */}
+                    {formattedFilters}
                 </div>
                 <div className="">
                     Description: {selectedResult.description.toString()}

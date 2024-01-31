@@ -11,6 +11,7 @@ const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(true);
     const [selectedResult, setSelectedResult] = useState(0);
+    //const [listNameInput, setListNameInput] = useState("");
     
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -134,10 +135,9 @@ const ResultsScreen = () => {
                                 }
                             </div>
                             <p className="flex justify-center" onClick={()=>{
-                                if (!isPreviouslySaved && ''){
-                                    
+                                //send the list to saved-list page
                                 }
-                            }}>Save List</p>
+                            }>Save List</p>
                     </div>
                 :
                     <div>
