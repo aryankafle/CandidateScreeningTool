@@ -1,18 +1,18 @@
 import { IonIcon } from "@ionic/react"
 import { closeCircleOutline } from 'ionicons/icons';
-import { filter, forEach } from "lodash";
-
+import { Filter } from "../../../context/FilterContext";
+import { Result } from "../../../utils/Result";
 
 type ResultDescriptionPopupProps = {
-    selectedDescription : string
-    selectedFilters : string[]
+    selectedResult : Result
     onXClicked : () => void
 }
 
 
 
-const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({selectedDescription, selectedFilters, onXClicked}) => {
-    var formattedFilters = selectedFilters.map((filter, index) => <p className="flex m-1 border-double">{selectedFilters.at(index)}</p>);
+const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({selectedResult, onXClicked}) => {
+    var filters = selectedResult.applicant
+    //var formattedFilters = selectedFilters.map((filter, index) => <p className="flex m-1 border-double">{selectedFilters.at(index)}</p>);
 
     return(
         <div className="flex w-screen items-center justify-center">
@@ -22,10 +22,10 @@ const ResultsDescriptionPopup : React.FC<ResultDescriptionPopupProps> = ({select
                     onClick={onXClicked}/>
                 </div>
                 <div className="flex ">
-                    {formattedFilters}
+                    {/* {formattedFilters} */}
                 </div>
                 <div className="">
-                    Description: {selectedDescription}
+                    Description: {selectedResult.description.toString()}
                 </div>
             </div>
         </div>  

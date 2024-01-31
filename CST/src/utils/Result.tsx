@@ -37,6 +37,7 @@ export class Result {
 
     get applicant() {return this.#applicant}
     get exactScore() { return this.#score}
+    get description() { return this.#summary}
     get grade() {
         const scoreRangeOfOneLetterGrade = Result.MAX_SCORE / 5
         const gradeEnum : Grades = Math.round(this.#score / scoreRangeOfOneLetterGrade)

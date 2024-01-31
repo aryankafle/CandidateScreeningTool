@@ -17,7 +17,7 @@ const ResultsScreen = () => {
     };
 
     var savedList = new SavedList("Coders", "theres some cool coders in here", []);
-    let candidatesList = savedList.orderedResumeList;
+    let candidates = savedList.orderedResumeList;
     var isPreviouslySaved = false;
 
     class Candidate
@@ -51,72 +51,37 @@ const ResultsScreen = () => {
         }
     }
 
-    function getCandidateImage(candidate: Candidate){
-        if (candidate.getRank === 'A'){
-            return(
-                <img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>
-            );
-        }else{
-            return(
-                <img className='flex items-center w-10' src={`/assets/b-rating.png`} alt="B png" width=''></img>
-            );
-        }
-    }
-
     function getCandidateImage1(result: Result){
         switch(result.grade.toString()){
             case "A":{
                 return(<img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>);
             } 
             case "B":{
-                return(<img className='flex items-center w-10' src={`/assets/B-rating.png`} alt="B png"></img>);
+                return(<img className='flex items-center w-10' src={`/assets/-rating.png`} alt="B png"></img>);
             }
-                
-            
+            case "C":{
+                return(<img className='flex items-center w-10' src={`/assets/c-rating.png`} alt="C png"></img>);
+            }
+            case "D":{
+                return(<img className='flex items-center w-10' src={`/assets/d-rating.png`} alt="B png"></img>);
+            }
         }
 
         
     }
 
-    function generateCandidates(){
-        for (let i = 0; i < 10; i++){
-            var r = 'A';
-            if (i%2 === 0){
-                r = 'B';
-            }
-            candidates.push(new Candidate('Bob' + i, r, "description", ["5 years working experience", "college diploma"]))
-        }
-    }
-
-    var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
-    generateCandidates();
-
-
     const ResultsCard = (props: {candidateIndex: number}) => {
         return(
-          <div className="border-black text-black 
-                         dark:border-white dark:text-white 
-                         flex flex-row border-[0.1rem] px-[2rem] p-2" 
-                onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
-              {candidates[props.candidateIndex].getName}
-              {getCandidateImage(candidates[props.candidateIndex])}
-         </div>
-        )
-    }
-    const ResultsC = (props: {candidateIndex: number}) => {
-        return(
-          <div className="border-black text-black 
-                         dark:border-white dark:text-white 
-                         flex flex-row border-[0.1rem] px-[2rem] p-2" 
-                onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
-              {candidatesList[props.candidateIndex].applicant.name}
-              {getCandidateImage(candidates[props.candidateIndex])}
-         </div>
-        )
+            <div className="border-black text-black 
+                           dark:border-white dark:text-white 
+                           flex flex-row border-[0.1rem] px-[2rem] p-2" 
+                  onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
+                {candidates[props.candidateIndex].applicant.name}
+                {getCandidateImage1(candidates[props.candidateIndex])}
+           </div>
+          )
     }
 
-
-    
 
     const SaveListInfo = () => {
         return (
@@ -135,24 +100,17 @@ const ResultsScreen = () => {
                         flex-grow overflow-scroll">
             <div className="flex flex-col flex-grow overflow-scroll" >
                 <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedFilters={candidates[selectedResult].getFilters}
-                    selectedDescription={candidates[selectedResult].getDescription}
+                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} 
+                    selectedResult={candidates[selectedResult]}
                     ></ResultsDescriptionPopup>
                 </Modal>
                 <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
                 <div className="flex justify-center">
-                    {isPreviouslySaved? 
-                        <ol className="space-y-5">
-                            {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
-                        </ol>
-                    :
-                        <ol className="space-y-5">
-                            {candidatesList.map((result: Result, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
-                        </ol>
-                    }
-                    
+                    <ol className="space-y-5">
+                    {candidates.map((result: Result, index: number)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
+                    </ol>
                 </div>
             </div>  
             <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
@@ -164,8 +122,13 @@ const ResultsScreen = () => {
                             </div>
                             <h1 className="flex justify-center">Description</h1>
                             <div className="flex justify-center">
-                                <input className="bg-gray" type="text" />
+                                {isPreviouslySaved?
+                                    savedList.listDescription
+                                    :
+                                    <input className="bg-gray" type="text" />
+                                }
                             </div>
+                            <p className="flex justify-center">Save List</p>
                     </div>
                 :
                     <div>
