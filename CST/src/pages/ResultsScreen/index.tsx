@@ -66,8 +66,6 @@ const ResultsScreen = () => {
                 return(<img className='flex items-center w-10' src={`/assets/d-rating.png`} alt="B png"></img>);
             }
         }
-
-        
     }
 
     const ResultsCard = (props: {candidateIndex: number}) => {
@@ -81,7 +79,7 @@ const ResultsScreen = () => {
            </div>
           )
     }
-
+ 
 
     const SaveListInfo = () => {
         return (
@@ -116,10 +114,17 @@ const ResultsScreen = () => {
             <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
                 {showSidePanel ?
                     <div className="w-full">
-                            <h1 className="flex justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>List Name</h1>
+                        <h1 className="flex justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>List Name: </h1>
+                        {isPreviouslySaved?
+                            <div className="flex justify-center">
+                                {savedList.listName}
+                            </div>
+                            :
                             <div className="flex justify-center">
                                 <input className="bg-gray" type="text" />
                             </div>
+                        }
+                    
                             <h1 className="flex justify-center">Description</h1>
                             <div className="flex justify-center">
                                 {isPreviouslySaved?
@@ -128,7 +133,9 @@ const ResultsScreen = () => {
                                     <input className="bg-gray" type="text" />
                                 }
                             </div>
-                            <p className="flex justify-center">Save List</p>
+                            <p className="flex justify-center" onClick={()=>{
+                                if (!isPreviouslySaved && '')
+                            }}>Save List</p>
                     </div>
                 :
                     <div>
