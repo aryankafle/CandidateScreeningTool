@@ -134,7 +134,9 @@ const ResultsScreen = () => {
                                 }
                             </div>
                             <p className="flex justify-center" onClick={()=>{
-                                if (!isPreviouslySaved && '')
+                                if (!isPreviouslySaved && ''){
+                                    
+                                }
                             }}>Save List</p>
                     </div>
                 :
