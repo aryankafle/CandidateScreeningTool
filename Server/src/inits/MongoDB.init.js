@@ -1,4 +1,4 @@
-import mongoConfig from "../../config/MongoDB.config.js"
+import mongoConfig from "../config/MongoDB.config.js"
 import { MongoClient } from 'mongodb';
 import dotenv from "dotenv"
 dotenv.config();
@@ -7,7 +7,7 @@ dotenv.config();
 
 
 
-const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
+export const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
 
 export var isConnected = false;
 
@@ -15,7 +15,7 @@ export var isConnected = false;
 
 
 
-const connection = async () => {
+export const connection = async () => {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
@@ -23,10 +23,9 @@ const connection = async () => {
         await client.db("admin").command({ ping: 1 });
         isConnected = true
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-      } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
+        return isConnected
+      } catch (err) {
+        console.log(err)
+        await client.close()
       }
 }
-
-export default connection
