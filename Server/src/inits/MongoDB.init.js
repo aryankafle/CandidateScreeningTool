@@ -26,9 +26,6 @@ export const connection = async () => {
         return isConnected
       } catch (err) {
         console.log(err)
+        await client.close()
       }
-      // finally {
-      //   // Ensures that the client will close when you finish/error
-      //   await client.close();
-      // }
 }
