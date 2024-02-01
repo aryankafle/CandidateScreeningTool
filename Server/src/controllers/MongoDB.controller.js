@@ -1,4 +1,5 @@
 import { testMongoDBConnection } from "../models/services/MongoDB.service.js";
+import { viewTable } from "../models/services/MongoDB.service.js";
 
 
 export const testMongoDatabaseConnection = async (req, res) => {
@@ -6,3 +7,7 @@ export const testMongoDatabaseConnection = async (req, res) => {
     return testMongoDBConnection() ? res.status(200).send({message: "Connected to Database"}) : res.status(404).send({message: "Error Connecting to Database"})
 }
 
+export const viewCommentsTable = async (req, res) => {
+    testMongoDBConnection() ? viewTable() : console.log("error")
+    return testMongoDBConnection() ? res.status(200).send({message: "Printed table in console"}) : res.status(404).send({message: "Error querying data"})
+}

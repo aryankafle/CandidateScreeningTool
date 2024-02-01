@@ -7,7 +7,6 @@ export const testMongoDBConnection = () => {
 
 // code writes complete content of 1 table (comments) into console
 export const viewTable = async () => {
-    await connection()
     const db = client.db("sample_mflix")
     const coll = db.collection("comments")
     const cursor = coll.find()
