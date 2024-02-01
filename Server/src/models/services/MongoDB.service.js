@@ -5,6 +5,7 @@ export const testMongoDBConnection = () => {
     return database.checkMongoDBConnection()
 }
 
+// code writes complete content of 1 table (comments) into console
 export const viewTable = async () => {
     await connection()
     const db = client.db("sample_mflix")
