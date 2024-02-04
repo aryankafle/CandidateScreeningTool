@@ -107,7 +107,8 @@ const ViewSavedListsScreen = () => {
         return (
             <div className="border-black text-black
                             dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem] justify-between">
+                            flex flex-row border-[0.1rem] px-[4rem] 
+                            py-[1rem] justify-between text-xl">
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
@@ -138,7 +139,7 @@ const ViewSavedListsScreen = () => {
     return(
        <div className=" dark:bg-blue bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
-            <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center">
+            <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input
                     onChange={onChange}
                     onSubmit={handleSubmit}
@@ -164,7 +165,8 @@ const ViewSavedListsScreen = () => {
                             text-black
                             dark:text-white
                             self-center
-                            text-center">
+                            text-center
+                            text-xl">
                 {
                     anySelected() ?
                         <div className="flex flex-col gap-[0.5rem]">
