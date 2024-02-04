@@ -2,7 +2,6 @@ import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
-import _ from "lodash"
 
 
 
@@ -17,6 +16,8 @@ const ViewSavedListsScreen = () => {
     const {
 
         selectableItems,
+
+        anySelected,
 
         selectAll,
         removeCurrentSelectionFromList,
@@ -50,7 +51,7 @@ const ViewSavedListsScreen = () => {
         })
     }
 
-    const handleRemove = () => {
+    const handleRemoveSelection = () => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
 
         if(confirmation) {
@@ -58,7 +59,7 @@ const ViewSavedListsScreen = () => {
         }
     }
 
-    const handleCreateCombinedList = (event: React.MouseEvent<HTMLDivElement>) => {
+    const createCombinedList = () => {
         let name = prompt("Name of Combined List") || undefined
         let description = prompt("Description of Combined List") || undefined
 
@@ -82,7 +83,7 @@ const ViewSavedListsScreen = () => {
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         if(event.key === "Delete") {
-            handleRemove()
+            handleRemoveSelection()
         }
         handleSelectionOnKeyDown(event)
     }, [handleSelectionOnKeyDown])
@@ -116,15 +117,13 @@ const ViewSavedListsScreen = () => {
                                 dark:text-white
                                 select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
                         }
-                        onClick={(event) => {
-                            handleSelectionOnClick(event, props.index)
-                        }}
+                        onClick={(event) => { handleSelectionOnClick(event, props.index) }}
                 >
                     {props.savedList.listName}
                 </div>
                 <div
                     className="cursor-pointer select-none w-[20%]"
-                    onClick={() => {sendToList(props.savedList)}}
+                    onClick={() => { sendToList(props.savedList) }}
                 >
                     Open List
                 </div>
@@ -160,30 +159,30 @@ const ViewSavedListsScreen = () => {
             </div>
             <div className="pt-[2rem] h-[5rem]
                             text-black
-                            dark: text-white
+                            dark:text-white
                             self-center
                             text-center">
                 {
-                    selectableItems.some(selectableItem => selectableItem.isSelected) ?
+                    anySelected() ?
                         <div className="flex flex-col gap-[0.5rem]">
                             <div
                                 className="select-none cursor-pointer"
-                                onClick={() => { handleRemove() }}
+                                onClick={() => { handleRemoveSelection() }}
                             >
                                 Delete Current Selection
                             </div>
                             <div
                                 className="select-none cursor-pointer"
-                                onClick={handleCreateCombinedList}
+                                onClick={() => { createCombinedList() }}
                             >
                                 Create Combined List from Selection
                             </div>
                         </div>
                     :
-                        selectableItems.length > 0 &&
+                        savedLists.length > 0 &&
                         <div
                             className="select-none cursor-pointer"
-                            onClick={() => {selectAll()}}
+                            onClick={() => { selectAll() }}
                         >
                             Select All
                         </div>

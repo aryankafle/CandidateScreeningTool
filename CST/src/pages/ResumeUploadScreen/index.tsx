@@ -27,7 +27,12 @@ const ResumeUploadScreen = () => {
     const {
 
         selectableItems,
-        // setSelectableItems,
+
+        getAllItems,
+        // getAllSelectedItems,
+        // getAllNotSelectedItems,
+        // amountSelected,
+        anySelected,
 
         // previouslySelectedIndex,
 
@@ -86,8 +91,7 @@ const ResumeUploadScreen = () => {
 
 
     function handleAddFiltersClick() {
-        const files = selectableItems.map((fileSelection) => {return fileSelection.item})
-        fileContext.setUploadedFiles(files)
+        fileContext.setUploadedFiles(getAllItems)
         
         navigate("/filter")
     }
@@ -197,13 +201,13 @@ const ResumeUploadScreen = () => {
                 </ol>
                 <div className="h-[5rem]
                                 text-black
-                                dark: text-white
+                                dark:text-white
                                 self-center">
-                    {selectableItems.some((selectable) => selectable.isSelected) ?
+                    { anySelected() ?
                         <div className="flex flex-col my-[1rem]">
                             <Button
                                 className=" text-black
-                                            dark: text-white
+                                            dark:text-white
                                             flex-grow self-center"
                                 onClick={() => { removeCurrentSelectionFromList(); } }
                             >
@@ -211,7 +215,7 @@ const ResumeUploadScreen = () => {
                             </Button>
                             <Button
                                 className=" text-black
-                                            dark: text-white
+                                            dark:text-white
                                             flex-grow self-center"
                                 onClick={() => { clearSelection(); } }
                             >
