@@ -124,7 +124,7 @@ const ViewSavedListsScreen = () => {
                     {props.savedList.listName}
                 </div>
                 <div
-                    className="cursor-pointer select-none w-[20%]"
+                    className="cursor-pointer select-none w-[10%]"
                     onClick={() => { sendToList(props.savedList) }}
                 >
                     Open List
@@ -138,7 +138,7 @@ const ViewSavedListsScreen = () => {
     return(
        <div className=" dark:bg-blue bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
-            <div className="flex pt-[1rem] justify-center w-full">
+            <div className="flex flex-row pt-[1rem] justify-center">
                 <Input
                     onChange={onChange}
                     onSubmit={handleSubmit}
