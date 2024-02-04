@@ -138,7 +138,7 @@ const ViewSavedListsScreen = () => {
     return(
        <div className=" dark:bg-blue bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
-            <div className="flex flex-row pt-[1rem] justify-center">
+            <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center">
                 <Input
                     onChange={onChange}
                     onSubmit={handleSubmit}
