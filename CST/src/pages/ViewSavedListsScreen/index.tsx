@@ -2,6 +2,8 @@ import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import { saveOutline } from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
 
 
 
@@ -143,6 +145,7 @@ const ViewSavedListsScreen = () => {
                     title="Enter External List"
                     placeholder="Enter Link"    
                 />
+                <IonIcon className="cursor-pointer text-[2rem] pt-8 px-4" icon={saveOutline}></IonIcon>
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
                 <ol className=" border-black self-center flex-grow
