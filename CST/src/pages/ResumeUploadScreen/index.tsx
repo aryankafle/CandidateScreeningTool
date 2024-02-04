@@ -7,6 +7,7 @@ import Button from '../../components/buttons/ImprovedButtonComponent'
 import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
+import Input from "../../components/forms/InputBox";
 
 
 
@@ -20,6 +21,10 @@ const ResumeUploadScreen = () => {
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
+    const [batchName, setBatchName] = useState("")
+
+    const [title, setTitle] =  useState("") 
+
     const [showModal, setShowModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
@@ -28,7 +33,7 @@ const ResumeUploadScreen = () => {
 
         selectableItems,
 
-        getAllItems,
+        // getAllItems,
         // getAllSelectedItems,
         // getAllNotSelectedItems,
         // amountSelected,
@@ -56,7 +61,14 @@ const ResumeUploadScreen = () => {
 
 
 
+    const handleChangeTitleContext = () => { fileContext.setCurrentBatchName(title) }
 
+    useEffect(handleChangeTitleContext, [title, fileContext])
+
+
+
+    
+    
     const handleFileUpload = useCallback((event : React.ChangeEvent<HTMLInputElement>) => {
 
         if(!event.target.files) return;
@@ -91,16 +103,22 @@ const ResumeUploadScreen = () => {
 
 
     function handleAddFiltersClick() {
-        fileContext.setUploadedFiles(getAllItems)
-        
         navigate("/filter")
+    }
+
+
+
+    function handleDeleteFiles() {
+        if(window.confirm("Are you sure you want to delete the currently selected files from the batch?")) {
+            removeCurrentSelectionFromList()
+        }
     }
 
 
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         if(event.key === "Delete") {
-            removeCurrentSelectionFromList()
+            handleDeleteFiles()
         }
         else {
             handleSelectionOnKeyDown(event)
@@ -168,6 +186,19 @@ const ResumeUploadScreen = () => {
                     currentlySelectedIndex={currentlyOpenedIndex}
                 />
             </Modal>
+            <div className="dark:border-white dark:text-white
+                            border-black text-black
+                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                <div >
+                    Upload a batch of resumes.
+                </div>
+                <Input 
+                    title={"Batch Name:"}
+                    placeholder={"Batch A-1"}
+                    onChange={(event) => { setBatchName(event.target.value)}}
+                    onSubmit={() => { setTitle(batchName) }}
+                />
+            </div>
             <div className="flex justify-center">
                 <Button 
                     className=" dark:border-white dark:text-white
@@ -176,7 +207,7 @@ const ResumeUploadScreen = () => {
                     onClick={handleUploadClick}
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    Upload Files
+                    { title ? `Upload Files to ${title}` : `Upload Files`  }
                     <input
                         accept=".doc,.docx,.pdf,.png,.jpg"
                         type="file"
@@ -209,7 +240,7 @@ const ResumeUploadScreen = () => {
                                 className=" text-black
                                             dark:text-white
                                             flex-grow self-center"
-                                onClick={() => { removeCurrentSelectionFromList(); } }
+                                onClick={() => { handleDeleteFiles(); } }
                             >
                                             Remove Selected Files
                             </Button>
