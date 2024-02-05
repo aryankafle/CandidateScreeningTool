@@ -23,8 +23,6 @@ const ResumeUploadScreen = () => {
 
     const [batchName, setBatchName] = useState("")
 
-    const [title, setTitle] =  useState("") 
-
     const [showModal, setShowModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
@@ -60,15 +58,6 @@ const ResumeUploadScreen = () => {
 
 
 
-
-    const handleChangeTitleContext = () => { fileContext.setCurrentBatchName(title) }
-
-    useEffect(handleChangeTitleContext, [title, fileContext])
-
-
-
-    
-    
     const handleFileUpload = useCallback((event : React.ChangeEvent<HTMLInputElement>) => {
 
         if(!event.target.files) return;
@@ -108,11 +97,11 @@ const ResumeUploadScreen = () => {
 
 
 
-    function handleDeleteFiles() {
+    const handleDeleteFiles = useCallback(() => {
         if(window.confirm("Are you sure you want to delete the currently selected files from the batch?")) {
             removeCurrentSelectionFromList()
         }
-    }
+    }, [removeCurrentSelectionFromList])
 
 
 
@@ -123,7 +112,7 @@ const ResumeUploadScreen = () => {
         else {
             handleSelectionOnKeyDown(event)
         }
-    }, [handleSelectionOnKeyDown, removeCurrentSelectionFromList])
+    }, [handleSelectionOnKeyDown, handleDeleteFiles])
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
@@ -196,7 +185,7 @@ const ResumeUploadScreen = () => {
                     title={"Batch Name:"}
                     placeholder={"Batch A-1"}
                     onChange={(event) => { setBatchName(event.target.value)}}
-                    onSubmit={() => { setTitle(batchName) }}
+                    onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
                 />
             </div>
             <div className="flex justify-center">
@@ -207,7 +196,7 @@ const ResumeUploadScreen = () => {
                     onClick={handleUploadClick}
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    { title ? `Upload Files to ${title}` : `Upload Files`  }
+                    { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
                     <input
                         accept=".doc,.docx,.pdf,.png,.jpg"
                         type="file"
