@@ -2,6 +2,8 @@ import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import { copyOutline } from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
 
 
 
@@ -105,7 +107,8 @@ const ViewSavedListsScreen = () => {
         return (
             <div className="border-black text-black
                             dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem] justify-between">
+                            flex flex-row border-[0.1rem] px-[4rem] 
+                            py-[1rem] justify-between text-xl">
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
@@ -122,7 +125,7 @@ const ViewSavedListsScreen = () => {
                     {props.savedList.listName}
                 </div>
                 <div
-                    className="cursor-pointer select-none w-[20%]"
+                    className="cursor-pointer select-none w-[10%]"
                     onClick={() => { sendToList(props.savedList) }}
                 >
                     Open List
@@ -136,13 +139,14 @@ const ViewSavedListsScreen = () => {
     return(
        <div className=" dark:bg-blue bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
-            <div className="flex pt-[1rem] justify-center w-full">
+            <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input
                     onChange={onChange}
                     onSubmit={handleSubmit}
                     title="Enter External List"
                     placeholder="Enter Link"    
                 />
+                <IonIcon className="cursor-pointer text-[2rem] pt-8 px-4" icon={copyOutline}></IonIcon>
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
                 <ol className=" border-black self-center flex-grow
@@ -161,7 +165,8 @@ const ViewSavedListsScreen = () => {
                             text-black
                             dark:text-white
                             self-center
-                            text-center">
+                            text-center
+                            text-xl">
                 {
                     anySelected() ?
                         <div className="flex flex-col gap-[0.5rem]">
