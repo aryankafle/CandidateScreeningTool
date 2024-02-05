@@ -17,14 +17,24 @@ export class SavedList {
 
     #orderedResumeList : Result[]
     get orderedResumeList() {return this.#orderedResumeList}
+
+    #listLink : string;
+    get listLink() {return this.#listLink}
     
 
+
+
+
+    private generateLink() {
+        return "dummylinkfor+" + this.#listName
+    }
 
     constructor(name : string, description : string, orderedResumeList : Result[], color? : string) {
         this.#listName = name;
         this.#listDescription = description;
         this.#orderedResumeList = orderedResumeList;
         this.#color = color || "#FFFFFFFF";
+        this.#listLink = this.generateLink()
     }
 
 
