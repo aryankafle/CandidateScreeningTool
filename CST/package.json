@@ -24,6 +24,7 @@
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "openid": "^2.0.11",
+    "pdf-to-png-converter": "^3.1.0",
     "react": "*",
     "react-dom": "^18.2.0",
     "react-promise-tracker": "^2.1.1",
