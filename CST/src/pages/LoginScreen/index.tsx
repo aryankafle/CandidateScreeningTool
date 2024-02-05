@@ -2,56 +2,57 @@ import LoginButton from '../../components/buttons/LoginButton'
 import LogoutButton from '../../components/buttons/LogoutButton'
 import  axios  from 'axios';
 import {useState } from "react";
+import querystring from 'querystring'
+import oauth from 'axios-oauth-client'
+
+
+const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID as string
+const clientSecret = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_SECRET as string
+const redirectUrl =  'http://localhost:3000/home'
+//'https://accounts.google.com/o/oauth2/v2/auth'
+
+
 
 const LoginScreen = () => {
     const [account, setAccount] = useState("")
-    function logout() {
-        //window.location.href = "https://localhost:3000/oauth/revoke"
-        
-
-
-        axios.get('/user?ID=29931420007-dp18uidt963gicfb6niv4maf74p26le9.apps.googleusercontent.com')
-            .then(function (response: any) {
-            // handle success
-                setAccount(response);
-                console.log(response);
-        })
-            .catch(function (error: any) {
-                // handle error
-                console.log(error);
-        })
-            .finally(function () {
-                // always executed
-        });
-
-        // var options = {
-        //     method: 'POST',
-        //     url: 'https://localhost:3000/oauth/revoke',
-        //     headers: {'content-type': 'application/json'},
-        //     data: {
-        //       client_id: '29931420007-dp18uidt963gicfb6niv4maf74p26le9.apps.googleusercontent.com',
-        //       client_secret: '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',
-        //       token: 'https://localhost:3000/oauth/token'
-        //     }
-        //   };
-
-          
-
-        //   axios.get(options).then(function (response : any) {
-        //     console.log(response.data);
-        //   }).catch(function (error: any) {
-        //     console.error(error);
-        //   });
-        
+    const data = { 'grant_type': 'client_credentials'};
     
+    const getAuthorizationCode = oauth.authorizationCode(
+        axios.create(),
+        'https://oauth.com/2.0/token', // OAuth 2.0 token endpoint
+        'CLIENT_ID',
+        'CLIENT_SECRET',
+        'https://your-app.com/oauth-redirect' // Redirect URL for your app
+      )
+      const auth = await getAuthorizationCode('AUTHORIZATION_CODE')
+
+
+
+
+    function login() {
+        
+        //Response.writeHead(301, { "Location": authorizationUrl });
+
+    //     axios.post("https://accounts.google.com/o/oauth2/v2/auth",
+    //     { 
+    //         client_id: clientId,
+            
+    //         data:({
+    //             response_type: "code",
+    //             redirect_url: redirectUrl,
+    //         })
+
+    
+    
+    // })
       
     }
     return (
         <div>
-            <LoginButton />
+            {/* <LoginButton /> */}
             <button 
-                onClick = {logout}>
-                    grr
+                onClick = {login}>
+                    GRUH
                         
             </button>
         </div>
