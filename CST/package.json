@@ -29,6 +29,7 @@
     "react-promise-tracker": "^2.1.1",
     "react-query": "^3.39.3",
     "sort-by": "^0.0.2",
+    "tesseract.js": "^5.0.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
