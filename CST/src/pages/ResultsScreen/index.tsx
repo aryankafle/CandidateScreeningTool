@@ -83,16 +83,7 @@ const ResultsScreen = () => {
         )
     }
 
-    const SaveListInfo = () => {
-        return (
-            <div className="flex justify-center">
-                <div className="text-2xl">
-                    <h1 className="flex justify-center">List Name</h1>
-                    <input type="text" className="bg-gray rounded-md"/>
-                </div>
-            </div>
-        )
-    }
+    
 
     return (
         <div className="dark:bg-blue bg-white
