@@ -39,7 +39,6 @@ export class Result {
         this.#filters = filters;
     }
 
-    get applicant() {return this.#applicant}
     get exactScore() { return this.#score}
     get description() { return this.#summary}
     get filters() { return this.#filters}
