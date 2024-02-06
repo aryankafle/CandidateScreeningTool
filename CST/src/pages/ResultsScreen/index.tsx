@@ -4,6 +4,7 @@ import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPo
 import { SavedList } from "../../context/SavedListsContext";
 import { Result } from "../../utils/Result";
 import { bookmarkOutline } from 'ionicons/icons';
+import NavButton from "../../components/buttons/NavButton";
 import { IonIcon } from "@ionic/react";
 
 
@@ -20,37 +21,6 @@ const ResultsScreen = () => {
     var savedList = new SavedList("Coders", "theres some cool coders in here", []);
     let candidates = savedList.orderedResumeList;
     var isPreviouslySaved = false;
-
-    class Candidate
-    {
-        name: string;
-        rank: string;
-        description: string;
-        filters: string[];
-
-        constructor(name: string, rank: string, description: string, filters: string[]){
-            this.name = name;
-            this.rank = rank;
-            this.description = description;
-            this.filters = filters;
-        }
-
-        get getName(){
-            return this.name;
-        }
-
-        get getRank(){
-            return this.rank;
-        }
-
-        get getDescription(){
-            return this.description;
-        }
-
-        get getFilters(){
-            return this.filters;
-        }
-    }
 
     function getCandidateImage1(result: Result){
         switch(result.grade.toString()){
@@ -125,10 +95,12 @@ const ResultsScreen = () => {
                                     <input className="bg-gray" type="text" />
                                 }
                             </div>
-                            <p className="flex justify-center" onClick={()=>{
-                                //send the list to saved-list page
-                                }
-                            }>Save List</p>
+
+                            <div className="flex justify-center">
+                                <NavButton className="flex justify-center" toRoute='/home/saved-lists'>
+                                    Save List
+                                </NavButton>
+                            </div>
                     </div>
                 :
                     <div>
