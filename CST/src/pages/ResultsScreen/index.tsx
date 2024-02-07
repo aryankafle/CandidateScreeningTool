@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
-import { SavedList } from "../../context/SavedListsContext";
+import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 import { Result } from "../../utils/Result";
 import { bookmarkOutline } from 'ionicons/icons';
 import NavButton from "../../components/buttons/NavButton";
 import { IonIcon } from "@ionic/react";
+import { useContext } from "react";
 
 
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(true);
     const [selectedResult, setSelectedResult] = useState(0);
-    //const [listNameInput, setListNameInput] = useState("");
+    const {savedLists, setSavedLists} = useContext(SavedListsContext);
+ 
     
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -38,6 +40,18 @@ const ResultsScreen = () => {
             }
         }
     }
+
+    const addSavedListToSavedLists = useCallback(()=> {
+        setSavedLists((savedLists) => {
+            if(savedLists.some(sL => SavedList.isEqual(sL, savedList))) {
+                return savedLists
+            }
+            return [...savedLists, savedList]
+        })
+
+    }, [savedLists, setSavedLists]) 
+
+    
 
     const ResultsCard = (props: {candidateIndex: number}) => {
         return(
