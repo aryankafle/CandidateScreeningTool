@@ -4,16 +4,14 @@ import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPo
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 import { Result } from "../../utils/Result";
 import { bookmarkOutline } from 'ionicons/icons';
-import NavButton from "../../components/buttons/NavButton";
 import { IonIcon } from "@ionic/react";
-import { useContext } from "react";
+import SaveListButton from "../../components/buttons/SaveListButton";
 
 
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(true);
     const [selectedResult, setSelectedResult] = useState(0);
-    const {savedLists, setSavedLists} = useContext(SavedListsContext);
  
     
     const toggleModal = () => {
@@ -40,16 +38,6 @@ const ResultsScreen = () => {
             }
         }
     }
-
-    const addSavedListToSavedLists = useCallback(()=> {
-        setSavedLists((savedLists) => {
-            if(savedLists.some(sL => SavedList.isEqual(sL, savedList))) {
-                return savedLists
-            }
-            return [...savedLists, savedList]
-        })
-
-    }, [savedLists, setSavedLists]) 
 
     
 
@@ -111,9 +99,9 @@ const ResultsScreen = () => {
                             </div>
 
                             <div className="flex justify-center">
-                                <NavButton className="flex justify-center" toRoute='/home/saved-lists'>
+                                <SaveListButton className="flex justify-center" toRoute='/home/saved-lists' savedList={savedList}>
                                     Save List
-                                </NavButton>
+                                </SaveListButton> 
                             </div>
                     </div>
                 :
