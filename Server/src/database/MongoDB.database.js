@@ -3,8 +3,13 @@ import { isConnected, connection } from "../inits/MongoDB.init.js"
 
 
 
-
-connection()
+try {
+    connection()
+    console.log("Successfully Connected to MongoDb.")
+}
+catch (error) {
+    console.log("Error Connecting to MongoDb: ", error)
+}
 
 export const checkMongoDBConnection = () => {
     return isConnected
