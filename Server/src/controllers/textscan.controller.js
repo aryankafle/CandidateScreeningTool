@@ -6,7 +6,7 @@ const buff =  fs.readFileSync("./example.pdf")
 
 export const convertPdfToImg = async (req, res) => {
 
-    const pngPage = await pdfToPng(buff, {
+    const pngPage = await pdfToPng(buff, { //normally req.message
         pagesToProcess: [1],
         viewportScale: 2.0,
     });

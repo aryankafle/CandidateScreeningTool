@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "react-query"
+import { FileContext } from "../context/FileContext";
 
 function App() {
   
@@ -9,7 +10,8 @@ function App() {
   const [openAITokensUsed, setOpenAITokensUsed] = useState("fetching tokens used data...");
   const [dbConnectionTest, setDbConnectionTest] = useState("Fetching database connection status...")
   const [pdfData, setPdfData] = useState("GRAH THIS IS RESPONSE");
-  
+  const fileContext = useContext(FileContext)
+
 
   const getpdftest = async () => {
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`)
@@ -19,7 +21,12 @@ function App() {
 
   const getOpenAITest = async () => {
     console.log("this is when chat gpt makes request")
-    const text = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`)
+    const text = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`) //, {
+    //   params: {
+    //     message: Buffer.from(JSON.stringify(fileContext.uploadedFiles))
+    //   }
+    // })
+  
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
       params: {
         message: "Use less than 100 tokens and List the first 5 words of the following text: " + text.data.message,
