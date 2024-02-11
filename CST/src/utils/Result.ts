@@ -10,13 +10,13 @@ export type Applicant = {
 
 
 
-enum Grades {
-    A, B, C, D, F
+export enum Grades {
+    F, D, C, B, A
 }
 
 export class Result {
     
-    private static MAX_SCORE = 10000
+    private static MAX_SCORE = 1000
 
     #score : number
     #resumeFile : File
