@@ -1,7 +1,7 @@
 import {pdfToPng} from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import fs from "fs"
-import {useContext} from "react"
+//import {useContext} from "react"
 const buff =  fs.readFileSync("./example.pdf")
 
 export const convertPdfToImg = async (req, res) => {
