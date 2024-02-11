@@ -35,23 +35,25 @@ function Router() {
             <Route element={<DecoratedLayout />}>
                 <Route  path="/filter"
                         element={
-                            <div className="h-full w-full flex flex-col overflow-clip">
+                            <>
                                 <div className="flex flex-col flex-shrink">
                                     <HeaderButtons />
                                 </div>
                                 <div className="flex flex-col flex-grow overflow-clip">
                                     <FilterScreen />
                                 </div>
-                            </div>
+                            </>
                         }
                 />
                 <Route path="/results" element={
-                    <div>
-                        <div>
+                    <>
+                        <div className="flex flex-col flex-shrink">
                             <BackButton toRoute="/home" ></BackButton>
                         </div>
-                        <ResultsScreen />
-                    </div>
+                        <div className="flex flex-col flex-grow overflow-clip">
+                            <ResultsScreen />
+                        </div>
+                    </>
                     }
                  />
             </Route>

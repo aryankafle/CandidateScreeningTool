@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
-import { bookmarkOutline } from 'ionicons/icons';
+import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
 import { Result, Applicant, Grades } from "../../utils/Result";
+import Button from "../../components/buttons/ImprovedButtonComponent";
+import Input from "../../components/forms/InputBox"
+import _ from 'lodash';
 
 
 const ResultsScreen = () => {
@@ -94,7 +97,7 @@ const ResultsScreen = () => {
         return (
             <div 
                 className=" bg-green dark:bg-white
-                            flex flex-row flex-grow w-[70%] rounded-r-full py-[1rem]"
+                            flex flex-row flex-grow w-[80%] rounded-r-full py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
                     setCurrentCandidate(props.candidate)
@@ -113,10 +116,8 @@ const ResultsScreen = () => {
 
 
     return (
-        <div className="dark:bg-blue bg-white
-                        text-2xl flex flex-row 
-                        flex-grow overflow-scroll">
-            <div className="flex flex-col flex-grow overflow-scroll" >
+        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row bg-white dark:bg-blue">
+            <div className="text-2xl flex flex-col flex-grow overflow-scroll" >
                 { showModal && <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                     <ResultsDescriptionPopup
                         selectedDescription={currentCandidate.summary as string}
@@ -127,21 +128,58 @@ const ResultsScreen = () => {
                 <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
-                <div className="flex flex-col justify-center gap-[1.3rem]">
+                <div className="flex flex-col justify-center gap-[1.3rem] overflow-auto">
                     {candidates?.map((candidate) => <IndividualCandidateCard 
                         key={candidate.exactScore}
                         candidate={candidate}
                     />)}
                 </div>
             </div>  
-            <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
+            <div className="flex">
                 {showSidePanel ?
-                    <div className="w-full">
-                        
+                    <div className="flex flex-row items-start">
+                        <Button 
+                            className="flex self-end bg-green dark:bg-white rounded-l-full py-[3rem] mb-[2rem]"
+                            onClick={() => { setShowSidePanel(false) }}
+                        >
+                            <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
+                        </Button>
+                        <div className="flex flex-col h-full bg-green dark:bg-white py-[1rem] px-[2rem]">
+                            <div className="flex flex-col pt-[1rem] gap-[4rem]">
+                                <Input
+                                    title={"List Name"}
+                                    placeholder={currentSavedList?.listName || "name"}
+                                />
+                                <Input
+                                    title={"List Description"}
+                                    placeholder={currentSavedList?.listDescription || "name"}
+                                />
+                            </div>
+                            <div className="flex flex-row flex-grow items-end pb-[4rem]">
+                                <Button
+                                    className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
+                                    onClick={() => {alert("saving")}}
+                                >
+                                    <div
+                                        className="text-4xl self-center"
+                                    >
+                                        Save List
+                                    </div>
+                                    <IonIcon icon={saveOutline} className="self-center text-5xl"/>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
+
                 :
-                    <div>
-                        <IonIcon className="cursor-pointer text-[3rem] p-5" icon={bookmarkOutline} onClick={()=>setShowSidePanel(!showSidePanel)}></IonIcon>
+                    <div className="flex flex-row items-start">
+                        <Button 
+                            className="flex self-end bg-green dark:bg-white rounded-l-full py-[3rem] mb-[2rem]"
+                            onClick={() => { setShowSidePanel(true) }}
+                        >
+                            <IonIcon icon={caretBackOutline} className="self-center text-5xl" />
+                        </Button>
+                        <div className="flex w-[1rem] h-full bg-green dark:bg-white" />
                     </div>
                 }
             </div>
