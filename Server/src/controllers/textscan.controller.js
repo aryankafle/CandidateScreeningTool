@@ -11,10 +11,11 @@ export const convertPdfToImg = async (req, res) => {
         viewportScale: 2.0,
     });
 
-    console.log(pngPage[0].content)
+    
     const worker = await createWorker('eng');
     const ret = await worker.recognize(pngPage[0].content)
     await worker.terminate();
+    console.log("file text" + ret.data.text)
     return res.status(200).send({message:ret.data.text})
 
 }
