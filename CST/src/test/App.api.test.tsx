@@ -8,11 +8,21 @@ function App() {
   const [openAIAnswer, setOpenAIAnswer] = useState("fetching response message...");
   const [openAITokensUsed, setOpenAITokensUsed] = useState("fetching tokens used data...");
   const [dbConnectionTest, setDbConnectionTest] = useState("Fetching database connection status...")
-  const [response, setResponse] = useState("GRAH THIS IS RESPONSE");
+  const [pdfData, setPdfData] = useState("GRAH THIS IS RESPONSE");
+  
+
+  const getpdftest = async () => {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`)
+    console.log(response.data + "bruh")
+    return response.data
+  }
+
   const getOpenAITest = async () => {
+    console.log("this is when chat gpt makes request")
+    const text = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`)
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
       params: {
-        message: "Say hello world with extreme enthusiasm. Use less than 100 tokens.",
+        message: "Use less than 100 tokens and List the first 5 words of the following text: " + text.data.message,
         role: "user"
       }
     })
@@ -25,18 +35,15 @@ function App() {
 
     return response.data
   }
-  const getpdftest = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`)
-    console.log(response.data + "bruh")
-    return response.data
-  }
+
+
 
   const TextScanQuery = useQuery({
     queryKey: ['get', 'textScan', 'testQuery'],
     queryFn: getpdftest,
     staleTime: Infinity,
     cacheTime: Infinity
-  })
+  });
 
   const openAIQuery = useQuery({
     queryKey: ['get', 'openAI', 'testQuery'],
@@ -44,6 +51,7 @@ function App() {
     staleTime: Infinity,
     cacheTime: Infinity
   })
+
   const MongoDBQuery = useQuery({
     queryKey: ['post', 'MongoDB', 'testQuery'],
     queryFn: getMongoDBTest,
@@ -65,19 +73,19 @@ function App() {
 //   staleTime: Infinity,
 //   cacheTime: Infinity
 // })
-console.log(TextScanQuery.data?.message + "buh")
+//console.log(TextScanQuery.data?.message + "buh")
   useEffect(() => {    
     openAIQuery.data?.answer && setOpenAIAnswer(openAIQuery.data?.answer)
     openAIQuery.data?.tokensUsed && setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
-    MongoDBQuery.data?.message && setDbConnectionTest(MongoDBQuery.data?.message)
-    TextScanQuery.data?.message && setResponse(TextScanQuery.data?.message)  
+    MongoDBQuery.data?.message && setDbConnectionTest(MongoDBQuery.data?.message) 
+    TextScanQuery.data?.message && setPdfData(TextScanQuery.data?.message)  
   }, [openAIQuery, MongoDBQuery, TextScanQuery])
   return (
     <>
         <h1>Open AI Message: {openAIAnswer}</h1>
         <h1>Open AI TokensUsed: {openAITokensUsed}</h1>
         <h1>Server Connection Status: {dbConnectionTest}</h1>
-        <h1> TextScanMessage: {response} </h1>
+        <h1> TextScanMessage: {pdfData} </h1>
     </>
   )
 }
