@@ -3,7 +3,7 @@ export type Applicant = {
     email? : string
     number? : string
     linkedIn? : string
-    age? : string
+    age? : number
 }
 
 

@@ -1,89 +1,74 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
-import { bookmarkOutline } from 'ionicons/icons';
+import { bookmarkOutline, save } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
+import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
+import { Result, Applicant } from "../../utils/Result";
 
 
 const ResultsScreen = () => {
     const [showModal, setShowModal] = useState(false);
-    const [showSidePanel, setShowSidePanel] = useState(true);
-    const [selectedResult, setSelectedResult] = useState(0);
-    
-    const toggleModal = () => {
-        setShowModal(!showModal);
-    };
+    const [showSidePanel, setShowSidePanel] = useState(false);
 
-    class Candidate
-    {
-        name: string;
-        rank: string;
-        description: string;
-        filters: string[];
+    const savedListContext = useContext(SavedListsContext)
+    const currentSavedList = savedListContext.currentSavedList
 
-        constructor(name: string, rank: string, description: string, filters: string[]){
-            this.name = name;
-            this.rank = rank;
-            this.description = description;
-            this.filters = filters;
-        }
+    const candidates = useMemo(() => currentSavedList?.orderedResumeList, [currentSavedList?.orderedResumeList])
 
-        get getName(){
-            return this.name;
-        }
-
-        get getRank(){
-            return this.rank;
-        }
-
-        get getDescription(){
-            return this.description;
-        }
-
-        get getFilters(){
-            return this.filters;
-        }
-    }
-
-    function getCandidateImage(candidate: Candidate){
-        if (candidate.getRank === 'A'){
-            return(
-                <img className='flex items-center w-10' src={`/assets/a-rating.png`} alt="A png"></img>
-            );
-        }else{
-            return(
-                <img className='flex items-center w-10' src={`/assets/b-rating.png`} alt="B png" width=''></img>
-            );
-        }
-    }
-
-    function generateCandidates(){
-        for (let i = 0; i < 10; i++){
-            var r = 'A';
-            if (i%2 === 0){
-                r = 'B';
-            }
-            candidates.push(new Candidate('Bob' + i, r, "description", ["5 years working experience", "college diploma"]))
-        }
-    }
-
-    var candidates: Candidate[] = []; //temporary placeholder for the filtered candidates 
-    generateCandidates();
+    useEffect(() => {
+        savedListContext.setCurrentSavedList(
+            new SavedList(
+                "dummy list",
+                "list of dummy resumes",
+                [
+                    new Result(
+                        {
+                            name : "dude 1"
+                        } as Applicant,
+                        {} as File,
+                        100,
+                        "is the first dude"
+                    ),
+                    new Result(
+                        {
+                            name: "dude 2",
+                            email: "dude2@gmail.com",
+                            number: "dude2number"
+                        } as Applicant,
+                        {} as File,
+                        400,
+                        "is the second dude"
+                    ),
+                    new Result(
+                        {
+                            name: "dude 3",
+                            email: "dude3@outlook.com",
+                            number: "dude3num",
+                            linkedIn: "dude3linkedin",
+                            age: 2
+                        } as Applicant,
+                        {} as File,
+                        200,
+                        "is the third dude"
+                    ),
+                ], 
+            )
+        )
+    }, [])
 
 
-    const ResultsCard = (props: {candidateIndex: number}) => {
-        return(
-          <div className="border-black text-black 
-                         dark:border-white dark:text-white 
-                         flex flex-row border-[0.1rem] px-[2rem] p-2" 
-                onClick={() => { toggleModal(); setSelectedResult(props.candidateIndex)}}>
-              {candidates[props.candidateIndex].getName}
-              {getCandidateImage(candidates[props.candidateIndex])}
-         </div>
+
+    const IndividualCandidateCard = (props: {candidate : Result}) => {
+
+        return (
+            <div className="flex">
+                {props.candidate.exactScore}
+            </div>
         )
     }
 
-    
+
 
     return (
         <div className="dark:bg-blue bg-white
@@ -91,30 +76,21 @@ const ResultsScreen = () => {
                         flex-grow overflow-scroll">
             <div className="flex flex-col flex-grow overflow-scroll" >
                 <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                    <ResultsDescriptionPopup onXClicked={()=>{setShowModal(false)}} selectedFilters={candidates[selectedResult].getFilters}
-                    selectedDescription={candidates[selectedResult].getDescription}
-                    ></ResultsDescriptionPopup>
+                    
                 </Modal>
                 <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                     <h1>Here are some great candidates based on your needs:</h1>
                 </div>
-                <div className="flex justify-center">
-                    <ol className="space-y-5">
-                        {candidates.map((candidate : Candidate, index)=><li><ResultsCard candidateIndex={index}></ResultsCard></li>)}
-                    </ol>
+                <div className="flex flex-col justify-center">
+                    {candidates?.map((candidate) => <IndividualCandidateCard 
+                        candidate={candidate}
+                    />)}
                 </div>
             </div>  
             <div className={showSidePanel ? `flex flex-col w-2/5 h-screen bg-white justify-start` : `flex flex-col w-1/10 h-screen bg-white justify-start`}>
                 {showSidePanel ?
                     <div className="w-full">
-                            <h1 className="flex justify-center" onClick={()=>setShowSidePanel(!showSidePanel)}>List Name</h1>
-                            <div className="flex justify-center">
-                                <input className="bg-gray" type="text" />
-                            </div>
-                            <h1 className="flex justify-center">Description</h1>
-                            <div className="flex justify-center">
-                                <input className="bg-gray" type="text" />
-                            </div>
+                        
                     </div>
                 :
                     <div>

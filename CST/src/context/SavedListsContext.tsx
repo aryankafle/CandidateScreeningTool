@@ -29,10 +29,10 @@ export class SavedList {
         return "dummylinkfor+" + this.#listName
     }
 
-    constructor(name : string, description : string, orderedResumeList : Result[], color? : string) {
+    constructor(name : string, description : string, resumes : Result[], color? : string) {
         this.#listName = name;
         this.#listDescription = description;
-        this.#orderedResumeList = orderedResumeList;
+        this.#orderedResumeList = resumes.sort((a : Result, b : Result) => a.exactScore - b.exactScore )
         this.#color = color || "#FFFFFFFF";
         this.#listLink = this.generateLink()
     }
@@ -78,15 +78,19 @@ export class SavedList {
 
 type SavedListsContextType = {
 
-    savedLists: SavedList[]
-    setSavedLists: React.Dispatch<React.SetStateAction<SavedList[]>>
+    savedLists : SavedList[]
+    setSavedLists : React.Dispatch<React.SetStateAction<SavedList[]>>
+    currentSavedList? : SavedList
+    setCurrentSavedList : React.Dispatch<React.SetStateAction<SavedList | undefined>>
 
 }
 
 const SavedListsContextInitial = {
 
     savedLists: [] as SavedList[],
-    setSavedLists: {} as React.Dispatch<React.SetStateAction<SavedList[]>>
+    setSavedLists: {} as React.Dispatch<React.SetStateAction<SavedList[]>>,
+    currentSavedList : undefined,
+    setCurrentSavedList : {} as React.Dispatch<React.SetStateAction<SavedList | undefined>>
 
 }
 
@@ -99,9 +103,10 @@ export const SavedListsContext = createContext<SavedListsContextType>(SavedLists
 const SavedListsContextProvider = (props: { children : ReactNode }) => {
 
     const [savedLists, setSavedLists] = useState([] as SavedList[])
+    const [currentSavedList, setCurrentSavedList] = useState<SavedList | undefined>(undefined)
     
     return (
-        <SavedListsContext.Provider value={{savedLists, setSavedLists}}>
+        <SavedListsContext.Provider value={{savedLists, setSavedLists, currentSavedList, setCurrentSavedList}}>
             {props.children}
         </SavedListsContext.Provider>
     )
