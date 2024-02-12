@@ -5,6 +5,7 @@ import { useClipboard } from "../../hooks/Clipboard"
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,7 +13,9 @@ import { IonIcon } from "@ionic/react";
 
 const ViewSavedListsScreen = () => {
 
-    const {savedLists, setSavedLists} = useContext(SavedListsContext)
+    const navigate = useNavigate()
+
+    const {savedLists, setSavedLists, setCurrentSavedList} = useContext(SavedListsContext)
 
     const [nameInput, setNameInput] = useState<string>("");
 
@@ -69,7 +72,8 @@ const ViewSavedListsScreen = () => {
     }, [copyTextToClipboard])
 
     const sendToList = useCallback((list : SavedList) => {
-        alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
+        setCurrentSavedList(list)
+        navigate("/results")
     }, [])
 
     const addExternalListToSavedLists = useCallback(() => {  

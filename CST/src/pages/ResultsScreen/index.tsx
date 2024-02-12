@@ -8,23 +8,28 @@ import { Result, Applicant, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
+import { useNavigate } from "react-router-dom";
+import _ from "lodash"
 
 
 const ResultsScreen = () => {
+    const navigate = useNavigate()
+
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(false);
 
     const savedListContext = useContext(SavedListsContext)
 
-    const candidates = useMemo(() => savedListContext.currentSavedList?.orderedResumeList, [savedListContext.currentSavedList?.orderedResumeList])
     const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, 0, "loading..."))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [resumes, setResumes] = useState([] as Result[])
 
     useEffect(() => {
         setTitle(savedListContext.currentSavedList?.listName ? savedListContext.currentSavedList?.listName : "")
         setDescription(savedListContext.currentSavedList?.listDescription ? savedListContext.currentSavedList?.listDescription : "")
+        setResumes(savedListContext.currentSavedList?.orderedResumeList ? savedListContext.currentSavedList?.orderedResumeList : [])
     }, [savedListContext.currentSavedList])
 
     useEffect(() => {
@@ -66,131 +71,27 @@ const ResultsScreen = () => {
                         {} as File,
                         200,
                         "is the third dude"
-                    ),
-                    new Result(
-                        {
-                            name : "dude 1"
-                        } as Applicant,
-                        {} as File,
-                        100,
-                        "is the first dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 2",
-                            email: "dude2@gmail.com",
-                            number: "dude2number"
-                        } as Applicant,
-                        {} as File,
-                        400,
-                        "is the second dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 3",
-                            email: "dude3@outlook.com",
-                            number: "dude3num",
-                            linkedIn: "dude3linkedin",
-                            age: 2
-                        } as Applicant,
-                        {} as File,
-                        200,
-                        "is the third dude"
-                    ),
-                    new Result(
-                        {
-                            name : "dude 1"
-                        } as Applicant,
-                        {} as File,
-                        100,
-                        "is the first dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 2",
-                            email: "dude2@gmail.com",
-                            number: "dude2number"
-                        } as Applicant,
-                        {} as File,
-                        400,
-                        "is the second dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 3",
-                            email: "dude3@outlook.com",
-                            number: "dude3num",
-                            linkedIn: "dude3linkedin",
-                            age: 2
-                        } as Applicant,
-                        {} as File,
-                        200,
-                        "is the third dude"
-                    ),
-                    new Result(
-                        {
-                            name : "dude 1"
-                        } as Applicant,
-                        {} as File,
-                        100,
-                        "is the first dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 2",
-                            email: "dude2@gmail.com",
-                            number: "dude2number"
-                        } as Applicant,
-                        {} as File,
-                        400,
-                        "is the second dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 3",
-                            email: "dude3@outlook.com",
-                            number: "dude3num",
-                            linkedIn: "dude3linkedin",
-                            age: 2
-                        } as Applicant,
-                        {} as File,
-                        200,
-                        "is the third dude"
-                    ),
-                    new Result(
-                        {
-                            name : "dude 1"
-                        } as Applicant,
-                        {} as File,
-                        100,
-                        "is the first dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 2",
-                            email: "dude2@gmail.com",
-                            number: "dude2number"
-                        } as Applicant,
-                        {} as File,
-                        400,
-                        "is the second dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 3",
-                            email: "dude3@outlook.com",
-                            number: "dude3num",
-                            linkedIn: "dude3linkedin",
-                            age: 2
-                        } as Applicant,
-                        {} as File,
-                        200,
-                        "is the third dude"
-                    ),
+                    )
                 ], 
             )
         )
     }, [])
+
+    const handleSaveList = () => {
+        const shouldMakeNewList = 
+            title !== savedListContext.currentSavedList?.listName ||
+            description !== savedListContext.currentSavedList?.listDescription ||
+            !_.isEqual(resumes, savedListContext.currentSavedList?.orderedResumeList)
+        
+        if(!shouldMakeNewList) {
+            navigate("/home/saved-lists")
+            return;
+        }
+
+        const newList = new SavedList(title, description, resumes)
+        savedListContext.setSavedLists((lists) => [...lists, newList])
+        navigate("/home/saved-lists")
+    }
 
 
 
@@ -261,7 +162,7 @@ const ResultsScreen = () => {
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
                     <div className="flex flex-col justify-center gap-[1.3rem] overflow-auto">
-                        {candidates?.map((candidate) => <IndividualCandidateCard 
+                        {resumes?.map((candidate) => <IndividualCandidateCard 
                             key={candidate.exactScore}
                             candidate={candidate}
                         />)}
@@ -303,7 +204,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
                                     <Button
                                         className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
-                                        onClick={() => {alert("saving")}}
+                                        onClick={() => { handleSaveList() }}
                                     >
                                         <div
                                             className="text-4xl self-center"
