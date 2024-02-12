@@ -1,12 +1,13 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUploadOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FileContext } from "../../context/FileContext";
+import { FileContext } from '../../context/FileContext';
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/buttons/ImprovedButtonComponent'
 import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
+import Input from "../../components/forms/InputBox";
 
 
 
@@ -20,7 +21,10 @@ const ResumeUploadScreen = () => {
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
-    const [showModal, setShowModal] = useState(false)
+    const [batchName, setBatchName] = useState("")
+
+    const [showFileModal, setShowFileModal] = useState(false)
+    const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
@@ -28,7 +32,7 @@ const ResumeUploadScreen = () => {
 
         selectableItems,
 
-        getAllItems,
+        // getAllItems,
         // getAllSelectedItems,
         // getAllNotSelectedItems,
         // amountSelected,
@@ -50,8 +54,6 @@ const ResumeUploadScreen = () => {
         handleSelectionOnClick
 
     } = useSelectableList<File>(fileContext.uploadedFiles, fileContext.setUploadedFiles)
-
-
 
 
 
@@ -91,21 +93,27 @@ const ResumeUploadScreen = () => {
 
 
     function handleAddFiltersClick() {
-        fileContext.setUploadedFiles(getAllItems)
-        
-        navigate("/filter")
+        setShowConfirmFilesModal(true)
     }
+
+
+
+    const handleDeleteFiles = useCallback(() => {
+        if(window.confirm("Are you sure you want to delete the currently selected files from the batch?")) {
+            removeCurrentSelectionFromList()
+        }
+    }, [removeCurrentSelectionFromList])
 
 
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         if(event.key === "Delete") {
-            removeCurrentSelectionFromList()
+            handleDeleteFiles()
         }
         else {
             handleSelectionOnKeyDown(event)
         }
-    }, [handleSelectionOnKeyDown, removeCurrentSelectionFromList])
+    }, [handleSelectionOnKeyDown, handleDeleteFiles])
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
@@ -117,6 +125,46 @@ const ResumeUploadScreen = () => {
     }, [handleKeyDown])
 
 
+
+
+
+    const ConfirmFilesPanel : React.FC = () => {
+        return (
+            <div className="bg-white dark:bg-blue
+                                flex flex-col flex-grow m-[15rem]">
+                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                    {`Are you sure you want to use this batch of resumes?`} <br></br>
+                    {`Batch Name: ${fileContext.currentBatchName}`}
+                </div>
+                <div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
+                    {fileContext.uploadedFiles.map((file) => (
+                        <div key={file.name}>
+                            {file.name}
+                        </div>
+                    ))}
+                </div>
+                <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
+                    <Button
+                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                        onClick={() => {
+                            setShowConfirmFilesModal(false)
+                            navigate("/filter")
+                        }}
+                    >
+                        Yes
+                    </Button>
+                    <Button
+                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                        onClick={() => {
+                            setShowConfirmFilesModal(false)
+                        }}
+                    >
+                        No
+                    </Button>
+                </div>
+            </div>
+        )
+    }
 
 
 
@@ -144,7 +192,7 @@ const ResumeUploadScreen = () => {
                 </div>
                 <div
                     className="cursor-pointer select-none"
-                    onClick={() => { setShowModal(!showModal); setCurrentlyOpenedIndex(props.index)}}
+                    onClick={() => { setShowFileModal(!showFileModal); setCurrentlyOpenedIndex(props.index)}}
                 >
                     Open File
                 </div>
@@ -158,16 +206,32 @@ const ResumeUploadScreen = () => {
     return (
         <div className="dark:bg-blue bg-white justify-center
                         flex flex-col flex-grow">
-            <Modal 
-                modalTrigger={showModal}
-                onClose={()=>{setShowModal(false)}}
-            >
-                <ViewFilePopup
-                    onXClicked={()=>{setShowModal(false)}}
-                    uploadedFiles={fileContext.uploadedFiles}
-                    currentlySelectedIndex={currentlyOpenedIndex}
+            {
+                showFileModal && <Modal 
+                    modalTrigger={showFileModal}
+                    onClose={()=>{setShowFileModal(false)}}
+                >
+                    <ViewFilePopup
+                        onXClicked={()=>{setShowFileModal(false)}}
+                        uploadedFiles={fileContext.uploadedFiles}
+                        currentlySelectedIndex={currentlyOpenedIndex}
+                    />
+                </Modal>
+            }
+            <div className="dark:border-white dark:text-white
+                            border-black text-black
+                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                <div >
+                    Upload a batch of resumes.
+                </div>
+                <Input 
+                    title={"Batch Name:"}
+                    placeholder={"Batch A-1"}
+                    value={batchName}
+                    onChange={(event) => { setBatchName(event.target.value)}}
+                    onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
                 />
-            </Modal>
+            </div>
             <div className="flex justify-center">
                 <Button 
                     className=" dark:border-white dark:text-white
@@ -176,7 +240,7 @@ const ResumeUploadScreen = () => {
                     onClick={handleUploadClick}
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    Upload Files
+                    { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
                     <input
                         accept=".doc,.docx,.pdf,.png,.jpg"
                         type="file"
@@ -209,7 +273,7 @@ const ResumeUploadScreen = () => {
                                 className=" text-black
                                             dark:text-white
                                             flex-grow self-center"
-                                onClick={() => { removeCurrentSelectionFromList(); } }
+                                onClick={() => { handleDeleteFiles(); } }
                             >
                                             Remove Selected Files
                             </Button>
@@ -241,6 +305,52 @@ const ResumeUploadScreen = () => {
                     Add Filters to Uploaded Files
                 </Button>
             </div>
+            {
+                showConfirmFilesModal && <Modal 
+                    modalTrigger={showConfirmFilesModal}
+                    onClose={()=>{setShowConfirmFilesModal(false)}}
+                >
+                    {
+                        fileContext.uploadedFiles.length > 2 ? 
+                            <ConfirmFilesPanel />
+                        :
+                            !fileContext.currentBatchName ? 
+                                <div className="bg-white dark:bg-blue
+                                                flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
+                                    <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                                        {`Please set a name for this batch of resumes!`}
+                                    </div>
+                                    <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
+                                        <Button
+                                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                            onClick={() => {
+                                                setShowConfirmFilesModal(false)
+                                            }}
+                                        >
+                                            Ok
+                                        </Button>
+                                    </div>
+                                </div>
+                            :
+                            <div className="bg-white dark:bg-blue
+                                            flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
+                                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                                    {`Please upload at least 2 resumes!`}
+                                </div>
+                                <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
+                                    <Button
+                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        onClick={() => {
+                                            setShowConfirmFilesModal(false)
+                                        }}
+                                    >
+                                        Ok
+                                    </Button>
+                                </div>
+                            </div>
+                    }
+                </Modal>
+            }
         </div>
     )
 }

@@ -1,7 +1,11 @@
 import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
+import { useClipboard } from "../../hooks/Clipboard"
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import { copyOutline } from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -9,9 +13,11 @@ import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 
 const ViewSavedListsScreen = () => {
 
-    const {savedLists, setSavedLists} = useContext(SavedListsContext)
+    const navigate = useNavigate()
 
-    const [nameInput, setNameInput] = useState("");
+    const {savedLists, setSavedLists, setCurrentSavedList} = useContext(SavedListsContext)
+
+    const [nameInput, setNameInput] = useState<string>("");
 
     const {
 
@@ -27,39 +33,27 @@ const ViewSavedListsScreen = () => {
 
     } = useSelectableList<SavedList>(savedLists, setSavedLists)
 
+    const {
+
+        copyTextToClipboard
+
+    } = useClipboard()
 
 
 
 
-    const onChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if(event.target.value) {
-            setNameInput(event.target.value);
-        }
-    };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault();
-        
-        setSavedLists((savedLists) => {
-            const dummySavedList = new SavedList(nameInput, "", [])
-
-            if(savedLists.some(savedList => SavedList.isEqual(savedList, dummySavedList))) {
-                return savedLists
-            }
-
-            return [...savedLists, dummySavedList]
-        })
-    }
-
-    const handleRemoveSelection = () => {
+    const handleRemoveSelection = useCallback(() => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
 
         if(confirmation) {
             removeCurrentSelectionFromList()
         }
-    }
+    }, [removeCurrentSelectionFromList])
 
-    const createCombinedList = () => {
+
+
+    const createCombinedList = useCallback(() => {
         let name = prompt("Name of Combined List") || undefined
         let description = prompt("Description of Combined List") || undefined
 
@@ -71,13 +65,31 @@ const ViewSavedListsScreen = () => {
 
             return [...savedLists, newList]
         })
-    }
+    }, [selectableItems, setSavedLists])
 
-    
+    const copyListLink = useCallback(async (savedList : SavedList) => {
+        await copyTextToClipboard(savedList.listLink, true)
+    }, [copyTextToClipboard])
 
-    function sendToList(list : SavedList) {
-        alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
-    }
+    const sendToList = useCallback((list : SavedList) => {
+        setCurrentSavedList(list)
+        navigate("/results")
+    }, [navigate, setCurrentSavedList])
+
+    const addExternalListToSavedLists = useCallback(() => {  
+        if(!nameInput) return;
+
+        setSavedLists((savedLists) => {
+            const dummySavedList = new SavedList(nameInput, "", [])
+
+            if(savedLists.some(savedList => SavedList.isEqual(savedList, dummySavedList))) {
+                return savedLists
+            }
+
+            return [...savedLists, dummySavedList]
+        })
+
+    }, [nameInput, setSavedLists])
 
 
 
@@ -86,7 +98,7 @@ const ViewSavedListsScreen = () => {
             handleRemoveSelection()
         }
         handleSelectionOnKeyDown(event)
-    }, [handleSelectionOnKeyDown])
+    }, [handleRemoveSelection, handleSelectionOnKeyDown])
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
@@ -105,27 +117,38 @@ const ViewSavedListsScreen = () => {
         return (
             <div className="border-black text-black
                             dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem] justify-between">
+                            flex flex-row border-[0.1rem] px-[2rem] 
+                            py-[1rem] justify-between text-xl">
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
                                 `text-red border-red
                                 dark:text-red
-                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
+                                flex flex-grow select-none cursor-pointer overflow-x-clip text-ellipsis`
                             :
                                 `text-black border-black
                                 dark:text-white
-                                select-none cursor-pointer overflow-x-clip text-ellipsis w-[70%]`
+                                flex flex-grow select-none cursor-pointer overflow-x-clip text-ellipsis`
                         }
                         onClick={(event) => { handleSelectionOnClick(event, props.index) }}
                 >
                     {props.savedList.listName}
                 </div>
-                <div
-                    className="cursor-pointer select-none w-[20%]"
-                    onClick={() => { sendToList(props.savedList) }}
-                >
-                    Open List
+                <div className="flex flex-row justify-between w-[10rem]">
+                    <div
+                        className="flex flex-grow w-[6rem] cursor-pointer select-none text-[1.2rem]"
+                        onClick={() => { sendToList(props.savedList) }}
+                    >
+                        <span className="text-center self-center">
+                            Open List
+                        </span>
+                    </div>
+                    <div
+                        className="flex flex-row flex-grow cursor-pointer"
+                        onClick={() => {copyListLink(props.savedList)}}
+                    >
+                        <IonIcon className="h-full w-full" icon={copyOutline}></IonIcon>
+                    </div>
                 </div>
             </div>
         )
@@ -136,12 +159,13 @@ const ViewSavedListsScreen = () => {
     return(
        <div className=" dark:bg-blue bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
-            <div className="flex pt-[1rem] justify-center w-full">
+            <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input
-                    onChange={onChange}
-                    onSubmit={handleSubmit}
-                    title="Enter External List"
-                    placeholder="Enter Link"    
+                    title={"Enter External List"} placeholder={"Enter Link"}
+                    value={nameInput}
+                    onSubmit={(event) => { addExternalListToSavedLists(); setNameInput("")}}
+                    onChange={(event) => { setNameInput(event.target.value) }}
+                    errorFunction={(string) => {return ""}}
                 />
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
@@ -161,7 +185,8 @@ const ViewSavedListsScreen = () => {
                             text-black
                             dark:text-white
                             self-center
-                            text-center">
+                            text-center
+                            text-xl">
                 {
                     anySelected() ?
                         <div className="flex flex-col gap-[0.5rem]">
