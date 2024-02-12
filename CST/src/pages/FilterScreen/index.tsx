@@ -97,7 +97,7 @@ const FilterScreen = () => {
                     <InputBox 
                             title={"Keyword Bias"} placeholder={"Full-stack Development"}
                             onSubmit={
-                                (event) => {
+                                () => {
                                     if(isValidKeyword(keywordBias)) {
                                         const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
 
@@ -112,6 +112,7 @@ const FilterScreen = () => {
                                     setKeywordBias(event.target.value)
                                 }
                             }
+                            value={keywordBias}
                             errorFunction={(string) => {return ""}
                         }
                     />
