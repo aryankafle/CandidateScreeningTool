@@ -3,10 +3,10 @@ import { createWorker } from 'tesseract.js';
 import fs from "fs"
 //import {useContext} from "react"
 const buff =  fs.readFileSync("./example.pdf")
-
+const buff2 = fs.readFileSync("./Stats.pdf")
 export const convertPdfToImg = async (req, res) => {
 
-    const pngPage = await pdfToPng(buff, { //normally req.message
+    const pngPage = await pdfToPng(buff2, { //normally req.message
         pagesToProcess: [1],
         viewportScale: 2.0,
     });
