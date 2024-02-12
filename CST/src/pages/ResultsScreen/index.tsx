@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Modal from '../../components/modals/Modal';
-import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
@@ -113,11 +112,7 @@ const ResultsScreen = () => {
             <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blue">
                 <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
                     { showModal && <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                        <ResultsDescriptionPopup
-                            selectedDescription={currentCandidate.summary as string}
-                            selectedFilters={[]}
-                            onXClicked={() => { setShowModal(false) }}
-                        />
+                        
                     </Modal>}
                     <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                         <h1>Here are some great candidates based on your needs:</h1>
