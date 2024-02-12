@@ -131,7 +131,7 @@ const ResumeUploadScreen = () => {
     const ConfirmFilesPanel : React.FC = () => {
         return (
             <div className="bg-white dark:bg-blue
-                                flex flex-col flex-grow m-[15rem]">
+                                flex flex-col self-center h-[80%] w-[80%]">
                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                     {`Are you sure you want to use this batch of resumes?`} <br></br>
                     {`Batch Name: ${fileContext.currentBatchName}`}
@@ -315,25 +315,25 @@ const ResumeUploadScreen = () => {
                             <ConfirmFilesPanel />
                         :
                             !fileContext.currentBatchName ? 
-                                <div className="bg-white dark:bg-blue
-                                                flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
-                                    <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
-                                        {`Please set a name for this batch of resumes!`}
-                                    </div>
-                                    <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
-                                        <Button
-                                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                            onClick={() => {
-                                                setShowConfirmFilesModal(false)
-                                            }}
-                                        >
-                                            Ok
-                                        </Button>
-                                    </div>
+                            <div className="bg-white dark:bg-blue
+                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                                    {`Please enter a batch name!`}
                                 </div>
+                                <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
+                                    <Button
+                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        onClick={() => {
+                                            setShowConfirmFilesModal(false)
+                                        }}
+                                    >
+                                        Ok
+                                    </Button>
+                                </div>
+                            </div>
                             :
                             <div className="bg-white dark:bg-blue
-                                            flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
+                                            flex flex-col self-center w-[80%] h-[80%] justify-between">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please upload at least 2 resumes!`}
                                 </div>
