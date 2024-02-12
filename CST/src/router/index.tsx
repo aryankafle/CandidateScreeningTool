@@ -39,7 +39,7 @@ function Router() {
                                 <div className="flex flex-col flex-shrink">
                                     <HeaderButtons />
                                 </div>
-                                <div className="flex flex-col flex-grow overflow-clip">
+                                <div className="flex h-full w-full overflow-auto">
                                     <FilterScreen />
                                 </div>
                             </>
@@ -50,7 +50,7 @@ function Router() {
                         <div className="flex flex-col flex-shrink">
                             <BackButton toRoute="/home" ></BackButton>
                         </div>
-                        <div className="flex flex-col flex-grow overflow-clip">
+                        <div className="flex w-full h-full overflow-auto">
                             <ResultsScreen />
                         </div>
                     </>

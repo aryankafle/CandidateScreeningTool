@@ -227,6 +227,7 @@ const ResumeUploadScreen = () => {
                 <Input 
                     title={"Batch Name:"}
                     placeholder={"Batch A-1"}
+                    value={batchName}
                     onChange={(event) => { setBatchName(event.target.value)}}
                     onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
                 />
