@@ -74,7 +74,7 @@ const ViewSavedListsScreen = () => {
     const sendToList = useCallback((list : SavedList) => {
         setCurrentSavedList(list)
         navigate("/results")
-    }, [])
+    }, [navigate, setCurrentSavedList])
 
     const addExternalListToSavedLists = useCallback(() => {  
         if(!nameInput) return;

@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
-import { Result, Applicant, Grades } from "../../utils/Result";
+import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
@@ -20,7 +20,7 @@ const ResultsScreen = () => {
 
     const savedListContext = useContext(SavedListsContext)
 
-    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, 0, "loading..."))
+    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, 500, "loading...", []))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -34,47 +34,8 @@ const ResultsScreen = () => {
 
     useEffect(() => {
         if(!savedListContext.currentSavedList) {
-            // throw new Error("No currently selected saved list.")
+            throw new Error("No currently selected saved list.")
         }
-
-        savedListContext.setCurrentSavedList(
-            new SavedList(
-                "dummy list",
-                "list of dummy resumes",
-                [
-                    new Result(
-                        {
-                            name : "dude 1"
-                        } as Applicant,
-                        {} as File,
-                        100,
-                        "is the first dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 2",
-                            email: "dude2@gmail.com",
-                            number: "dude2number"
-                        } as Applicant,
-                        {} as File,
-                        400,
-                        "is the second dude"
-                    ),
-                    new Result(
-                        {
-                            name: "dude 3",
-                            email: "dude3@outlook.com",
-                            number: "dude3num",
-                            linkedIn: "dude3linkedin",
-                            age: 2
-                        } as Applicant,
-                        {} as File,
-                        200,
-                        "is the third dude"
-                    )
-                ], 
-            )
-        )
     }, [])
 
     const handleSaveList = () => {
@@ -149,8 +110,8 @@ const ResultsScreen = () => {
 
     return (
         <div className="flex flex-col flex-grow">
-            <div className="overflow-auto flex h-full w-full flex-row bg-white dark:bg-blue">
-                <div className="text-2xl flex flex-col flex-grow" >
+            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blue">
+                <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
                     { showModal && <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                         <ResultsDescriptionPopup
                             selectedDescription={currentCandidate.summary as string}
@@ -161,9 +122,9 @@ const ResultsScreen = () => {
                     <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
-                    <div className="flex flex-col justify-center gap-[1.3rem] overflow-auto">
+                    <div className="flex flex-col justify-center gap-[1.3rem]">
                         {resumes?.map((candidate) => <IndividualCandidateCard 
-                            key={candidate.exactScore}
+                            key={candidate.id}
                             candidate={candidate}
                         />)}
                     </div>
