@@ -5,6 +5,7 @@ import { useClipboard } from "../../hooks/Clipboard"
 import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,9 +13,11 @@ import { IonIcon } from "@ionic/react";
 
 const ViewSavedListsScreen = () => {
 
-    const {savedLists, setSavedLists} = useContext(SavedListsContext)
+    const navigate = useNavigate()
 
-    const [nameInput, setNameInput] = useState("");
+    const {savedLists, setSavedLists, setCurrentSavedList} = useContext(SavedListsContext)
+
+    const [nameInput, setNameInput] = useState<string>("");
 
     const {
 
@@ -39,12 +42,6 @@ const ViewSavedListsScreen = () => {
 
 
 
-
-    const handleInputChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if(event.target.value) {
-            setNameInput(event.target.value);
-        }
-    };
 
     const handleRemoveSelection = useCallback(() => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
@@ -75,10 +72,13 @@ const ViewSavedListsScreen = () => {
     }, [copyTextToClipboard])
 
     const sendToList = useCallback((list : SavedList) => {
-        alert(`Sending to List: ${list.listName}\nwith description: ${list.listDescription}\nand color: ${list.color}`)
-    }, [])
+        setCurrentSavedList(list)
+        navigate("/results")
+    }, [navigate, setCurrentSavedList])
 
-    const addExternalListToSavedLists = useCallback(() => {        
+    const addExternalListToSavedLists = useCallback(() => {  
+        if(!nameInput) return;
+
         setSavedLists((savedLists) => {
             const dummySavedList = new SavedList(nameInput, "", [])
 
@@ -88,6 +88,7 @@ const ViewSavedListsScreen = () => {
 
             return [...savedLists, dummySavedList]
         })
+
     }, [nameInput, setSavedLists])
 
 
@@ -160,10 +161,11 @@ const ViewSavedListsScreen = () => {
                         flex flex-grow flex-col pb-[10rem]">
             <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input
-                    onChange={handleInputChange}
-                    onSubmit={() => { addExternalListToSavedLists() }}
-                    title="Enter External List"
-                    placeholder="Enter Link"    
+                    title={"Enter External List"} placeholder={"Enter Link"}
+                    value={nameInput}
+                    onSubmit={(event) => { addExternalListToSavedLists(); setNameInput("")}}
+                    onChange={(event) => { setNameInput(event.target.value) }}
+                    errorFunction={(string) => {return ""}}
                 />
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
