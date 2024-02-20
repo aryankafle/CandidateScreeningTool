@@ -9,5 +9,5 @@ export const testMongoDatabaseConnection = async (req, res) => {
 
 export const viewCommentsTable = async (req, res) => {
     testMongoDBConnection() ? viewTable() : console.log("error")
-    return testMongoDBConnection() ? res.status(200).send({message: "Printed table in console"}) : res.status(404).send({message: "Error querying data"})
+    return viewTable() ? res.status(200).send({message: "Printed table in console"}) : res.status(404).send({message: "Error querying data"})
 }

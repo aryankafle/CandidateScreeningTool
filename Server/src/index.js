@@ -5,7 +5,7 @@ import cors from "cors";
 import linkedInRoutes from "./routes/LinkedIn.routes.js"
 import openAIRoutes from "./routes/OpenAI.routes.js"
 import MongoDBRoutes from "./routes/MongoDB.routes.js"
-
+import textScanRoutes from "./routes/textScan.routes.js"
 
 
 
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use("/linkedIn", linkedInRoutes)
 app.use("/openAI", openAIRoutes)
 app.use("/mongoDB", MongoDBRoutes)
+app.use("/textScan", textScanRoutes)
 
 
 
