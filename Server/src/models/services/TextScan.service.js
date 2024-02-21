@@ -1,16 +1,16 @@
 import {pdfToPng} from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import WordExtractor from "word-extractor"
-export const convertPdfToImg = async (req, res) => {
-    //console.log("the files", req.files)
+export const convertPdfToImg = async (fileArray) => {
+    //console.log("the files", fileArray)
     
     //console.log("the buffer", buffer)
     var returnArr = [];
     try {
-        for (i = 0; i < req.files.length; i++){
-            switch(req.files[i].mimetype){
+        for (i = 0; i < fileArray.length; i++){
+            switch(fileArray[i].mimetype){
                 case "application/pdf":
-                    const pngPage = await pdfToPng(req.files[i].buffer, {
+                    const pngPage = await pdfToPng(fileArray[i].buffer, {
                         pagesToProcess: [1],
                         viewportScale: 2.0,
                     });
@@ -19,7 +19,7 @@ export const convertPdfToImg = async (req, res) => {
                     await worker.terminate();
                     const pdfFile = {
                         text: ret,
-                        name: req.files[i].originalname
+                        fileName: fileArray[i].originalname
                     }
                     returnArr.push(pdfFile)
                     break;
@@ -27,11 +27,11 @@ export const convertPdfToImg = async (req, res) => {
                 case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
                     //yada yada i put word 2 text processing code in here 
                     const extractor = new WordExtractor()
-                    const extracted = extractor.extract(req.files[i].buffer)
+                    const extracted = extractor.extract(fileArray[i].buffer)
                     const text = (await extracted).getBody()
                     const wordFile = {
                         text: text,
-                        name: req.files[i].originalname
+                        fileName: fileArray[i].originalname
                     }
                     returnArr.push(pdfFile)
                     break;

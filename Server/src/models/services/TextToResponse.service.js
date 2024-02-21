@@ -15,7 +15,7 @@ export const queryAI = async (fileArray, filterArray) => {
             const GPTResponse = await openAICllient.chat.completions.create(query)
             const fullResponse = {
                 text: GPTResponse,
-                fileName: fileArray[i].name
+                fileName: fileArray[i].fileName
             }
             openAiResponseArr.push(fullResponse)
         }
@@ -23,7 +23,7 @@ export const queryAI = async (fileArray, filterArray) => {
             console.log(`OpenAI Service - queryAI Error: Creating GPTReponse resulted in error: ${err}`)
             const fullResponse = {
                 text: `OpenAI Service - queryAI Error: Creating GPTReponse resulted in error: ${err}`,
-                fileName: fileArray[i].name
+                fileName: fileArray[i].fileName
             }
             openAiResponseArr.push(fullResponse)
         }
