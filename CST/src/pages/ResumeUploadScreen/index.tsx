@@ -21,7 +21,7 @@ const ResumeUploadScreen = () => {
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
-    const [batchName, setBatchName] = useState("")
+    const [batchName, setBatchName] = useState(fileContext.currentBatchName)
 
     const [showFileModal, setShowFileModal] = useState(false)
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
