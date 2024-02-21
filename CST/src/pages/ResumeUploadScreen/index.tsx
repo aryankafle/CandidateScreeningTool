@@ -8,6 +8,7 @@ import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
+import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 
 
 
@@ -157,8 +158,11 @@ const ResumeUploadScreen = () => {
                 <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                     <Button
                         className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                        onClick={() => {
+                        onClick={async () => {
                             setShowConfirmFilesModal(false)
+
+                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, "nouser")
+
                             navigate("/filter")
                         }}
                     >

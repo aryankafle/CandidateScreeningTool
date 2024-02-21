@@ -10,6 +10,8 @@ type FileContextType = {
     setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>
     currentBatchName: string
     setCurrentBatchName: React.Dispatch<React.SetStateAction<string>>
+    currentBatchId : string
+    setCurrentBatchId : React.Dispatch<React.SetStateAction<string>>
     currentFormData : FormData
     setCurrentFormData : React.Dispatch<React.SetStateAction<FormData>>
 
@@ -21,6 +23,8 @@ const FileContextInitial = {
     setUploadedFiles: {} as React.Dispatch<React.SetStateAction<File[]>>,
     currentBatchName: "",
     setCurrentBatchName: {} as React.Dispatch<React.SetStateAction<string>>,
+    currentBatchId: crypto.randomUUID(),
+    setCurrentBatchId: {} as React.Dispatch<React.SetStateAction<string>>,
     currentFormData : {} as FormData,
     setCurrentFormData : {} as React.Dispatch<React.SetStateAction<FormData>>
 
@@ -36,10 +40,11 @@ const FileContextProvider = (props: { children : ReactNode }) => {
 
     const [uploadedFiles, setUploadedFiles] = useState([] as File[])
     const [currentBatchName, setCurrentBatchName] = useState("")
+    const [currentBatchId, setCurrentBatchId] = useState("")
     const [currentFormData, setCurrentFormData] = useState<FormData>({} as FormData)
     
     return (
-        <FileContext.Provider value={{uploadedFiles, setUploadedFiles, currentBatchName, setCurrentBatchName, currentFormData, setCurrentFormData}}>
+        <FileContext.Provider value={{uploadedFiles, setUploadedFiles, currentBatchName, setCurrentBatchName, currentBatchId, setCurrentBatchId, currentFormData, setCurrentFormData}}>
             {props.children}
         </FileContext.Provider>
     )

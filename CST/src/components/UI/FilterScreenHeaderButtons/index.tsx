@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react"
 import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
-import { getSortedResumes } from "../../../requests/ResumeRequests"
+import { getListResults, getSortedResumes, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
 import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
@@ -31,12 +31,51 @@ const HeaderButtons = () => {
                         className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                     border-black text-black bg-white hover:bg-gray active:bg-blue"
                         onClick={async () => {
-                            
-                            const resumes = await getSortedResumes(fileContext.uploadedFiles, filterContext.selectedFilters)
 
-                            savedListsContext.setCurrentSavedList(
-                                new SavedList(fileContext.currentBatchName, "", resumes)
+                            let uploadError = false;
+                            let fetchError = false;
+
+                            uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, "nouser")
+                            .then(
+                                () => {
+                                    // getListResults(fileContext.currentBatchId, "nouser")
+                                    // .then((res) => {
+                                    //     const resumes = res
+                                    //     savedListsContext.setCurrentSavedList(
+                                    //         new SavedList(fileContext.currentBatchName, "", resumes)
+                                    //     )
+                                    // })
+                                    // .catch((error) => {
+                                    //     console.log("Error fetching reuslts: ", error)
+                                    //     fetchError = true;
+                                    // })
+
+                                    getSortedResumes(fileContext.uploadedFiles, filterContext.selectedFilters)
+                                    .then((res) => {
+                                        const resumes = res
+                                        savedListsContext.setCurrentSavedList(
+                                            new SavedList(fileContext.currentBatchName, "", resumes)
+                                        )
+                                    })
+                                    .catch((error) => {
+                                        console.log("Error fetching reuslts: ", error)
+                                        fetchError = true;
+                                    })
+                                }
                             )
+                            .catch((error) => {
+                                console.log("Error uploading filters: ", error)
+                                uploadError = true;
+                            })
+
+                            if(uploadError) {
+                                alert("error uploading filters")
+                                return;
+                            }
+                            if(fetchError) {
+                                alert("error fetching results")
+                                return;
+                            }
 
                             navigate("/results")
                         }}

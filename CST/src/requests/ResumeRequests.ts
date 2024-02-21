@@ -27,16 +27,20 @@ export const getSortedResumes = async (resumes : File[], filters : Filter[]) => 
 
 export const uploadFilesToDatabase = async (fileFormData : FormData, listid: string, usertoken : string) => {
 
+    return;
 }
 
 export const uploadFiltersToDatabase = async (filters : Filter[], listid : string, usertoken : string) => {
 
+    return;
 }
 
 export const filterExistingResumeList = async (listid : string, usertoken : string) => {
 
+    return;
 }
 
 export const getListResults = async (listid : string, usertoken : string) => {
 
+    return [] as Result[]
 }
