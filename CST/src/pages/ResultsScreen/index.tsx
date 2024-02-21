@@ -7,12 +7,14 @@ import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash"
 
 
 const ResultsScreen = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+    
 
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(false);

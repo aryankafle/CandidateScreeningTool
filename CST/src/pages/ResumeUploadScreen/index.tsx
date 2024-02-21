@@ -68,7 +68,10 @@ const ResumeUploadScreen = () => {
         const fileNames = fileContext.uploadedFiles.map((file) => file.name)
         const uniqueFiles = [...fileContext.uploadedFiles]
 
-        const eventFiles = [...event.target.files]
+        const eventFiles : File[] = [...event.target.files].map((file) => {
+            const f : File = file as File
+            return f
+        });
 
         eventFiles.forEach(file => {
             if(!fileNames.includes(file.name)) {
