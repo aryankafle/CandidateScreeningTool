@@ -17,7 +17,11 @@ export const convertPdfToImg = async (req, res) => {
                     const worker = await createWorker('eng');
                     const ret = await worker.recognize(pngPage[0].content)
                     await worker.terminate();
-                    returnArr.push(ret)
+                    const pdfFile = {
+                        text: ret,
+                        name: req.files[i].originalname
+                    }
+                    returnArr.push(pdfFile)
                     break;
                     //currently only processes 1 page resumes btw 
                 case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -25,7 +29,11 @@ export const convertPdfToImg = async (req, res) => {
                     const extractor = new WordExtractor()
                     const extracted = extractor.extract(req.files[i].buffer)
                     const text = (await extracted).getBody()
-                    returnArr.push(text)
+                    const wordFile = {
+                        text: text,
+                        name: req.files[i].originalname
+                    }
+                    returnArr.push(pdfFile)
                     break;
             }
         }
