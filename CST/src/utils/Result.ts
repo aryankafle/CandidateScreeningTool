@@ -24,10 +24,10 @@ export class Result {
     #resumeFile : File
     #applicant : Applicant
     #filtersApplied : Filter[]
-    #summary : {}
+    #summary : string
     #id : string
 
-    constructor(applicant : Applicant, resume : File, score : number, summary : {}, filtersApplied : Filter[]) {
+    constructor(applicant : Applicant, resume : File, score : number, summary : string, filtersApplied : Filter[]) {
 
         if(score > Result.MAX_SCORE) {
             throw new RangeError(`Resume Result Error: Resultant score for "${applicant}"'s greater than maximum score of ${Result.MAX_SCORE}.`)

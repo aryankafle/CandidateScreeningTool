@@ -3,6 +3,9 @@ import { Result } from "../utils/Result"
 
 export class SavedList {
 
+    #id : string
+    get id() {return this.#id}
+
     #listName : string;
     get listName(){return this.#listName}
     set listName(newName : string){this.#listName = newName}
@@ -35,6 +38,7 @@ export class SavedList {
         this.#orderedResumeList = resumes.sort((a : Result, b : Result) => b.exactScore - a.exactScore )
         this.#color = color || "#FFFFFFFF";
         this.#listLink = this.generateLink()
+        this.#id = crypto.randomUUID()
     }
 
 

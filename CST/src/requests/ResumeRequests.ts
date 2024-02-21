@@ -13,7 +13,7 @@ export const getSortedResumes = async (resumes : File[], filters : Filter[]) => 
             {name: "applicant" + i},
             resumes[i],
             Math.floor(Math.random() * 1000),
-            {descriptoin: "this is a candidate " + i},
+            "this is a candidate " + i,
             filters
         ))
     }

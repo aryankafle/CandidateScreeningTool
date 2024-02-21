@@ -79,17 +79,8 @@ const ViewSavedListsScreen = () => {
     const addExternalListToSavedLists = useCallback(() => {  
         if(!nameInput) return;
 
-        setSavedLists((savedLists) => {
-            const dummySavedList = new SavedList(nameInput, "", [])
-
-            if(savedLists.some(savedList => SavedList.isEqual(savedList, dummySavedList))) {
-                return savedLists
-            }
-
-            return [...savedLists, dummySavedList]
-        })
-
-    }, [nameInput, setSavedLists])
+        //do somehting with external list here
+    }, [nameInput])
 
 
 
@@ -175,6 +166,7 @@ const ViewSavedListsScreen = () => {
                         {selectableItems.map(
                             (selectable, index : number) => (
                                 <SavedListCard
+                                    key = {selectable.id}
                                     index = {index}
                                     savedList = {selectable.item}
                                 />
