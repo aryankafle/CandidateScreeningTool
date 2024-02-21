@@ -28,6 +28,8 @@ const ResumeUploadScreen = () => {
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
+    const [files, setFiles] = useState<{preview: string, data : File}[]>([])
+
     const {
 
         selectableItems,
@@ -63,24 +65,29 @@ const ResumeUploadScreen = () => {
 
         if(!event.target.files) return;
 
+        
 
-
-        const fileNames = fileContext.uploadedFiles.map((file) => file.name)
-        const uniqueFiles = [...fileContext.uploadedFiles]
-
-        const eventFiles = [...event.target.files]
-
-        eventFiles.forEach(file => {
-            if(!fileNames.includes(file.name)) {
-                uniqueFiles.push(file)
+        for(let i = 0; i < event.target.files.length; i++) {
+            const file = {
+                preview: URL.createObjectURL(event.target.files[i]),
+                data: event.target.files[i]
             }
-        });
 
-
-
-        fileContext.setUploadedFiles(uniqueFiles)
+            setFiles([...files, file])
+        }
         
     }, [fileContext])
+
+    const handleSubmit : React.FormEventHandler<HTMLFormElement> = async (event) => {
+        event.preventDefault()
+
+        let formData = new FormData()
+        for(let i = 0; i < files.length; i++) {
+            formData.append("file" + i, files[i].data)
+        }
+
+
+    }
 
 
 
@@ -148,7 +155,7 @@ const ResumeUploadScreen = () => {
                         className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                         onClick={() => {
                             setShowConfirmFilesModal(false)
-                            navigate("/filter")
+                            navigate("/test")
                         }}
                     >
                         Yes
@@ -241,14 +248,18 @@ const ResumeUploadScreen = () => {
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
                     { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                    <input
-                        accept=".doc,.docx,.pdf,.png,.jpg"
-                        type="file"
-                        multiple
-                        hidden
-                        ref={hiddenFileInput}
-                        onChange={(event) => {handleFileUpload(event)}}
-                    />
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            accept=".doc,.docx,.pdf,.png,.jpg"
+                            type="file"
+                            name="file"
+                            multiple
+                            hidden
+                            ref={hiddenFileInput}
+                            onChange={handleFileUpload}
+                            
+                        />
+                    </form>
                 </Button>
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
