@@ -28,8 +28,6 @@ const ResumeUploadScreen = () => {
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
-    const [files, setFiles] = useState<{preview: string, data : File}[]>([])
-
     const {
 
         selectableItems,
@@ -63,29 +61,36 @@ const ResumeUploadScreen = () => {
 
     const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
 
+        event.preventDefault()
+
         if(!event.target.files) return;
 
         
+        
+        const uniqueFiles = [...new Set([...fileContext.uploadedFiles, ...event.target.files])]
+        
+        fileContext.setUploadedFiles(uniqueFiles)
 
 
-        for(let i = 0; i < event.target.files.length; i++) {
-            const file = {
-                preview: URL.createObjectURL(event.target.files[i]),
-                data: event.target.files[i]
-            }
-
+        
+        let formData = new FormData()
+        for(let i = 0; i < uniqueFiles.length; i++) {
+            formData.append("files", uniqueFiles[i])
         }
+
+        fileContext.setCurrentFormData(formData)
+
     }
 
     const handleSubmit : React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault()
 
         let formData = new FormData()
-        for(let i = 0; i < files.length; i++) {
-            formData.append("file" + i, files[i].data)
+        for(let i = 0; i < fileContext.uploadedFiles.length; i++) {
+            formData.append("files", fileContext.uploadedFiles[i])
         }
 
-
+        fileContext.setCurrentFormData(formData)
     }
 
 
@@ -247,16 +252,20 @@ const ResumeUploadScreen = () => {
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
                     { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                    <form onSubmit={handleSubmit}>
+                    <form 
+                        onSubmit={handleSubmit}
+                        method='POST'
+                        encType='multipart/form-data'
+                        action='upload'
+                    >
                         <input
                             accept=".doc,.docx,.pdf,.png,.jpg"
                             type="file"
-                            name="file"
+                            name="files"
                             multiple
                             hidden
                             ref={hiddenFileInput}
                             onChange={handleFileUpload}
-                            
                         />
                     </form>
                 </Button>

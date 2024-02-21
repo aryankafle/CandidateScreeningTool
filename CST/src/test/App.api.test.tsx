@@ -11,25 +11,18 @@ function App() {
   const [dbConnectionTest, setDbConnectionTest] = useState("Fetching database connection status...")
   const [pdfData, setPdfData] = useState("GRAH THIS IS RESPONSE");
   const fileContext = useContext(FileContext)
-  const thing = fileContext.uploadedFiles[0]
+  const thing = fileContext.currentFormData
 
   const getpdftest = async () => {
-    const myFormData = new FormData()
-    myFormData.append("files", thing)
-    const response = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/upload`, myFormData, {
-      headers: {
-        'Content-Type' : 'multipart/form-data'
-      }
+    const response = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing, {
+        headers: {
+          'Content-Type' : 'multipart/form-data'
+        }
       })
     return response.data
   }
 
   const getOpenAITest = async () => {
-    const thing = fileContext.uploadedFiles[0]
-    console.log(fileContext.uploadedFiles +"array")
-    console.log( thing instanceof File)
-     const myFormData = new FormData()
-     myFormData.append("files", thing)
     // console.log(myFormData + "grahh")
     // const textdata  = await jQuery.ajax({
     //   url: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`,
@@ -43,8 +36,9 @@ function App() {
     //const buff3 = Buffer.from(readAsArrayBuffer(thing))
     //console.log(thing.name + "front end thing data")
 
-    console.log(myFormData + "myformdata")
-    const text = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/upload`,myFormData, {
+    console.log(thing)
+
+    const text = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing, {
       headers: {
          'Content-Type' : 'multipart/form-data'
        }
@@ -59,12 +53,6 @@ function App() {
 
     return response.data;
   }
-
-  // const getMongoDBTest = async () => {
-  //   const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/mongoDB/test-mongoDB-connection`)
-
-  //   return response.data
-  // }
 
 
 
@@ -82,32 +70,10 @@ function App() {
     cacheTime: Infinity
   })
 
-  // const MongoDBQuery = useQuery({
-  //   queryKey: ['post', 'MongoDB', 'testQuery'],
-  //   queryFn: getMongoDBTest,
-  //   staleTime: Infinity,
-  //   cacheTime: Infinity
-  // })
-
-//   const textscantest = async () => {
-//     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/ScanText`, {
-//     params: {
-//         message: TextScanQuery.data?.message ,
-//     }
-// })
-//     return response.data
-// }
-// const ImgScanQuery = useQuery({
-//   queryKey: ['post', 'ScanText', 'testQuery'],
-//   queryFn: textscantest,
-//   staleTime: Infinity,
-//   cacheTime: Infinity
-// })
-//console.log(TextScanQuery.data?.message + "buh")
   useEffect(() => {    
     openAIQuery.data?.answer && setOpenAIAnswer(openAIQuery.data?.answer)
     openAIQuery.data?.tokensUsed && setOpenAITokensUsed(openAIQuery.data?.tokensUsed)
-   // MongoDBQuery.data?.message && setDbConnectionTest(MongoDBQuery.data?.message) 
+    // MongoDBQuery.data?.message && setDbConnectionTest(MongoDBQuery.data?.message) 
     TextScanQuery.data?.message && setPdfData(TextScanQuery.data?.message)  
   }, [openAIQuery, TextScanQuery]) //MongoDBQuery, TextScanQuery])
   return (

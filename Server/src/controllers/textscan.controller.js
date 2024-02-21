@@ -1,31 +1,30 @@
 import {pdfToPng} from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import fs from "fs"
-//import {useContext} from "react"
-const buff =  fs.readFileSync("./example.pdf")
+
 const buff2 = fs.readFileSync("./Stats.pdf")
 export const convertPdfToImg = async (req, res) => {
 
-    //console.log(req.query.message)
-    //console.log(Object.getPrototypeOf(req.query.message))
-    // if (req.query.message instanceof FormData){
-    //     console.log(req.query.message.name + "message")
-    //     console.log("yah")
-    // }
-    
+    console.log("the files", req.files)
+    const buffer = req.files[0].buffer
 
-    //console.log(req.message.files)
-    //console.log("req " + req)
-    const pngPage = await pdfToPng(buff2, { //normally req.message
-        pagesToProcess: [1],
-        viewportScale: 2.0,
-    });
+    console.log("the buffer", buffer)
 
-    
-    const worker = await createWorker('eng');
-    const ret = await worker.recognize(pngPage[0].content)
-    await worker.terminate();
-    //console.log("file text" + ret.data.text)
-    return res.status(200).send({message:ret.data.text})
+    try {
+        const pngPage = await pdfToPng(buffer, {
+            pagesToProcess: [1],
+            viewportScale: 2.0,
+        });
 
+        const worker = await createWorker('eng');
+        const ret = await worker.recognize(pngPage[0].content)
+        await worker.terminate();
+
+        return res.status(200).send({message:ret.data.text})
+    } catch (error) {
+        console.log("fuckm,", error)
+    }
+
+
+    return res.status(200)
 }
