@@ -7,7 +7,7 @@ import { arrowBackOutline } from "ionicons/icons";
 
 
 type BackButtonProps = {
-    toRoute : string
+    toRoute? : string
 }
 
 
@@ -21,7 +21,8 @@ const BackButton = (props: BackButtonProps) => {
             className=" dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                         border-black text-black bg-white hover:bg-gray active:bg-blue
                         w-[3rem]"
-            toRoute={props.toRoute}
+            toRoute={props.toRoute || ""}
+            usesPreviousRoute={!props.toRoute}
         >
             <IonIcon icon={arrowBackOutline} size="small"/>
         </NavButton>
