@@ -1,4 +1,3 @@
-import { useQuery } from "react-query"
 import { Result } from "../utils/Result"
 import { Filter } from "../context/FilterContext"
 
