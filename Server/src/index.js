@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-//import fileUpload from "express-fileupload"
 import multer from "multer"
 
 import linkedInRoutes from "./routes/LinkedIn.routes.js"

@@ -46,7 +46,7 @@ function App() {
   
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
       params: {
-        message: "Use less than 100 tokens and List the first 5 words of the following text: " + "hi" ,//text.data.message,
+        message: "Use less than 100 tokens and List the first 5 words of the following text: " + text.data.message ,//text.data.message,
         role: "user"
       }
     })
