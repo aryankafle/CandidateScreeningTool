@@ -3,7 +3,7 @@ import { Result } from "../utils/Result"
 import { Filter } from "../context/FilterContext"
 
 /*
-This is where we'll do the backend request for the resumes.
+dummy function for now before backend stuff is routed.
 */
 export const getSortedResumes = async (resumes : File[], filters : Filter[]) => {
     let list : Result[] = []
@@ -19,4 +19,24 @@ export const getSortedResumes = async (resumes : File[], filters : Filter[]) => 
     }
 
     return list;
+}
+
+
+
+
+
+export const uploadFilesToDatabase = async (fileFormData : FormData, listid: string, usertoken : string) => {
+
+}
+
+export const uploadFiltersToDatabase = async (filters : Filter[], listid : string, usertoken : string) => {
+
+}
+
+export const filterExistingResumeList = async (listid : string, usertoken : string) => {
+
+}
+
+export const getListResults = async (listid : string, usertoken : string) => {
+
 }
