@@ -159,7 +159,7 @@ const ResumeUploadScreen = () => {
                         className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                         onClick={() => {
                             setShowConfirmFilesModal(false)
-                            navigate("/test")
+                            navigate("/filter")
                         }}
                     >
                         Yes
@@ -339,9 +339,9 @@ const ResumeUploadScreen = () => {
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please enter a batch name!`}
                                 </div>
-                                <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
+                                <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
                                     <Button
-                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        className="flex flex-col justify-center w-[50%] bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                                         onClick={() => {
                                             setShowConfirmFilesModal(false)
                                         }}
