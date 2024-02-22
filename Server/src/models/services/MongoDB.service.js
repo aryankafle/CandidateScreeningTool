@@ -13,11 +13,11 @@ export const viewTable = async () => {
     //await cursor.forEach(console.log)
 }
 
-export const insertResumeData = async (user, listID, [filters], [results]) => {
+export const insertResumeData = async (fileFormData, listID, userToken) => {
     const db = client.db("resumes")
     const coll = db.collection("example_list")
     const docs = [
-        {name: name, img: img, listID: listID}
+        {userToken: userToken, listID: listID, fileFormData: fileFormData}
       ];
     const result = await coll.insertMany(docs);
     console.log(result.insertedIds);
