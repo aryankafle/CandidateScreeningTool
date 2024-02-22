@@ -30,7 +30,7 @@ export const convertPdfToImg = async (req, res) => {
 
         return res.status(200).send({message:ret.data.text})
     } catch (error) {
-        console.log("fuckm,", error)
+        console.log("Error", error)
     }
 
 
