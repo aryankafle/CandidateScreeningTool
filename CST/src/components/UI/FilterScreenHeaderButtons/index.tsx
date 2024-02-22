@@ -35,9 +35,9 @@ const HeaderButtons = () => {
                             let uploadError = false;
                             let fetchError = false;
 
-                            uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, "nouser")
+                            await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, "nouser")
                             .then(
-                                () => {
+                                async () => {
                                     // getListResults(fileContext.currentBatchId, "nouser")
                                     // .then((res) => {
                                     //     const resumes = res
@@ -50,7 +50,7 @@ const HeaderButtons = () => {
                                     //     fetchError = true;
                                     // })
 
-                                    getSortedResumes(fileContext.uploadedFiles, filterContext.selectedFilters)
+                                    await getSortedResumes(fileContext.uploadedFiles, filterContext.selectedFilters)
                                     .then((res) => {
                                         const resumes = res
                                         savedListsContext.setCurrentSavedList(
