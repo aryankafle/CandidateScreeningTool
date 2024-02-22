@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
-import ResultsDescriptionPopup from "../../components/modals/ResultDescriptionPopup";
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
@@ -9,22 +8,58 @@ import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
-import _ from "lodash"
+import { FileContext } from "../../context/FileContext";
+import { FilterContext } from "../../context/FilterContext";
 
 
 const ResultsScreen = () => {
     const navigate = useNavigate()
 
+    
+
     const [showModal, setShowModal] = useState(false);
     const [showSidePanel, setShowSidePanel] = useState(false);
 
     const savedListContext = useContext(SavedListsContext)
+    const fileContext = useContext(FileContext)
+    const filterContext = useContext(FilterContext)
 
     const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, 500, "loading...", []))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [resumes, setResumes] = useState([] as Result[])
+
+    const [selectedResumes, setSelectedResumes] = useState([] as Result[])
+
+    const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
+
+
+
+    const isPreviousSavedList = useMemo(() => {
+        if(!savedListContext.currentSavedList) {
+            return false;
+        }
+        
+        return savedListContext.savedLists.includes(savedListContext.currentSavedList)
+    }, [savedListContext.savedLists, savedListContext.currentSavedList])
+
+    const hasChangedFromPreviousSavedList = useMemo(() => {
+        if(!isPreviousSavedList || !savedListContext.currentSavedList) {
+            return undefined;
+        }
+
+        const thisList = savedListContext.currentSavedList
+
+        if(thisList.listName !== title) return true
+        if(thisList.listDescription !== description) return true
+        // if(thisList.color !== color) return true
+
+        return false;
+        
+    }, [description, isPreviousSavedList, savedListContext.currentSavedList, title])
+
+
 
     useEffect(() => {
         setTitle(savedListContext.currentSavedList?.listName ? savedListContext.currentSavedList?.listName : "")
@@ -36,21 +71,57 @@ const ResultsScreen = () => {
         if(!savedListContext.currentSavedList) {
             throw new Error("No currently selected saved list.")
         }
+// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
+
+
+
     const handleSaveList = () => {
-        const shouldMakeNewList = 
-            title !== savedListContext.currentSavedList?.listName ||
-            description !== savedListContext.currentSavedList?.listDescription ||
-            !_.isEqual(resumes, savedListContext.currentSavedList?.orderedResumeList)
         
-        if(!shouldMakeNewList) {
-            navigate("/home/saved-lists")
-            return;
+        for(let i = 0; i < savedListContext.savedLists.length; i++) {
+            if(savedListContext.savedLists[i].listName === title) {
+                setListWithSameName(savedListContext.savedLists[i])
+                return;
+            }
         }
 
         const newList = new SavedList(title, description, resumes)
         savedListContext.setSavedLists((lists) => [...lists, newList])
+
+        
+
+        fileContext.setUploadedFiles([])
+        fileContext.setCurrentBatchName("")
+        fileContext.setCurrentFormData({} as FormData)
+
+        filterContext.setSelectedFilters([])
+
+        navigate("/home/saved-lists")
+    }
+
+    const handleReplaceListWithSameName = () => {
+        savedListContext.setSavedLists((savedLists) => {
+            let listIndex = -1
+            if(listWithSameName) listIndex = savedLists.indexOf(listWithSameName)
+
+            const newList = new SavedList(title, description, resumes)
+            
+            const temp = [...savedLists]
+            temp.splice(listIndex, 1, newList)
+
+            return temp
+        })
+
+        
+
+        fileContext.setUploadedFiles([])
+        fileContext.setCurrentBatchName("")
+        fileContext.setCurrentFormData({} as FormData)
+
+        filterContext.setSelectedFilters([])
+
         navigate("/home/saved-lists")
     }
 
@@ -85,6 +156,22 @@ const ResultsScreen = () => {
         }
     }
 
+    const CandidateDescriptionPopup = () => {
+        return (
+            <div className="flex flex-col self-center h-[80%] w-[80%] bg-green dark:bg-blue">
+                <div onClick={() => setShowModal(false)}>
+                    close
+                </div>
+                <div>
+                    {currentCandidate.applicant.name}
+                </div>
+                <div>
+                    {currentCandidate.summary}
+                </div>
+            </div>
+        )
+    }
+
     const IndividualCandidateCard = (props: {candidate : Result}) => {
 
         return (
@@ -111,14 +198,32 @@ const ResultsScreen = () => {
     return (
         <div className="flex flex-col flex-grow">
             <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blue">
+                {showModal && 
+                    <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
+                        <CandidateDescriptionPopup />
+                    </Modal>
+                }
+                {listWithSameName &&
+                    <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
+                        <div className="flex flex-col h-[80%] w-[80%] bg-green dark:bg-blue self-center">
+                            <div>
+                                You already have a saved list named {title}.
+                            </div>
+                            <div
+                                onClick={() => setListWithSameName(undefined)}
+                            >
+                                Go back.
+                            </div>
+                            <div
+                                onClick={handleReplaceListWithSameName}
+                            >
+                                Replace existing list (name: {listWithSameName.listName}, description: {listWithSameName.listDescription})
+                            </div>
+                        </div>
+                    </Modal>
+                }
                 <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
-                    { showModal && <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                        <ResultsDescriptionPopup
-                            selectedDescription={currentCandidate.summary as string}
-                            selectedFilters={[]}
-                            onXClicked={() => { setShowModal(false) }}
-                        />
-                    </Modal>}
+                    
                     <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
@@ -163,17 +268,32 @@ const ResultsScreen = () => {
                                     />
                                 </div>
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
-                                    <Button
-                                        className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
-                                        onClick={() => { handleSaveList() }}
-                                    >
-                                        <div
-                                            className="text-4xl self-center"
+                                    {!isPreviousSavedList &&
+                                        <Button
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
+                                            onClick={() => { handleSaveList() }}
                                         >
-                                            Save List
-                                        </div>
-                                        <IonIcon icon={saveOutline} className="self-center text-5xl"/>
-                                    </Button>
+                                            <div
+                                                className="text-4xl self-center"
+                                            >
+                                                {"Save List"}
+                                            </div>
+                                            <IonIcon icon={saveOutline} className="self-center text-5xl"/>
+                                        </Button>
+                                    }
+                                    {isPreviousSavedList && (hasChangedFromPreviousSavedList || selectedResumes.length > 0) &&
+                                        <Button
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
+                                            onClick={() => { handleSaveList() }}
+                                        >
+                                            <div
+                                                className="text-1xl self-center"
+                                            >
+                                                {"Save As New List"}
+                                            </div>
+                                            <IonIcon icon={saveOutline} className="self-center text-5xl"/>
+                                        </Button> 
+                                    }
                                 </div>
                             </div>
                         </div>

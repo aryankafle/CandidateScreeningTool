@@ -8,6 +8,7 @@ import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
+import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 
 
 
@@ -21,7 +22,7 @@ const ResumeUploadScreen = () => {
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
-    const [batchName, setBatchName] = useState("")
+    const [batchName, setBatchName] = useState(fileContext.currentBatchName)
 
     const [showFileModal, setShowFileModal] = useState(false)
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
@@ -59,28 +60,39 @@ const ResumeUploadScreen = () => {
 
 
 
-    const handleFileUpload = useCallback((event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
+
+        event.preventDefault()
 
         if(!event.target.files) return;
 
-
-
-        const fileNames = fileContext.uploadedFiles.map((file) => file.name)
-        const uniqueFiles = [...fileContext.uploadedFiles]
-
-        const eventFiles = [...event.target.files]
-
-        eventFiles.forEach(file => {
-            if(!fileNames.includes(file.name)) {
-                uniqueFiles.push(file)
-            }
-        });
-
-
-
-        fileContext.setUploadedFiles(uniqueFiles)
         
-    }, [fileContext])
+        
+        const uniqueFiles = [...new Set([...fileContext.uploadedFiles, ...event.target.files])]
+        
+        fileContext.setUploadedFiles(uniqueFiles)
+
+
+        
+        let formData = new FormData()
+        for(let i = 0; i < uniqueFiles.length; i++) {
+            formData.append("files", uniqueFiles[i])
+        }
+
+        fileContext.setCurrentFormData(formData)
+
+    }
+
+    const handleSubmit : React.FormEventHandler<HTMLFormElement> = async (event) => {
+        event.preventDefault()
+
+        let formData = new FormData()
+        for(let i = 0; i < fileContext.uploadedFiles.length; i++) {
+            formData.append("files", fileContext.uploadedFiles[i])
+        }
+
+        fileContext.setCurrentFormData(formData)
+    }
 
 
 
@@ -131,7 +143,7 @@ const ResumeUploadScreen = () => {
     const ConfirmFilesPanel : React.FC = () => {
         return (
             <div className="bg-white dark:bg-blue
-                                flex flex-col flex-grow m-[15rem]">
+                                flex flex-col self-center h-[80%] w-[80%]">
                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                     {`Are you sure you want to use this batch of resumes?`} <br></br>
                     {`Batch Name: ${fileContext.currentBatchName}`}
@@ -146,8 +158,11 @@ const ResumeUploadScreen = () => {
                 <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                     <Button
                         className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                        onClick={() => {
+                        onClick={async () => {
                             setShowConfirmFilesModal(false)
+
+                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, "nouser")
+
                             navigate("/filter")
                         }}
                     >
@@ -241,14 +256,22 @@ const ResumeUploadScreen = () => {
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
                     { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                    <input
-                        accept=".doc,.docx,.pdf,.png,.jpg"
-                        type="file"
-                        multiple
-                        hidden
-                        ref={hiddenFileInput}
-                        onChange={(event) => {handleFileUpload(event)}}
-                    />
+                    <form 
+                        onSubmit={handleSubmit}
+                        method='POST'
+                        encType='multipart/form-data'
+                        action='upload'
+                    >
+                        <input
+                            accept=".doc,.docx,.pdf,.png,.jpg"
+                            type="file"
+                            name="files"
+                            multiple
+                            hidden
+                            ref={hiddenFileInput}
+                            onChange={handleFileUpload}
+                        />
+                    </form>
                 </Button>
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
@@ -315,25 +338,25 @@ const ResumeUploadScreen = () => {
                             <ConfirmFilesPanel />
                         :
                             !fileContext.currentBatchName ? 
-                                <div className="bg-white dark:bg-blue
-                                                flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
-                                    <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
-                                        {`Please set a name for this batch of resumes!`}
-                                    </div>
-                                    <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
-                                        <Button
-                                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                            onClick={() => {
-                                                setShowConfirmFilesModal(false)
-                                            }}
-                                        >
-                                            Ok
-                                        </Button>
-                                    </div>
+                            <div className="bg-white dark:bg-blue
+                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                                    {`Please enter a batch name!`}
                                 </div>
+                                <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
+                                    <Button
+                                        className="flex flex-col justify-center w-[50%] bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        onClick={() => {
+                                            setShowConfirmFilesModal(false)
+                                        }}
+                                    >
+                                        Ok
+                                    </Button>
+                                </div>
+                            </div>
                             :
                             <div className="bg-white dark:bg-blue
-                                            flex flex-col flex-grow mx-[15rem] my-[30rem] justify-between">
+                                            flex flex-col self-center w-[80%] h-[80%] justify-between">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please upload at least 2 resumes!`}
                                 </div>

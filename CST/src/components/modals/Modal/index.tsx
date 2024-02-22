@@ -83,7 +83,7 @@ class Modal extends Component<ModalProps & { children?: ReactNode }> {
                             alignItems: "center"
                         }
                     }>
-                    <div className="flex flex-grow w-screen h-screen">
+                    <div className="flex justify-center flex-grow w-screen h-screen">
                         {this.props.children}
                     </div>
                 </div>
