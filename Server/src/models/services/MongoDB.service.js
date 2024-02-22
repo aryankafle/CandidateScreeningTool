@@ -19,7 +19,9 @@ export const insertResumeData = async (fileFormData, listID, userToken) => {
     const doc = [{
             userToken: userToken, 
             listID: listID, 
-            fileFormData: fileFormData
+            fileFormData: fileFormData,
+            filters: [],
+            filteredResults: null
         }];
     const result = await coll.insert(doc);
     console.log(result.insertedIds);
