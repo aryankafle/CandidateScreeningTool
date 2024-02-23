@@ -42,3 +42,11 @@ export const updateResumeFilters = async (listID, userToken, filters) => {
     const result = await coll.updateMany(setDocs, updateDocs)
     console.log("Number of updated docs: " + result.modifiedCount)
 }
+
+export const filterResumes = async (listID, userToken) => {
+
+}
+
+export const getResumeResults = async (listID, userToken) => {
+    
+}
