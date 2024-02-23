@@ -11,7 +11,9 @@ export const testMongoDatabaseConnection = async (req, res) => {
 export const uploadResumesToDB = async (req, res, listID, userToken) => {
     if (testMongoDBConnection()) {
         const images = convertPdfToImg(req.files)
-        insertResumeData(images, listID, userToken)
+        images.forEach(element => {
+            insertResumeData(element, listID, userToken)
+        });
     } else {
         console.log("Error connecting to database")
     }
