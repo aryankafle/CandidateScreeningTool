@@ -43,6 +43,15 @@ export const updateResumeFilters = async (listID, userToken, filters) => {
     console.log("Number of updated docs: " + result.modifiedCount)
 }
 
+export const regroupResumeObjects = async (listID, userToken) => {
+    const db = client.db("resumes")
+    const coll = db.collection("example_list")
+    const resumeObjectArray = []
+    const cursor = coll.find({listID: listID, userToken: userToken}).project({scannedResume: 1})
+    await cursor.forEach(resumeObjectArray.push)
+    return resumeObjectArray
+}
+
 export const filterResumes = async (listID, userToken) => {
 
 }
