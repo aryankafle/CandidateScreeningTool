@@ -1,4 +1,4 @@
-import { testMongoDBConnection } from "../models/services/MongoDB.service.js";
+import { filterResumes, testMongoDBConnection } from "../models/services/MongoDB.service.js";
 import { viewTable, insertResumeData } from "../models/services/MongoDB.service.js";
 import { convertPdfToImg } from "./textscan.controller.js";
 
@@ -21,7 +21,7 @@ export const uploadResumesToDB = async (req, res, listID, userToken) => {
 
 export const applyFiltersToResumes = async (listID, userToken) => {
     if (testMongoDBConnection()) {
-
+        filterResumes(listID, userToken)
     } else {
         console.log("error connecting to DB")
     }
