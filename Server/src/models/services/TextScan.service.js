@@ -33,7 +33,7 @@ export const convertPdfToImg = async (fileArray) => {
                         text: text,
                         fileName: fileArray[i].originalname
                     }
-                    returnArr.push(pdfFile)
+                    returnArr.push(wordFile)
                     break;
             }
         }
