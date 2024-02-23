@@ -15,6 +15,14 @@ export const uploadResumesToDB = async (req, res, listID, userToken) => {
             insertResumeData(element, listID, userToken)
         });
     } else {
-        console.log("Error connecting to database")
+        console.log("Error connecting to db")
+    }
+}
+
+export const applyFiltersToResumes = async (listID, userToken) => {
+    if (testMongoDBConnection()) {
+
+    } else {
+        console.log("error connecting to DB")
     }
 }
