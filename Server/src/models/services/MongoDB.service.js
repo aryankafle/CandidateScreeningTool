@@ -10,19 +10,43 @@ export const viewTable = async () => {
     const db = client.db("sample_mflix")
     const coll = db.collection("comments")
     const cursor = coll.find()
-    //await cursor.forEach(console.log)
+    await cursor.forEach(console.log)
 }
 
-export const insertResumeData = async (fileFormData, listID, userToken) => {
+export const insertResumeData = async (scannedResume, listID, userToken) => {
     const db = client.db("resumes")
     const coll = db.collection("example_list")
     const doc = [{
             userToken: userToken, 
             listID: listID, 
-            fileFormData: fileFormData,
+            scannedResume: scannedResume,
             filters: [],
             filteredResults: null
         }];
     const result = await coll.insert(doc);
-    console.log(result.insertedIds);
+    console.log("Inserted IDs: " + result.insertedIds);
+}
+
+export const updateResumeFilters = async (listID, userToken, filters) => {
+    const db = client.db("resumes")
+    const coll = db.collection("example_list")
+    const setDocs = [{
+        userToken: userToken,
+        listID: listID
+    }]
+    const updateDocs = [{
+        $set: {
+            filters: filters
+        }
+    }]
+    const result = await coll.updateMany(setDocs, updateDocs)
+    console.log("Number of updated docs: " + result.modifiedCount)
+}
+
+export const filterResumes = async (listID, userToken) => {
+
+}
+
+export const getResumeResults = async (listID, userToken) => {
+
 }
