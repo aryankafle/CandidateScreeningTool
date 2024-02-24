@@ -1,5 +1,5 @@
 import { filterResumes, getResumeResults, testMongoDBConnection } from "../models/services/MongoDB.service.js";
-import { viewTable, insertResumeData } from "../models/services/MongoDB.service.js";
+import { insertResumeData } from "../models/services/MongoDB.service.js";
 import { convertPdfToImg } from "./textscan.controller.js";
 
 
