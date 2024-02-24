@@ -1,5 +1,5 @@
-import { filterResumes, testMongoDBConnection } from "../models/services/MongoDB.service.js";
-import { viewTable, insertResumeData } from "../models/services/MongoDB.service.js";
+import { filterResumes, getResumeResults, testMongoDBConnection } from "../models/services/MongoDB.service.js";
+import { insertResumeData } from "../models/services/MongoDB.service.js";
 import { convertPdfToImg } from "./textscan.controller.js";
 
 
@@ -25,4 +25,16 @@ export const applyFiltersToResumes = async (listID, userToken) => {
     } else {
         console.log("error connecting to DB")
     }
+}
+
+export const getResumeList = async (listID, userToken) => {
+    if (testMongoDBConnection()) {
+        getResumeResults(listID, userToken);
+    } else {
+        console.log("error connecting to DB")
+    }
+}
+
+export const updateFilters = async (listID, userToken, filters) => {
+    
 }

@@ -65,5 +65,8 @@ export const filterResumes = async (listID, userToken) => {
 }
 
 export const getResumeResults = async (listID, userToken) => {
-
+    const db = client.db("resumes");
+    const coll = db.collection("example_list");
+    const resumes = coll.find({listID: listID, userToken: userToken});
+    return resumes;
 }
