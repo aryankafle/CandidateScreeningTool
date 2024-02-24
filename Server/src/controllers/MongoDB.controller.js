@@ -1,6 +1,6 @@
 import { filterResumes, getResumeResults, testMongoDBConnection, updateResumeFilters } from "../models/services/MongoDB.service.js";
 import { insertResumeData } from "../models/services/MongoDB.service.js";
-import { convertPdfToImg } from "./textscan.controller.js";
+import { convertPdfToImg } from "../models/services/TextScan.service.js";
 
 
 export const testMongoDatabaseConnection = async (req, res) => {
