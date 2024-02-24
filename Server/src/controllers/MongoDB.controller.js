@@ -27,7 +27,7 @@ export const applyFiltersToResumes = async (listID, userToken) => {
     }
 }
 
-export const getResumeList = async (req, res, listID, userToken) => {
+export const getResumeList = async (listID, userToken) => {
     if (testMongoDBConnection()) {
         getResumeResults(listID, userToken);
     } else {
@@ -35,4 +35,6 @@ export const getResumeList = async (req, res, listID, userToken) => {
     }
 }
 
-export const 
+export const updateFilters = async (listID, userToken, filters) => {
+    
+}
