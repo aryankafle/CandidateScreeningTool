@@ -5,7 +5,7 @@ export const queryAI = async (fileArray, filterArray) => {
     var openAiResponseArr = []
     const query = openaiConfig.query
     query.messages.pop();
-    for (i = 0; i < fileArray.length; i++){
+    for (var i = 0; i < fileArray.length; i++){
         const newQuery = {
             role: "user",
             content: "Given this filter" + filterArray[0] + ", Summarize this file" + fileArray[i].text

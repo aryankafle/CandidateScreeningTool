@@ -2,14 +2,16 @@ import {pdfToPng} from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import WordExtractor from "word-extractor"
 export const convertPdfToImg = async (fileArray) => {
-    //console.log("the files", fileArray)
+    //console.log("the files muahaha", fileArray)
     
     //console.log("the buffer", buffer)
     var returnArr = [];
+    console.log(fileArray.length)
     try {
-        for (i = 0; i < fileArray.length; i++){
+        for (var i = 0; i < fileArray.length; i++){
             switch(fileArray[i].mimetype){
                 case "application/pdf":
+                    console.log("pdf is scan")
                     const pngPage = await pdfToPng(fileArray[i].buffer, {
                         pagesToProcess: [1],
                         viewportScale: 2.0,
@@ -25,6 +27,7 @@ export const convertPdfToImg = async (fileArray) => {
                     break;
                     //currently only processes 1 page resumes btw 
                 case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                    console.log("not pdf is scan")
                     //yada yada i put word 2 text processing code in here 
                     const extractor = new WordExtractor()
                     const extracted = extractor.extract(fileArray[i].buffer)
@@ -34,9 +37,9 @@ export const convertPdfToImg = async (fileArray) => {
                         fileName: fileArray[i].originalname
                     }
                     returnArr.push(wordFile)
-                    break;
             }
         }
+        
         return returnArr;
     } catch (error) {
         console.log("grrr,", error)

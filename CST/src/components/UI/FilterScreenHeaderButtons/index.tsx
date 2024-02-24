@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react"
 import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
-import { getListResults, getSortedResumes, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
+import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
 import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
@@ -49,8 +49,10 @@ const HeaderButtons = () => {
                                     //     console.log("Error fetching reuslts: ", error)
                                     //     fetchError = true;
                                     // })
-
-                                    await getSortedResumes(fileContext.uploadedFiles, filterContext.selectedFilters)
+                                    //nouser
+                                    await filterExistingResumeList(fileContext.currentBatchId, "nouser")
+                                    
+                                    await getListResults(fileContext.currentBatchId, "filterContext.selectedFilters")
                                     .then((res) => {
                                         const resumes = res
                                         savedListsContext.setCurrentSavedList(
@@ -61,6 +63,8 @@ const HeaderButtons = () => {
                                         console.log("Error fetching reuslts: ", error)
                                         fetchError = true;
                                     })
+
+                                    
                                 }
                             )
                             .catch((error) => {

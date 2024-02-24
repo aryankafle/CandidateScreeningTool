@@ -32,8 +32,9 @@ app.use(express.json());
 
 app.use("/linkedIn", linkedInRoutes)
 app.use("/openAI", openAIRoutes)
-app.use("/mongoDB", MongoDBRoutes)
+//app.use("/mongoDB", MongoDBRoutes)
 app.use("/fileUploads", upload.array("files"), fileUploadRoutes)
+app.use("/mongoDB", upload.array("files"), MongoDBRoutes)
 
 
 

@@ -162,7 +162,7 @@ const ResumeUploadScreen = () => {
                             setShowConfirmFilesModal(false)
 
                             await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, "nouser")
-
+                            
                             navigate("/filter")
                         }}
                     >

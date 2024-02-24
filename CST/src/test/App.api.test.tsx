@@ -14,10 +14,16 @@ function App() {
   const thing = fileContext.currentFormData
 
   const getpdftest = async () => {
-    const response = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing, {
-        headers: {
-          'Content-Type' : 'multipart/form-data'
-        }
+    const response = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing,
+    
+    {
+       params: {
+        bruh: "hey"
+       }
+
+        // headers: {
+        //   'Content-Type' : 'multipart/form-data'
+        // }
       })
     return response.data
   }

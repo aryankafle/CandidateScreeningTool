@@ -24,7 +24,7 @@ export const insertResumeData = async (scannedResume, listID, userToken) => {
             filters: [],
             filteredResults: null
         }];
-    const result = await coll.insert(doc);
+    const result = await coll.insertOne(doc);
     console.log("Inserted IDs: " + result.insertedIds);
 }
 
@@ -68,5 +68,6 @@ export const getResumeResults = async (listID, userToken) => {
     const db = client.db("resumes");
     const coll = db.collection("example_list");
     const resumes = coll.find({listID: listID, userToken: userToken}).project({filteredResults: 1});
+    console.log(resumes)
     return resumes;
 }
