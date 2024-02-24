@@ -27,9 +27,9 @@ export const applyFiltersToResumes = async (listID, userToken) => {
     }
 }
 
-export const getResumeList = async (listID, userToken) => {
+export const getResumeList = async (res, listID, userToken) => {
     if (testMongoDBConnection()) {
-        getResumeResults(listID, userToken);
+        res.status(200).send(getResumeResults(listID, userToken));
     } else {
         console.log("error connecting to DB")
     }
