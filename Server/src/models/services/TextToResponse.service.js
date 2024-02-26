@@ -12,9 +12,9 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
 
         const filterScores = [];
 
-        console.log("88989423,", filterArray)
+        console.log("88989423,", filters)
 
-        for(var filterIndex = 0; filterIndex < filterArray.length; filterIndex++) {
+        for(var filterIndex = 0; filterIndex < filters.length; filterIndex++) {
 
             const filterScore = await queryAI(
                 `
@@ -28,7 +28,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
                 , `user`
             )
 
-            filterScores.push({filter: filters[filterIndex], score: filterScore})
+            filterScores.push({filter: filters[filterIndex], score: filterScore.choices[0].message.content})
             
         }
 
