@@ -2,60 +2,40 @@ import { Result, Applicant } from '../utils/Result';
 import { Filter } from "../context/FilterContext"
 import axios from "axios";
 
-/*
-dummy function for now before backend stuff is routed.
-*/
-export const getSortedResumes = async (resumes : File[], filters : Filter[]) => {
-    let list : Result[] = []
-    for(let i = 0; i < resumes.length; i++) {
-        console.log(            Math.ceil(Math.random() * 998 + 1)        )
-        list.push(new Result(
-            {name: "applicant" + i},
-            resumes[i],
-            Math.floor(Math.random() * 1000),
-            "this is a candidate " + i,
-            filters
-        ))
-    }
-
-    return list;
-}
 
 
 
 
+export const uploadFilesToDatabase = async (fileFormData : FormData, listID: string, userToken : string) => {
 
-export const uploadFilesToDatabase = async (fileFormData : FormData, listid: string, usertoken : string) => {
-
-    fileFormData.append("listID", listid)
-    fileFormData.append("userToken", usertoken)
+    fileFormData.append("listID", listID)
+    fileFormData.append("userToken", userToken)
 
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/uploadResumesToDB`, fileFormData)
-
-    return;
     
 }
 
-export const uploadFiltersToDatabase = async (filters : any[], listid : string, usertoken : string) => {
-    console.log(`${filters} + filters`)
+export const uploadFiltersToDatabase = async (filters : any[], listID : string, userToken : string) => {
+    
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/updateFilters`, {
-        filters: filters,
-        listID: listid,
-        userToken: usertoken
+        filters,
+        listID,
+        userToken
     })
-    return;
+
 }
 
-export const filterExistingResumeList = async (listid : string, usertoken : string) => {    
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/applyFiltersToResumes`, {
-        listID: listid,
-        userToken: usertoken
+export const filterExistingResumeList = async (listID : string, userToken : string) => {    
     
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/applyFiltersToResumes`, {
+        listID,
+        userToken
     })
-    return;
+
 }
 
 export const getListResults = async (listid : string, usertoken : string) => {
+
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getResumeList`, {
         params:{
             listID: listid,
@@ -65,15 +45,19 @@ export const getListResults = async (listid : string, usertoken : string) => {
 
     const filteredResultsArray = response.data
 
-    const app = {name: "apper"} as Applicant
 
-    const arr = []
+
+    const resultsArray = []
 
     for(let i = 0; i < filteredResultsArray.length; i++) {
-        const result = new Result(app, {} as File, filteredResultsArray[i].text.scores[0].score, filteredResultsArray[i].text.summary, filteredResultsArray[i].text.scores[0].filter)
-        arr.push(result)
+        const resumeResult = filteredResultsArray[i]
+        const applicant = {name: resumeResult.name !== "nouser" ? resumeResult.name : "NO NAME FOUND"} as Applicant
+
+        const result = new Result(applicant, resumeResult.file, resumeResult.scores[0].score, resumeResult.summary, resumeResult.filters)
+        resultsArray.push(result)
     }
 
-    console.log("arrrrrr", arr)
-    return arr
+
+
+    return resultsArray
 }
