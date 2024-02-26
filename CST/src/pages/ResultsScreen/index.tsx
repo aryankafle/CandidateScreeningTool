@@ -74,6 +74,10 @@ const ResultsScreen = () => {
 // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        console.log(savedListContext.currentSavedList)
+    }, [savedListContext.currentSavedList])
+
 
 
 

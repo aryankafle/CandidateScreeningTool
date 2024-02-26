@@ -79,10 +79,7 @@ export const getResumeResults = async (listID, userToken) => {
     const db = client.db("resumes");
     const coll = db.collection("example_list");
     
-    const cursor = coll.find({listID: listID, userToken: userToken}).project({filteredResults: 1});
+    const results = await coll.find({listID: listID, userToken: userToken}).project({filteredResults: 1}).toArray();
     
-
-
-    await cursor.forEach(console.log)
-    return cursor;
+    return results.map((result) => result.filteredResults);
 }

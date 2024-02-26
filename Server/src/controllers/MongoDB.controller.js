@@ -49,12 +49,12 @@ export const getResumeList = async (req, res) => {
     
     if (testMongoDBConnection()) {
         try {
-            const results = await getResumeResults(req.listID, req.userToken)
+            const results = await getResumeResults(req.query?.listID, req.query?.userToken)
             
             res.status(200).send(results);
         }
         catch (error) {
-            console.log("getresmuelist")
+            console.log("getresmuelist", req.query?.listID, req.query?.userToken, error)
             res.status(200).send({})
         }
     } else {

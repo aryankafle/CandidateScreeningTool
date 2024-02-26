@@ -1,6 +1,7 @@
 import { openAICllient } from "../../inits/OpenAI.init.js"
 import { queryAI } from "./OpenAIQuery.service.js"
 import openaiConfig from "../../config/openai.config.js"
+import { query } from "express";
 
 export const getResultsFromFilesWithFilters = async (fileArray) => {
 
@@ -32,19 +33,20 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
             
         }
 
+        const summary = await queryAI(
+            `
+                <START_OF_FILE_TEXT> 
+                ${file.text}
+                <END_OF_FILE_TEXT>
+                Summarize each section of the above file.
+            `
 
+            , `user`
+        )
 
         return {
             scores: filterScores,
-            summary: await queryAI(
-                `
-                    <START_OF_FILE_TEXT> 
-                    ${file.text}
-                    <END_OF_FILE_TEXT>
-                    Summarize each section of the above file.
-                `
-
-                , `user`)
+            summary: summary.choices[0].message.content
         }
         
     }

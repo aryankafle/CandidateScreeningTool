@@ -1,4 +1,4 @@
-import { Result } from "../utils/Result"
+import { Result, Applicant } from '../utils/Result';
 import { Filter } from "../context/FilterContext"
 import axios from "axios";
 
@@ -56,11 +56,24 @@ export const filterExistingResumeList = async (listid : string, usertoken : stri
 }
 
 export const getListResults = async (listid : string, usertoken : string) => {
-    const result = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getResumeList`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getResumeList`, {
         params:{
             listID: listid,
             userToken: usertoken
         }
     })
-    return [] as Result[]
+
+    const filteredResultsArray = response.data
+
+    const app = {name: "apper"} as Applicant
+
+    const arr = []
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+        const result = new Result(app, {} as File, filteredResultsArray[i].text.scores[0].score, filteredResultsArray[i].text.summary, filteredResultsArray[i].text.scores[0].filter)
+        arr.push(result)
+    }
+
+    console.log("arrrrrr", arr)
+    return arr
 }

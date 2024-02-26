@@ -13,7 +13,7 @@ export type Applicant = {
 
 
 export enum Grades {
-    F, D, C, B, A
+    F = 1, D, C, B, A
 }
 
 export class Result {
@@ -44,7 +44,7 @@ export class Result {
     get exactScore() { return this.#score}
     get grade() {
         const scoreRangeOfOneLetterGrade = Result.MAX_SCORE / 5
-        const gradeEnum : Grades = Math.floor(this.#score / scoreRangeOfOneLetterGrade)
+        const gradeEnum : Grades = Math.ceil(this.#score / scoreRangeOfOneLetterGrade)
 
         return gradeEnum
     }

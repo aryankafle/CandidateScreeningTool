@@ -44,17 +44,22 @@ const HeaderButtons = () => {
 
                                     await filterExistingResumeList(fileContext.currentBatchId, "nouser")
                                     
-                                    await getListResults(fileContext.currentBatchId, "filterContext.selectedFilters")
-                                    .then((res) => {
-                                        const resumes = res
+                                    let listResults
+                                    
+                                    try {
+                                        listResults = await getListResults(fileContext.currentBatchId, "nouser")
+                                    }
+                                    catch (error) {
+                                        console.log("Error getting filter results: ", error)
+                                    }
+
+                                    if(listResults) {
                                         savedListsContext.setCurrentSavedList(
-                                            new SavedList(fileContext.currentBatchName, "", resumes)
+                                            new SavedList(fileContext.currentBatchName, "", listResults)
                                         )
-                                    })
-                                    .catch((error) => {
-                                        console.log("Error fetching reuslts: ", error)
-                                        fetchError = true;
-                                    })
+
+                                        navigate("/results")
+                                    }
 
                                     
                                 }
@@ -73,7 +78,6 @@ const HeaderButtons = () => {
                                 return;
                             }
 
-                            navigate("/results")
                         }}
                 >
                     <IonIcon
