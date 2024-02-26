@@ -14,6 +14,10 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
     
 }
 
+
+
+
+
 export const uploadFiltersToDatabase = async (filters : any[], listID : string, userToken : string) => {
     
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/updateFilters`, {
@@ -24,6 +28,10 @@ export const uploadFiltersToDatabase = async (filters : any[], listID : string, 
 
 }
 
+
+
+
+
 export const filterExistingResumeList = async (listID : string, userToken : string) => {    
     
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/applyFiltersToResumes`, {
@@ -32,6 +40,10 @@ export const filterExistingResumeList = async (listID : string, userToken : stri
     })
 
 }
+
+
+
+
 
 export const getListResults = async (listid : string, usertoken : string) => {
 
@@ -49,17 +61,25 @@ export const getListResults = async (listid : string, usertoken : string) => {
     const resultsArray = []
 
     for(let i = 0; i < filteredResultsArray.length; i++) {
+
+        console.log(filteredResultsArray[i])
+    }
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+
         const resumeResult = filteredResultsArray[i]
 
-        if(!resumeResult?.scores) {
-            continue;
+        if(resumeResult?.error) {
+            throw new Error(resumeResult?.error)
         }
 
-        console.log(i, resumeResult)
+
+
         const applicant = {name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND"} as Applicant
 
         const result = new Result(applicant, resumeResult?.file, resumeResult?.scores[0].score, resumeResult?.summary, resumeResult?.filters)
         resultsArray.push(result)
+        
     }
 
 

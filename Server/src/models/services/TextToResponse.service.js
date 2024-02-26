@@ -1,19 +1,16 @@
-import { openAICllient } from "../../inits/OpenAI.init.js"
 import { queryAI } from "./OpenAIQuery.service.js"
-import openaiConfig from "../../config/openai.config.js"
-import { query } from "express";
 
 export const getResultsFromFilesWithFilters = async (fileArray) => {
-
-    const openAiResponseArr = [];
-
-
-
+    
     async function getGPTResponse(file, filters) {
 
-        const filterScores = [];
+        console.log(`------Getting response for file: ${file.fileName}.`)
 
-        console.log("88989423,", filters)
+
+
+
+
+        const filterScores = [];
 
         for(var filterIndex = 0; filterIndex < filters.length; filterIndex++) {
 
@@ -55,31 +52,40 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
             , `user`
         )
 
-        return {
+
+
+        const response = {
             scores: filterScores,
             summary: summary.choices[0].message.content,
             name: name.choices[0].message.content,
         }
+
+
+
+
+
+        console.log(`------Got GPT Response: ${response}`)
+
+        return response
         
     }
 
+
+
+    const openAiResponseArr = [];
+
     for (var fileIndex = 0; fileIndex < fileArray.length; fileIndex++){
 
-        var GPTResponse;
+        var GPTResponse = await getGPTResponse(fileArray[fileIndex].scannedResume, fileArray[fileIndex].filters)
 
-        try {
-            GPTResponse = await getGPTResponse(fileArray[fileIndex].scannedResume, fileArray[fileIndex].filters)
-        }
-        catch(error) {
-            console.log(`service: async getResultsFromFilesWithFilters(), error: ${error}`)
-        }
+
 
 
 
         if(!GPTResponse) {
             
             openAiResponseArr.push({
-                error: "Error getting GPT Response.",
+                error: `Error getting GPT Response: ${error}`,
                 fileName: fileArray[fileIndex].fileName
             })
             
@@ -95,7 +101,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
     }
 
 
-
+    
     return openAiResponseArr;
 
 }

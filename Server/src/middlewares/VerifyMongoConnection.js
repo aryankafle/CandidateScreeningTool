@@ -4,7 +4,7 @@ export const verifyMongoDbConnection = (req, res, next) => {
 
     if(testMongoDBConnection()) {
 
-        return res.status(200).send("MongoDb Server successfully connected.")
+        next()
 
     }
     else {

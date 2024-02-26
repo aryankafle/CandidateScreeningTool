@@ -29,13 +29,19 @@ export const viewTable = async () => {
 
 
 
-export const insertResumeData = async (scannedResume, listID, userToken, index) => {
+export const insertResumeData = async (scannedResume, listID, userToken) => {
+
+    console.log("----Inserting resume data.")
+
+
+
+
 
     const db = client.db("resumes")
     const coll = db.collection("example_list")
 
     const doc = {
-        index: index,
+        isFiltered: false,
         userToken: userToken, 
         listID: listID, 
         scannedResume: scannedResume,
@@ -47,6 +53,11 @@ export const insertResumeData = async (scannedResume, listID, userToken, index) 
 
     await coll.insertOne(doc);
 
+
+
+
+
+    console.log("----Done inserting resume data.")
 }
 
 
@@ -54,6 +65,12 @@ export const insertResumeData = async (scannedResume, listID, userToken, index) 
 
 
 export const updateResumeFilters = async (listID, userToken, filters) => {
+
+    console.log("----Updating resume filters.")
+
+
+
+
 
     const db = client.db("resumes")
     const coll = db.collection("example_list")
@@ -71,6 +88,10 @@ export const updateResumeFilters = async (listID, userToken, filters) => {
 
 
 
+
+
+    console.log("----Done updating resume filters.")
+
     await coll.updateMany(setDocs, updateDocs)
 
 }
@@ -81,12 +102,22 @@ export const updateResumeFilters = async (listID, userToken, filters) => {
 
 export const getResumeObjects = async (listID, userToken) => {
 
+    console.log("----Getting resume objects.")
+
+
+
+
+
     const db = client.db("resumes")
     const coll = db.collection("example_list")
 
     const docArray = await coll.find({listID: listID, userToken: userToken}).toArray()
 
 
+
+
+
+    console.log("----Done getting resume objects.")
 
     return docArray
 
@@ -98,10 +129,17 @@ export const getResumeObjects = async (listID, userToken) => {
 
 export const filterResumes = async (listID, userToken) => {
 
+    console.log("----Filtering resumes.")
+
+
+
+    
+
     const db = client.db("resumes")
     const coll = db.collection("example_list")
     
     const resumeObjectArray = await getResumeObjects(listID, userToken)
+    console.log(`----${resumeObjectArray.length} resumes to filter.`)
 
     const filteredResumeArray = await getResultsFromFilesWithFilters(resumeObjectArray)
     
@@ -109,9 +147,15 @@ export const filterResumes = async (listID, userToken) => {
 
     for(var i = 0; i < filteredResumeArray.length; i++) {
 
-        coll.updateOne({listID: listID, userToken: userToken, index: i}, {"$set": {filteredResults: filteredResumeArray[i]}})
+        await coll.updateOne({listID: listID, userToken: userToken, isFiltered: false}, {"$set": {filteredResults: filteredResumeArray[i], isFiltered: true}})
     
     }
+
+
+
+
+
+    console.log("----Finished filtering resumes.")
 
 }
 
@@ -120,13 +164,23 @@ export const filterResumes = async (listID, userToken) => {
 
 
 export const getResumeResults = async (listID, userToken) => {
+    
+    console.log("----Getting resume reuslts.")
+
+
+
+
 
     const db = client.db("resumes");
     const coll = db.collection("example_list");
     
-    const results = await coll.find({listID: listID, userToken: userToken}).project({filteredResults: 1}).toArray();
+    const results = await coll.find({listID: listID, userToken: userToken, isFiltered: true}).project({filteredResults: 1}).toArray();
     
 
+
+
+
+    console.log("--Done getting resume results.")
 
     return results.map((result) => result.filteredResults);
     

@@ -6,8 +6,8 @@ import { filterResumes, getResumeResults } from "../models/services/MongoDB.serv
 
 export const applyFiltersToResumes = async (req, res) => {
 
-    console.log(`Using Controller: async applyFiltersToResumes
-                \n--Request Query: ${req.query}`)
+    console.log(`\n\n\nUsing Controller: async applyFiltersToResumes`)
+    console.log(`--Request Query: ${req.query}\n`)
 
                 
 
@@ -15,7 +15,13 @@ export const applyFiltersToResumes = async (req, res) => {
 
     await filterResumes(req.body?.listID, req.body?.userToken)
 
-    return res.status(200).json({message: "Successful Upload to Db!"})
+    res.status(200).json({message: "Successful Upload to Db!"})
+
+
+
+
+
+    console.log("Controller function finished.\n")
 
 }
 
@@ -25,9 +31,8 @@ export const applyFiltersToResumes = async (req, res) => {
 
 export const getResumeList = async (req, res) => {
 
-    console.log(`Using Controller: async getResumeList
-                \n--Request Query: ${req.query}`)
-
+    console.log(`\n\n\nUsing Controller: async getResumeList`)
+    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -45,5 +50,11 @@ export const getResumeList = async (req, res) => {
         res.status(200).send({})
     
     }
+
+
+
+
+
+    console.log("Controller function finished.\n\n\n")
 
 }

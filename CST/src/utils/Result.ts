@@ -43,6 +43,7 @@ export class Result {
 
     get exactScore() { return this.#score}
     get grade() {
+        
         const scoreRangeOfOneLetterGrade = Result.MAX_SCORE / 5
         const gradeEnum : Grades = Math.ceil(this.#score / scoreRangeOfOneLetterGrade)
 

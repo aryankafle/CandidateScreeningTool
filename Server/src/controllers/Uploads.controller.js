@@ -8,8 +8,8 @@ import { convertFiletoText } from "../models/services/TextScan.service.js";
 
 export const uploadResumesToDB = async (req, res) => {
     
-    console.log(`Using Controller: async uploadResumesToDB
-                \n--Request Query: ${req.query}`)
+    console.log(`\n\n\nUsing Controller: async uploadResumesToDB`)
+    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -21,7 +21,7 @@ export const uploadResumesToDB = async (req, res) => {
 
         try {
 
-            await insertResumeData(textScans[i], req.body?.listID, req.body?.userToken, i)
+            await insertResumeData(textScans[i], req.body?.listID, req.body?.userToken)
         
         }
         catch (error) {
@@ -34,7 +34,13 @@ export const uploadResumesToDB = async (req, res) => {
 
 
 
-    return res.status(200).json({message: "Successful Upload to Db!"})
+    res.status(200).json({message: "Successful Upload to Db!"})
+
+
+
+
+
+    console.log("Controller function finished.\n\n\n")
 
 }
 
@@ -44,8 +50,8 @@ export const uploadResumesToDB = async (req, res) => {
 
 export const updateFilters = async (req, res) => {
 
-    console.log(`Using Controller: async updateFilters
-                \n--Request Query: ${req.query}`)
+    console.log(`\n\n\nUsing Controller: async updateFilters`)
+    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -65,6 +71,12 @@ export const updateFilters = async (req, res) => {
 
 
 
-    return res.status(200).json({message: "Successful Upload to Db!"})
+    res.status(200).json({message: "Successful Upload to Db!"})
+
+
+
+
+
+    console.log("Controller function finished.\n\n\n")
 
 }

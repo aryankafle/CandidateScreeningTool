@@ -7,35 +7,61 @@ import WordExtractor from "word-extractor"
 
 
 export const convertFiletoText = async (fileArray) => {
+
+    console.log(`----Converting ${fileArray.length} files to text.`)
     
+
+
+
+
     var returnArr = [];
 
     for (var i = 0; i < fileArray.length; i++){
+
+        const file = fileArray[i]
+
+        console.log(`------Converting ${file.originalname} to text.`)
+
+
+
+
         
-        switch(fileArray[i].mimetype){
+        switch(file.mimetype){
 
             case "application/pdf":
                 
-                const pdfText = await changePdfToText(fileArray[i])
+                const pdfText = await changePdfToText(file)
                 returnArr.push(pdfText)
 
                 break;
             
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 
-                const wordText = await changeWordToText(fileArray[i])
+                const wordText = await changeWordToText(file)
                 returnArr.push(wordText)
+
+                break;
             
             default: 
 
-                throw new Error(`Error converting file to text: File ${fileArray[i].fileName} is not of a valid document type. It is of type ${fileArray[i].mimetype}, which cannot be processed.`)
+                throw new Error(`Error converting file to text: File ${file.originalname} is not of a valid document type. It is of type ${file.mimetype}, which cannot be processed.`)
         
-            }
+        }
+
+
+
+
+
+        console.log(`------Done coneverting ${file.originalname}:`)
 
     }
 
 
     
+
+
+    console.log(`----Converted ${fileArray.length} files to text.`)
+
     return returnArr;
 
 }
@@ -64,6 +90,7 @@ async function changePdfToText(pdfFile) {
     }
     
     return fileText
+
 }
 
 async function changeWordToText(wordFile) {
@@ -81,4 +108,5 @@ async function changeWordToText(wordFile) {
     }
     
     return fileText
+
 }
