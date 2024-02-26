@@ -1,10 +1,13 @@
-const config = {
+import dotenv from "dotenv"
+dotenv.config()
+
+const auth0Config = {
     authRequired: false,
     auth0Logout: true,
-    secret: 'a long, randomly-generated string stored in env',
+    secret: process.env.AUTH0_CLIENT_SECRET,
     baseURL: 'http://localhost:3000',
-    clientID: 'rhTt3oKQLiaDI4K3cbXbPteswjquK0b2',
-    issuerBaseURL: 'https://dev-6j1kerntmeevms68.us.auth0.com'
+    clientID: process.env.AUTO0_CLIENT_ID,
+    issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
   };
   
-  export default config
+  export default auth0Config

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer"
 import {auth} from 'express-openid-connect'
+import auth0Config from "./config/auth0.config.js"
 
 import resumeFilteringRoutes from "./routes/ResumeFiltering.routes.js"
 import uploadRoutes from "./routes/Uploads.routes.js"
@@ -28,6 +29,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(auth(auth0Config));
+
 
 
 
