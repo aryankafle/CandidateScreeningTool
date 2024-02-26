@@ -188,10 +188,10 @@ const ResultsScreen = () => {
                 }}
             >
                 <div className="flex flex-grow self-center justify-center">
-                    {props.candidate.applicant.name}
+                    {props.candidate.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem]">
-                    { getRatingImage(props.candidate.grade ) }
+                    { getRatingImage(props.candidate.grade ) || "asdf" }
                 </div>
             </div>
         )

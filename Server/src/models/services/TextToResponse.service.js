@@ -58,7 +58,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
         return {
             scores: filterScores,
             summary: summary.choices[0].message.content,
-            name: name
+            name: name.choices[0].message.content,
         }
         
     }
@@ -91,6 +91,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
             filters: [...fileArray[fileIndex].filters],
             file: fileArray[fileIndex]
         })
+        
     }
 
 
