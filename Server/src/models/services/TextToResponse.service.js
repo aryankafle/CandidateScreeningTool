@@ -44,9 +44,21 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
             , `user`
         )
 
+        const name = await queryAI(
+            `
+                <START_OF_FILE_TEXT> 
+                ${file.text}
+                <END_OF_FILE_TEXT>
+                If the above file is a resume, find the name of the person who wrote it. If not, find the author. Respond only with the first and last name of the person who wrote it or author. If you cannot find either, respond with "nouser".
+            `
+
+            , `user`
+        )
+
         return {
             scores: filterScores,
-            summary: summary.choices[0].message.content
+            summary: summary.choices[0].message.content,
+            name: name
         }
         
     }
@@ -75,8 +87,9 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
         }
 
         openAiResponseArr.push({
-            text: GPTResponse,
-            fileName: fileArray[fileIndex].fileName
+            ...GPTResponse,
+            filters: [...fileArray[fileIndex].filters],
+            file: fileArray[fileIndex]
         })
     }
 
