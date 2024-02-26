@@ -5,7 +5,9 @@ import express from "express";
 import {
     applyFiltersToResumes,
     getResumeList,
-} from "../controllers/MongoDB.controller.js";
+} from "../controllers/ResumeFiltering.controller.js";
+
+import { verifyMongoDbConnection } from "../middlewares/VerifyMongoConnection.js";
 
 
 
@@ -13,7 +15,7 @@ const router = express.Router();
 
 
 
-router.post("/applyFiltersToResumes", applyFiltersToResumes)
-router.get("/getResumeList", getResumeList)
+router.post("/applyFiltersToResumes", verifyMongoDbConnection, applyFiltersToResumes)
+router.get("/getResumeList", verifyMongoDbConnection, getResumeList)
 
 export default router;

@@ -1,5 +1,4 @@
 import { Result, Applicant } from '../utils/Result';
-import { Filter } from "../context/FilterContext"
 import axios from "axios";
 
 

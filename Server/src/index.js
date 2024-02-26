@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer"
 
-import resumeFilteringRoutes from "./routes/resumeFiltering.routes.js"
-import uploadRoutes from "./routes/uploads.routes.js"
-import testRoutes from "./routes/test.routes.js"
+import resumeFilteringRoutes from "./routes/ResumeFiltering.routes.js"
+import uploadRoutes from "./routes/Uploads.routes.js"
+import testRoutes from "./routes/Test.routes.js"
 
 
 

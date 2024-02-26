@@ -3,12 +3,17 @@ import { createWorker } from 'tesseract.js';
 import WordExtractor from "word-extractor"
 
 
+
+
+
 export const convertFiletoText = async (fileArray) => {
     
     var returnArr = [];
 
     for (var i = 0; i < fileArray.length; i++){
+        
         switch(fileArray[i].mimetype){
+
             case "application/pdf":
                 
                 const pdfText = await changePdfToText(fileArray[i])
@@ -22,13 +27,20 @@ export const convertFiletoText = async (fileArray) => {
                 returnArr.push(wordText)
             
             default: 
-                throw new Error(`service: convertFileToText; error: File ${fileArray[i].fileName} is not of a valid document type. It is of type ${fileArray[i].mimetype}, which cannot be processed.`)
-        }
+
+                throw new Error(`Error converting file to text: File ${fileArray[i].fileName} is not of a valid document type. It is of type ${fileArray[i].mimetype}, which cannot be processed.`)
+        
+            }
+
     }
 
+
+    
     return returnArr;
 
 }
+
+
 
 async function changePdfToText(pdfFile) {
     
