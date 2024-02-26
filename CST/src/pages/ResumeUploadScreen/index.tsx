@@ -60,38 +60,50 @@ const ResumeUploadScreen = () => {
 
 
 
-    const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
 
-        event.preventDefault()
-
-        if(!event.target.files) return;
-
+    useEffect(() => {
         
-        
-        const uniqueFiles = [...new Set([...fileContext.uploadedFiles, ...event.target.files])]
-        
-        fileContext.setUploadedFiles(uniqueFiles)
-
-
-        
-        let formData = new FormData()
-        for(let i = 0; i < uniqueFiles.length; i++) {
-            formData.append("files", uniqueFiles[i])
-        }
-
-        fileContext.setCurrentFormData(formData)
-
-    }
-
-    const handleSubmit : React.FormEventHandler<HTMLFormElement> = async (event) => {
-        event.preventDefault()
-
         let formData = new FormData()
         for(let i = 0; i < fileContext.uploadedFiles.length; i++) {
             formData.append("files", fileContext.uploadedFiles[i])
         }
 
         fileContext.setCurrentFormData(formData)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fileContext.uploadedFiles])
+
+
+
+
+
+    const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
+
+        event.preventDefault()
+
+        if(!event.target.files) return;
+
+
+
+
+
+        const eventFiles : File[] = [...event.target.files]
+        const uniqueFiles : File[] = [...fileContext.uploadedFiles]
+
+        for(let i = 0; i < eventFiles.length; i++) {
+            
+            if(uniqueFiles.some((file) => file.name === eventFiles[i].name)) {
+                continue;    
+            }
+
+            uniqueFiles.push(eventFiles[i])
+        
+        }
+
+
+
+        fileContext.setUploadedFiles(uniqueFiles)
+
     }
 
 
@@ -121,6 +133,7 @@ const ResumeUploadScreen = () => {
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         if(event.key === "Delete") {
             handleDeleteFiles()
+
         }
         else {
             handleSelectionOnKeyDown(event)
@@ -158,10 +171,12 @@ const ResumeUploadScreen = () => {
                 <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                     <Button
                         className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                        onClick={async () => {
-                            setShowConfirmFilesModal(false)
+                        onClick={async (event) => {
+                            event.preventDefault()
 
                             await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, "nouser")
+
+                            setShowConfirmFilesModal(false)
                             
                             navigate("/filter")
                         }}
@@ -257,7 +272,6 @@ const ResumeUploadScreen = () => {
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
                     { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
                     <form 
-                        onSubmit={handleSubmit}
                         method='POST'
                         encType='multipart/form-data'
                         action='upload'

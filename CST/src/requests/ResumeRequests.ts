@@ -77,7 +77,7 @@ export const getListResults = async (listid : string, usertoken : string) => {
 
         const applicant = {name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND"} as Applicant
 
-        const result = new Result(applicant, resumeResult?.file, resumeResult?.scores[0].score, resumeResult?.summary, resumeResult?.filters)
+        const result = new Result(applicant, resumeResult?.file, resumeResult?.scores, resumeResult?.summary, resumeResult?.filters)
         resultsArray.push(result)
         
     }

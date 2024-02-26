@@ -35,7 +35,7 @@ export class SavedList {
     constructor(name : string, description : string, resumes : Result[], color? : string) {
         this.#listName = name;
         this.#listDescription = description;
-        this.#orderedResumeList = resumes.sort((a : Result, b : Result) => b.exactScore - a.exactScore )
+        this.#orderedResumeList = resumes.sort((a : Result, b : Result) => b.overallScore - a.overallScore )
         this.#color = color || "#FFFFFFFF";
         this.#listLink = this.generateLink()
         this.#id = crypto.randomUUID()

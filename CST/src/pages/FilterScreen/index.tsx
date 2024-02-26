@@ -28,7 +28,7 @@ class DummyFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Years of Work Experience", "Is the file in english?", quantity)
+            super("Years of Work Experience", "Is the file a resume?", quantity)
         }
 
         else {

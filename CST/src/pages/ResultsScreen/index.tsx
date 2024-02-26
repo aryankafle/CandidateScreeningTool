@@ -24,7 +24,7 @@ const ResultsScreen = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
-    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, 500, "loading...", []))
+    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], "loading...", []))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -167,6 +167,9 @@ const ResultsScreen = () => {
                 </div>
                 <div>
                     {currentCandidate.summary}
+                </div>
+                <div>
+                    {currentCandidate.overallScore}
                 </div>
             </div>
         )
