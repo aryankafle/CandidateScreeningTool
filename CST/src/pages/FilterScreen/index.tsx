@@ -12,9 +12,12 @@ import DraggableList from '../../components/views/DraggableList/';
 
 
 class KeywordBiasFilter extends Filter {
-    
+
     constructor(keyword : string) {
-        super(`Keyword Bias: ${keyword}`)
+        super(
+            `Keyword Bias: ${keyword}`,
+            `How well does the file include the keyword: ${keyword}, or similar keywords? Similar keywords are less important than original keyword, so weight them into your answer less based on how far they are from the original keyword.`,
+        )
     }
 
 }
@@ -25,7 +28,7 @@ class DummyFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Years of Work Experience", quantity)
+            super("Years of Work Experience", "Is the file in english?", quantity)
         }
 
         else {

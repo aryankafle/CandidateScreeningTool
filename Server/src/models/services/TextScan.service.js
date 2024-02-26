@@ -1,48 +1,72 @@
 import {pdfToPng} from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import WordExtractor from "word-extractor"
-export const convertPdfToImg = async (fileArray) => {
-    //console.log("the files muahaha", fileArray)
+
+
+export const convertFiletoText = async (fileArray) => {
     
-    //console.log("the buffer", buffer)
     var returnArr = [];
-    console.log(fileArray.length)
-    try {
-        for (var i = 0; i < fileArray.length; i++){
-            switch(fileArray[i].mimetype){
-                case "application/pdf":
-                    console.log("pdf is scan")
-                    const pngPage = await pdfToPng(fileArray[i].buffer, {
-                        pagesToProcess: [1],
-                        viewportScale: 2.0,
-                    });
-                    const worker = await createWorker('eng');
-                    const ret = await worker.recognize(pngPage[0].content)
-                    await worker.terminate();
-                    const pdfFile = {
-                        text: ret,
-                        fileName: fileArray[i].originalname
-                    }
-                    returnArr.push(pdfFile)
-                    break;
-                    //currently only processes 1 page resumes btw 
-                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                    console.log("not pdf is scan")
-                    //yada yada i put word 2 text processing code in here 
-                    const extractor = new WordExtractor()
-                    const extracted = extractor.extract(fileArray[i].buffer)
-                    const text = (await extracted).getBody()
-                    const wordFile = {
-                        text: text,
-                        fileName: fileArray[i].originalname
-                    }
-                    returnArr.push(wordFile)
-            }
+
+    for (var i = 0; i < fileArray.length; i++){
+        switch(fileArray[i].mimetype){
+            case "application/pdf":
+                
+                const pdfText = await changePdfToText(fileArray[i])
+                returnArr.push(pdfText)
+
+                break;
+            
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+
+                const wordText = await changeWordToText(fileArray[i])
+                returnArr.push(wordText)
+            
+            default: 
+                throw new Error(`service: convertFileToText; error: File ${fileArray[i].fileName} is not of a valid document type. It is of type ${fileArray[i].mimetype}, which cannot be processed.`)
         }
-        
-        return returnArr;
-    } catch (error) {
-        console.log("grrr,", error)
-        return null;
     }
+
+    return returnArr;
+
+}
+
+async function changePdfToText(pdfFile) {
+    
+    const pngPage = await pdfToPng(pdfFile.buffer, {
+        pagesToProcess: [1],
+        viewportScale: 2.0,
+    });
+
+
+
+    const worker = await createWorker('eng');
+    const ret = await worker.recognize(pngPage[0].content)
+
+    await worker.terminate();
+    
+
+    
+    const fileText = {
+        text: ret.data.text,
+        fileName: pdfFile.originalname
+    }
+    
+    return fileText
+}
+
+async function changeWordToText(wordFile) {
+
+    const extractor = new WordExtractor()
+    const extracted = extractor.extract(wordFile.buffer)
+
+    const text = (await extracted).getBody()
+    
+
+
+    const fileText = {
+        text: text,
+        fileName: wordFile.originalname
+    }
+    
+    return fileText
 }

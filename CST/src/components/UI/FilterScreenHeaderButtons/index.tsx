@@ -35,21 +35,13 @@ const HeaderButtons = () => {
                             let uploadError = false;
                             let fetchError = false;
 
-                            await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, "nouser")
+
+                            
+                            await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, "nouser")
+
                             .then(
                                 async () => {
-                                    // getListResults(fileContext.currentBatchId, "nouser")
-                                    // .then((res) => {
-                                    //     const resumes = res
-                                    //     savedListsContext.setCurrentSavedList(
-                                    //         new SavedList(fileContext.currentBatchName, "", resumes)
-                                    //     )
-                                    // })
-                                    // .catch((error) => {
-                                    //     console.log("Error fetching reuslts: ", error)
-                                    //     fetchError = true;
-                                    // })
-                                    //nouser
+
                                     await filterExistingResumeList(fileContext.currentBatchId, "nouser")
                                     
                                     await getListResults(fileContext.currentBatchId, "filterContext.selectedFilters")

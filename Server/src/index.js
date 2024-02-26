@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer"
 
-import linkedInRoutes from "./routes/LinkedIn.routes.js"
-import openAIRoutes from "./routes/OpenAI.routes.js"
-import MongoDBRoutes from "./routes/MongoDB.routes.js"
-import fileUploadRoutes from "./routes/fileUploads.routes.js"
+import resumeFilteringRoutes from "./routes/resumeFiltering.routes.js"
+import uploadRoutes from "./routes/uploads.routes.js"
+import testRoutes from "./routes/test.routes.js"
+
 
 
 
@@ -30,11 +30,9 @@ app.use(express.json());
 
 
 
-app.use("/linkedIn", linkedInRoutes)
-app.use("/openAI", openAIRoutes)
-//app.use("/mongoDB", MongoDBRoutes)
-app.use("/fileUploads", upload.array("files"), fileUploadRoutes)
-app.use("/mongoDB", upload.array("files"), MongoDBRoutes)
+app.use("/uploads", upload.array("files"), uploadRoutes)
+app.use("/resume-filtering", resumeFilteringRoutes)
+app.use("/test", testRoutes)
 
 
 
