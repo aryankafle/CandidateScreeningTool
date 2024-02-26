@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer"
+import {auth} from 'express-openid-connect'
 
 import resumeFilteringRoutes from "./routes/ResumeFiltering.routes.js"
 import uploadRoutes from "./routes/Uploads.routes.js"

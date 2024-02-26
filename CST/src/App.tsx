@@ -3,8 +3,7 @@ import AppContextProvider from "./context"
 import Router from "./router"
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-
-
+//const { auth } = require('express-openid-connect')
 
 
 const queryClient = new QueryClient();
