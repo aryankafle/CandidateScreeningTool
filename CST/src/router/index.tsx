@@ -57,7 +57,7 @@ function Router() {
                 </Route>
                 <Route element={<BaseLayout />}>
                     <Route index element={<SplashScreen />} />
-                    <Route path="/login" element={<LoginScreen />} />
+                    <Route path="/signin" element={<LoginScreen />} />
                     <Route path="/test" element={<TestScreen />} />
                     <Route path="*" element={<PageNotFoundScreen />} />
                 </Route>

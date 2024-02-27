@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer"
 import auth0Config from "./config/auth0.config.js"
-
+import bruh from "express-openid-connect";
+const {auth} = bruh
 import { 
 
     authRoutes, 
@@ -13,7 +14,7 @@ import {
 
     testRoutes,
 
-} from "./routes/"
+} from "./routes/index.js"
 
 
 
@@ -67,7 +68,8 @@ app.get("/", (req, res) => {
     res.status(200).json({message: "Archnatin CST Back-end Server"})
 })
 
-
+//frontend buttons make axios request to backend routes like requiresauth
+//use /auth before any route
 
 
 

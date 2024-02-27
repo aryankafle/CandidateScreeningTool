@@ -1,7 +1,7 @@
 import express from "express";
-import requiresAuth from "express-openid-connect";
+import bruh from "express-openid-connect";
 
-
+const {requiresAuth} = bruh
 
 
 
