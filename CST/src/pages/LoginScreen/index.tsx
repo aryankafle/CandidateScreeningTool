@@ -1,5 +1,5 @@
-// import LoginButton from '../../components/buttons/LoginButton'
-// import LogoutButton from '../../components/buttons/LogoutButton'
+import LoginButton from '../../components/buttons/LoginButton'
+ // import LogoutButton from '../../components/buttons/LogoutButton'
 // import  axios  from 'axios';
 // import querystring from 'querystring'
 // import oauth from 'axios-oauth-client'
@@ -16,54 +16,18 @@
 
 
 const LoginScreen = () => {
-   
 
-    // //const img = convert(1);
-    // // const [account, setAccount] = useState("")
-    // // const data = { 'grant_type': 'client_credentials'};
-    // const [response, setResponse] = useState("");
-    // const [pngPage, setPngPage] = useState([] as PngPageOutput[])
-    // // const getAuthorizationCode = oauth.authorizationCode(
-    // //     axios.create(),
-    // //     'https://oauth.com/2.0/token', // OAuth 2.0 token endpoint
-    // //     'CLIENT_ID',
-    // //     'CLIENT_SECRET',
-    // //     'https://your-app.com/oauth-redirect' // Redirect URL for your app
-    // //   )
-    // //   const auth = await getAuthorizationCode('AUTHORIZATION_CODE')
-    // useEffect(() => {  
-    //     ImgScanQuery.data?.message && setResponse(ImgScanQuery.data.message)  
-    //   }, [ImgScanQuery])
 
      function login() {
-     
-    //       console.log(response)
-    //     // test(`Convert PDF To PNG`, async () => {
-    //     //     const pngPages: PngPageOutput[] = await pdfToPng('./Half_Day_Schedule.pdf', // The function accepts PDF file path or a Buffer
-    //     //     {
-    //     //         viewportScale: 2.0, 
-    //     //         pagesToProcess: [1],   
-    //     //     });
-    //     //     setPngPage(pngPages)
-    //     // });
-    //     //MOVE TO BACKEND
-
-    //     // const convertPdfToImg = async () => {
-    //     //     const pngPage = await pdfToPng('./Half_Day_Schedule.pdf', {
-    //     //         pagesToProcess: [1],
-    //     //         viewportScale: 2.0
-    //     // });
-    //     // return pngPage[0].content
-    //     // }
-    //     // setPngPage(convertPdfToImg)
+        
      }
     
     return (
         <div>
-            {/* <LoginButton /> */}
-            <button 
-                onClick = {login}>
-                    GRUH
+            { <LoginButton /> }
+            <button>
+                {/* onClick = {login}>
+                    GRUH */}
                         
             </button>
         </div>
