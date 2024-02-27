@@ -1,6 +1,5 @@
 import express from "express";
 import requiresAuth from "express-openid-connect";
-import Auth from 'express-openid-connect'
 
 
 

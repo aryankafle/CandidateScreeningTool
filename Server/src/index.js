@@ -4,11 +4,17 @@ import cors from "cors";
 import multer from "multer"
 import auth0Config from "./config/auth0.config.js"
 
+import { 
 
+    authRoutes, 
 
-import resumeFilteringRoutes from "./routes/ResumeFiltering.routes.js"
-import uploadRoutes from "./routes/Uploads.routes.js"
-import testRoutes from "./routes/Test.routes.js"
+    resumeFilteringRoutes, 
+    uploadRoutes, 
+
+    testRoutes,
+
+} from "./routes/"
+
 
 
 
@@ -31,6 +37,8 @@ app.use(express.json());
 
 
 app.use(auth(auth0Config));
+app.use("/auth", authRoutes)
+
 // app.use(requiresAuth());
 
 
@@ -41,10 +49,10 @@ const upload = multer({
 });
 
 app.use("/uploads", upload.array("files"), uploadRoutes)
-
-
-
 app.use("/resume-filtering", resumeFilteringRoutes)
+
+
+
 app.use("/test", testRoutes)
 
 
