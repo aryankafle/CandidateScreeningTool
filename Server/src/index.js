@@ -1,10 +1,13 @@
 import express from "express";
+
 import dotenv from "dotenv";
+dotenv.config()
+
 import cors from "cors";
 import multer from "multer"
 import auth0Config from "./config/auth0.config.js"
-import bruh from "express-openid-connect";
-const {auth} = bruh
+import { auth } from 'express-openid-connect/index.js'
+
 import { 
 
     authRoutes, 
@@ -20,7 +23,6 @@ import {
 
 
 
-dotenv.config()
 
 const PORT = process.env.PORT || 3001
 
