@@ -2,6 +2,7 @@ import { ReactNode, createContext } from "react"
 import FileContextProvider from "./FileContext"
 import FilterContextProvider from "./FilterContext"
 import SavedListsContextProvider from "./SavedListsContext"
+import AuthContextProvider from "./AuthContext"
 
 
 
@@ -20,6 +21,7 @@ const AppContextProvider = (props: { children : ReactNode }) => {
     
     return (
         <AppContext.Provider value={{ }}>
+            AuthContextProivder
             <FileContextProvider> 
                 <FilterContextProvider>
                     <SavedListsContextProvider>

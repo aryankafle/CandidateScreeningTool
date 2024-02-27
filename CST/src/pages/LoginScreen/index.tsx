@@ -46,7 +46,8 @@ const LoginScreen = () => {
             {/* { <LoginButton /> } */}
             <button
                 onClick = {() => asynclogin()}>
-                    Login       
+                    Login    
+                          
             </button>
             <button
                 onClick = {() => logout()}>
