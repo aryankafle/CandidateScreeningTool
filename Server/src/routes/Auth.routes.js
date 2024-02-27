@@ -1,13 +1,13 @@
 import express from "express";
-import requiresAuth from "express-openid-connect";
+
+import Auth from 'express-openid-connect/index.js'
+const { requiresAuth } = Auth
 
 
 
 
 
 const router = express.Router();
-
-
 
 
 
@@ -18,5 +18,9 @@ router.get('/authtest', (req, res) => {
 router.get('/profile', requiresAuth(), (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
 });
+
+
+
+
 
 export default router;
