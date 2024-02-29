@@ -21,14 +21,15 @@ const AppContextProvider = (props: { children : ReactNode }) => {
     
     return (
         <AppContext.Provider value={{ }}>
-            
-            <FileContextProvider> 
-                <FilterContextProvider>
-                    <SavedListsContextProvider>
-                        {props.children}
-                    </SavedListsContextProvider>
-                </FilterContextProvider>
-            </FileContextProvider>
+            <AuthContextProvider>
+                <FileContextProvider> 
+                    <FilterContextProvider>
+                        <SavedListsContextProvider>
+                            {props.children}
+                        </SavedListsContextProvider>
+                    </FilterContextProvider>
+                </FileContextProvider>
+            </AuthContextProvider>
         </AppContext.Provider>
     )
 }
