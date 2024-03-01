@@ -6,7 +6,7 @@ dotenv.config()
 import cors from "cors";
 import multer from "multer"
 import auth0Config from "./config/auth0.config.js"
-import { auth } from 'express-openid-connect/index.js'
+import { auth } from 'express-openid-connect'
 
 import { 
 
