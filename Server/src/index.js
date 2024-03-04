@@ -8,6 +8,12 @@ import multer from "multer"
 import auth0Config from "./config/auth0.config.js"
 import { auth } from 'express-openid-connect'
 
+
+
+import { SERVER_PORT } from "./util/ips.js";
+
+import { corsConfig } from "./config/cors.config.js";
+
 import { 
 
     authRoutes, 
@@ -23,19 +29,12 @@ import {
 
 
 
-
-const PORT = process.env.PORT || 3001
-
-
-
 const app = express();
 
-
-
-
-
-app.use(cors());
+app.use(cors({ origin: corsConfig }));
 app.use(express.json());
+
+
 
 
 
@@ -43,6 +42,8 @@ app.use(auth(auth0Config));
 app.use("/auth", authRoutes)
 
 // app.use(requiresAuth());
+
+
 
 
 
@@ -70,11 +71,10 @@ app.get("/", (req, res) => {
     res.status(200).json({message: "Archnatin CST Back-end Server"})
 })
 
-//frontend buttons make axios request to backend routes like requiresauth
-//use /auth before any route
 
 
 
-app.listen(PORT, () => {
+
+app.listen(SERVER_PORT, () => {
     console.log(`Express is running and server is listening on ${PORT}`)
 });
