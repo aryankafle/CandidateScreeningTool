@@ -76,5 +76,5 @@ app.get("/", (req, res) => {
 
 
 app.listen(SERVER_PORT, () => {
-    console.log(`Express is running and server is listening on ${PORT}`)
+    console.log(`Express is running and server is listening on ${SERVER_PORT}`)
 });
