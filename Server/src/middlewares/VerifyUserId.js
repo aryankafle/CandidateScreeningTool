@@ -4,8 +4,6 @@ export const verifyUserId = (req, res, next) => {
         return res.status(400).send("userToken can't be undefined!")
     }
 
-    console.log("ASDasdASDasd,", req.body?.userToken)
-
     next()
     
 }
