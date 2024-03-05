@@ -1,7 +1,7 @@
 import express from "express";
-import passport from "passport";
+// import passport from "passport";
 import expressSession from "express-session";
-import passportSetup from "./passport.js"
+import passport from "./passport.js"
 
 import dotenv from "dotenv";
 dotenv.config()
@@ -12,6 +12,8 @@ import multer from "multer"
 
 
 import { CLIENT_HOST, CLIENT_IP, SERVER_PORT } from "./util/ips.js";
+
+import { verifyUserId } from "./middlewares/VerifyUserId.js";
 
 import { 
 
@@ -62,8 +64,8 @@ const upload = multer({
     storage: storage
 });
 
-app.use("/uploads", upload.array("files"), uploadRoutes)
-app.use("/resume-filtering", resumeFilteringRoutes)
+app.use("/uploads", upload.array("files"), verifyUserId, uploadRoutes)
+app.use("/resume-filtering", verifyUserId, resumeFilteringRoutes)
 
 app.use("/test", testRoutes)
 

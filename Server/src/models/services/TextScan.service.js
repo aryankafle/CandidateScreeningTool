@@ -42,6 +42,13 @@ export const convertFiletoText = async (fileArray) => {
 
                 break;
             
+            case "image/png":
+
+                const pngText = await changePngToText(file)
+                returnArr.push(pngText)
+
+                break;
+
             default: 
 
                 throw new Error(`Error converting file to text: File ${file.originalname} is not of a valid document type. It is of type ${file.mimetype}, which cannot be processed.`)
@@ -68,6 +75,7 @@ export const convertFiletoText = async (fileArray) => {
 
 
 
+// only does one page i think?
 async function changePdfToText(pdfFile) {
     
     const pngPage = await pdfToPng(pdfFile.buffer, {
@@ -109,4 +117,21 @@ async function changeWordToText(wordFile) {
     
     return fileText
 
+}
+
+async function changePngToText(pngFile) {
+
+    const worker = await createWorker('eng');
+    const ret = await worker.recognize(pngFile.buffer)
+
+    await worker.terminate();
+    
+
+    
+    const fileText = {
+        text: ret.data.text,
+        fileName: pngFile.originalname
+    }
+    
+    return fileText
 }
