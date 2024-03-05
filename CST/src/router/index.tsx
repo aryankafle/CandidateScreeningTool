@@ -1,9 +1,10 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 
 import HomeRoutes from "./HomeRouter";
+import AuthRoutes from "./AuthRouter"
 
 
 
@@ -11,7 +12,6 @@ import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
 import ResultsScreen from "../pages/ResultsScreen"
-import LoginScreen from "../pages/LoginScreen"
 
 
 
@@ -23,46 +23,90 @@ import BackButton from "../components/buttons/BackButton";
 
 
 
+import { UserContext } from "../context/UserContext";
+import { useCallback, useContext, useEffect } from "react";
+import axios from "axios";
+
+
+
 
 
 function Router() {
+
+    const { setUserData, isLoggedIn } = useContext(UserContext)
+
+    const getUser = useCallback(async () => {
+  
+      try {
+    
+          const { data } = await axios.get(
+              `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/login/success`
+              , { withCredentials: true }
+          )
+
+          console.log("Successfully Signed In: ", data)
+          setUserData(data.user)
+          
+      } 
+      catch (error) {
+    
+          console.log("Error getting user: ", error)
+    
+      }
+    
+    }, [setUserData])
+    
+    useEffect(() => {
+      getUser()
+    }, [getUser])
+
+    useEffect(() => {
+        console.log("Is Logged In: ", isLoggedIn)
+    }, [isLoggedIn])
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<DecoratedLayout />}>
-                    <Route path="/filter"
-                            element={
-                                <>
-                                    <div className="flex flex-col flex-shrink">
-                                        <HeaderButtons />
-                                    </div>
-                                    <div className="flex h-full w-full overflow-auto">
-                                        <FilterScreen />
-                                    </div>
-                                </>
-                            }
+                    <Route 
+                        path="/filter"
+                        element={ isLoggedIn ?
+                            <>
+                                <div className="flex flex-col flex-shrink">
+                                    <HeaderButtons />
+                                </div>
+                                <div className="flex h-full w-full overflow-auto">
+                                    <FilterScreen />
+                                </div>
+                            </>
+                            :
+                            <Navigate to="/auth/signin"/>
+                        }
                     />
-                    <Route path="/results" element={
-                        <>
-                            <div className="flex flex-col flex-shrink">
-                                <BackButton></BackButton>
-                            </div>
-                            <div className="flex w-full h-full overflow-auto">
-                                <ResultsScreen />
-                            </div>
-                        </>
+                    <Route 
+                        path="/results"
+                        element={ isLoggedIn ?
+                            <>
+                                <div className="flex flex-col flex-shrink">
+                                    <BackButton></BackButton>
+                                </div>
+                                <div className="flex w-full h-full overflow-auto">
+                                    <ResultsScreen />
+                                </div>
+                            </>
+                            :
+                            <Navigate to="/auth/signin"/>
                         }
                     />
                 </Route>
                 <Route element={<BaseLayout />}>
                     <Route index element={<SplashScreen />} />
-                    <Route path="/signin" element={<LoginScreen />} />
+                    <Route path="/auth/*" element={<AuthRoutes />}/>
                     <Route path="/test" element={<TestScreen />} />
                     <Route path="*" element={<PageNotFoundScreen />} />
                 </Route>
                 <Route element={<HomeLayout />}>
-                    <Route path="/home/*" element={<HomeRoutes />} />
+                    <Route path="/home/*" element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/>} />
                 </Route>
             </Routes>
         </BrowserRouter>

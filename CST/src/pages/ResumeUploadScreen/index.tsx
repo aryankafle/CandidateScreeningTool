@@ -9,6 +9,7 @@ import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
+import { UserContext } from "../../context/UserContext";
 
 
 
@@ -19,6 +20,8 @@ const ResumeUploadScreen = () => {
     const navigate = useNavigate()
     
     const fileContext = useContext(FileContext)
+
+    const { userData } = useContext(UserContext)
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -174,7 +177,7 @@ const ResumeUploadScreen = () => {
                         onClick={async (event) => {
                             event.preventDefault()
 
-                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, "nouser")
+                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id)
 
                             setShowConfirmFilesModal(false)
                             

@@ -8,6 +8,7 @@ import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
 import { SavedList, SavedListsContext } from '../../../context/SavedListsContext';
+import { UserContext } from "../../../context/UserContext"
 
 
 
@@ -20,6 +21,10 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const savedListsContext = useContext(SavedListsContext)
+
+    const { userData } = useContext(UserContext)
+
+
 
     return (
         <div className="overflow-auto p-[0.3rem] flex flex-row justify-between">
@@ -35,19 +40,21 @@ const HeaderButtons = () => {
                             let uploadError = false;
                             let fetchError = false;
 
+                            let id = userData.id
 
-                            
+
+
                             await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, "nouser")
 
                             .then(
                                 async () => {
 
-                                    await filterExistingResumeList(fileContext.currentBatchId, "nouser")
+                                    await filterExistingResumeList(fileContext.currentBatchId, id)
                                     
                                     let listResults
                                     
                                     try {
-                                        listResults = await getListResults(fileContext.currentBatchId, "nouser")
+                                        listResults = await getListResults(fileContext.currentBatchId, id)
                                     }
                                     catch (error) {
                                         console.log("Error getting filter results: ", error)

@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router-dom"
-import ResultsScreen from "../pages/ResultsScreen"
+import SignInScreen from "../pages/SignInScreen"
+import SignOutScreen from "../pages/SignOutScreen"
 
-const authRoutes = () => {
+const AuthRoutes = () => {
 
     return (
-        <div>
-            auth routes
-        </div>
+        <Routes>
+            <Route path="/signin" element={<SignInScreen />} />
+            <Route path="/signout" element={<SignOutScreen />} />
+        </Routes>
     )
 }
 
-export default authRoutes
+export default AuthRoutes

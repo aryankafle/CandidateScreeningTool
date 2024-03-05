@@ -11,6 +11,8 @@ export const uploadResumesToDB = async (req, res) => {
     console.log(`\n\n\nUsing Controller: async uploadResumesToDB`)
     console.log(`--Request Query: ${req.query}\n`)
 
+    console.log(req.query?.userToken)
+
 
 
 
