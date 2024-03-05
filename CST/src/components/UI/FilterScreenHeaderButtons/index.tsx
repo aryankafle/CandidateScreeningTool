@@ -44,7 +44,7 @@ const HeaderButtons = () => {
 
 
 
-                            await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, "nouser")
+                            await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
 
                             .then(
                                 async () => {
