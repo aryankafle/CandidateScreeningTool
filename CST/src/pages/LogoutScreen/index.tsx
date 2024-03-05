@@ -6,29 +6,29 @@ import { Navigate } from 'react-router-dom';
 
 
 
-const handleLogin = () => {
+const handleLogout = () => {
     window.open(
-        `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/google/callback`,
+        `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/logout`,
         "_self"
     )
 }
 
 
 
-const LoginScreen = () => {
+const LogoutScreen = () => {
     
     const { isLoggedIn } = useContext(UserContext)
 
     return (
         <div>
-            {isLoggedIn && <Navigate to="/home"/>}
+            {!isLoggedIn && <Navigate to="/signin"/>}
             <button
-                onClick = {handleLogin}>
-                    Login          
+                onClick = {handleLogout}>
+                    Logout
             </button>
         </div>
         
     )
 }
 
-export default LoginScreen
+export default LogoutScreen

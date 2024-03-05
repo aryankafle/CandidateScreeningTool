@@ -1,4 +1,7 @@
 import express from "express";
+import passport from "passport";
+import expressSession from "express-session";
+import passportSetup from "./passport.js"
 
 import dotenv from "dotenv";
 dotenv.config()
@@ -8,7 +11,7 @@ import multer from "multer"
 
 
 
-import { SERVER_PORT } from "./util/ips.js";
+import { CLIENT_HOST, CLIENT_IP, SERVER_PORT } from "./util/ips.js";
 
 import { 
 
@@ -27,12 +30,32 @@ import {
 
 const app = express();
 
-app.use(cors())
+app.set('trust proxy', 1)
+app.use(
+    expressSession({
+        secret: "secret_session",
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false } //CHANGE TO TRUE EVENTUALLY IDK HOW
+    })
+)
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(cors({
+    origin: CLIENT_IP,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+}))
+
 app.use(express.json());
 
 
 
 
+
+app.use("/auth", authRoutes)
 
 const storage = multer.memoryStorage()
 const upload = multer({
