@@ -11,15 +11,13 @@ import ResultsScreen from "../pages/ResultsScreen"
 
 const HomeRoutes = () => {
     return (
-        <>
-            <Routes>
-                <Route path="/resume-upload" element={<ResumeUpload />} />
-                <Route path="/saved-lists" element={<ViewSavedLists />} />
-                <Route path="/results" element={<ResultsScreen />} />
-                <Route path="/" element={<ResumeUpload />} />
-                <Route path="/*" element={<PageNotFoundScreen />} />
-            </Routes>
-        </>
+        <Routes>
+            <Route path="/resume-upload" element={<ResumeUpload />} />
+            <Route path="/saved-lists" element={<ViewSavedLists />} />
+            <Route path="/results" element={<ResultsScreen />} />
+            <Route path="/" element={<ResumeUpload />} />
+            <Route path="/*" element={<PageNotFoundScreen />} />
+        </Routes>
         
     )
 }

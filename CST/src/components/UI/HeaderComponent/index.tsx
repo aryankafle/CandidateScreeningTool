@@ -9,26 +9,29 @@ const HeaderComponent = () => {
     return (
         <header className="bg-white text-black
                            dark:text-white dark:bg-black
-                           p-[0.7rem] select-none flex flex-shrink " 
+                           p-[0.7rem] select-none flex flex-shrink flex-row justify-between px-[2rem]" 
         >
             { isLoggedIn ?
             <div
                 className="flex flex-row min-w-[15rem] w-[20%] justify-between"
             >
-                <text>
+                <span>
                     Welcome, {userData.displayName}.
-                </text>
+                </span>
                 <div>
-                    <Link to="/signout">
+                    <Link to="/auth/signout">
                         Sign Out
                     </Link>
                 </div>
             </div>
             :
-            <Link to="/signin">
+            <Link to="/auth/signin">
                 Log In
             </Link>
             }
+            <Link to="/home">
+                Home
+            </Link>
         </header>
     )
 }

@@ -45,7 +45,7 @@ router.get("/google", passport.authenticate("google", ["profile", "email"]))
 router.get("/logout", (req, res, next) => {
     req.logout((error) => {
         if(error) { return next(error) }
-        res.redirect(`${CLIENT_IP}/signin`)
+        res.redirect(`${CLIENT_IP}/`)
     })
 })
 

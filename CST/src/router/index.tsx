@@ -4,6 +4,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 import HomeRoutes from "./HomeRouter";
+import AuthRoutes from "./AuthRouter"
 
 
 
@@ -11,8 +12,6 @@ import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
 import TestScreen from "../test/App.api.test"
 import ResultsScreen from "../pages/ResultsScreen"
-import LoginScreen from "../pages/LoginScreen"
-import LogoutScreen from "../pages/LogoutScreen";
 
 
 
@@ -81,7 +80,7 @@ function Router() {
                                 </div>
                             </>
                             :
-                            <Navigate to="/signin"/>
+                            <Navigate to="/auth/signin"/>
                         }
                     />
                     <Route 
@@ -96,19 +95,18 @@ function Router() {
                                 </div>
                             </>
                             :
-                            <Navigate to="/signin"/>
+                            <Navigate to="/auth/signin"/>
                         }
                     />
                 </Route>
                 <Route element={<BaseLayout />}>
                     <Route index element={<SplashScreen />} />
-                    <Route path="/signin" element={<LoginScreen />} />
-                    <Route path="/signout" element={<LogoutScreen />} />
+                    <Route path="/auth/*" element={<AuthRoutes />}/>
                     <Route path="/test" element={<TestScreen />} />
                     <Route path="*" element={<PageNotFoundScreen />} />
                 </Route>
                 <Route element={<HomeLayout />}>
-                    <Route path="/home/*" element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/signin"/>} />
+                    <Route path="/home/*" element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/>} />
                 </Route>
             </Routes>
         </BrowserRouter>
