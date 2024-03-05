@@ -18,9 +18,15 @@ import { useGoogleLogin, googleLogout } from '@react-oauth/google'
 import axios from "axios"
 
 async function requests(){
-    await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/login`)
-    const gruh = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/Auth/authtest`)
+    const currentUrl = "http://localhost:3000/home"
+    const encodedParam = encodeURI(`?redirectUrl=${currentUrl}`)
+    window.location.href = `http://localhost:3001/google${encodedParam}`
 
+    //const gruh = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/google`)
+    //await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/login`)
+    //const gruh = await fetch(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/Auth/authtest`)
+    //const gruh = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/Auth/authtest`)
+    //console.log(gruh.data)
 }
 
 const logout = async() => {
@@ -45,7 +51,7 @@ const LoginScreen = () => {
         <div>
             {/* { <LoginButton /> } */}
             <button
-                onClick = {() => asynclogin()}>
+                onClick = {() => requests()}>
                     Login    
                           
             </button>

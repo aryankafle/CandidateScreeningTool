@@ -13,7 +13,8 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
         const filterScores = [];
 
         for(var filterIndex = 0; filterIndex < filters.length; filterIndex++) {
-
+                //ask chat gpt to do more than 1 query at the same time
+                //yada yada concurrent quieres
             const filterScore = await queryAI(
                 `
                     <START_OF_FILE_TEXT> 
