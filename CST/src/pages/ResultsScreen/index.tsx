@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
+import { closeCircleOutline } from "ionicons/icons";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
 import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
@@ -158,17 +159,17 @@ const ResultsScreen = () => {
 
     const CandidateDescriptionPopup = () => {
         return (
-            <div className="flex flex-col self-center h-[80%] w-[80%] bg-green dark:bg-blue">
-                <div onClick={() => setShowModal(false)}>
-                    close
+            <div className="border-gray-500 border-solid rounded-md self-center h-[60%] w-[80%] bg-green dark:bg-grayDark">
+                <div className='text-right text-3xl text-redS' onClick={() => setShowModal(false)}>
+                    <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
-                <div>
+                <div className="text-center text-2xl text-gray">
                     {currentCandidate.applicant.name}
                 </div>
-                <div>
+                <div className="text-blueDark mx-4">
                     {currentCandidate.summary}
                 </div>
-                <div>
+                <div className="m-4 text-blueDark">
                     {currentCandidate.overallScore}
                 </div>
             </div>
