@@ -10,7 +10,7 @@ const colors = {
     grayDark: '#111827',
     grayLight:'#d1d5db',
     blueLight:'#38bdf8',
-    blueMid: '#1d4ed8',
+    blueMid: '#2563eb',
     blueDark: '#1e40af'
 }
 
