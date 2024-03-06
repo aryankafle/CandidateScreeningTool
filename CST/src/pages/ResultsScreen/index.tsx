@@ -163,10 +163,10 @@ const ResultsScreen = () => {
                 <div className='text-right text-3xl text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
-                <div className="text-center text-2xl text-gray">
+                <div className="text-center text-2xl text-white">
                     {currentCandidate.applicant.name}
                 </div>
-                <div className="text-blueDark mx-4">
+                <div className="text-blueMid mx-4">
                     {currentCandidate.summary}
                 </div>
                 <div className="m-4 text-blueLight">

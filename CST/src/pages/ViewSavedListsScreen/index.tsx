@@ -106,7 +106,7 @@ const ViewSavedListsScreen = () => {
     
     const SavedListCard =  (props: {savedList : SavedList, index: number}) => {
         return (
-            <div className="border-black text-black
+            <div className="border-black text-black hover:bg-blueMid
                             dark:border-white dark:text-white
                             flex flex-row border-[0.1rem] px-[2rem] 
                             py-[1rem] justify-between text-xl">
@@ -148,7 +148,7 @@ const ViewSavedListsScreen = () => {
 
 
     return(
-       <div className=" dark:bg-blue bg-white justify-center
+       <div className=" dark:bg-blueDark bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
             <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input

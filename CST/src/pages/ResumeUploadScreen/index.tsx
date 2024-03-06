@@ -310,7 +310,7 @@ const ResumeUploadScreen = () => {
                     { anySelected() ?
                         <div className="flex flex-col my-[1rem]">
                             <Button
-                                className=" text-black
+                                className=" text-black hover:text-grayLight
                                             dark:text-white
                                             flex-grow self-center"
                                 onClick={() => { handleDeleteFiles(); } }
@@ -318,7 +318,7 @@ const ResumeUploadScreen = () => {
                                             Remove Selected Files
                             </Button>
                             <Button
-                                className=" text-black
+                                className=" text-black hover:text-grayLight
                                             dark:text-white
                                             flex-grow self-center"
                                 onClick={() => { clearSelection(); } }
@@ -328,7 +328,7 @@ const ResumeUploadScreen = () => {
                         </div>
                     :
                         <Button onClick={() => selectAll()}
-                                className="my-[1.5rem]"
+                                className="my-[1.5rem] hover:text-grayLight"
                         >
                             { selectableItems.length > 0 ? "Select All" : ""}
                         </Button>
