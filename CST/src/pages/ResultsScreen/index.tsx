@@ -159,7 +159,7 @@ const ResultsScreen = () => {
 
     const CandidateDescriptionPopup = () => {
         return (
-            <div className="border-gray-500 border-solid rounded-md self-center h-[60%] w-[80%] bg-green dark:bg-grayDark">
+            <div className="border-gray-500 border-solid rounded-md self-center h-[60%] w-[80%] bg-grayDark dark:bg-grayDark">
                 <div className='text-right text-3xl text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
@@ -169,7 +169,7 @@ const ResultsScreen = () => {
                 <div className="text-blueDark mx-4">
                     {currentCandidate.summary}
                 </div>
-                <div className="m-4 text-blueDark">
+                <div className="m-4 text-blueLight">
                     {currentCandidate.overallScore}
                 </div>
             </div>
@@ -180,7 +180,7 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                className=" bg-green dark:bg-white
+                className=" bg-white
                             flex flex-row flex-grow w-[80%] rounded-r-full py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
@@ -190,7 +190,7 @@ const ResultsScreen = () => {
                 <div className="flex flex-grow self-center justify-center">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
-                <div className="pr-[2rem]">
+                <div className="pr-[2rem] bor">
                     { getRatingImage(props.candidate.grade ) || "asdf" }
                 </div>
             </div>
@@ -201,7 +201,7 @@ const ResultsScreen = () => {
 
     return (
         <div className="flex flex-col flex-grow">
-            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blue">
+            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blueDark">
                 {showModal && 
                     <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                         <CandidateDescriptionPopup />
@@ -209,16 +209,16 @@ const ResultsScreen = () => {
                 }
                 {listWithSameName &&
                     <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
-                        <div className="flex flex-col h-[80%] w-[80%] bg-green dark:bg-blue self-center">
-                            <div>
+                        <div className="flex flex-col h-[80%] w-[60%] bg-green dark:bg-grayDark self-center">
+                            <div className="text-grayLight leading-10">
                                 You already have a saved list named {title}.
                             </div>
-                            <div
+                            <div className="text-grayLight leading-10"
                                 onClick={() => setListWithSameName(undefined)}
                             >
-                                Go back.
+                                Go back
                             </div>
-                            <div
+                            <div className="text-blueLight leading-10"
                                 onClick={handleReplaceListWithSameName}
                             >
                                 Replace existing list (name: {listWithSameName.listName}, description: {listWithSameName.listDescription})
@@ -287,7 +287,7 @@ const ResultsScreen = () => {
                                     }
                                     {isPreviousSavedList && (hasChangedFromPreviousSavedList || selectedResumes.length > 0) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
