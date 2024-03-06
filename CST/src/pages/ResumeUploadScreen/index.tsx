@@ -158,7 +158,7 @@ const ResumeUploadScreen = () => {
 
     const ConfirmFilesPanel : React.FC = () => {
         return (
-            <div className="bg-white dark:bg-blue
+            <div className="bg-white dark:bg-blueDark
                                 flex flex-col self-center h-[80%] w-[80%]">
                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                     {`Are you sure you want to use this batch of resumes?`} <br></br>
@@ -166,7 +166,7 @@ const ResumeUploadScreen = () => {
                 </div>
                 <div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
                     {fileContext.uploadedFiles.map((file) => (
-                        <div key={file.name}>
+                        <div key={file.name} className="mx-2">
                             {file.name}
                         </div>
                     ))}
@@ -203,7 +203,7 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="border-black text-black
+            <div className="border-black text-black hover:bg-blueMid
                             dark:border-white dark:text-white
                             flex flex-row border-[0.1rem] px-[2rem]">
                 <div 
@@ -237,7 +237,7 @@ const ResumeUploadScreen = () => {
 
 
     return (
-        <div className="dark:bg-blue bg-white justify-center
+        <div className="dark:bg-blueDark bg-white justify-center
                         flex flex-col flex-grow">
             {
                 showFileModal && <Modal 
@@ -252,7 +252,7 @@ const ResumeUploadScreen = () => {
                 </Modal>
             }
             <div className="dark:border-white dark:text-white
-                            border-black text-black
+                            border-black text-black hover:bg-blueMid
                             border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                 <div >
                     Upload a batch of resumes.
@@ -268,7 +268,7 @@ const ResumeUploadScreen = () => {
             <div className="flex justify-center">
                 <Button 
                     className=" dark:border-white dark:text-white
-                                border-black text-black
+                                border-black text-black hover:bg-blueMid
                                 border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick}
                 >
@@ -338,7 +338,7 @@ const ResumeUploadScreen = () => {
             <div className="flex justify-center">
                 <Button
                     className=" dark:border-white dark:text-white
-                                border-black text-black
+                                border-black text-black hover:bg-blueMid
                                 flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
                     onClick={()=>handleAddFiltersClick()}
                 >
