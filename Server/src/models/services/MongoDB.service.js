@@ -123,6 +123,28 @@ export const getResumeObjects = async (listID, userToken) => {
 
 }
 
+export const getDefaultResumeObjects = async (userToken) => {
+
+    console.log("----Getting resume objects.")
+
+
+
+
+
+    const db = client.db("resumes")
+    const coll = db.collection("example_list")
+
+    const docArray = await coll.find({userToken: userToken}).toArray()
+
+
+
+
+
+    console.log("----Done getting resume objects.")
+
+    return docArray
+
+}
 
 
 

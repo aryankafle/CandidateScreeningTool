@@ -5,6 +5,7 @@ export class SavedList {
 
     #id : string
     get id() {return this.#id}
+    set id(id : string) {this.#id = id}
 
     #listName : string;
     get listName(){return this.#listName}

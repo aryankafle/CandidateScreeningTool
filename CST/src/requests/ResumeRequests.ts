@@ -86,3 +86,44 @@ export const getListResults = async (listid : string, usertoken : string) => {
 
     return resultsArray
 }
+
+export const getDefaultListResults = async (usertoken : string) => {
+
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getDefaultResumeList`, {
+        params:{
+            userToken: usertoken
+        }
+    })
+
+    const filteredResultsArray = response.data
+
+
+
+    const resultsArray = []
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+
+        console.log(filteredResultsArray[i])
+    }
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+
+        const resumeResult = filteredResultsArray[i]
+
+        if(resumeResult?.error) {
+            throw new Error(resumeResult?.error)
+        }
+
+
+
+        //const applicant = {name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND"} as Applicant
+
+        //const result = new Result(applicant, resumeResult?.file, resumeResult?.scores, resumeResult?.summary, resumeResult?.filters)
+        resultsArray.push(resumeResult)
+        
+    }
+
+
+
+    return resultsArray
+}
