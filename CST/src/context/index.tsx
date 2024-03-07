@@ -3,6 +3,7 @@ import FileContextProvider from "./FileContext"
 import FilterContextProvider from "./FilterContext"
 import SavedListsContextProvider from "./SavedListsContext"
 import UserContextProvider from "./UserContext"
+import SelectionContextProvider from "./SelectionContext"
 
 
 
@@ -25,7 +26,9 @@ const AppContextProvider = (props: { children : ReactNode }) => {
                 <FileContextProvider> 
                     <FilterContextProvider>
                         <SavedListsContextProvider>
-                            {props.children}
+                            <SelectionContextProvider>
+                                {props.children}
+                            </SelectionContextProvider>
                         </SavedListsContextProvider>
                     </FilterContextProvider>
                 </FileContextProvider>
