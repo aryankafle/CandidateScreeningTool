@@ -152,13 +152,13 @@ const FilterScreen = () => {
                 </div>
             :
                 <div 
-                    className=" bg-red dark:bg-green rounded-tr-[1rem] rounded-br-[3rem]
+                    className=" bg-red dark:bg-blueLight rounded-tr-[1rem] rounded-br-[3rem]
                                 py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                     <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
                         {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
                     </div>
                     <IonIcon
-                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
+                        className="cursor-pointer text-[2rem] hover:text-redS" icon={closeCircleOutline}
                         onClick={handleXClicked}
                     />
                 </div>
@@ -173,12 +173,12 @@ const FilterScreen = () => {
             <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
                 <div className='sticky flex flex-col z-[1] top-0'>
                     <div
-                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
+                        className="flex flex-shrink bg-[gray] dark:bg-blueDark text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
                     >
                         Find your desired candidates.
                     </div>
                     <div
-                        className="flex flex-shrink bg-[gray] dark:bg-blue text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem]"
+                        className="flex flex-shrink bg-[gray] dark:bg-blueDark text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem]"
                     >
                         Current Filter Layers:
                     </div>
@@ -195,7 +195,7 @@ const FilterScreen = () => {
                 </div>
             </div>
             <div className='sticky top-0 flex flex-grow'>
-                <div className="bg-[gray] dark:bg-blue
+                <div className="bg-[gray] dark:bg-blueDark
                                 flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
                     <div className="self-center text-[5rem]">Filters</div>
                     <FilterLayerOptions />

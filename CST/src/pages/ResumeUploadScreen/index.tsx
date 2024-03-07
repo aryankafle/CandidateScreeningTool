@@ -160,7 +160,7 @@ const ResumeUploadScreen = () => {
         return (
             <div className="bg-white dark:bg-blueDark
                                 flex flex-col self-center h-[80%] w-[80%]">
-                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
+                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
                     {`Are you sure you want to use this batch of resumes?`} <br></br>
                     {`Batch Name: ${fileContext.currentBatchName}`}
                 </div>
