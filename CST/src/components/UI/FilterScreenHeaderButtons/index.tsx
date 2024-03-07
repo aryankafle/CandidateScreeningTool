@@ -9,6 +9,7 @@ import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
 import { SavedList, SavedListsContext } from '../../../context/SavedListsContext';
 import { UserContext } from "../../../context/UserContext"
+import { SelectionContext } from '../../../context/SelectionContext';
 
 
 
@@ -21,6 +22,7 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const savedListsContext = useContext(SavedListsContext)
+    const selectionContext = useContext(SelectionContext)
 
     const { userData } = useContext(UserContext)
 
@@ -41,33 +43,34 @@ const HeaderButtons = () => {
                             let fetchError = false;
 
                             let id = userData.id
-
+                            
 
 
                             await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
-
                             .then(
                                 async () => {
 
                                     await filterExistingResumeList(fileContext.currentBatchId, id)
+                                              
                                     
-                                    let listResults
-                                    
-                                    try {
-                                        listResults = await getListResults(fileContext.currentBatchId, id)
-                                    }
-                                    catch (error) {
-                                        console.log("Error getting filter results: ", error)
-                                    }
 
-                                    if(listResults) {
-                                        savedListsContext.setCurrentSavedList(
-                                            new SavedList(fileContext.currentBatchName, "", listResults)
-                                        )
+                                    const listResults = await getListResults(fileContext.currentBatchId, id)
 
-                                        navigate("/results")
-                                    }
+                                    if(!listResults) throw Error("List results are undefined.");
 
+
+
+                                    savedListsContext.setCurrentSavedList(
+                                        new SavedList(fileContext.currentBatchName, "", listResults)
+                                    )
+
+                                    selectionContext.setPreviouslySavedList(
+                                        new SavedList(fileContext.currentBatchName, "", listResults)
+                                    )
+
+                                    selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
+
+                                    navigate("/results")
                                     
                                 }
                             )
