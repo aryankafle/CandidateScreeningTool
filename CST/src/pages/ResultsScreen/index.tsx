@@ -209,16 +209,16 @@ const ResultsScreen = () => {
                 }
                 {listWithSameName &&
                     <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
-                        <div className="flex flex-col h-[80%] w-[60%] bg-green dark:bg-grayDark self-center">
-                            <div className="text-grayLight leading-10">
+                        <div className="flex flex-col h-[60%] w-[60%] bg-green dark:bg-grayDark self-center">
+                            <div className="text-grayLight leading-10 text-center">
                                 You already have a saved list named {title}.
                             </div>
-                            <div className="text-grayLight leading-10"
+                            <div className="text-grayLight leading-10 mx-2 underline"
                                 onClick={() => setListWithSameName(undefined)}
                             >
                                 Go back
                             </div>
-                            <div className="text-blueLight leading-10"
+                            <div className="text-blueLight leading-10 mx-2 underline"
                                 onClick={handleReplaceListWithSameName}
                             >
                                 Replace existing list (name: {listWithSameName.listName}, description: {listWithSameName.listDescription})
@@ -274,7 +274,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
                                     {!isPreviousSavedList &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
