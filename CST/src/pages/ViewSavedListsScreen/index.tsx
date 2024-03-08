@@ -198,7 +198,7 @@ const ViewSavedListsScreen = () => {
                     :
                         savedLists.length > 0 &&
                         <div
-                            className="select-none cursor-pointer"
+                            className="select-none cursor-pointer hover:text-grayLight"
                             onClick={() => { selectAll() }}
                         >
                             Select All
