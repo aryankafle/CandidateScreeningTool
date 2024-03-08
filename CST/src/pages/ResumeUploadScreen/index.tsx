@@ -10,6 +10,7 @@ import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
+import TypewriterSpinner from "../../components/UI/LoadingSpinner";
 
 
 
@@ -29,6 +30,7 @@ const ResumeUploadScreen = () => {
 
     const [showFileModal, setShowFileModal] = useState(false)
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
@@ -180,9 +182,12 @@ const ResumeUploadScreen = () => {
                         onClick={async (event) => {
                             event.preventDefault()
 
+                            setShowLoadingScreen(true)
+
                             await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id)
 
                             setShowConfirmFilesModal(false)
+                            setShowLoadingScreen(false)
                             
                             navigate("/filter")
                         }}
@@ -354,6 +359,25 @@ const ResumeUploadScreen = () => {
                     Add Filters to Uploaded Files
                 </Button>
             </div>
+
+            {
+                showLoadingScreen && <Modal
+                    modalTrigger={showLoadingScreen}
+                    onClose={()=>{setShowLoadingScreen(false)}}
+                >
+                    {
+                        <div className="flex flex-col self-center text-center justify-center
+                        bg-grayLight border-4 border-gray rounded
+                        text-grayDark w-[80%] h-[80%] text-3xl">
+                            <TypewriterSpinner></TypewriterSpinner>
+                        </div>
+                    }
+
+                </Modal>
+            }
+
+
+
             {
                 showConfirmFilesModal && <Modal 
                     modalTrigger={showConfirmFilesModal}
