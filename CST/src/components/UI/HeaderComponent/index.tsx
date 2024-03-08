@@ -18,7 +18,7 @@ const HeaderComponent = () => {
                 <span>
                     Welcome, {userData.displayName}.
                 </span>
-                <div>
+                <div className="hover:text-grayLight">
                     <Link to="/auth/signout">
                         Sign Out
                     </Link>
@@ -29,7 +29,7 @@ const HeaderComponent = () => {
                 Log In
             </Link>
             }
-            <Link to="/home">
+            <Link to="/home" className="hover:text-grayLight">
                 Home
             </Link>
         </header>

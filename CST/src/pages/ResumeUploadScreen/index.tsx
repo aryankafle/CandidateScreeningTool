@@ -158,13 +158,15 @@ const ResumeUploadScreen = () => {
 
     const ConfirmFilesPanel : React.FC = () => {
         return (
-            <div className="bg-white dark:bg-blueDark
+            <div className="bg-white dark:bg-blueDark 
+                                border-4 border-blueMid rounded
                                 flex flex-col self-center h-[80%] w-[80%]">
                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
                     {`Are you sure you want to use this batch of resumes?`} <br></br>
                     {`Batch Name: ${fileContext.currentBatchName}`}
                 </div>
-                <div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
+                <div className="flex flex-col border-[2px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto
+                                rounded">
                     {fileContext.uploadedFiles.map((file) => (
                         <div key={file.name} className="mx-2">
                             {file.name}
@@ -173,7 +175,8 @@ const ResumeUploadScreen = () => {
                 </div>
                 <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                     <Button
-                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]
+                                    hover:text-grayLight"
                         onClick={async (event) => {
                             event.preventDefault()
 
@@ -187,7 +190,8 @@ const ResumeUploadScreen = () => {
                         Yes
                     </Button>
                     <Button
-                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]
+                                    hover:text-grayLight"
                         onClick={() => {
                             setShowConfirmFilesModal(false)
                         }}
@@ -252,7 +256,8 @@ const ResumeUploadScreen = () => {
                 </Modal>
             }
             <div className="dark:border-white dark:text-white
-                            border-black text-black hover:bg-blueMid
+                            border-black text-black hover:bg-blueDark bg-blueMid
+                            hover:-translate-y-0.5 rounded
                             border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                 <div >
                     Upload a batch of resumes.
@@ -267,13 +272,16 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button 
-                    className=" dark:border-white dark:text-white
-                                border-black text-black hover:bg-blueMid
+                    className=" dark:border-white dark:text-white 
+                                border-black text-black bg-blueMid
+                                hover:-translate-y-0.5 hover:bg-blueDark rounded
                                 border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                     onClick={handleUploadClick}
                 >
                     <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                    <span>
+                        { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                    </span>
                     <form 
                         method='POST'
                         encType='multipart/form-data'
@@ -338,8 +346,9 @@ const ResumeUploadScreen = () => {
             <div className="flex justify-center">
                 <Button
                     className=" dark:border-white dark:text-white
-                                border-black text-black hover:bg-blueMid
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
+                                border-black text-black bg-blueMid
+                                hover:bg-blueDark hover:-translate-y-0.5
+                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] rounded"
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
