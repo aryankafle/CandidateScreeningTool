@@ -4,6 +4,7 @@ import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icon
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
+import { SelectionContext } from "../../context/SelectionContext";
 import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
@@ -22,6 +23,7 @@ const ResultsScreen = () => {
     const [showSidePanel, setShowSidePanel] = useState(false);
 
     const savedListContext = useContext(SavedListsContext)
+    const selectionContext = useContext(SelectionContext)
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
@@ -31,26 +33,26 @@ const ResultsScreen = () => {
     const [description, setDescription] = useState("")
     const [resumes, setResumes] = useState([] as Result[])
 
-    const [selectedResumes, setSelectedResumes] = useState([] as Result[])
+    const [selectedResumes] = useState([] as Result[])
 
     const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
 
 
 
     const isPreviousSavedList = useMemo(() => {
-        if(!savedListContext.currentSavedList) {
+        if(!selectionContext.currentSavedList) {
             return false;
         }
         
-        return savedListContext.savedLists.includes(savedListContext.currentSavedList)
-    }, [savedListContext.savedLists, savedListContext.currentSavedList])
+        return savedListContext.savedLists.includes(selectionContext.currentSavedList)
+    }, [savedListContext.savedLists, selectionContext.currentSavedList])
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
-        if(!isPreviousSavedList || !savedListContext.currentSavedList) {
+        if(!isPreviousSavedList || !selectionContext.currentSavedList) {
             return undefined;
         }
 
-        const thisList = savedListContext.currentSavedList
+        const thisList = selectionContext.currentSavedList
 
         if(thisList.listName !== title) return true
         if(thisList.listDescription !== description) return true
@@ -58,18 +60,18 @@ const ResultsScreen = () => {
 
         return false;
         
-    }, [description, isPreviousSavedList, savedListContext.currentSavedList, title])
+    }, [description, isPreviousSavedList, selectionContext.currentSavedList, title])
 
 
 
     useEffect(() => {
-        setTitle(savedListContext.currentSavedList?.listName ? savedListContext.currentSavedList?.listName : "")
-        setDescription(savedListContext.currentSavedList?.listDescription ? savedListContext.currentSavedList?.listDescription : "")
-        setResumes(savedListContext.currentSavedList?.orderedResumeList ? savedListContext.currentSavedList?.orderedResumeList : [])
-    }, [savedListContext.currentSavedList])
+        setTitle(selectionContext.currentSavedList?.listName ? selectionContext.currentSavedList?.listName : "")
+        setDescription(selectionContext.currentSavedList?.listDescription ? selectionContext.currentSavedList?.listDescription : "")
+        setResumes(selectionContext.currentSavedList?.orderedResumeList ? selectionContext.currentSavedList?.orderedResumeList : [])
+    }, [selectionContext.currentSavedList])
 
     useEffect(() => {
-        if(!savedListContext.currentSavedList) {
+        if(!selectionContext.currentSavedList) {
             throw new Error("No currently selected saved list.")
         }
 // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -251,7 +253,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}
-                                        placeholder={savedListContext.currentSavedList?.listName ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.listName ? "" : "name"}
                                         onChange={
                                             (event) => {
                                                 setTitle(event.target.value)
@@ -261,7 +263,7 @@ const ResultsScreen = () => {
                                     />
                                     <MultilineInput
                                         title={"List Description"}
-                                        placeholder={savedListContext.currentSavedList?.listDescription ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.listDescription ? "" : "name"}
                                         onChange={
                                             (event) => {
                                                 setDescription(event.target.value)

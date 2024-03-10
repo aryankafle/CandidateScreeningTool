@@ -15,8 +15,8 @@ const router = express.Router();
 
 
 
-router.post("/uploadResumesToDB", uploadResumesToDB)
-router.post("/updateFilters", verifyUserOwnsList, updateFilters)
+router.post("/upload-resumes-to-db", uploadResumesToDB)
+router.post("/update-filters", verifyUserOwnsList, updateFilters)
 
 
 

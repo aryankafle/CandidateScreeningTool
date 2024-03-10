@@ -85,8 +85,6 @@ type SavedListsContextType = {
 
     savedLists : SavedList[]
     setSavedLists : React.Dispatch<React.SetStateAction<SavedList[]>>
-    currentSavedList? : SavedList
-    setCurrentSavedList : React.Dispatch<React.SetStateAction<SavedList | undefined>>
 
 }
 
@@ -94,8 +92,6 @@ const SavedListsContextInitial = {
 
     savedLists: [] as SavedList[],
     setSavedLists: {} as React.Dispatch<React.SetStateAction<SavedList[]>>,
-    currentSavedList : undefined,
-    setCurrentSavedList : {} as React.Dispatch<React.SetStateAction<SavedList | undefined>>
 
 }
 
@@ -108,10 +104,9 @@ export const SavedListsContext = createContext<SavedListsContextType>(SavedLists
 const SavedListsContextProvider = (props: { children : ReactNode }) => {
 
     const [savedLists, setSavedLists] = useState([] as SavedList[])
-    const [currentSavedList, setCurrentSavedList] = useState<SavedList | undefined>(undefined)
     
     return (
-        <SavedListsContext.Provider value={{savedLists, setSavedLists, currentSavedList, setCurrentSavedList}}>
+        <SavedListsContext.Provider value={{savedLists, setSavedLists}}>
             {props.children}
         </SavedListsContext.Provider>
     )
