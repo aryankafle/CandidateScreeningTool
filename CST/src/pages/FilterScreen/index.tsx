@@ -6,6 +6,7 @@ import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
+import { FileContext } from '../../context/FileContext';
 
 
 
@@ -48,6 +49,13 @@ const FilterScreen = () => {
 
     const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
 
+    const fileContext = useContext(FileContext)
+
+    if (!fileContext.uploadedFiles) {
+        throw('No files uploaded')
+    } else if (fileContext.currentBatchName == "") {
+        throw('No batch name created')
+    }
 
 
 
