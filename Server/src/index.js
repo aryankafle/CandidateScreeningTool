@@ -12,7 +12,8 @@ import multer from "multer"
 
 import { CLIENT_HOST, CLIENT_IP, SERVER_PORT } from "./util/ips.js";
 
-import { verifyUserId } from "./middlewares/VerifyUserId.js";
+import { verifyUserRegistered } from "./middlewares/VerifyRegisteredUser.js";
+import { verifyMongoDbConnection } from "./middlewares/VerifyMongoConnection.js";
 
 import { 
 
@@ -63,8 +64,8 @@ const upload = multer({
     storage: storage
 });
 
-app.use("/uploads", upload.array("files"), verifyUserId, uploadRoutes)
-app.use("/resume-filtering", verifyUserId, resumeFilteringRoutes)
+app.use("/uploads", upload.array("files"), verifyMongoDbConnection, verifyUserRegistered, uploadRoutes)
+app.use("/resume-filtering", verifyMongoDbConnection, verifyUserRegistered, resumeFilteringRoutes)
 
 app.use("/test", testRoutes)
 

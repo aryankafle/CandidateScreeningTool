@@ -6,7 +6,7 @@ import WordExtractor from "word-extractor"
 
 
 
-export const convertFiletoText = async (fileArray) => {
+export const convertFilestoText = async (fileArray) => {
 
     console.log(`----Converting ${fileArray.length} files to text.`)
     

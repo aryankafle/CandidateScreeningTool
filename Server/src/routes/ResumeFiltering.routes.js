@@ -7,7 +7,9 @@ import {
     getResumeList,
 } from "../controllers/ResumeFiltering.controller.js";
 
-import { verifyMongoDbConnection } from "../middlewares/VerifyMongoConnection.js";
+import { verifyUserOwnsList } from "../middlewares/VerifyUserOwnsList.js";
+
+
 
 
 
@@ -15,8 +17,8 @@ const router = express.Router();
 
 
 
-router.post("/applyFiltersToResumes", verifyMongoDbConnection, applyFiltersToResumes)
-router.get("/getResumeList", verifyMongoDbConnection, getResumeList)
+router.post("/applyFiltersToResumes", verifyUserOwnsList, applyFiltersToResumes)
+router.get("/getResumeList", verifyUserOwnsList, getResumeList)
 
 
 
