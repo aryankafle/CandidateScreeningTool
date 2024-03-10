@@ -150,34 +150,12 @@ export const filterResumes = async (listID) => {
     const batch = await savedLists.findOne({ _id: listID })
     const batchID = batch.files_id
 
-export const getDefaultResumeObjects = async (userToken) => {
-
-    console.log("----Getting resume objects.")
-
-
-
-
-
-    const db = client.db("resumes")
-    const coll = db.collection("example_list")
-
-    const docArray = await coll.find({userToken: userToken}).toArray()
-
-
-
-
-
-    console.log("----Done getting resume objects.")
-
-    return docArray
-
-}
-
+    
 
     const files = await fileBatches.findOne({ _id: batchID })
     const fileTextScans = files?.file_textscans
 
-    console.log(batch.filters)
+
 
 
 
