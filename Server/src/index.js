@@ -23,6 +23,9 @@ import {
     uploadRoutes, 
 
     testRoutes,
+    
+    selectionRoutes
+    
 
 } from "./routes/index.js"
 
@@ -69,6 +72,7 @@ app.use("/resume-filtering", verifyMongoDbConnection, verifyUserRegistered, resu
 
 app.use("/test", testRoutes)
 
+app.use("/selection", verifyMongoDbConnection, verifyUserRegistered, selectionRoutes)
 
 
 

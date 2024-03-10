@@ -7,7 +7,7 @@ import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } fro
 import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
-import { SavedList, SavedListsContext } from '../../../context/SavedListsContext';
+import { SavedList } from '../../../context/SavedListsContext';
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';
 
@@ -21,7 +21,6 @@ const HeaderButtons = () => {
     
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
-    const savedListsContext = useContext(SavedListsContext)
     const selectionContext = useContext(SelectionContext)
 
     const { userData } = useContext(UserContext)
@@ -60,7 +59,7 @@ const HeaderButtons = () => {
 
 
 
-                                    savedListsContext.setCurrentSavedList(
+                                    selectionContext.setCurrentSavedList(
                                         new SavedList(fileContext.currentBatchName, "", listResults)
                                     )
 

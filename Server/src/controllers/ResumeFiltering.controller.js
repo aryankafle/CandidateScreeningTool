@@ -7,7 +7,7 @@ import { filterResumes, getSavedList, getUserSavedLists } from "../models/servic
 export const applyFiltersToResumes = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async applyFiltersToResumes`)
-    console.log(`--Request Query: ${req.query}\n`)
+    console.log(`--Request Body: ${req.body.toString()}\n`)
 
 
 
@@ -32,7 +32,6 @@ export const applyFiltersToResumes = async (req, res) => {
 export const getResumeList = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async getResumeList`)
-    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -71,7 +70,6 @@ export const getResumeList = async (req, res) => {
 export const getAllUserSavedLists = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async getAllUserSavedLists`)
-    console.log(`--Request Query: ${req.query}\n`)
 
 
 

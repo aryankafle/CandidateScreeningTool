@@ -9,7 +9,6 @@ import { convertFilestoText } from "../models/services/TextScan.service.js";
 export const uploadResumesToDB = async (req, res) => {
     
     console.log(`\n\n\nUsing Controller: async uploadResumesToDB`)
-    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -24,13 +23,21 @@ export const uploadResumesToDB = async (req, res) => {
     }
     catch (error) {
 
-        console.log(`Error uploading new saved list. textScans: ${textScans}`)
+        console.log(`Error uploading new saved lists. textScans: ${textScans}`)
+
+        res.status(500).json({
+            error: error,
+            message: `Error uploading new saved lists. textScans: ${textScans}`
+        })
 
     }
 
 
 
-    res.status(200).json({message: "Successful Upload to Db!"})
+    res.status(200).json({
+        error: false,
+        message: "Successfully uploaded resume files and text scans to db."
+    })
 
 
 
@@ -47,7 +54,6 @@ export const uploadResumesToDB = async (req, res) => {
 export const updateFilters = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async updateFilters`)
-    console.log(`--Request Query: ${req.query}\n`)
 
 
 
@@ -61,13 +67,20 @@ export const updateFilters = async (req, res) => {
     catch (error) {
         
         console.log("Error updating resume filters: ", error)
-        return res.status(500).json({message: "Error updating resume filters."})
+
+        return res.status(500).json({
+            error: error,
+            message: "Error updating resume filters."
+        })
     
     }
 
 
 
-    res.status(200).json({message: "Successful Upload to Db!"})
+    res.status(200).json({
+        error: false,
+        message: "Successfully uploaded filters to db."
+    })
 
 
 

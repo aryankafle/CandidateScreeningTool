@@ -1,6 +1,8 @@
+import { SavedList } from '../context/SavedListsContext';
 import { Result, Applicant } from '../utils/Result';
+import { Location } from "react-router-dom"
 import axios from "axios";
-
+ 
 
 
 
@@ -10,7 +12,7 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
     fileFormData.set("listID", listID)
     fileFormData.set("userID", userID)
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/uploadResumesToDB`, fileFormData)
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/upload-resumes-to-db`, fileFormData)
     
 }
 
@@ -20,7 +22,7 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
 
 export const uploadFiltersToDatabase = async (filters : any[], listID : string, userID : string) => {
     
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/updateFilters`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/update-filters`, {
         filters,
         listID,
         userID
@@ -34,7 +36,7 @@ export const uploadFiltersToDatabase = async (filters : any[], listID : string, 
 
 export const filterExistingResumeList = async (listID : string, userID : string) => {    
     
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/applyFiltersToResumes`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/apply-filters-to-resumes`, {
         listID,
         userID
     })
@@ -47,7 +49,7 @@ export const filterExistingResumeList = async (listID : string, userID : string)
 
 export const getListResults = async (listID : string, userID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getResumeList`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/get-resume-list`, {
         params:{
             listID,
             userID
@@ -85,4 +87,70 @@ export const getListResults = async (listID : string, userID : string) => {
 
 
     return resultsArray
+}
+
+export const getAllUserSavedLists = async (userID : string) => {
+
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/get-all-user-saved-lists`, {
+        params:{
+            userID
+        }
+    })
+
+    const filteredResultsArray = response.data
+
+
+
+    const resultsArray = []
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+
+        console.log(filteredResultsArray[i])
+    }
+
+    for(let i = 0; i < filteredResultsArray.length; i++) {
+
+        const resumeResult = filteredResultsArray[i]
+
+        if(resumeResult?.error) {
+            throw new Error(resumeResult?.error)
+        }
+
+        resultsArray.push(resumeResult)
+        
+    }
+
+
+
+    return resultsArray
+}
+
+export const getUserSelection = async (userID : string) => {
+
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/get-user-saved-selection`, {
+        params:{
+            userID
+        }
+    })
+
+    return response.data
+
+}
+
+export const postUserLocation = async (userID : string, location : Location<any>) => {
+
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
+        userID,
+        location
+    })
+
+}
+
+export const postUserCurrentSavedList = async (userID : string, currentSavedList : SavedList) => {
+    console.log(`${userID} userid ${currentSavedList} saved list`)
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
+        userID,
+        currentSavedList
+    })
+
 }

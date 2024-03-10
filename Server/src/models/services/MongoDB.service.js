@@ -150,12 +150,12 @@ export const filterResumes = async (listID) => {
     const batch = await savedLists.findOne({ _id: listID })
     const batchID = batch.files_id
 
-
+    
 
     const files = await fileBatches.findOne({ _id: batchID })
     const fileTextScans = files?.file_textscans
 
-    console.log(batch.filters)
+
 
 
 
@@ -223,7 +223,7 @@ export const addUser = async (userToken) => {
 
     try {
 
-        await users.insertOne({ _id: userToken.id, user_token: userToken, saved_list_ids: [], current_saved_list: null })
+        await users.insertOne({ _id: userToken.id, user_token: userToken, saved_list_ids: [], current_location: null, current_saved_list: null })
     
     }
     catch (error) {
@@ -238,5 +238,79 @@ export const addUser = async (userToken) => {
 
 
     console.log("----Done adding user to user table.")
+
+}
+
+
+
+
+
+export const getUserSelection = async (userID) => {
+
+    console.log("----Getting user selection for user: ", userID)
+
+
+
+    
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+
+
+
+    const user = await users.findOne( { _id: userID } )
+
+    const currentSavedList = user.current_saved_list || {}
+    const location = user.current_location || "/" 
+
+    return {
+
+        user: userID,
+        currentSavedList,
+        location,
+
+    }
+
+
+    
+
+
+    console.log("----Done getting user selection.")
+
+}
+
+
+
+
+
+export const setUserSelection = async (userID, selection) => {
+    
+    console.log("----Setting user selection for user: ", userID)
+
+
+
+    
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+
+
+    
+    const user = await users.findOne( { _id: userID } )
+
+    const currentSavedList = selection.currentSavedList || user.current_saved_list || {}
+    const location = selection.location || user.current_location || "/" 
+
+
+
+    await users.updateOne({ _id: userID }, { $set: { location, currentSavedList } }) 
+
+
+    
+
+
+    console.log("----Done setting user selection.")
 
 }
