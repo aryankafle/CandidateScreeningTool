@@ -1,6 +1,6 @@
 import { updateResumeFilters } from "../models/services/MongoDB.service.js";
-import { insertResumeData } from "../models/services/MongoDB.service.js";
-import { convertFiletoText } from "../models/services/TextScan.service.js";
+import { uploadNewSavedList } from "../models/services/MongoDB.service.js";
+import { convertFilestoText } from "../models/services/TextScan.service.js";
 
 
 
@@ -11,26 +11,20 @@ export const uploadResumesToDB = async (req, res) => {
     console.log(`\n\n\nUsing Controller: async uploadResumesToDB`)
     console.log(`--Request Query: ${req.query}\n`)
 
-    console.log(req.query?.userToken)
 
 
+    
 
+    const textScans = await convertFilestoText(req.files)
 
+    try {
 
-    const textScans = await convertFiletoText(req.files)
+        await uploadNewSavedList(req.files, textScans, req.body?.listID, req.body?.userID)
+    
+    }
+    catch (error) {
 
-    for(let i = 0; i < textScans.length; i++) {
-
-        try {
-
-            await insertResumeData(textScans[i], req.body?.listID, req.body?.userToken)
-        
-        }
-        catch (error) {
-
-            console.log(`Error inserting resume data. textScan: ${textScans}, index: ${i}`)
-
-        }
+        console.log(`Error uploading new saved list. textScans: ${textScans}`)
 
     }
 
@@ -61,7 +55,7 @@ export const updateFilters = async (req, res) => {
 
     try {
 
-        await updateResumeFilters(req.body?.listID, req.body?.userToken, req.body?.filters);
+        await updateResumeFilters(req.body?.listID, req.body?.filters);
     
     }
     catch (error) {

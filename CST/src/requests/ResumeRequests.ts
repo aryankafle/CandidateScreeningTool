@@ -5,10 +5,10 @@ import axios from "axios";
 
 
 
-export const uploadFilesToDatabase = async (fileFormData : FormData, listID: string, userToken : string) => {
+export const uploadFilesToDatabase = async (fileFormData : FormData, listID: string, userID : string) => {
 
-    fileFormData.append("listID", listID)
-    fileFormData.append("userToken", userToken)
+    fileFormData.set("listID", listID)
+    fileFormData.set("userID", userID)
 
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/uploadResumesToDB`, fileFormData)
     
@@ -18,12 +18,12 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
 
 
 
-export const uploadFiltersToDatabase = async (filters : any[], listID : string, userToken : string) => {
+export const uploadFiltersToDatabase = async (filters : any[], listID : string, userID : string) => {
     
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/updateFilters`, {
         filters,
         listID,
-        userToken
+        userID
     })
 
 }
@@ -32,11 +32,11 @@ export const uploadFiltersToDatabase = async (filters : any[], listID : string, 
 
 
 
-export const filterExistingResumeList = async (listID : string, userToken : string) => {    
+export const filterExistingResumeList = async (listID : string, userID : string) => {    
     
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/applyFiltersToResumes`, {
         listID,
-        userToken
+        userID
     })
 
 }
@@ -45,16 +45,16 @@ export const filterExistingResumeList = async (listID : string, userToken : stri
 
 
 
-export const getListResults = async (listid : string, usertoken : string) => {
+export const getListResults = async (listID : string, userID : string) => {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/getResumeList`, {
         params:{
-            listID: listid,
-            userToken: usertoken
+            listID,
+            userID
         }
     })
 
-    const filteredResultsArray = response.data
+    const filteredResultsArray = response.data.results
 
 
 
