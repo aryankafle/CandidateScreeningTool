@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
@@ -6,6 +6,9 @@ import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
+import { FileContext } from '../../context/FileContext';
+import { SelectionContext } from '../../context/SelectionContext';
+import { FlagContext } from '../../context/FlagContext';
 
 
 
@@ -76,8 +79,36 @@ const FilterScreen = () => {
 
     const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
 
+    const fileContext = useContext(FileContext)
+
+    const { previouslySelectedFilters } = useContext(SelectionContext)
+
+    const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
+
+    if (!fileContext.uploadedFiles) {
+        throw('No files uploaded')
+    } else if (fileContext.currentBatchName == "") {
+        throw('No batch name created')
+    }
 
 
+    useEffect(() => {
+        
+        if (filterList.length !== previouslySelectedFilters.length) {
+            setFiltersChanged(true)
+            return;
+        }
+
+        if (filterList.some((filter) => !previouslySelectedFilters.includes(filter))) {
+            setFiltersChanged(true)
+            return;
+        }
+
+
+
+        setFiltersChanged(false)
+    
+    }, [filterList])
 
 
     const FilterLayerOptions = () => {
