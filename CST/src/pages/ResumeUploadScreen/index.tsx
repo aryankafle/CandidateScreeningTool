@@ -1,5 +1,5 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline } from 'ionicons/icons';
+import { cloudUploadOutline, flag } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from '../../context/FileContext';
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
+import { FlagContext } from "../../context/FlagContext"
 
 
 
@@ -31,6 +32,8 @@ const ResumeUploadScreen = () => {
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
+
+    const { loadingState, setLoadingState } = useContext(FlagContext)
 
     const {
 
@@ -180,6 +183,8 @@ const ResumeUploadScreen = () => {
                             await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id)
 
                             setShowConfirmFilesModal(false)
+
+                            setLoadingState(true)
                             
                             navigate("/filter")
                         }}

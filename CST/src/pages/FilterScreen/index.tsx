@@ -1,6 +1,7 @@
 import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
-import { FilterContext, Filter } from "../../context/FilterContext";
+import { FilterContext } from "../../context/FilterContext";
+import { Filter } from "../../utils/Filter"
 import { closeCircleOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
