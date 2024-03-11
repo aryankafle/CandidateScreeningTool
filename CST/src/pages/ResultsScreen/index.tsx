@@ -14,6 +14,7 @@ import { FileContext } from "../../context/FileContext";
 import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
+import { FlagContext } from "../../context/FlagContext";
 
 
 const ResultsScreen = () => {
