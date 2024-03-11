@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from "react"
-import { SavedList } from "../utils/SavedLIst"
+import { SavedList } from "../utils/SavedList"
 
 
 

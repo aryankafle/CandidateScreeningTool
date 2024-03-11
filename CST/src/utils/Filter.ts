@@ -1,6 +1,8 @@
 import { UniquelyIdentified } from "./UniquelyIdentified";
 
-export abstract class Filter extends UniquelyIdentified{
+export abstract class Filter implements UniquelyIdentified {
+
+    readonly id = crypto.randomUUID()
 
     protected static MAX_STRENGTH = 1000;
     protected static MAX_SCORE = 1000
@@ -11,11 +13,15 @@ export abstract class Filter extends UniquelyIdentified{
         A score measures how well a file's text answers the question posed by the filter. It is your job to assign a score value for the above file's text. 
         A score near 0 would associate with a file text that does not, or barely, answers the question.
         A score near ${Filter.MAX_SCORE} associates with a file text that answers the question very well. 
-        Scores are a floating point number between the values 0 and ${Filter.MAX_SCORE}. Assign the file text above a score based upon how well it answers the following Filter question: 
+        Scores are a floating point number between the values 0 and ${Filter.MAX_SCORE}.
+        If the Filter question is something that can be answered with a yes or a no, assign a score of ${Filter.MAX_SCORE} for yes, and 0 for no.
+        Assign the file text above a score based upon how well it answers the following Filter question: 
     `;
     public readonly filterQuery;
     public readonly endQuery = `
-        Only include in your response the numerical value of the score.
+        ONLY include in your response the numerical value of the score.
+        Do NOT include anything but this numerical score value.
+        Make sure to ONLY score the resume based on the criteria specified in the filter.
     `
 
 
@@ -26,7 +32,6 @@ export abstract class Filter extends UniquelyIdentified{
 
 
     constructor(description : string, filterQuery : string, quantity? : number) {
-        super();
         
         this.filterQuery = filterQuery
         this.totalQuery = `${this.initialQuery} "${filterQuery}" ${this.endQuery}`
@@ -45,14 +50,16 @@ export abstract class Filter extends UniquelyIdentified{
 
 
 
-    public toJson() {
+    public toJSON() {
         return {
+
             id: this.id,
 
             filterName: this.description,
             filterQuantity: this.quantity,
 
             query: this.totalQuery,
+
         }
     }
 

@@ -1,16 +1,18 @@
 import { Result, Applicant } from '../utils/Result';
 import { Location } from "react-router-dom"
 import axios from "axios";
-import { SavedList } from '../utils/SavedLIst';
+import { SavedList } from '../utils/SavedList';
+import { Filter } from '../utils/Filter';
  
 
 
 
 
-export const uploadFilesToDatabase = async (fileFormData : FormData, listID: string, userID : string) => {
+export const uploadFilesToDatabase = async (fileFormData : FormData, listID: string, userID : string, batchName : string ) => {
 
     fileFormData.set("listID", listID)
     fileFormData.set("userID", userID)
+    fileFormData.set("batchName", batchName)
 
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/upload-resumes-to-db`, fileFormData)
     
@@ -20,10 +22,10 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
 
 
 
-export const uploadFiltersToDatabase = async (filters : any[], listID : string, userID : string) => {
+export const uploadFiltersToDatabase = async (filters : Filter[], listID : string, userID : string) => {
     
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/update-filters`, {
-        filters,
+        filters: filters.map((filter) => filter.toJSON()),
         listID,
         userID
     })
@@ -50,7 +52,7 @@ export const filterExistingResumeList = async (listID : string, userID : string)
 export const getListResults = async (listID : string, userID : string) => {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/get-resume-list`, {
-        params:{
+        params: {
             listID,
             userID
         }
@@ -64,11 +66,6 @@ export const getListResults = async (listID : string, userID : string) => {
 
     for(let i = 0; i < filteredResultsArray.length; i++) {
 
-        console.log(filteredResultsArray[i])
-    }
-
-    for(let i = 0; i < filteredResultsArray.length; i++) {
-
         const resumeResult = filteredResultsArray[i]
 
         if(resumeResult?.error) {
@@ -77,9 +74,13 @@ export const getListResults = async (listID : string, userID : string) => {
 
 
 
-        const applicant = {name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND"} as Applicant
+        const applicant = {
+            
+            name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND",
+            
+        } as Applicant
 
-        const result = new Result(applicant, resumeResult?.file, resumeResult?.scores, resumeResult?.summary, resumeResult?.filters)
+        const result = new Result(applicant, resumeResult?.file, resumeResult?.scores, resumeResult?.summary)
         resultsArray.push(result)
         
     }
@@ -97,26 +98,29 @@ export const getAllUserSavedLists = async (userID : string) => {
         }
     })
 
-    const filteredResultsArray = response.data
+    const userSavedListsArray = response.data
 
 
 
     const resultsArray = []
 
-    for(let i = 0; i < filteredResultsArray.length; i++) {
+    for(let i = 0; i < userSavedListsArray.length; i++) {
 
-        console.log(filteredResultsArray[i])
-    }
+        const savedList = userSavedListsArray[i]
 
-    for(let i = 0; i < filteredResultsArray.length; i++) {
-
-        const resumeResult = filteredResultsArray[i]
-
-        if(resumeResult?.error) {
-            throw new Error(resumeResult?.error)
+        if(savedList?.error) {
+            throw new Error(savedList?.error)
         }
 
-        resultsArray.push(resumeResult)
+        console.log(resultsArray)
+
+        resultsArray.push(new SavedList(
+            savedList?.name || "",
+            savedList?.description || "",
+            savedList?.results || [],
+            savedList?.color || undefined,
+            savedList?.owner || ""
+        ))
         
     }
 
@@ -137,7 +141,7 @@ export const getUserSelection = async (userID : string) => {
 
 }
 
-export const postUserLocation = async (userID : string, location : Location<any>) => {
+export const postUserLocation = async (userID : string, location : string) => {
 
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
         userID,
@@ -147,7 +151,7 @@ export const postUserLocation = async (userID : string, location : Location<any>
 }
 
 export const postUserCurrentSavedList = async (userID : string, currentSavedList : SavedList) => {
-    console.log(`${userID} userid ${currentSavedList} saved list`)
+
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
         userID,
         currentSavedList

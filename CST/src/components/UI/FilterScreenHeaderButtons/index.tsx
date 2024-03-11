@@ -10,7 +10,7 @@ import { FilterContext } from "../../../context/FilterContext"
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';
 import { FlagContext } from "../../../context/FlagContext"
-import { SavedList } from "../../../utils/SavedLIst"
+import { SavedList } from "../../../utils/SavedList"
 
 
 
@@ -23,11 +23,76 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
-    const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
+    const { filtersChanged } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
+
+
+
+
+    const handleFilterResumes = async () => {
+
+        if (!filtersChanged) {
+                            
+            navigate("/results")
+
+            return;
+
+        }
+
+
+        
+        let uploadError;
+        let filterError;
+        let fetchError;        
+
+
+
+        await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, userData.id)
+
+        await filterExistingResumeList(fileContext.currentBatchId, userData.id)
+
+        const listResults = await getListResults(fileContext.currentBatchId, userData.id)
+
+        console.log(fetchError)
+
+        if(!listResults) throw Error("List results are undefined.");
+
+
+
+        const newSavedList = new SavedList(fileContext.currentBatchName, "", listResults, undefined, userData.id )
+
+
+
+        selectionContext.setCurrentSavedList(newSavedList)
+
+        selectionContext.setPreviouslySavedList(newSavedList)
+
+        selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
+
+
+
+        if(uploadError) {
+            alert("error uploading filters")
+            return;
+        }
+        if(filterError) {
+            alert("error filtering")
+            return;
+        }
+        if(fetchError) {
+            alert("error fetching results")
+            return;
+        }
+
+
+
+        navigate("/results")
+
+    }
     
+
 
 
 
@@ -40,70 +105,7 @@ const HeaderButtons = () => {
                 <Button
                     className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                 border-black text-black bg-white hover:bg-gray active:bg-blue"
-                    onClick={async () => {
-
-                        if(!filtersChanged) {
-                            
-                            navigate("/results")
-
-                            return;
-
-                        }
-
-
-
-
-                        
-                        let uploadError = false;
-                        let fetchError = false;
-
-                        let id = userData.id
-                        
-
-
-                        await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
-                        .then(
-                            async () => {
-
-                                await filterExistingResumeList(fileContext.currentBatchId, id)
-                                            
-                                
-
-                                const listResults = await getListResults(fileContext.currentBatchId, id)
-
-                                if(!listResults) throw Error("List results are undefined.");
-
-
-
-                                selectionContext.setCurrentSavedList(
-                                    new SavedList(fileContext.currentBatchName, "", listResults)
-                                )
-
-                                selectionContext.setPreviouslySavedList(
-                                    new SavedList(fileContext.currentBatchName, "", listResults)
-                                )
-
-                                selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
-
-                                navigate("/results")
-                                
-                            }
-                        )
-                        .catch((error) => {
-                            console.log("Error uploading filters: ", error)
-                            uploadError = true;
-                        })
-
-                        if(uploadError) {
-                            alert("error uploading filters")
-                            return;
-                        }
-                        if(fetchError) {
-                            alert("error fetching results")
-                            return;
-                        }
-
-                    }}
+                    onClick={ handleFilterResumes }
                 >
                     <IonIcon
                         icon={colorWandOutline}

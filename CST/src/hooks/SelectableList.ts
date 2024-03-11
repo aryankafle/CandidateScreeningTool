@@ -3,8 +3,10 @@ import { UniquelyIdentified } from "../utils/UniquelyIdentified";
 
 export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Dispatch<React.SetStateAction<ItemType[]>>) => {
 
-    class ItemSelection extends UniquelyIdentified {
+    class ItemSelection implements UniquelyIdentified {
 
+        readonly id = crypto.randomUUID()
+        
         public readonly item : ItemType
 
         public isSelected : boolean
@@ -12,7 +14,6 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
 
 
         constructor(item : ItemType, isSelected : boolean) {
-            super()
             this.item = item
             this.isSelected = isSelected
         }

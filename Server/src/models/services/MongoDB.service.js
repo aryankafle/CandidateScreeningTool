@@ -29,7 +29,7 @@ export const viewTable = async () => {
 
 
 
-export const uploadNewSavedList = async (original_files, file_textscans, saved_list_id, userID) => {
+export const uploadNewSavedList = async (original_files, file_textscans, saved_list_id, name_of_list, owner_of_list) => {
 
     console.log("----Inserting resume data.")
 
@@ -47,25 +47,27 @@ export const uploadNewSavedList = async (original_files, file_textscans, saved_l
 
     const filesID = crypto.randomUUID()
 
-    try{
+
 
     await fileBatches.insertOne({ _id: filesID, original_files, file_textscans })
 
     await savedLists.insertOne({ 
-        _id: saved_list_id, files_id: filesID, user_id: userID,
-        filters: [], isFiltered: false, timesFiltered: 0, results: [] 
+        _id: saved_list_id, 
+        owner_of_list,
+        users_with_access: [], 
+        name_of_list,
+        description_of_list : "",
+        files_id: filesID,
+        color: "", 
+        filters: [],
+        results: [],
     })
 
 
 
-    await users.updateOne({ _id: userID }, { 
+    await users.updateOne({ _id: owner_of_list }, { 
         $push: { saved_list_ids: saved_list_id }, 
-        $set: { current_saved_list: saved_list_id }
     })
-    }
-    catch (error) {
-        console.log("errorrorr", error)
-    }
 
 
 
@@ -89,7 +91,7 @@ export const getSavedList = async (listID) => {
     const db = client.db("resumes")
     const savedLists = db.collection("saved-lists")
 
-    const savedListsArray = await savedLists.findOne({ _id: listID })
+    const savedList = await savedLists.findOne({ _id: listID })
 
 
 
@@ -97,7 +99,7 @@ export const getSavedList = async (listID) => {
 
     console.log("----Done getting saved list.")
 
-    return savedListsArray
+    return savedList
 
 }
 
@@ -147,19 +149,16 @@ export const filterResumes = async (listID) => {
 
 
 
-    const batch = await savedLists.findOne({ _id: listID })
-    const batchID = batch.files_id
+    const savedList = await savedLists.findOne({ _id: listID })
 
     
 
-    const files = await fileBatches.findOne({ _id: batchID })
+    const files = await fileBatches.findOne({ _id: savedList.files_id })
     const fileTextScans = files?.file_textscans
 
 
 
-
-
-    const results = await getResultsFromFilesWithFilters(fileTextScans, batch.filters)
+    const results = await getResultsFromFilesWithFilters(fileTextScans, savedList.filters)
 
 
 
@@ -177,7 +176,7 @@ export const filterResumes = async (listID) => {
 
 
 
-export const getUserSavedLists = async (userID) => {
+export const getUserSavedLists = async (owner) => {
     
     console.log("----Getting user with userID: ${userID}'s saved lists.")
 
@@ -191,7 +190,7 @@ export const getUserSavedLists = async (userID) => {
 
 
 
-    const savedListsArray = savedLists.find({ user_id: userID }).toArray()
+    const savedListsArray = savedLists.find({ owner }).toArray()
 
 
 
@@ -261,8 +260,14 @@ export const getUserSelection = async (userID) => {
 
     const user = await users.findOne( { _id: userID } )
 
-    const currentSavedList = user.current_saved_list || {}
-    const location = user.current_location || "/" 
+    const currentSavedList = user.current_saved_list
+    const location = user.current_location
+
+
+
+
+
+    console.log("----Done getting user selection.")
 
     return {
 
@@ -271,12 +276,6 @@ export const getUserSelection = async (userID) => {
         location,
 
     }
-
-
-    
-
-
-    console.log("----Done getting user selection.")
 
 }
 
@@ -300,12 +299,18 @@ export const setUserSelection = async (userID, selection) => {
     
     const user = await users.findOne( { _id: userID } )
 
-    const currentSavedList = selection.currentSavedList || user.current_saved_list || {}
-    const location = selection.location || user.current_location || "/" 
+    const currentSavedList = selection.currentSavedList || user.current_saved_list
+    const location = selection.location || user.current_location
 
 
 
-    await users.updateOne({ _id: userID }, { $set: { location, currentSavedList } }) 
+    if(location && location !== null) {
+        await users.updateOne({ _id: userID }, { $set: { current_location: location } })
+    }
+
+    if(currentSavedList && currentSavedList !== null) {
+        await users.updateOne({ _id: userID }, { $set: { current_saved_list: currentSavedList } }) 
+    }
 
 
     

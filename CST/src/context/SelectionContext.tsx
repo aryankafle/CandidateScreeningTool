@@ -1,8 +1,7 @@
 import { ReactNode, SetStateAction, createContext, useEffect, useState, useContext } from "react"
 import { Filter } from "../utils/Filter"
-import { SavedList } from "../utils/SavedLIst"
+import { SavedList } from "../utils/SavedList"
 
-import { Location } from "react-router-dom"
 import { postUserCurrentSavedList, postUserLocation } from "../requests/ResumeRequests"
 import { UserContext } from "./UserContext"
 
@@ -24,8 +23,8 @@ type SelectionContextType = {
     currentSavedList : SavedList,
     setCurrentSavedList : React.Dispatch<SetStateAction<SavedList>>,
 
-    location : Location<any>,
-    setLocation : React.Dispatch<SetStateAction<Location<any>>>
+    location : string,
+    setLocation : React.Dispatch<SetStateAction<string>>
 
 }
 
@@ -40,8 +39,8 @@ const SelectionContextInitial = {
     currentSavedList : {} as SavedList,
     setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList>>,
 
-    location : {} as Location<any>,
-    setLocation : {} as React.Dispatch<SetStateAction<Location<any>>>
+    location : "",
+    setLocation : {} as React.Dispatch<SetStateAction<string>>
 
 }
 
@@ -55,11 +54,11 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
 
     const { userData } = useContext(UserContext) 
 
-    const [ location, setLocation ] = useState<Location>({} as Location)
+    const [ location, setLocation ] = useState<string>("")
 
     useEffect(() => {
 
-        if(!userData || !location) return;
+        if(!userData || !location || location === null || location === "/") return;
 
         postUserLocation(userData.id, location)
     
@@ -77,7 +76,7 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
 
     useEffect(() => {
 
-        if(!userData || !location) return;
+        if(!userData) return;
 
         postUserCurrentSavedList(userData.id, currentSavedList)
     
