@@ -18,12 +18,12 @@ export const uploadResumesToDB = async (req, res) => {
 
     try {
 
-        await uploadNewSavedList(req.files, textScans, req.body?.listID, req.body?.userID)
+        await uploadNewSavedList(req.files, textScans, req.body?.listID, req.body?.batchName, req.body?.userID)
     
     }
     catch (error) {
 
-        console.log(`Error uploading new saved lists. textScans: ${textScans}`)
+        console.log(`Error uploading new saved lists. error: ${error}`)
 
         res.status(500).json({
             error: error,

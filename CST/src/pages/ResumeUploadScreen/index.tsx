@@ -177,7 +177,7 @@ const ResumeUploadScreen = () => {
                         onClick={async (event) => {
                             event.preventDefault()
 
-                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id)
+                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName)
 
                             setShowConfirmFilesModal(false)
                             

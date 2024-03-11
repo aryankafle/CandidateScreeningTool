@@ -6,17 +6,14 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
         console.log(`------Getting response for file: ${file.fileName}.`)
 
-        console.log("filtersasdfasdf", filterArray)
 
 
 
 
-
-        const filterScores = [];
+        const scores = [];
 
         for(var filterIndex = 0; filterIndex < filterArray.length; filterIndex++) {
-                //ask chat gpt to do more than 1 query at the same time
-                //yada yada concurrent quieres
+            
             const filterScore = await queryAI(
                 `
                     <START_OF_FILE_TEXT> 
@@ -29,27 +26,59 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
                 , `user`
             )
 
-            filterScores.push({filter: filterArray[filterIndex], score: filterScore.choices[0].message.content})
+            scores.push({filter: filterArray[filterIndex], score: parseInt(filterScore.choices[0].message.content)})
             
         }
 
-        const summary = await queryAI(
+        const sectionSummaries = await queryAI(
             `
                 <START_OF_FILE_TEXT> 
                 ${file.text}
                 <END_OF_FILE_TEXT>
-                Summarize each section of the above file.
+
+                Your task is to partition this above file into sections and create a brief summary of the included information in each of your created sections.
+                
+                ***
+
+                There are a couple of sections you MUST include in this list of sections as listed below:
+                1. "Contact Information"
+                2. "Skills"
+                3. "Experience"
+
+                Other than those three, include any other sections that also partition the contents of the file nicely.
+
+                ***
+
+                You must format your response in a specific way. Respond in a JSON format, with the section titles listed as keys and their respective summaries as values.
+                Make absolutely sure that each key, value pair matches correctly.
+                Completely adhere to this format, do not respond with any other text than this JSON.
             `
 
             , `user`
         )
+
+        
+        const overallSummary = await queryAI(
+            `
+                <START_OF_FILE_TEXT> 
+                ${file.text}
+                <END_OF_FILE_TEXT>
+
+                Summarize the following file's content in paragraph form. Be brief but accurate.
+                Prioritize accuracy, you MUST not provide an incorrect summary.
+            `
+
+            , `user`
+        )
+
+        const summaries = JSON.parse(sectionSummaries.choices[0].message.content)
 
         const name = await queryAI(
             `
                 <START_OF_FILE_TEXT> 
                 ${file.text}
                 <END_OF_FILE_TEXT>
-                If the above file is a resume, find the name of the person who wrote it. If not, find the author. Respond only with the first and last name of the person who wrote it or author. If you cannot find either, respond with "nouser".
+                If the above file is a resume, find the name of the person who wrote it. If not, find the author. Respond ONLY with the FIRST and LAST name of the person who wrote it or author. If you cannot find either, respond with "nouser". Do NOT respond with any other text than this.
             `
 
             , `user`
@@ -58,8 +87,9 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
 
         const response = {
-            scores: filterScores,
-            summary: summary.choices[0].message.content,
+            scores,
+            summaries,
+            summary: overallSummary.choices[0].message.content,
             name: name.choices[0].message.content,
         }
 
@@ -98,7 +128,7 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
         openAiResponseArr.push({
             ...GPTResponse,
             filters: [...filterArray],
-            file: fileArray[fileIndex]
+            fileName: fileArray[fileIndex].fileName
         })
         
     }

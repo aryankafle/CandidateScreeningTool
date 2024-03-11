@@ -1,6 +1,6 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { UserContext } from "../../context/UserContext"
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 
@@ -17,11 +17,20 @@ const handleLogout = () => {
 
 const LogoutScreen = () => {
     
+    const navigate = useNavigate()
+
     const { isLoggedIn } = useContext(UserContext)
+
+    useEffect(() => {
+        
+        if(isLoggedIn) return;
+
+        navigate("/auth/signin")
+
+    }, [isLoggedIn, navigate])
 
     return (
         <div>
-            {!isLoggedIn && <Navigate to="auth/signin"/>}
             <button
                 onClick = {handleLogout}>
                     Sign Out

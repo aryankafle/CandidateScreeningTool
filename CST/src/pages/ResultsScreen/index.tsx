@@ -12,7 +12,8 @@ import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import { FileContext } from "../../context/FileContext";
 import { FilterContext } from "../../context/FilterContext";
-import { SavedList } from "../../utils/SavedLIst";
+import { SavedList } from "../../utils/SavedList";
+import { UserContext } from "../../context/UserContext";
 
 
 const ResultsScreen = () => {
@@ -28,7 +29,9 @@ const ResultsScreen = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
-    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], "loading...", []))
+    const { userData } = useContext(UserContext)
+
+    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}]))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -55,8 +58,8 @@ const ResultsScreen = () => {
 
         const thisList = selectionContext.currentSavedList
 
-        if(thisList.listName !== title) return true
-        if(thisList.listDescription !== description) return true
+        if(thisList.name !== title) return true
+        if(thisList.description !== description) return true
         // if(thisList.color !== color) return true
 
         return false;
@@ -66,9 +69,9 @@ const ResultsScreen = () => {
 
 
     useEffect(() => {
-        setTitle(selectionContext.currentSavedList?.listName ? selectionContext.currentSavedList?.listName : "")
-        setDescription(selectionContext.currentSavedList?.listDescription ? selectionContext.currentSavedList?.listDescription : "")
-        setResumes(selectionContext.currentSavedList?.orderedResumeList ? selectionContext.currentSavedList?.orderedResumeList : [])
+        setTitle(selectionContext.currentSavedList?.name || "")
+        setDescription(selectionContext.currentSavedList?.description || "")
+        setResumes(selectionContext.currentSavedList?.results || [])
     }, [selectionContext.currentSavedList])
 
     useEffect(() => {
@@ -85,13 +88,13 @@ const ResultsScreen = () => {
     const handleSaveList = () => {
         
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
-            if(savedListContext.savedLists[i].listName === title) {
+            if(savedListContext.savedLists[i].name === title) {
                 setListWithSameName(savedListContext.savedLists[i])
                 return;
             }
         }
 
-        const newList = new SavedList(title, description, resumes)
+        const newList = new SavedList(title, description, resumes, undefined, userData.id)
         savedListContext.setSavedLists((lists) => [...lists, newList])
 
         
@@ -110,7 +113,7 @@ const ResultsScreen = () => {
             let listIndex = -1
             if(listWithSameName) listIndex = savedLists.indexOf(listWithSameName)
 
-            const newList = new SavedList(title, description, resumes)
+            const newList = new SavedList(title, description, resumes, undefined, userData.id)
             
             const temp = [...savedLists]
             temp.splice(listIndex, 1, newList)
@@ -170,7 +173,7 @@ const ResultsScreen = () => {
                     {currentCandidate.applicant.name}
                 </div>
                 <div className="text-blueMid mx-4">
-                    {currentCandidate.summary}
+                    {currentCandidate.summaries[0].summary}
                 </div>
                 <div className="m-4 text-blueLight">
                     {currentCandidate.overallScore}
@@ -224,7 +227,7 @@ const ResultsScreen = () => {
                             <div className="text-blueLight leading-10"
                                 onClick={handleReplaceListWithSameName}
                             >
-                                Replace existing list (name: {listWithSameName.listName}, description: {listWithSameName.listDescription})
+                                Replace existing list (name: {listWithSameName.name}, description: {listWithSameName.description})
                             </div>
                         </div>
                     </Modal>
@@ -236,7 +239,7 @@ const ResultsScreen = () => {
                     </div>
                     <div className="flex flex-col justify-center gap-[1.3rem]">
                         {resumes?.map((candidate) => <IndividualCandidateCard 
-                            key={candidate.id}
+                            key={Math.random()*9999}
                             candidate={candidate}
                         />)}
                     </div>
@@ -254,7 +257,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}
-                                        placeholder={selectionContext.currentSavedList?.listName ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.name ? "" : "name"}
                                         onChange={
                                             (event) => {
                                                 setTitle(event.target.value)
@@ -264,7 +267,7 @@ const ResultsScreen = () => {
                                     />
                                     <MultilineInput
                                         title={"List Description"}
-                                        placeholder={selectionContext.currentSavedList?.listDescription ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.description ? "" : "name"}
                                         onChange={
                                             (event) => {
                                                 setDescription(event.target.value)

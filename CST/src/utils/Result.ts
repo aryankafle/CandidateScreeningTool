@@ -1,5 +1,9 @@
 import { Filter } from "./Filter"
 
+
+
+
+
 export type Applicant = {
     name : string
     email? : string
@@ -16,54 +20,53 @@ export enum Grades {
     F = 1, D, C, B, A,
 }
 
+
+
+
+
 export class Result {
-    
+
     private static MAX_SCORE = 1000
 
-    #overallScore : number
-    #scores : number[]
-    #resumeFile : File
-    #applicant : Applicant
-    #filtersApplied : Filter[]
-    #summary : string
-    #id : string
 
-    constructor(applicant : Applicant, resume : File, scores : any[], summary : string, filtersApplied : Filter[]) {
 
-        function getOverallScore() {
+    readonly scores : {filter : Filter, score : number}[]
 
-            let cumulative = 0;
-            
-            scores.forEach((scoreObj) => {
-                cumulative += parseInt(scoreObj.score)
-            })
+    readonly resume : File
 
-            return cumulative / scores.length
-        }
+    readonly applicant : Applicant
 
-        this.#scores = scores;
-        this.#overallScore = getOverallScore()
-        this.#resumeFile = resume;
-        this.#applicant = applicant;
-        this.#summary = summary;
-        this.#filtersApplied = filtersApplied
-        this.#id = crypto.randomUUID()
+    readonly summaries : {section : string, summary : string}[]
 
-        if(this.#overallScore > Result.MAX_SCORE) {
-            throw new RangeError(`Resume Result Error: Resultant score for "${applicant}"'s greater than maximum score of ${Result.MAX_SCORE}.`)
-        }
+
+
+
+
+
+
+    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summary : {section : string, summary : string}[]) {
+
+        this.applicant = applicant
+        this.resume = resume
+        this.scores = scores
+        this.summaries = summary
 
     }
 
 
 
+    
 
+    get overallScore() {
 
+        let cumulative = 0;
+        
+        this.scores.forEach(({filter, score}) => {
+            cumulative += score
+        })
 
-
-    get overallScore() { return this.#overallScore}
-
-    get scores() {return this.#scores}
+        return cumulative / this.scores.length
+    }
 
 
 
@@ -71,7 +74,7 @@ export class Result {
         
         const scoreRangeOfOneLetterGrade = Result.MAX_SCORE / 5
         
-        let gradeNum = Math.ceil(this.#overallScore / scoreRangeOfOneLetterGrade)
+        let gradeNum = Math.ceil(this.overallScore / scoreRangeOfOneLetterGrade)
 
         
 
@@ -96,9 +99,13 @@ export class Result {
 
 
 
-    get resume() { return this.#resumeFile }
-    get applicant() { return this.#applicant }
-    get summary() { return this.#summary }
-    get appliedFilters() { return this.#filtersApplied}
-    get id() {return this.#id}
+    public toJSON() {
+        return {
+           applicant: this.applicant,
+           scores: this.scores,
+           resume: this.resume,
+           summaries: this.summaries
+        }
+    }
+
 }

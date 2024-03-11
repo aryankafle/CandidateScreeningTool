@@ -21,7 +21,7 @@ export const verifyUserOwnsList = async (req, res, next) => {
 
     console.log(savedList)
 
-    if(! (savedList?.user_id === userID) ) {
+    if(! (savedList?.owner_of_list === userID) ) {
 
         return res.status(500).json({
             error: true,
