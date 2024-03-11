@@ -276,6 +276,18 @@ const FilterScreen = () => {
     }
 
 
+    const FilterLoadingPanel = () => {
+        return(
+            <div className="bg-white dark:bg-blueDark
+                            flex flex-col self-center h-[80%] w-[80%]">
+                <div className="flex justify-center text-8xl text-white">
+                    Loading...
+                </div>
+            </div>
+        )
+    }
+
+
 
 
 
@@ -283,7 +295,7 @@ const FilterScreen = () => {
         <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
             {filtersApplied && 
                 <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
-                    {/* <CandidateDescriptionPopup /> */}
+                    <FilterLoadingPanel/>
                 </Modal>
             }
             <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
