@@ -2,7 +2,7 @@ import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext } from "../../context/FilterContext";
 import { Filter } from '../../utils/Filter';
-import { closeCircleOutline } from "ionicons/icons";
+import { closeCircleOutline, flag } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
@@ -83,6 +83,10 @@ const FilterScreen = () => {
     const { previouslySelectedFilters } = useContext(SelectionContext)
 
     const { setFiltersChanged } = useContext(FlagContext)
+
+    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
+
+    const { loadingState, setLoadingState } = useContext(FlagContext)
 
 
 
