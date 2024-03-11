@@ -1,5 +1,5 @@
 import * as database from '../../database/MongoDB.database.js'; 
-import { connection, client } from '../../inits/MongoDB.init.js'
+import { client } from '../../inits/MongoDB.init.js'
 import { getResultsFromFilesWithFilters } from './TextToResponse.service.js';
 
 
@@ -29,7 +29,7 @@ export const viewTable = async () => {
 
 
 
-export const insertResumeData = async (scannedResume, listID, userToken) => {
+export const uploadNewSavedList = async (original_files, file_textscans, saved_list_id, userID) => {
 
     console.log("----Inserting resume data.")
 
@@ -38,53 +38,87 @@ export const insertResumeData = async (scannedResume, listID, userToken) => {
 
 
     const db = client.db("resumes")
-    const coll = db.collection("example_list")
 
-    const doc = {
-        isFiltered: false,
-        userToken: userToken, 
-        listID: listID, 
-        scannedResume: scannedResume,
-        filters: [],
-        filteredResults: []
-    };
+    const users = db.collection("users")
+    const fileBatches = db.collection("file-batches")
+    const savedLists = db.collection("saved-lists")
 
 
 
-    await coll.insertOne(doc);
+    const filesID = crypto.randomUUID()
 
+    try{
+
+    await fileBatches.insertOne({ _id: filesID, original_files, file_textscans })
+
+    await savedLists.insertOne({ 
+        _id: saved_list_id, files_id: filesID, user_id: userID,
+        filters: [], isFiltered: false, timesFiltered: 0, results: [] 
+    })
+
+
+
+    await users.updateOne({ _id: userID }, { 
+        $push: { saved_list_ids: saved_list_id }, 
+        $set: { current_saved_list: saved_list_id }
+    })
+    }
+    catch (error) {
+        console.log("errorrorr", error)
+    }
 
 
 
 
     console.log("----Done inserting resume data.")
+
 }
 
 
 
 
 
-export const updateResumeFilters = async (listID, userToken, filters) => {
+export const getSavedList = async (listID) => {
 
-    console.log("----Updating resume filters.")
+    console.log(`----Getting saved list with id: ${listID}.`)
 
 
 
 
 
     const db = client.db("resumes")
-    const coll = db.collection("example_list")
+    const savedLists = db.collection("saved-lists")
 
-    const setDocs = {
-        userToken: userToken,
-        listID: listID
-    }
+    const savedListsArray = await savedLists.findOne({ _id: listID })
 
-    const updateDocs = {
-        $set: {
-            filters: filters
-        }
-    }
+
+
+
+
+    console.log("----Done getting saved list.")
+
+    return savedListsArray
+
+}
+
+
+
+
+
+export const updateResumeFilters = async (listID, filters) => {
+
+    console.log(`----Updating resume filters for saved list with id: ${listID}.`)
+
+
+
+
+
+    const db = client.db("resumes")
+    const savedLists = db.collection("saved-lists")
+
+
+
+    await savedLists.updateOne({ _id: listID }, { $set: { filters } })
 
 
 
@@ -92,64 +126,44 @@ export const updateResumeFilters = async (listID, userToken, filters) => {
 
     console.log("----Done updating resume filters.")
 
-    await coll.updateMany(setDocs, updateDocs)
-
 }
 
 
 
 
 
-export const getResumeObjects = async (listID, userToken) => {
+export const filterResumes = async (listID) => {
 
-    console.log("----Getting resume objects.")
+    console.log(`----Filtering resumes for saved list with id ${listID}.`)
 
 
 
 
 
     const db = client.db("resumes")
-    const coll = db.collection("example_list")
 
-    const docArray = await coll.find({listID: listID, userToken: userToken}).toArray()
-
-
+    const fileBatches = db.collection("file-batches")
+    const savedLists = db.collection("saved-lists")
 
 
 
-    console.log("----Done getting resume objects.")
-
-    return docArray
-
-}
-
-
-
-
-
-export const filterResumes = async (listID, userToken) => {
-
-    console.log("----Filtering resumes.")
-
-
+    const batch = await savedLists.findOne({ _id: listID })
+    const batchID = batch.files_id
 
     
 
-    const db = client.db("resumes")
-    const coll = db.collection("example_list")
-    
-    const resumeObjectArray = await getResumeObjects(listID, userToken)
-    console.log(`----${resumeObjectArray.length} resumes to filter.`)
-
-    const filteredResumeArray = await getResultsFromFilesWithFilters(resumeObjectArray)
-    
+    const files = await fileBatches.findOne({ _id: batchID })
+    const fileTextScans = files?.file_textscans
 
 
-    for(var i = 0; i < filteredResumeArray.length; i++) {
 
-        await coll.updateOne({listID: listID, userToken: userToken, isFiltered: false}, {"$set": {filteredResults: filteredResumeArray[i], isFiltered: true}})
-    
-    }
+
+
+    const results = await getResultsFromFilesWithFilters(fileTextScans, batch.filters)
+
+
+
+    savedLists.updateOne({ _id: listID }, { $set: { results } })
 
 
 
@@ -163,25 +177,140 @@ export const filterResumes = async (listID, userToken) => {
 
 
 
-export const getResumeResults = async (listID, userToken) => {
+export const getUserSavedLists = async (userID) => {
     
-    console.log("----Getting resume reuslts.")
+    console.log("----Getting user with userID: ${userID}'s saved lists.")
 
 
 
 
 
     const db = client.db("resumes");
-    const coll = db.collection("example_list");
     
-    const results = await coll.find({listID: listID, userToken: userToken, isFiltered: true}).project({filteredResults: 1}).toArray();
+    const savedLists = db.collection("saved_lists");
+
+
+
+    const savedListsArray = savedLists.find({ user_id: userID }).toArray()
+
+
+
+
+
+    console.log("----Done getting saved lists.")
+
+    return savedListsArray;
+    
+}
+
+
+
+
+
+export const addUser = async (userToken) => {
+
+    console.log("----Adding user to usertable: ", userToken.id)
+
+
+
+    
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+
+
+
+    try {
+
+        await users.insertOne({ _id: userToken.id, user_token: userToken, saved_list_ids: [], current_location: null, current_saved_list: null })
+    
+    }
+    catch (error) {
+
+        console.log("----User already registered.")
+        return;
+
+    }
+
+
+
+
+
+    console.log("----Done adding user to user table.")
+
+}
+
+
+
+
+
+export const getUserSelection = async (userID) => {
+
+    console.log("----Getting user selection for user: ", userID)
+
+
+
+    
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+
+
+
+    const user = await users.findOne( { _id: userID } )
+
+    const currentSavedList = user.current_saved_list || {}
+    const location = user.current_location || "/" 
+
+    return {
+
+        user: userID,
+        currentSavedList,
+        location,
+
+    }
+
+
     
 
 
+    console.log("----Done getting user selection.")
+
+}
 
 
-    console.log("--Done getting resume results.")
 
-    return results.map((result) => result.filteredResults);
+
+
+export const setUserSelection = async (userID, selection) => {
     
+    console.log("----Setting user selection for user: ", userID)
+
+
+
+    
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+
+
+    
+    const user = await users.findOne( { _id: userID } )
+
+    const currentSavedList = selection.currentSavedList || user.current_saved_list || {}
+    const location = selection.location || user.current_location || "/" 
+
+
+
+    await users.updateOne({ _id: userID }, { $set: { location, currentSavedList } }) 
+
+
+    
+
+
+    console.log("----Done setting user selection.")
+
 }

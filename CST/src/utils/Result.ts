@@ -1,4 +1,4 @@
-import { Filter } from "../context/FilterContext"
+import { Filter } from "./Filter"
 
 export type Applicant = {
     name : string
