@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { FileContext } from "../../context/FileContext";
 import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedLIst";
+import { FlagContext } from "../../context/FlagContext";
 
 
 const ResultsScreen = () => {
@@ -28,6 +29,8 @@ const ResultsScreen = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
     const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], "loading...", []))
 
     const [title, setTitle] = useState("")
@@ -37,6 +40,8 @@ const ResultsScreen = () => {
     const [selectedResumes] = useState([] as Result[])
 
     const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
+    
+    setLoadingState(false)
 
 
 

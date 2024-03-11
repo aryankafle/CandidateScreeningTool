@@ -11,7 +11,6 @@ import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 import { FlagContext } from "../../context/FlagContext"
-import { divide } from "lodash";
 
 
 
@@ -210,8 +209,8 @@ const ResumeUploadScreen = () => {
                             </Button>
                         </div></>)
                 :
-                    <div>
-                        loading
+                    <div className="flex justify-center text-8xl text-white">
+                        Loading...
                     </div>
                 }    
             </div>

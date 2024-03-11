@@ -10,6 +10,7 @@ import DraggableList from '../../components/views/DraggableList/';
 import { FileContext } from '../../context/FileContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import { FlagContext } from '../../context/FlagContext';
+import Modal from '../../components/modals/Modal';
 
 
 
@@ -86,6 +87,12 @@ const FilterScreen = () => {
 
     const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
 
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
+
+    setLoadingState(false)
+
     if (!fileContext.uploadedFiles) {
         throw('No files uploaded')
     } else if (fileContext.currentBatchName == "") {
@@ -110,6 +117,13 @@ const FilterScreen = () => {
         setFiltersChanged(false)
     
     }, [filterList])
+
+
+
+    useEffect(() => {
+        setLoadingState(filtersApplied)
+    }, [filtersApplied])
+
 
 
     const FilterLayerOptions = () => {
@@ -272,6 +286,11 @@ const FilterScreen = () => {
 
     return (
         <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+            {filtersApplied && 
+                <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
+                    {/* <CandidateDescriptionPopup /> */}
+                </Modal>
+            }
             <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
                 <div className='sticky flex flex-col z-[1] top-0'>
                     <div

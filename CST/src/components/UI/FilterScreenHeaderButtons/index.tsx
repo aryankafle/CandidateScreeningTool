@@ -24,6 +24,7 @@ const HeaderButtons = () => {
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
     const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
+    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -60,6 +61,8 @@ const HeaderButtons = () => {
                         let id = userData.id
                         
 
+
+                        setFiltersApplied(true)
 
                         await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
                         .then(
