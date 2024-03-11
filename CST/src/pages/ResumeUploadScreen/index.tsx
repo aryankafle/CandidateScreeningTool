@@ -10,7 +10,7 @@ import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
-import TypewriterSpinner from "../../components/UI/LoadingSpinner";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
 
 
@@ -369,7 +369,7 @@ const ResumeUploadScreen = () => {
                         <div className="flex flex-col self-center text-center justify-center
                         bg-grayLight border-4 border-gray rounded
                         text-grayDark w-[80%] h-[80%] text-3xl">
-                            <TypewriterSpinner></TypewriterSpinner>
+                            <LoadingSpinner></LoadingSpinner>
                         </div>
                     }
 

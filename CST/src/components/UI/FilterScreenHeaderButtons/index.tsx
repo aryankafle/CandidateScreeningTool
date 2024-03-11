@@ -9,6 +9,9 @@ import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
 import { SavedList, SavedListsContext } from '../../../context/SavedListsContext';
 import { UserContext } from "../../../context/UserContext"
+import { useState } from "react"
+import Modal from "../../modals/Modal"
+import LoadingSpinner from "../LoadingSpinner"
 
 
 
@@ -21,6 +24,8 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const savedListsContext = useContext(SavedListsContext)
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false)
+
 
     const { userData } = useContext(UserContext)
 
@@ -31,6 +36,21 @@ const HeaderButtons = () => {
             <div className="flex flex-col justify-center">
                 <BackButton toRoute="/home"></BackButton>
             </div>
+            {
+                showLoadingScreen && <Modal
+                    modalTrigger={showLoadingScreen}
+                    onClose={()=>{setShowLoadingScreen(false)}}
+                >
+                    {
+                        <div className="flex flex-col self-center text-center justify-center
+                        bg-grayLight border-4 border-gray rounded
+                        text-grayDark w-[80%] h-[80%] text-3xl">
+                            <LoadingSpinner></LoadingSpinner>
+                        </div>
+                    }
+
+                </Modal>
+            }
             <div className="flex flex-col justify-center">
                 <Button
                         className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
@@ -42,7 +62,7 @@ const HeaderButtons = () => {
 
                             let id = userData.id
 
-
+                            setShowLoadingScreen(true)
 
                             await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
 
@@ -84,6 +104,8 @@ const HeaderButtons = () => {
                                 alert("error fetching results")
                                 return;
                             }
+
+                            setShowLoadingScreen(false)
 
                         }}
                 >
