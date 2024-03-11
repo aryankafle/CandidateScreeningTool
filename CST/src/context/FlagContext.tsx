@@ -13,6 +13,8 @@ type FlagContextType = {
     setFiltersChanged : React.Dispatch<SetStateAction<boolean>>,
     loadingState : boolean,
     setLoadingState : React.Dispatch<SetStateAction<boolean>>
+    filtersApplied : boolean,
+    setFiltersApplied : React.Dispatch<SetStateAction<boolean>>
 
 }
 
@@ -21,7 +23,9 @@ const FlagContextInitial = {
     filtersChanged : false,
     setFiltersChanged : {} as React.Dispatch<SetStateAction<boolean>>,
     loadingState : false,
-    setLoadingState : {} as React.Dispatch<SetStateAction<boolean>>
+    setLoadingState : {} as React.Dispatch<SetStateAction<boolean>>,
+    filtersApplied : false,
+    setFiltersApplied : {} as React.Dispatch<SetStateAction<boolean>>
 
 }
 
@@ -35,12 +39,15 @@ const FlagContextProvider = (props: { children : ReactNode }) => {
 
     const [ filtersChanged, setFiltersChanged ] = useState<boolean>(false)
     const [ loadingState, setLoadingState ] = useState<boolean>(false)
+    const [ filtersApplied, setFiltersApplied ] = useState<boolean>(false)
 
 
 
     return (
         <FlagContext.Provider value={{
-                filtersChanged, setFiltersChanged, loadingState, setLoadingState
+                filtersChanged, setFiltersChanged, 
+                loadingState, setLoadingState,
+                filtersApplied, setFiltersApplied
             }}>
             {props.children}
         </FlagContext.Provider>

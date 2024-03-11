@@ -2,13 +2,14 @@ import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext } from "../../context/FilterContext";
 import { Filter } from '../../utils/Filter';
-import { closeCircleOutline } from "ionicons/icons";
+import { closeCircleOutline, flag } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
 import { SelectionContext } from '../../context/SelectionContext';
 import { FlagContext } from '../../context/FlagContext';
+import Modal from '../../components/modals/Modal';
 
 
 
@@ -83,6 +84,10 @@ const FilterScreen = () => {
 
     const { setFiltersChanged } = useContext(FlagContext)
 
+    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
+
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
 
 
 
@@ -106,6 +111,13 @@ const FilterScreen = () => {
     }, [filterList, previouslySelectedFilters, setFiltersChanged])
 
 
+
+
+
+
+    useEffect(() => {
+        setLoadingState(filtersApplied)
+    }, [filtersApplied])
 
 
 
@@ -264,11 +276,28 @@ const FilterScreen = () => {
     }
 
 
+    const FilterLoadingPanel = () => {
+        return(
+            <div className="bg-white dark:bg-blueDark
+                            flex flex-col self-center h-[80%] w-[80%]">
+                <div className="flex justify-center text-8xl text-white">
+                    Loading...
+                </div>
+            </div>
+        )
+    }
+
+
 
 
 
     return (
         <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+            {filtersApplied && 
+                <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
+                    <FilterLoadingPanel/>
+                </Modal>
+            }
             <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
                 <div className='sticky flex flex-col z-[1] top-0'>
                     <div

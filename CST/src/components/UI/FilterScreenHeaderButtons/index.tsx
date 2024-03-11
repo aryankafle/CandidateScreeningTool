@@ -1,6 +1,6 @@
 import BackButton from "../../buttons/BackButton"
 import { IonIcon } from "@ionic/react"
-import { colorWandOutline } from "ionicons/icons"
+import { colorWandOutline, flag } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
 import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
@@ -24,6 +24,7 @@ const HeaderButtons = () => {
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
     const { filtersChanged } = useContext(FlagContext)
+    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -47,6 +48,8 @@ const HeaderButtons = () => {
         let filterError;
         let fetchError;        
 
+
+        setFiltersApplied(true)
 
 
         await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, userData.id)
