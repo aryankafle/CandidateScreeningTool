@@ -8,7 +8,7 @@ import { SelectionContext } from "../../context/SelectionContext";
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
-import { SavedList } from "../../utils/SavedLIst";
+import { SavedList } from "../../utils/SavedList";
 
 
 
@@ -29,6 +29,8 @@ const ViewSavedListsScreen = () => {
         selectableItems,
 
         anySelected,
+
+        getAllSelectedItems,
 
         selectAll,
         removeCurrentSelectionFromList,
@@ -59,32 +61,47 @@ const ViewSavedListsScreen = () => {
 
 
     const createCombinedList = useCallback(() => {
-        let name = prompt("Name of Combined List") || undefined
-        let description = prompt("Description of Combined List") || undefined
+        
+        const selected = getAllSelectedItems()
 
-        const newList = SavedList.combine(selectableItems.filter((selectable) => selectable.isSelected).map(selectable => selectable.item), name, description)
+        if(getAllSelectedItems().length !== 2) return;
+
+        const firstList = selected[1]
+        const secondList = selected[2]
+
+        const combined = SavedList.combine(firstList, secondList)
+
         setSavedLists((savedLists) => {
-            if(savedLists.some(savedList => SavedList.isEqual(savedList, newList))) {
+
+            if(savedLists.some(savedList => savedList.name === combined.name)) {
                 return savedLists
             }
 
-            return [...savedLists, newList]
+            return [...savedLists, combined]
+
         })
-    }, [selectableItems, setSavedLists])
+
+    }, [setSavedLists, getAllSelectedItems])
 
     const copyListLink = useCallback(async (savedList : SavedList) => {
+
         await copyTextToClipboard(savedList.listLink, true)
+
     }, [copyTextToClipboard])
 
     const sendToList = useCallback((list : SavedList) => {
+
         setCurrentSavedList(list)
         navigate("/results")
+
     }, [navigate, setCurrentSavedList])
 
     const addExternalListToSavedLists = useCallback(() => {  
+
         if(!nameInput) return;
 
         //do somehting with external list here
+        
     }, [nameInput])
 
 
@@ -128,7 +145,7 @@ const ViewSavedListsScreen = () => {
                         }
                         onClick={(event) => { handleSelectionOnClick(event, props.index) }}
                 >
-                    {props.savedList.listName}
+                    {props.savedList.name}
                 </div>
                 <div className="flex flex-row justify-between w-[10rem]">
                     <div

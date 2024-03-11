@@ -6,7 +6,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 import HomeRoutes from "./HomeRouter";
 import AuthRoutes from "./AuthRouter"
 
-import { getAllUserSavedLists } from "../requests/ResumeRequests"
+import { getAllUserSavedLists, getUserSelection } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -27,9 +27,9 @@ import { UserContext } from "../context/UserContext";
 import { SavedListsContext } from "../context/SavedListsContext";
 import { SelectionContext } from "../context/SelectionContext";
 import { useCallback, useContext, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Location } from "react-router-dom"
 import axios from "axios";
-import { SavedList } from "../utils/SavedLIst";
+import { SavedList } from "../utils/SavedList";
 
 
 
@@ -39,25 +39,34 @@ function Router() {
     
     const { userData, setUserData, isLoggedIn } = useContext(UserContext)
     const { setSavedLists } = useContext(SavedListsContext)
-    const { location, setLocation } = useContext(SelectionContext)
-    const navigation = useNavigate()
+    const { setLocation } = useContext(SelectionContext)
+    
+    const navigate = useNavigate()
 
     const route = useLocation()
 
     useEffect(() => {
 
-        console.log("nice stinker")
-        if(!location) return;
+        setLocation((location : string) => {
 
-        setLocation(route)
+            if(!location) return location;
+
+            return route.pathname;
+
+        })
+
         
-    }, [route])
+    }, [route.pathname, setLocation])
+
+
 
 
 
 
 
     const getUser = useCallback(async () => {
+
+        if(userData) return;
 
         const { data } = await axios.get(
             `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/login/success`
@@ -72,35 +81,35 @@ function Router() {
 
 
 
-
-
     const getSavedListData = useCallback(async () => {
 
-        const savedListData = await getAllUserSavedLists(userData.id)
-
-        if(!savedListData) return [];
-
-        
-        
-        const savedListArr : SavedList[] = []
-
-        for(let i = 0; i < savedListData.length; i++) {
-
-            const savedList = savedListData[i]
-
-            const currentList = new SavedList(savedList?.name, savedList?.description, savedList?.resumes, savedList?.color)
-
-            
-            
-            savedListArr.push(currentList) 
-            
-        }
-
-        return savedListArr
+        return await getAllUserSavedLists(userData.id)
 
     }, [userData])
 
 
+
+    useEffect(() => {
+        
+        if(!userData) return;
+
+        getUserSelection(userData.id)
+        .then((response) => {
+
+            const savedLocation : string = response.location
+
+            if(!savedLocation) navigate("/")
+
+            if(savedLocation) navigate(savedLocation)
+
+        })
+        .catch((error) => {
+
+            console.log("Error fetching user selection")
+
+        })
+
+    }, [ setLocation, userData ])
 
 
     
@@ -109,12 +118,19 @@ function Router() {
         getUser()
         .then((data) => setUserData(data))
         .catch((error) => {
+            
+            if(error.response.data.message === "Unauthorized") {
+
+                console.log("Did not find existing user session.")
+                return;
+
+            }
 
             console.log("Error getting user: ", error)
 
         })
 
-    }, [])
+    }, [getUser, setUserData])
 
 
 
@@ -130,7 +146,7 @@ function Router() {
 
         })
 
-    }, [])
+    }, [getSavedListData, setSavedLists, userData])
 
 
 

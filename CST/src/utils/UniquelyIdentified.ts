@@ -1,3 +1,5 @@
-export abstract class UniquelyIdentified {
-    public readonly id = crypto.randomUUID()
+export interface UniquelyIdentified {
+
+    readonly id : string
+
 }

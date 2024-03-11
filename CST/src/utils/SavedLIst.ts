@@ -1,78 +1,77 @@
 import { Result } from "./Result";
 import { UniquelyIdentified } from "./UniquelyIdentified";
+import { UserOwned } from "./UserOwned";
 
-export class SavedList extends UniquelyIdentified{
+export class SavedList implements UserOwned, UniquelyIdentified {
 
-    #listName : string;
-    get listName(){return this.#listName}
-    set listName(newName : string){this.#listName = newName}
+    private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
+    private static readonly RESULTS_ROUTE = "/results"
 
-    #listDescription : string;
-    get listDescription(){return this.#listDescription}
-    set listDescription(newDescription : string){this.#listDescription = newDescription}
+    readonly id = crypto.randomUUID()
 
-    #color : string;
-    get color(){return this.#color}
-    set color(newColor : string){this.#color = newColor}
-
-    #orderedResumeList : Result[]
-    get orderedResumeList() {return this.#orderedResumeList}
-
-    #listLink : string;
-    get listLink() {return this.#listLink}
-    
+    readonly owner : string
+    readonly shared : string[]
 
 
 
+    public readonly listLink : string;
 
-    private generateLink() {
-        return "dummylinkfor+" + this.#listName
-    }
 
-    constructor(name : string, description : string, resumes : Result[], color : string = "#FFFFFFFF") {
+    public name : string
 
-        super()
+    public description : string;
 
-        this.#listName = name;
-        this.#listDescription = description;
-        this.#orderedResumeList = resumes.sort((a : Result, b : Result) => b.overallScore - a.overallScore )
-        this.#color = color || "#FFFFFFFF";
-        this.#listLink = this.generateLink()
-
-    }
+    public color : string;
 
 
 
-    public static isEqual (savedList : SavedList, otherSavedList : SavedList) {
-        if(savedList.listName !== otherSavedList.listName) return false;
-                
-        return true;
+    public readonly results : Result[];
+
+
+
+
+
+    constructor( name : string, description : string, results : Result[], color : string = "#FFFFFFFF", owner : string, sharedTo : string[] = [] ) {
+
+        this.owner = "";
+        this.shared = [];
+
+        this.name = name;
+        this.description = description;
+        this.color = color
+
+        this.results = [...results].sort((a : Result, b : Result) => b.overallScore - a.overallScore )
+
+        this.listLink = `${SavedList.PUBLIC_URL}${SavedList.RESULTS_ROUTE}/${this.id}`
+
     }
 
 
 
-    public static combine (savedLists : SavedList[], newName? : string, newDescription? : string, newColor? : string) {
-        
-        let combinedNames = ""
-        
-        for(let i = 0; i < savedLists.length; i++) {
-            if(i < savedLists.length - 1) {
-                combinedNames += ` ${savedLists[i].listName},`
-            } 
-            else {
-                combinedNames += ` and ${savedLists[i].listName}`
-            }
+    public static combine(listA : SavedList, listB : SavedList) {
+
+        return new SavedList(
+            "name",
+            `Combination of ${listA.name} & ${listB.name}`,
+            [...listA.results, ...listB.results],
+            undefined,
+            listA.owner,
+        )
+    }
+
+
+
+    public toJSON() {
+        return {
+            _id: this.id,
+            owner_of_list: this.owner,
+            users_with_access: [ ...this.shared ],
+            name: this.name,
+            description: this.description,
+            color: this.color,
+            results: [...this.results.map( result => result.toJSON() ) ],
+            link: this.listLink,
         }
-
-
-
-        const name = newName || `Combination of:${combinedNames}.`;
-        const description = `Combined List of the following lists:${combinedNames}.`
-        const combinedResults = savedLists.flatMap((savedList) => savedList.orderedResumeList)
-
-
-
-        return new SavedList(name, description, combinedResults, newColor)
-
     }
+    
 }
