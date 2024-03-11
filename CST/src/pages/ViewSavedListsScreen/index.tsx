@@ -2,10 +2,13 @@ import { useEffect, useCallback, useContext, useState } from "react";
 import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { useClipboard } from "../../hooks/Clipboard"
-import { SavedList, SavedListsContext } from "../../context/SavedListsContext";
+import { SavedListsContext } from "../../context/SavedListsContext";
+import { SelectionContext } from "../../context/SelectionContext";
+
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
+import { SavedList } from "../../utils/SavedLIst";
 
 
 
@@ -15,7 +18,9 @@ const ViewSavedListsScreen = () => {
 
     const navigate = useNavigate()
 
-    const {savedLists, setSavedLists, setCurrentSavedList} = useContext(SavedListsContext)
+    const {savedLists, setSavedLists} = useContext(SavedListsContext)
+
+    const { setCurrentSavedList } = useContext(SelectionContext)
 
     const [nameInput, setNameInput] = useState<string>("");
 

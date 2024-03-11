@@ -1,10 +1,12 @@
 import { queryAI } from "./OpenAIQuery.service.js"
 
-export const getResultsFromFilesWithFilters = async (fileArray) => {
+export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => {
     
-    async function getGPTResponse(file, filters) {
+    async function getGPTResponse(file) {
 
         console.log(`------Getting response for file: ${file.fileName}.`)
+
+        console.log("filtersasdfasdf", filterArray)
 
 
 
@@ -12,7 +14,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
 
         const filterScores = [];
 
-        for(var filterIndex = 0; filterIndex < filters.length; filterIndex++) {
+        for(var filterIndex = 0; filterIndex < filterArray.length; filterIndex++) {
                 //ask chat gpt to do more than 1 query at the same time
                 //yada yada concurrent quieres
             const filterScore = await queryAI(
@@ -21,13 +23,13 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
                     ${file.text}
                     <END_OF_FILE_TEXT>
 
-                    ${filters[filterIndex].query}
+                    ${filterArray[filterIndex].query}
                 `
 
                 , `user`
             )
 
-            filterScores.push({filter: filters[filterIndex], score: filterScore.choices[0].message.content})
+            filterScores.push({filter: filterArray[filterIndex], score: filterScore.choices[0].message.content})
             
         }
 
@@ -77,7 +79,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
 
     for (var fileIndex = 0; fileIndex < fileArray.length; fileIndex++){
 
-        var GPTResponse = await getGPTResponse(fileArray[fileIndex].scannedResume, fileArray[fileIndex].filters)
+        var GPTResponse = await getGPTResponse(fileArray[fileIndex])
 
 
 
@@ -95,7 +97,7 @@ export const getResultsFromFilesWithFilters = async (fileArray) => {
 
         openAiResponseArr.push({
             ...GPTResponse,
-            filters: [...fileArray[fileIndex].filters],
+            filters: [...filterArray],
             file: fileArray[fileIndex]
         })
         

@@ -7,8 +7,10 @@ import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } fro
 import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
-import { SavedList, SavedListsContext } from '../../../context/SavedListsContext';
 import { UserContext } from "../../../context/UserContext"
+import { SelectionContext } from '../../../context/SelectionContext';
+import { FlagContext } from "../../../context/FlagContext"
+import { SavedList } from "../../../utils/SavedLIst"
 
 
 
@@ -20,9 +22,12 @@ const HeaderButtons = () => {
     
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
-    const savedListsContext = useContext(SavedListsContext)
+    const selectionContext = useContext(SelectionContext)
+    const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
+
+    
 
 
 
@@ -33,59 +38,72 @@ const HeaderButtons = () => {
             </div>
             <div className="flex flex-col justify-center">
                 <Button
-                        className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
-                                    border-black text-black bg-white hover:bg-gray active:bg-blue"
-                        onClick={async () => {
+                    className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
+                                border-black text-black bg-white hover:bg-gray active:bg-blue"
+                    onClick={async () => {
 
-                            let uploadError = false;
-                            let fetchError = false;
+                        if(!filtersChanged) {
+                            
+                            navigate("/results")
 
-                            let id = userData.id
+                            return;
+
+                        }
 
 
 
-                            await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
 
-                            .then(
-                                async () => {
+                        
+                        let uploadError = false;
+                        let fetchError = false;
 
-                                    await filterExistingResumeList(fileContext.currentBatchId, id)
-                                    
-                                    let listResults
-                                    
-                                    try {
-                                        listResults = await getListResults(fileContext.currentBatchId, id)
-                                    }
-                                    catch (error) {
-                                        console.log("Error getting filter results: ", error)
-                                    }
+                        let id = userData.id
+                        
 
-                                    if(listResults) {
-                                        savedListsContext.setCurrentSavedList(
-                                            new SavedList(fileContext.currentBatchName, "", listResults)
-                                        )
 
-                                        navigate("/results")
-                                    }
+                        await uploadFiltersToDatabase(filterContext.selectedFilters.map((filter) => filter.toJson()), fileContext.currentBatchId, userData.id)
+                        .then(
+                            async () => {
 
-                                    
-                                }
-                            )
-                            .catch((error) => {
-                                console.log("Error uploading filters: ", error)
-                                uploadError = true;
-                            })
+                                await filterExistingResumeList(fileContext.currentBatchId, id)
+                                            
+                                
 
-                            if(uploadError) {
-                                alert("error uploading filters")
-                                return;
+                                const listResults = await getListResults(fileContext.currentBatchId, id)
+
+                                if(!listResults) throw Error("List results are undefined.");
+
+
+
+                                selectionContext.setCurrentSavedList(
+                                    new SavedList(fileContext.currentBatchName, "", listResults)
+                                )
+
+                                selectionContext.setPreviouslySavedList(
+                                    new SavedList(fileContext.currentBatchName, "", listResults)
+                                )
+
+                                selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
+
+                                navigate("/results")
+                                
                             }
-                            if(fetchError) {
-                                alert("error fetching results")
-                                return;
-                            }
+                        )
+                        .catch((error) => {
+                            console.log("Error uploading filters: ", error)
+                            uploadError = true;
+                        })
 
-                        }}
+                        if(uploadError) {
+                            alert("error uploading filters")
+                            return;
+                        }
+                        if(fetchError) {
+                            alert("error fetching results")
+                            return;
+                        }
+
+                    }}
                 >
                     <IonIcon
                         icon={colorWandOutline}

@@ -1,4 +1,5 @@
 import { QueryClient,  QueryClientProvider } from "react-query"
+import { BrowserRouter } from "react-router-dom";
 import AppContextProvider from "./context"
 import Router from "./router"
 
@@ -17,7 +18,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}> 
       <AppContextProvider>
-        <Router />
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </AppContextProvider>
     </QueryClientProvider>
   )

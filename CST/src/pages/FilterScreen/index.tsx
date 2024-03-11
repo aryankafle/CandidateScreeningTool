@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext, Filter } from "../../context/FilterContext";
 import { closeCircleOutline } from "ionicons/icons";
@@ -6,6 +6,9 @@ import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
+import { FileContext } from '../../context/FileContext';
+import { SelectionContext } from '../../context/SelectionContext';
+import { FlagContext } from '../../context/FlagContext';
 
 
 
@@ -24,11 +27,39 @@ class KeywordBiasFilter extends Filter {
 
 
 
-class DummyFilter extends Filter {
+class WorkFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Years of Work Experience", "Is the file a resume?", quantity)
+            super("Years of Work Experience: 5+", "Does this file have 5+ years of work experience?", quantity)
+        }
+
+        else {
+            throw new RangeError("Quantity must be a positive integer.")
+        }
+    }
+
+}
+
+class DegreeFilter extends Filter {
+
+    constructor(quantity : number) {
+        if(quantity !== 0) {
+            super("Level of Degree: Masters", "Does this file have at least a masters degree?", quantity)
+        }
+
+        else {
+            throw new RangeError("Quantity must be a positive integer.")
+        }
+    }
+
+}
+
+class IsResumeFilter extends Filter {
+
+    constructor(quantity : number) {
+        if(quantity !== 0) {
+            super("File is a resume", "Is this file a resume?", quantity)
         }
 
         else {
@@ -48,8 +79,36 @@ const FilterScreen = () => {
 
     const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
 
+    const fileContext = useContext(FileContext)
+
+    const { previouslySelectedFilters } = useContext(SelectionContext)
+
+    const { filtersChanged, setFiltersChanged } = useContext(FlagContext)
+
+    if (!fileContext.uploadedFiles) {
+        throw('No files uploaded')
+    } else if (fileContext.currentBatchName == "") {
+        throw('No batch name created')
+    }
 
 
+    useEffect(() => {
+        
+        if (filterList.length !== previouslySelectedFilters.length) {
+            setFiltersChanged(true)
+            return;
+        }
+
+        if (filterList.some((filter) => !previouslySelectedFilters.includes(filter))) {
+            setFiltersChanged(true)
+            return;
+        }
+
+
+
+        setFiltersChanged(false)
+    
+    }, [filterList])
 
 
     const FilterLayerOptions = () => {
@@ -82,18 +141,58 @@ const FilterScreen = () => {
                         onClick={
                             () => {
 
-                                const dummyFilter : Filter = new DummyFilter(Math.floor(Math.random() * 99999999999) + 1)
+                                const workFilter : Filter = new WorkFilter(Math.floor(Math.random() * 99999999999) + 1)
 
-                                console.log("Dumb Filter: ", dummyFilter)
+                                console.log("Dumb Filter: ", workFilter)
 
-                                if(!isDuplicateFilter(dummyFilter)) {
-                                    setFilterList([...filterList, dummyFilter])    
+                                if(!isDuplicateFilter(workFilter)) {
+                                    setFilterList([...filterList, workFilter])    
                                 }
 
                             }
                         }
                     >
-                        Click to add new filter
+                        Click to add new work experience filter
+                    </Button>
+
+
+                    <Button
+                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        onClick={
+                            () => {
+
+                                const degreeFilter : Filter = new DegreeFilter(Math.floor(Math.random() * 99999999999) + 1)
+
+                                console.log("Dumb Filter: ", degreeFilter)
+
+                                if(!isDuplicateFilter(degreeFilter)) {
+                                    setFilterList([...filterList, degreeFilter])    
+                                }
+
+                            }
+                        }
+                    >
+                        Click to add new education degree filter
+                    </Button>
+
+
+                    <Button
+                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        onClick={
+                            () => {
+
+                                const isResumeFilter : Filter = new IsResumeFilter(Math.floor(Math.random() * 99999999999) + 1)
+
+                                console.log("Dumb Filter: ", isResumeFilter)
+
+                                if(!isDuplicateFilter(isResumeFilter)) {
+                                    setFilterList([...filterList, isResumeFilter])    
+                                }
+
+                            }
+                        }
+                    >
+                        Click to add new resume filter
                     </Button>
                 </div>
                 <div className="flex flex-col flex-shrink">
@@ -143,7 +242,8 @@ const FilterScreen = () => {
                     className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
                                 py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                     <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
+                        {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
+                        `${props.item.description}`}
                     </div>
                     <IonIcon
                         className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
@@ -155,7 +255,8 @@ const FilterScreen = () => {
                     className=" bg-red dark:bg-blueLight rounded-tr-[1rem] rounded-br-[3rem]
                                 py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
                     <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                        {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`}
+                        {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
+                         `${props.item.description}`}
                     </div>
                     <IonIcon
                         className="cursor-pointer text-[2rem] hover:text-redS" icon={closeCircleOutline}
