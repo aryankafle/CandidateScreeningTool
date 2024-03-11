@@ -7,10 +7,10 @@ import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } fro
 import { FileContext } from '../../../context/FileContext';
 import { useContext } from "react"
 import { FilterContext } from "../../../context/FilterContext"
-import { SavedList } from '../../../context/SavedListsContext';
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';
 import { FlagContext } from "../../../context/FlagContext"
+import { SavedList } from "../../../utils/SavedLIst"
 
 
 

@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
@@ -6,7 +6,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 import HomeRoutes from "./HomeRouter";
 import AuthRoutes from "./AuthRouter"
 
-import { getAllUserSavedLists, postUserLocation } from "../requests/ResumeRequests"
+import { getAllUserSavedLists } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -24,11 +24,12 @@ import BackButton from "../components/buttons/BackButton";
 
 
 import { UserContext } from "../context/UserContext";
-import { SavedList, SavedListsContext } from "../context/SavedListsContext";
+import { SavedListsContext } from "../context/SavedListsContext";
 import { SelectionContext } from "../context/SelectionContext";
 import { useCallback, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios";
+import { SavedList } from "../utils/SavedLIst";
 
 
 
@@ -89,7 +90,7 @@ function Router() {
 
             const currentList = new SavedList(savedList?.name, savedList?.description, savedList?.resumes, savedList?.color)
 
-            currentList.id = savedList.id
+            
             
             savedListArr.push(currentList) 
             

@@ -1,8 +1,8 @@
 import { ReactNode, SetStateAction, createContext, useEffect, useState, useContext } from "react"
-import { Filter } from "./FilterContext"
-import { SavedList } from "./SavedListsContext"
+import { Filter } from "../utils/Filter"
+import { SavedList } from "../utils/SavedLIst"
 
-import { useLocation, Location } from "react-router-dom"
+import { Location } from "react-router-dom"
 import { postUserCurrentSavedList, postUserLocation } from "../requests/ResumeRequests"
 import { UserContext } from "./UserContext"
 

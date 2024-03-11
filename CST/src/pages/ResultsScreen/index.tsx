@@ -3,7 +3,7 @@ import Modal from '../../components/modals/Modal';
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
-import { SavedList, SavedListsContext } from '../../context/SavedListsContext';
+import { SavedListsContext } from '../../context/SavedListsContext';
 import { SelectionContext } from "../../context/SelectionContext";
 import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
@@ -12,6 +12,7 @@ import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import { FileContext } from "../../context/FileContext";
 import { FilterContext } from "../../context/FilterContext";
+import { SavedList } from "../../utils/SavedLIst";
 
 
 const ResultsScreen = () => {

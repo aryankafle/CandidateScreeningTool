@@ -1,7 +1,7 @@
-import { SavedList } from '../context/SavedListsContext';
 import { Result, Applicant } from '../utils/Result';
 import { Location } from "react-router-dom"
 import axios from "axios";
+import { SavedList } from '../utils/SavedLIst';
  
 
 

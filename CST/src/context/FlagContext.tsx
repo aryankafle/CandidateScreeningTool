@@ -1,11 +1,4 @@
-import { ReactNode, SetStateAction, createContext, useEffect, useState, useContext } from "react"
-import { Filter } from "./FilterContext"
-import { SavedList } from "./SavedListsContext"
-
-import { useLocation, Location } from "react-router-dom"
-import { postUserCurrentSavedList, postUserLocation } from "../requests/ResumeRequests"
-import { UserContext } from "./UserContext"
-import { filterCircleSharp } from "ionicons/icons"
+import { ReactNode, SetStateAction, createContext, useState } from "react"
 
 
 
