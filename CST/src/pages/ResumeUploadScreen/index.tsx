@@ -239,12 +239,12 @@ const ResumeUploadScreen = () => {
                 <div 
                     className={
                         selectableItems[props.index].isSelected ?
-                            `text-red border-red
-                            dark:text-red
+                            `text-black border-black
+                            dark:text-white underline font-bold
                             flex-grow select-none cursor-pointer`
                         :
                             `text-black border-black
-                            dark:text-white
+                            dark:text-white no-underline font-normal
                             flex-grow select-none cursor-pointer`
                     }
                     onClick={(event) => {
