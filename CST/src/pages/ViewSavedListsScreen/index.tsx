@@ -170,7 +170,7 @@ const ViewSavedListsScreen = () => {
 
 
     return(
-       <div className=" dark:bg-blueDark bg-white justify-center
+       <div className=" dark:bg-grayDark bg-white justify-center
                         flex flex-grow flex-col pb-[10rem]">
             <div className="text-black dark:text-white flex flex-row pt-[1rem] justify-center p-10">
                 <Input

@@ -35,11 +35,15 @@ const LoginScreen = () => {
 
 
     return (
-        <div>
-            <button
-                onClick = {handleLogin}>
-                    Sign In          
-            </button>
+        <div className="bg-gradient-to-t from-blueDark to-black justify-center
+                        flex flex-col flex-grow">
+            <div className = "m-auto">       
+                <button className = "m-auto sm:h-[10rem] text-3xl bg-gradient-to-r from-darkerWhite to-white text-transparent bg-clip-text"
+                    onClick = {handleLogin}>
+                         Sign In 
+                </button>
+
+            </div>
         </div>
         
     )
