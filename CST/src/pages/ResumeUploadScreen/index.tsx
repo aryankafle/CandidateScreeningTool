@@ -285,7 +285,7 @@ const ResumeUploadScreen = () => {
             {!batchNameEntered ?
                 (
                     <div className="dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-blueMid
+                                    border-black text-black hover:bg-grayMid/30
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                     <div >
                         Upload a batch of resumes.
