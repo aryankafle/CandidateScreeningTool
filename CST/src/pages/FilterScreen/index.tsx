@@ -164,7 +164,7 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new work experience filter
+                        Click to add a new 5+ years work experience filter
                     </Button>
 
 
@@ -184,7 +184,7 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new education degree filter
+                        Click to add new education masters degree filter
                     </Button>
 
 
@@ -204,7 +204,7 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new resume filter
+                        Click to add new resume check filter
                     </Button>
                 </div>
                 <div className="flex flex-col flex-shrink">
