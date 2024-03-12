@@ -391,14 +391,14 @@ const ResumeUploadScreen = () => {
                             <ConfirmFilesPanel />
                         :
                             !fileContext.currentBatchName ? 
-                            <div className="bg-white dark:bg-blue
-                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please enter a batch name!`}
                                 </div>
                                 <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
                                     <Button
-                                        className="flex flex-col justify-center w-[50%] bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                                         onClick={() => {
                                             setShowConfirmFilesModal(false)
                                         }}
@@ -408,8 +408,8 @@ const ResumeUploadScreen = () => {
                                 </div>
                             </div>
                             :
-                            <div className="bg-white dark:bg-blue
-                                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please upload at least 2 resumes!`}
                                 </div>
