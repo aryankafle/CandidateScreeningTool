@@ -35,7 +35,7 @@ const LoginScreen = () => {
 
 
     return (
-        <div className="text-center text-2xl">
+        <div className="text-center text-4xl">
             <button
                 onClick = {handleLogin} className="text-black hover:text-grayMid border-2 border-spacing-8 
                                                     rounded m-4 p-1">
