@@ -181,7 +181,7 @@ const ResumeUploadScreen = () => {
 
     const ConfirmFilesPanel = () => {
         return (
-            <div className="bg-white dark:bg-blueDark
+            <div className="bg-white dark:bg-grayDark
                                 flex flex-col self-center h-[80%] w-[80%]">
                 {!loadingState ? 
                     (
@@ -283,7 +283,7 @@ const ResumeUploadScreen = () => {
             }
             {!batchNameEntered ?
                 (
-                    <div className="dark:border-white dark:text-white
+                    <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-blueMid
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                     <div >
@@ -302,7 +302,7 @@ const ResumeUploadScreen = () => {
                 (            
                 <div className="flex justify-center">
                     <Button 
-                        className=" dark:border-white dark:text-white
+                        className=" dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-blueMid
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                         onClick={handleUploadClick}
@@ -340,7 +340,8 @@ const ResumeUploadScreen = () => {
                 <div className="h-[5rem]
                                 text-black
                                 dark:text-white
-                                self-center">
+                                self-center
+                                text-lg">
                     { anySelected() ?
                         <div className="flex flex-col my-[1rem]">
                             <Button
@@ -371,7 +372,7 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button
-                    className=" dark:border-white dark:text-white
+                    className=" dark:border-white dark:text-white text-lg
                                 border-black text-black hover:bg-blueMid
                                 flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
                     onClick={()=>handleAddFiltersClick()}
