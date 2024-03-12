@@ -81,8 +81,6 @@ async function changePdfToText(pdfFile) {
     const pngPage = await pdfToPng(pdfFile.buffer, {
         viewportScale: 2.0,
     });
-    console.log(pngPage)
-
     let allFileString = ""
     for (let i = 0; i < pngPage.length; i++){
         const worker = await createWorker('eng');
@@ -91,8 +89,6 @@ async function changePdfToText(pdfFile) {
         allFileString = allFileString.concat(ret.data.text)
     }
     
-
-    console.log(allFileString + " all file string silly")
     const fileText = {
         text: allFileString,
         fileName: pdfFile.originalname
