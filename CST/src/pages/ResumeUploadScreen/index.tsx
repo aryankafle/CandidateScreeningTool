@@ -233,9 +233,9 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="border-black text-black hover:bg-blueMid
-                            dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem]">
+            <div className="text-black hover:bg-grayLight
+                            dark:text-white flex flex-row 
+                            px-[3rem] py-[3rem] text-xl">
                 <div 
                     className={
                         selectableItems[props.index].isSelected ?
@@ -328,9 +328,7 @@ const ResumeUploadScreen = () => {
                 </div>)
             }
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
-                <ol className=" border-black self-center flex-grow
-                                dark:border-white
-                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
+                <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                     {selectableItems.map(
                         (selectable, index : number) => (
                             <FileCard
