@@ -233,7 +233,7 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="text-black hover:bg-grayLight
+            <div className="text-black hover:bg-grayMid/30
                             dark:text-white flex flex-row 
                             px-[3rem] py-[3rem] text-xl">
                 <div 
