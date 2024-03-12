@@ -2,7 +2,8 @@ import { UniquelyIdentified } from "./UniquelyIdentified";
 
 export abstract class Filter implements UniquelyIdentified {
 
-    readonly id = crypto.randomUUID()
+    // readonly id = crypto.randomUUID()
+    readonly id  = "123"
 
     protected static MAX_STRENGTH = 1000;
     protected static MAX_SCORE = 1000

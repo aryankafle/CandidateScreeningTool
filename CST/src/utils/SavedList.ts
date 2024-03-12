@@ -7,7 +7,8 @@ export class SavedList implements UserOwned, UniquelyIdentified {
     private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
     private static readonly RESULTS_ROUTE = "/results"
 
-    readonly id = crypto.randomUUID()
+    // readonly id = crypto.randomUUID()
+    readonly id = "1248"
 
     readonly owner : string
     readonly shared : string[]
