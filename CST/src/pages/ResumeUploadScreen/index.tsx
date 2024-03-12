@@ -182,46 +182,47 @@ const ResumeUploadScreen = () => {
     const ConfirmFilesPanel = () => {
         return (
             <div className="bg-white dark:bg-grayDark
-                                flex flex-col self-center h-[80%] w-[80%]">
+                                flex flex-col self-center text-3xl">
                 {!loadingState ? 
                     (
-                    <><div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
-                        {`Are you sure you want to use this batch of resumes?`} <br></br>
-                        {`Batch Name: ${fileContext.currentBatchName}`}
-                    </div><div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
-                            {fileContext.uploadedFiles.map((file) => (
-                                <div key={file.name} className="mx-2">
-                                    {file.name}
-                                </div>
-                            ))}
-                        </div><div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
-                            <Button
-                                className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                onClick={async (event) => {
-                                    event.preventDefault();
+                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
+                        {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
+                    </div>
+                    <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
+                        {fileContext.uploadedFiles.map((file) => (
+                            <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
+                                {file.name}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={async (event) => {
+                                event.preventDefault();
 
-                                    setLoadingState(true);
+                                setLoadingState(true);
 
-                                    await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
+                                await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
 
-                                    setShowConfirmFilesModal(false);
+                                setShowConfirmFilesModal(false);
 
-                                    navigate("/filter");
-                                } }
-                            >
-                                Yes
-                            </Button>
-                            <Button
-                                className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                onClick={() => {
-                                    setShowConfirmFilesModal(false);
-                                } }
-                            >
-                                No
-                            </Button>
-                        </div></>)
+                                navigate("/filter");
+                            } }
+                        >
+                            Yes
+                        </Button>
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={() => {
+                                setShowConfirmFilesModal(false);
+                            } }
+                        >
+                            No
+                        </Button>
+                    </div></>)
                 :
-                    <div className="flex justify-center text-8xl text-white">
+                    <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
                         Loading...
                     </div>
                 }
