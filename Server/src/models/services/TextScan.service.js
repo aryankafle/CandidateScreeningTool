@@ -79,21 +79,22 @@ export const convertFilestoText = async (fileArray) => {
 async function changePdfToText(pdfFile) {
     
     const pngPage = await pdfToPng(pdfFile.buffer, {
-        pagesToProcess: [1],
         viewportScale: 2.0,
     });
+    console.log(pngPage)
 
-
-
-    const worker = await createWorker('eng');
-    const ret = await worker.recognize(pngPage[0].content)
-
-    await worker.terminate();
+    let allFileString = ""
+    for (let i = 0; i < pngPage.length; i++){
+        const worker = await createWorker('eng');
+        const ret = await worker.recognize(pngPage[i].content)
+        await worker.terminate();
+        allFileString = allFileString.concat(ret.data.text)
+    }
     
 
-    
+    console.log(allFileString + " all file string silly")
     const fileText = {
-        text: ret.data.text,
+        text: allFileString,
         fileName: pdfFile.originalname
     }
     
