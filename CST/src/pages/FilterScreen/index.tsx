@@ -88,6 +88,8 @@ const FilterScreen = () => {
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
+    setLoadingState(false)
+
 
 
 
