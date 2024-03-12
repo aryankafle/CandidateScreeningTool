@@ -304,7 +304,7 @@ const ResumeUploadScreen = () => {
                 <div className="flex justify-center">
                     <Button 
                         className=" dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-blueMid
+                                    border-black text-black hover:bg-grayMid/30
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                         onClick={handleUploadClick}
                     >
@@ -373,9 +373,9 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button
-                    className=" dark:border-white dark:text-white text-lg
-                                border-black text-black hover:bg-blueMid
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
+                    className=" dark:border-white dark:text-white dark:hover:bg-grayMid/30
+                                border-black text-black hover:bg-grayDark/30
+                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
