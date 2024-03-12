@@ -35,6 +35,8 @@ const ResumeUploadScreen = () => {
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
+    const [batchNameEntered, setBatchNameEntered] = useState(false)
+
     const {
 
         selectableItems,
@@ -86,6 +88,16 @@ const ResumeUploadScreen = () => {
     useEffect(() => {
         setLoadingState(loadingState)
     }, [loadingState])
+
+
+
+
+
+    useEffect(() => {
+        if (fileContext.currentBatchName !== "") {
+            setBatchNameEntered(true)
+        }
+    }, [fileContext.currentBatchName])
 
 
 
@@ -255,7 +267,7 @@ const ResumeUploadScreen = () => {
 
 
     return (
-        <div className="dark:bg-blueDark bg-white justify-center
+        <div className="dark:bg-grayDark bg-white justify-center
                         flex flex-col flex-grow">
             {
                 showFileModal && <Modal 
@@ -269,46 +281,52 @@ const ResumeUploadScreen = () => {
                     />
                 </Modal>
             }
-            <div className="dark:border-white dark:text-white
-                            border-black text-black hover:bg-blueMid
-                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <div >
-                    Upload a batch of resumes.
-                </div>
-                <Input 
-                    title={"Batch Name:"}
-                    placeholder={"Batch A-1"}
-                    value={batchName}
-                    onChange={(event) => { setBatchName(event.target.value)}}
-                    onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
-                />
-            </div>
-            <div className="flex justify-center">
-                <Button 
-                    className=" dark:border-white dark:text-white
-                                border-black text-black hover:bg-blueMid
-                                border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                    onClick={handleUploadClick}
-                >
-                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                    <form 
-                        method='POST'
-                        encType='multipart/form-data'
-                        action='upload'
-                    >
-                        <input
-                            accept=".doc,.docx,.pdf,.png,.jpg"
-                            type="file"
-                            name="files"
-                            multiple
-                            hidden
-                            ref={hiddenFileInput}
-                            onChange={handleFileUpload}
+            {!batchNameEntered ?
+                (
+                    <div className="dark:border-white dark:text-white
+                                    border-black text-black hover:bg-blueMid
+                                    border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                    <div >
+                        Upload a batch of resumes.
+                    </div>
+                        <Input 
+                            title={"Batch Name:"}
+                            placeholder={"Batch A-1"}
+                            value={batchName}
+                            onChange={(event) => { setBatchName(event.target.value)}}
+                            onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
                         />
-                    </form>
-                </Button>
-            </div>
+                    </div>
+                )
+                :
+                (            
+                <div className="flex justify-center">
+                    <Button 
+                        className=" dark:border-white dark:text-white
+                                    border-black text-black hover:bg-blueMid
+                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
+                        onClick={handleUploadClick}
+                    >
+                        <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
+                        { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                        <form 
+                            method='POST'
+                            encType='multipart/form-data'
+                            action='upload'
+                        >
+                            <input
+                                accept=".doc,.docx,.pdf,.png,.jpg"
+                                type="file"
+                                name="files"
+                                multiple
+                                hidden
+                                ref={hiddenFileInput}
+                                onChange={handleFileUpload}
+                            />
+                        </form>
+                    </Button>
+                </div>)
+            }
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
                 <ol className=" border-black self-center flex-grow
                                 dark:border-white
