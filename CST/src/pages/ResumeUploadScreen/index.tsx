@@ -181,47 +181,48 @@ const ResumeUploadScreen = () => {
 
     const ConfirmFilesPanel = () => {
         return (
-            <div className="bg-white dark:bg-blueDark
-                                flex flex-col self-center h-[80%] w-[80%]">
+            <div className="bg-white dark:bg-grayDark
+                                flex flex-col self-center text-3xl">
                 {!loadingState ? 
                     (
-                    <><div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
-                        {`Are you sure you want to use this batch of resumes?`} <br></br>
-                        {`Batch Name: ${fileContext.currentBatchName}`}
-                    </div><div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
-                            {fileContext.uploadedFiles.map((file) => (
-                                <div key={file.name} className="mx-2">
-                                    {file.name}
-                                </div>
-                            ))}
-                        </div><div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
-                            <Button
-                                className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                onClick={async (event) => {
-                                    event.preventDefault();
+                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
+                        {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
+                    </div>
+                    <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
+                        {fileContext.uploadedFiles.map((file) => (
+                            <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
+                                {file.name}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={async (event) => {
+                                event.preventDefault();
 
-                                    setLoadingState(true);
+                                setLoadingState(true);
 
-                                    await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
+                                await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
 
-                                    setShowConfirmFilesModal(false);
+                                setShowConfirmFilesModal(false);
 
-                                    navigate("/filter");
-                                } }
-                            >
-                                Yes
-                            </Button>
-                            <Button
-                                className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                                onClick={() => {
-                                    setShowConfirmFilesModal(false);
-                                } }
-                            >
-                                No
-                            </Button>
-                        </div></>)
+                                navigate("/filter");
+                            } }
+                        >
+                            Yes
+                        </Button>
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={() => {
+                                setShowConfirmFilesModal(false);
+                            } }
+                        >
+                            No
+                        </Button>
+                    </div></>)
                 :
-                    <div className="flex justify-center text-8xl text-white">
+                    <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
                         Loading...
                     </div>
                 }
@@ -233,18 +234,18 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="border-black text-black hover:bg-blueMid
-                            dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem]">
+            <div className="text-black hover:bg-grayMid/30
+                            dark:text-white flex flex-row 
+                            px-[3rem] py-[3rem] text-xl">
                 <div 
                     className={
                         selectableItems[props.index].isSelected ?
-                            `text-red border-red
-                            dark:text-red
+                            `text-black border-black
+                            dark:text-white underline font-bold
                             flex-grow select-none cursor-pointer`
                         :
                             `text-black border-black
-                            dark:text-white
+                            dark:text-white no-underline font-normal
                             flex-grow select-none cursor-pointer`
                     }
                     onClick={(event) => {
@@ -283,7 +284,7 @@ const ResumeUploadScreen = () => {
             }
             {!batchNameEntered ?
                 (
-                    <div className="dark:border-white dark:text-white
+                    <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-blueMid
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                     <div >
@@ -302,7 +303,7 @@ const ResumeUploadScreen = () => {
                 (            
                 <div className="flex justify-center">
                     <Button 
-                        className=" dark:border-white dark:text-white
+                        className=" dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-blueMid
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                         onClick={handleUploadClick}
@@ -328,9 +329,7 @@ const ResumeUploadScreen = () => {
                 </div>)
             }
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
-                <ol className=" border-black self-center flex-grow
-                                dark:border-white
-                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
+                <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                     {selectableItems.map(
                         (selectable, index : number) => (
                             <FileCard
@@ -342,7 +341,8 @@ const ResumeUploadScreen = () => {
                 <div className="h-[5rem]
                                 text-black
                                 dark:text-white
-                                self-center">
+                                self-center
+                                text-lg">
                     { anySelected() ?
                         <div className="flex flex-col my-[1rem]">
                             <Button
@@ -373,7 +373,7 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button
-                    className=" dark:border-white dark:text-white
+                    className=" dark:border-white dark:text-white text-lg
                                 border-black text-black hover:bg-blueMid
                                 flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
                     onClick={()=>handleAddFiltersClick()}

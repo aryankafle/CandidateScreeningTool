@@ -35,15 +35,13 @@ const LoginScreen = () => {
 
 
     return (
-        <div className="bg-gradient-to-t from-blueDark to-black justify-center
-                        flex flex-col flex-grow">
-            <div className = "m-auto">       
-                <button className = "m-auto sm:h-[10rem] text-3xl bg-gradient-to-r from-darkerWhite to-white text-transparent bg-clip-text"
-                    onClick = {handleLogin}>
-                         Sign In 
-                </button>
-
-            </div>
+        <div className="text-center text-4xl">
+            <button
+                onClick = {handleLogin} className="text-black border-2 border-spacing-8 
+                                                    hover:animate-text hover:bg-gradient-to-r hover:from-blueDark hover:to-grayLight hover:bg-clip-text hover:text-transparent
+                                                    rounded m-4 p-1 animate-text bg-gradient-to-r from-blueDark to-blueLight bg-clip-text text-transparent">
+                    Sign In       
+            </button>
         </div>
         
     )
