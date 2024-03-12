@@ -30,9 +30,11 @@ const LogoutScreen = () => {
     }, [isLoggedIn, navigate])
 
     return (
-        <div>
+        <div className="text-center text-3xl">
             <button
-                onClick = {handleLogout}>
+                onClick = {handleLogout} className="text-center 
+                hover:animate-text hover:bg-gradient-to-r hover:from-blueDark hover:to-grayLight hover:bg-clip-text hover:text-transparent
+                rounded m-4 p-1 animate-text bg-gradient-to-r from-blueDark to-blueLight bg-clip-text text-transparent">
                     Sign Out
             </button>
         </div>
