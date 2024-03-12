@@ -11,7 +11,7 @@ const Layout = () => {
   return (
     <Root>
       <Header /> 
-      <div className="flex-grow bg-grayDark ">
+      <div className="flex flex-grow">
         <Outlet />
       </div>
       <Footer />

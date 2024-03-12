@@ -212,7 +212,7 @@ const ResultsScreen = () => {
 
     return (
         <div className="flex flex-col flex-grow">
-            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blueDark">
+            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-grayDark">
                 {showModal && 
                     <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                         <CandidateDescriptionPopup />
