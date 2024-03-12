@@ -35,9 +35,9 @@ const LoginScreen = () => {
 
 
     return (
-        <div>
+        <div className="text-center">
             <button
-                onClick = {handleLogin}>
+                onClick = {handleLogin} className="text-grayDark hover:text-grayMid">
                     Sign In          
             </button>
         </div>
