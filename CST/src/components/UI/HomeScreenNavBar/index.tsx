@@ -30,17 +30,16 @@ const NavBar = () => {
 
 
 
-
     return (
-        <div className="flex justify-between text-xl bg-gray dark:bg-black">
+        <div className="flex justify-between">
             <Button className={
                     currentTab === "resume-upload" ?
-                        `text-black hover:bg-grayMid
-                        dark:text-white dark:hover:bg-grayMid/30
-                        flex py-[1rem] grow justify-center border-b-4`
+                        `bg-gray text-black hover:bg-red 
+                        dark:bg-gray dark:text-white dark:hover:bg-red
+                        flex py-[1rem] grow justify-center `
                     :
-                        `text-black hover:bg-grayMid
-                        dark:text-white dark:hover:bg-grayMid/30
+                        `bg-white text-black hover:bg-red
+                        dark:bg-black dark:text-white dark:hover:bg-red
                         flex py-[1rem] grow justify-center `
                     }
                     onClick={handleResumeUploadClick}>
@@ -48,12 +47,12 @@ const NavBar = () => {
             </Button>
             <Button className={
                     currentTab === "saved-lists" ?
-                        `text-black hover:bg-red 
-                        dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center border-b-4`
+                        `bg-gray text-black hover:bg-red 
+                        dark:bg-gray dark:text-white dark:hover:bg-red
+                        flex py-[1rem] grow justify-center `
                     :
-                        `text-black hover:bg-red
-                        dark:text-white dark:hover:bg-red
+                        `bg-white text-black hover:bg-red
+                        dark:bg-black dark:text-white dark:hover:bg-red
                         flex py-[1rem] grow justify-center `
                     }
                     onClick={handleSavedListsClick}>
