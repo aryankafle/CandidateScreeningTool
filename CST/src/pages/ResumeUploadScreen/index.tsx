@@ -285,7 +285,7 @@ const ResumeUploadScreen = () => {
             {!batchNameEntered ?
                 (
                     <div className="dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-blueMid
+                                    border-black text-black hover:bg-grayMid/30
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                     <div >
                         Upload a batch of resumes.
@@ -304,7 +304,7 @@ const ResumeUploadScreen = () => {
                 <div className="flex justify-center">
                     <Button 
                         className=" dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-blueMid
+                                    border-black text-black hover:bg-grayMid/30
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                         onClick={handleUploadClick}
                     >
@@ -373,9 +373,9 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button
-                    className=" dark:border-white dark:text-white text-lg
-                                border-black text-black hover:bg-blueMid
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
+                    className=" dark:border-white dark:text-white dark:hover:bg-grayMid/30
+                                border-black text-black hover:bg-grayDark/30
+                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
@@ -391,14 +391,14 @@ const ResumeUploadScreen = () => {
                             <ConfirmFilesPanel />
                         :
                             !fileContext.currentBatchName ? 
-                            <div className="bg-white dark:bg-blue
-                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please enter a batch name!`}
                                 </div>
                                 <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
                                     <Button
-                                        className="flex flex-col justify-center w-[50%] bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                                         onClick={() => {
                                             setShowConfirmFilesModal(false)
                                         }}
@@ -408,8 +408,8 @@ const ResumeUploadScreen = () => {
                                 </div>
                             </div>
                             :
-                            <div className="bg-white dark:bg-blue
-                                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please upload at least 2 resumes!`}
                                 </div>
