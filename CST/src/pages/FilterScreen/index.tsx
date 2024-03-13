@@ -112,6 +112,16 @@ const FilterScreen = () => {
 
 
 
+    useEffect(() => {
+
+        setLoadingState(false)
+
+    }, [])
+
+
+
+
+
     const FilterLayerOptions = () => {
 
         const [keywordBias, setKeywordBias] = useState<string>("")
@@ -283,13 +293,13 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem] bg-grayDark">
             {loadingState && 
                 <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
                     <FilterLoadingPanel/>
                 </Modal>
             }
-            <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
+            <div className="flex flex-col grow min-h-auto min-w-[17rem] w-[40vw] p-[1rem] m-[1rem] bg-grayMidDark rounded-lg">
                 <div className='sticky flex flex-col z-[1] top-0'>
                     <div
                         className="flex flex-shrink bg-[gray] dark:bg-blueDark text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
