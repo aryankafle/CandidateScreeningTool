@@ -100,7 +100,7 @@ const HeaderButtons = () => {
 
 
     return (
-        <div className="overflow-auto p-[0.3rem] flex flex-row justify-between">
+        <div className="overflow-auto p-[0.3rem] flex flex-row justify-between dark:bg-black">
             <div className="flex flex-col justify-center">
                 <BackButton toRoute="/home"></BackButton>
             </div>
