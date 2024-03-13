@@ -1,6 +1,7 @@
 import * as database from '../../database/MongoDB.database.js'; 
 import { client } from '../../inits/MongoDB.init.js'
 import { getResultsFromFilesWithFilters } from './TextToResponse.service.js';
+import crypto from "crypto"
 
 
 

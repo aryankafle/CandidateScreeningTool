@@ -19,6 +19,7 @@ import { FlagContext } from "../../context/FlagContext";
 
 
 const ResultsScreen = () => {
+    
     const navigate = useNavigate()
 
     
@@ -58,6 +59,7 @@ const ResultsScreen = () => {
     }, [savedListContext.savedLists, selectionContext.currentSavedList])
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
+
         if(!isPreviousSavedList || !selectionContext.currentSavedList) {
             return undefined;
         }

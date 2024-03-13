@@ -23,8 +23,7 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
-    const { filtersChanged } = useContext(FlagContext)
-    const { setLoadingState } = useContext(FlagContext)
+    const { setLoadingState, filtersChanged } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -33,16 +32,6 @@ const HeaderButtons = () => {
 
 
     const handleFilterResumes = async () => {
-
-        if (!filtersChanged) {
-                            
-            navigate("/results")
-
-            return;
-
-        }
-
-
         
         let uploadError;
         let filterError;
@@ -56,7 +45,7 @@ const HeaderButtons = () => {
 
         const listResults = await getListResults(fileContext.currentBatchId, userData.id)
 
-        console.log(fetchError)
+
 
         if(!listResults) throw Error("List results are undefined.");
 
@@ -78,10 +67,12 @@ const HeaderButtons = () => {
             alert("error uploading filters")
             return;
         }
+
         if(filterError) {
             alert("error filtering")
             return;
         }
+
         if(fetchError) {
             alert("error fetching results")
             return;
@@ -89,10 +80,10 @@ const HeaderButtons = () => {
 
 
 
-        navigate("/results")
+        setLoadingState(false)
 
     }
-    
+
 
 
 
@@ -106,9 +97,19 @@ const HeaderButtons = () => {
                 <Button
                     className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                 border-black text-black bg-white hover:bg-gray active:bg-blue"
-                    onClick={ () => {
-                        handleFilterResumes()
+                    onClick={ async () => {
+
                         setLoadingState(true)
+
+                        if(!filtersChanged) {
+
+                            navigate("/results")
+                            return;
+
+                        }
+
+                        handleFilterResumes().then(() => navigate("/results"))
+
                     } }
                 >
                     <IonIcon
