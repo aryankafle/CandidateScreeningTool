@@ -17,7 +17,7 @@ type ViewFilePopupProps = {
 
 const ViewFilePopup : React.FC<ViewFilePopupProps> = ({ uploadedFiles, currentlySelectedIndex, onXClicked}) => {
     return (
-        <div className="bg-white dark:bg-blue
+        <div className="bg-white dark:bg-blueDark
                         flex flex-col flex-grow m-[10vw]">
             <Button className="flex self-end py-[0.3rem] px-[0.6rem] " onClick={onXClicked}>
                 <IonIcon color="white" icon={backspaceOutline} size="large"></IonIcon>

@@ -274,52 +274,56 @@ const ResumeUploadScreen = () => {
                     />
                 </Modal>
             }
-            {!batchNameEntered ?
-                (
-                    <div className="dark:border-white dark:text-white text-lg
+            
+                <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-grayMidDark
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                    <div >
-                        Upload a batch of resumes.
-                    </div>
-                        <Input 
-                            title={"Batch Name:"}
-                            placeholder={"Batch A-1"}
-                            value={batchName}
-                            onChange={(event) => { setBatchName(event.target.value)}}
-                            onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
-                        />
-                    </div>
-                )
-                :
-                (            
-                <div className="flex justify-center">
-                    <Button 
-                        className=" dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-grayMidDark
-                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                        onClick={handleUploadClick}
-                    >
-                        <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                        { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                        <form 
-                            method='POST'
-                            encType='multipart/form-data'
-                            action='upload'
+                <div >
+                    Upload a batch of resumes.
+                </div>
+                    <Input 
+                        title={"Batch Name:"}
+                        placeholder={"Batch A-1"}
+                        value={batchName}
+                        onChange={(event) => { setBatchName(event.target.value)}}
+                        onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
+                    />
+                </div>
+                
+                
+                {batchNameEntered ?
+                    (            
+                        <div className="flex justify-center">
+                        <Button 
+                            className=" dark:border-white dark:text-white text-lg
+                                        border-black text-black hover:bg-grayMidDark
+                                        border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
+                            onClick={handleUploadClick}
                         >
-                            <input
-                                accept=".doc,.docx,.pdf,.png,.jpg"
-                                type="file"
-                                name="files"
-                                multiple
-                                hidden
-                                ref={hiddenFileInput}
-                                onChange={handleFileUpload}
-                            />
-                        </form>
-                    </Button>
-                </div>)
-            }
+                            <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
+                            { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                            <form 
+                                method='POST'
+                                encType='multipart/form-data'
+                                action='upload'
+                            >
+                                <input
+                                   accept=".doc,.docx,.pdf,.png,.jpg"
+                                    type="file"
+                                    name="files"
+                                    multiple
+                                    hidden
+                                    ref={hiddenFileInput}
+                                    onChange={handleFileUpload}
+                                />
+                            </form>
+                        </Button>
+                        </div>)
+                :
+                <></>
+                }
+
+
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
                 <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                     {selectableItems.map(
