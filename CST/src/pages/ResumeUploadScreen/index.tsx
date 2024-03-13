@@ -177,7 +177,7 @@ const ResumeUploadScreen = () => {
                                 flex flex-col self-center text-3xl">
                 {!loadingState ? 
                     (
-                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
+                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
                         {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
                     </div>
                     <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
@@ -274,25 +274,40 @@ const ResumeUploadScreen = () => {
                     />
                 </Modal>
             }
-            
-                <div className="dark:border-white dark:text-white text-lg
+               
+                 
+                {!batchNameEntered ?
+                    (   
+                    <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-grayMidDark
                                     border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <div >
-                    Upload a batch of resumes.
-                </div>
-                    <Input 
-                        title={"Batch Name:"}
-                        placeholder={"Batch A-1"}
-                        value={batchName}
-                        onChange={(event) => { setBatchName(event.target.value)}}
-                        onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
-                    />
-                </div>
-                
-                
-                {batchNameEntered ?
-                    (            
+                        <div >
+                        Upload a batch of resumes.
+                        </div>
+                            <Input 
+                            title={"Batch Name:"}
+                            placeholder={"Batch A-1"}
+                            value={batchName}
+                            onChange={(event) => { setBatchName(event.target.value)}}
+                            onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
+                        />
+                    </div>)
+                :     
+                    <>
+                    <div className="dark:border-white dark:text-white text-lg
+                                     border-black text-black hover:bg-grayMidDark
+                                    border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                        <div >
+                            Change batch name:
+                        </div>
+                            <Input 
+                            title={"Batch Name:"}
+                            placeholder={"Batch A-1"}
+                            value={batchName}
+                            onChange={(event) => { setBatchName(event.target.value)}}
+                            onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
+                        />
+                    </div>                 
                         <div className="flex justify-center">
                         <Button 
                             className=" dark:border-white dark:text-white text-lg
@@ -318,9 +333,8 @@ const ResumeUploadScreen = () => {
                                 />
                             </form>
                         </Button>
-                        </div>)
-                :
-                <></>
+                        </div>
+                    </>
                 }
 
 
