@@ -158,3 +158,21 @@ export const postUserCurrentSavedList = async (userID : string, currentSavedList
     })
 
 }
+
+export const addSavedList = async (userID : string, savedList : SavedList) => {
+
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/add-saved-list`, {
+        userID,
+        savedList: savedList.toJSON()
+    })
+
+}
+
+export const removeSavedList = async (userID : string, listID : string) => {
+
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/add-saved-list`, {
+        userID,
+        listID
+    })
+
+}

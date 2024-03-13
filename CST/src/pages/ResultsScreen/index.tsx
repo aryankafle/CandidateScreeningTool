@@ -14,6 +14,7 @@ import { FileContext } from "../../context/FileContext";
 import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
+import { addSavedList } from "../../requests/ResumeRequests";
 
 
 const ResultsScreen = () => {
@@ -96,6 +97,7 @@ const ResultsScreen = () => {
 
         const newList = new SavedList(title, description, resumes, undefined, userData.id)
         savedListContext.setSavedLists((lists) => [...lists, newList])
+        addSavedList(userData.id, newList)
 
         
 

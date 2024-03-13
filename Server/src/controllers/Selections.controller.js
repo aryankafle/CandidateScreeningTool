@@ -1,4 +1,4 @@
-import { getUserSavedLists, getUserSelection, setUserSelection } from "../models/services/MongoDB.service.js"
+import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList } from "../models/services/MongoDB.service.js"
 
 
 
@@ -118,4 +118,86 @@ export const setUserSavedSelection = async (req, res) => {
 
     console.log("Controller function finished.\n\n\n")
     
+}
+
+
+
+
+
+export const addNewSavedList = async (req, res) => {
+
+    console.log(`\n\n\nUsing Controller: async setUserSavedSelection`)
+
+
+
+
+
+    try {
+
+        await addSavedList(req.body?.userID, req.body?.savedList)
+
+        res.status(200).json({
+            error: false,
+            message: "Successfully added saved list."
+        })
+
+    }
+    catch (error) {
+
+        console.log("Error adding saved list: ", error)
+
+        res.status(500).json({
+            error: error,
+            message: "Error adding saved list."
+        })
+
+    }
+    
+
+    
+
+
+    console.log("Controller function finished.\n\n\n")
+
+}
+
+
+
+
+
+export const removeOldSavedList = async (req, res) => {
+
+    console.log(`\n\n\nUsing Controller: async setUserSavedSelection`)
+
+
+
+
+
+    try {
+
+        await removeSavedList(req.body?.listID)
+
+        res.status(200).json({
+            error: false,
+            message: "Successfully removed saved list."
+        })
+
+    }
+    catch (error) {
+
+        console.log("Error removing saved list: ", error)
+
+        res.status(500).json({
+            error: error,
+            message: "Error removing saved list."
+        })
+
+    }
+    
+
+    
+
+
+    console.log("Controller function finished.\n\n\n")
+
 }
