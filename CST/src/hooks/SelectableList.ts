@@ -5,8 +5,7 @@ export const useSelectableList = <ItemType>(list : ItemType[], setList: React.Di
 
     class ItemSelection implements UniquelyIdentified {
 
-        // readonly id = crypto.randomUUID()
-        readonly id = "123"
+        readonly id = crypto.randomUUID()
         
         public readonly item : ItemType
 
