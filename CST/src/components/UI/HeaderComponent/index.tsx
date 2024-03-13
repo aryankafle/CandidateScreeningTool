@@ -19,17 +19,17 @@ const HeaderComponent = () => {
                     Welcome, {userData.displayName}.
                 </span>
                 <div>
-                    <Link to="/auth/signout">
+                    <Link to="/auth/signout" className="hover:text-grayMid">
                         Sign Out
                     </Link>
                 </div>
             </div>
             :
-            <Link to="/auth/signin">
+            <Link to="/auth/signin" className="hover:text-grayMid">
                 Log In
             </Link>
             }
-            <Link to="/home">
+            <Link to="/home" className="hover:text-grayMid">
                 Home
             </Link>
         </header>

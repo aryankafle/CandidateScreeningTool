@@ -22,6 +22,9 @@ type SelectionContextType = {
 
     currentSavedList : SavedList,
     setCurrentSavedList : React.Dispatch<SetStateAction<SavedList>>,
+    
+    previouslySavedFiles : File[],
+    setPreviouslySavedFiles : React.Dispatch<SetStateAction<File[]>>,
 
     location : string,
     setLocation : React.Dispatch<SetStateAction<string>>
@@ -38,6 +41,9 @@ const SelectionContextInitial = {
 
     currentSavedList : {} as SavedList,
     setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList>>,
+
+    previouslySavedFiles : [],
+    setPreviouslySavedFiles : {} as React.Dispatch<SetStateAction<File[]>>,
 
     location : "",
     setLocation : {} as React.Dispatch<SetStateAction<string>>
@@ -74,6 +80,8 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
 
     const [currentSavedList, setCurrentSavedList] = useState<SavedList>({} as SavedList)
 
+    const [previouslySavedFiles, setPreviouslySavedFiles] = useState([] as File[])
+
     useEffect(() => {
 
         if(!userData) return;
@@ -89,6 +97,7 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
                 previouslySelectedFilters, setPreviouslySelectedFilters,
                 previouslySavedList, setPreviouslySavedList,
                 currentSavedList, setCurrentSavedList, 
+                previouslySavedFiles, setPreviouslySavedFiles,
                 location, setLocation 
             }}>
             {props.children}

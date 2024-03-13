@@ -11,6 +11,9 @@ import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 import { FlagContext } from "../../context/FlagContext"
+import { FilterContext } from "../../context/FilterContext";
+import { SelectionContext } from "../../context/SelectionContext";
+import { SavedList } from "../../utils/SavedList";
 
 
 
@@ -21,6 +24,9 @@ const ResumeUploadScreen = () => {
     const navigate = useNavigate()
     
     const fileContext = useContext(FileContext)
+    const filterContext = useContext(FilterContext)
+    const selectionContext = useContext(SelectionContext)
+    const flagContext = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -63,6 +69,23 @@ const ResumeUploadScreen = () => {
         handleSelectionOnClick
 
     } = useSelectableList<File>(fileContext.uploadedFiles, fileContext.setUploadedFiles)
+
+
+
+
+
+    useEffect(() => {
+
+        fileContext.setCurrentBatchId(crypto.randomUUID())
+        fileContext.setCurrentBatchName("")
+        fileContext.setUploadedFiles([])
+
+        filterContext.setSelectedFilters([])
+        selectionContext.setCurrentSavedList({} as SavedList)
+        flagContext.setLoadingState(false)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
 
@@ -191,6 +214,7 @@ const ResumeUploadScreen = () => {
                         <Button
                             className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                             onClick={async (event) => {
+
                                 event.preventDefault();
 
                                 setLoadingState(true);
@@ -199,7 +223,10 @@ const ResumeUploadScreen = () => {
 
                                 setShowConfirmFilesModal(false);
 
+                                selectionContext.setPreviouslySavedFiles([...fileContext.uploadedFiles])
+
                                 navigate("/filter");
+
                             } }
                         >
                             Yes
@@ -276,7 +303,7 @@ const ResumeUploadScreen = () => {
             }
                
                  
-                {!batchNameEntered ?
+                {!fileContext.currentBatchName ?
                     (   
                     <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-grayMidDark
