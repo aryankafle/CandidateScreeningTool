@@ -86,14 +86,6 @@ const ResumeUploadScreen = () => {
 
 
     useEffect(() => {
-        setLoadingState(loadingState)
-    }, [loadingState])
-
-
-
-
-
-    useEffect(() => {
         if (fileContext.currentBatchName !== "") {
             setBatchNameEntered(true)
         }

@@ -2,7 +2,7 @@ import { useState, useContext, useMemo, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
 import { FilterContext } from "../../context/FilterContext";
 import { Filter } from '../../utils/Filter';
-import { closeCircleOutline, flag } from "ionicons/icons";
+import { closeCircleOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
@@ -84,11 +84,7 @@ const FilterScreen = () => {
 
     const { setFiltersChanged } = useContext(FlagContext)
 
-    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
-
     const { loadingState, setLoadingState } = useContext(FlagContext)
-
-    setLoadingState(false)
 
 
 
@@ -113,13 +109,6 @@ const FilterScreen = () => {
     }, [filterList, previouslySelectedFilters, setFiltersChanged])
 
 
-
-
-
-
-    useEffect(() => {
-        setLoadingState(filtersApplied)
-    }, [filtersApplied])
 
 
 
@@ -295,7 +284,7 @@ const FilterScreen = () => {
 
     return (
         <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
-            {filtersApplied && 
+            {loadingState && 
                 <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
                     <FilterLoadingPanel/>
                 </Modal>

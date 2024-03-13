@@ -30,6 +30,7 @@ import { useCallback, useContext, useEffect } from "react";
 import { useLocation, useNavigate, Location } from "react-router-dom"
 import axios from "axios";
 import { SavedList } from "../utils/SavedList";
+import { FlagContext } from "../context/FlagContext";
 
 
 
@@ -40,10 +41,15 @@ function Router() {
     const { userData, setUserData, isLoggedIn } = useContext(UserContext)
     const { setSavedLists } = useContext(SavedListsContext)
     const { setLocation } = useContext(SelectionContext)
+    const { setLoadingState } = useContext(FlagContext)
     
     const navigate = useNavigate()
 
     const route = useLocation()
+
+    useEffect(() => {
+        setLoadingState(false)
+    }, [route.key, setLoadingState])
 
     useEffect(() => {
 

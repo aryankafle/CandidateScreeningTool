@@ -46,9 +46,9 @@ const ResultsScreen = () => {
     const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
     
 
-
-
     
+
+
     const isPreviousSavedList = useMemo(() => {
         if(!selectionContext.currentSavedList) {
             return false;

@@ -24,7 +24,7 @@ const HeaderButtons = () => {
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
     const { filtersChanged } = useContext(FlagContext)
-    const { filtersApplied, setFiltersApplied } = useContext(FlagContext)
+    const { setLoadingState } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -48,8 +48,6 @@ const HeaderButtons = () => {
         let filterError;
         let fetchError;        
 
-
-        setFiltersApplied(true)
 
 
         await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, userData.id)
@@ -108,7 +106,10 @@ const HeaderButtons = () => {
                 <Button
                     className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                 border-black text-black bg-white hover:bg-gray active:bg-blue"
-                    onClick={ handleFilterResumes }
+                    onClick={ () => {
+                        handleFilterResumes()
+                        setLoadingState(true)
+                    } }
                 >
                     <IonIcon
                         icon={colorWandOutline}
