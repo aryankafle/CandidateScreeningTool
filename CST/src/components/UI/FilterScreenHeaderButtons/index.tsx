@@ -1,6 +1,6 @@
 import BackButton from "../../buttons/BackButton"
 import { IonIcon } from "@ionic/react"
-import { colorWandOutline, flag } from "ionicons/icons"
+import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
 import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
@@ -56,8 +56,6 @@ const HeaderButtons = () => {
 
 
         selectionContext.setCurrentSavedList(newSavedList)
-
-        selectionContext.setPreviouslySavedList(newSavedList)
 
         selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
 

@@ -40,8 +40,6 @@ export const getResumeList = async (req, res) => {
     try {
 
         const results = await getSavedList(req.query?.listID)
-
-        console.log(results)
         
         res.status(200).send(results);
     

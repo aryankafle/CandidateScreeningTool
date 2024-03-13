@@ -1,5 +1,5 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline, flag } from 'ionicons/icons';
+import { cloudUploadOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from '../../context/FileContext';
 import { useNavigate } from "react-router-dom";
@@ -40,8 +40,6 @@ const ResumeUploadScreen = () => {
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
-
-    const [batchNameEntered, setBatchNameEntered] = useState(false)
 
     const {
 
@@ -103,16 +101,6 @@ const ResumeUploadScreen = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fileContext.uploadedFiles])
-
-
-
-
-
-    useEffect(() => {
-        if (fileContext.currentBatchName !== "") {
-            setBatchNameEntered(true)
-        }
-    }, [fileContext.currentBatchName])
 
 
 

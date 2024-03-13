@@ -27,12 +27,9 @@ import { UserContext } from "../context/UserContext";
 import { SavedListsContext } from "../context/SavedListsContext";
 import { SelectionContext } from "../context/SelectionContext";
 import { useCallback, useContext, useEffect } from "react";
-import { useLocation, useNavigate, Location } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import axios from "axios";
-import { SavedList } from "../utils/SavedList";
 import { FlagContext } from "../context/FlagContext";
-import { FileContext } from "../context/FileContext";
-import { FilterContext } from "../context/FilterContext";
 
 
 
@@ -47,12 +44,7 @@ function Router() {
 
 
 
-    const fileContext = useContext(FileContext)
-    const filterContext = useContext(FilterContext)
-    const selectionContext = useContext(SelectionContext)
-    const flagContext = useContext(FlagContext)
-    
-    const navigate = useNavigate()
+
 
     const route = useLocation()
 
@@ -71,10 +63,34 @@ function Router() {
             return route.pathname;
 
         })
-        
+
     }, [route.pathname, setLocation])
 
 
+
+
+
+    // useEffect(() => {
+        
+    //     if(!userData) return;
+
+    //     getUserSelection(userData.id)
+    //     .then((response) => {
+
+    //         const savedLocation : string = response.location
+
+    //         if(!savedLocation) navigate("/")
+
+    //         if(savedLocation) navigate(savedLocation)
+
+    //     })
+    //     .catch((error) => {
+
+    //         console.log("Error fetching user selection")
+
+    //     })
+
+    // }, [ setLocation, userData ])
 
 
 
@@ -93,83 +109,54 @@ function Router() {
         
         return data.user
     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
 
-    const getSavedListData = useCallback(async () => {
-
-        return await getAllUserSavedLists(userData.id)
-
-    }, [userData])
 
 
-
-    useEffect(() => {
-        
-        if(!userData) return;
-
-        getUserSelection(userData.id)
-        .then((response) => {
-
-            const savedLocation : string = response.location
-
-            if(!savedLocation) navigate("/")
-
-            if(savedLocation) navigate(savedLocation)
-
-        })
-        .catch((error) => {
-
-            console.log("Error fetching user selection")
-
-        })
-
-    }, [ setLocation, userData ])
-
-
-    
     useEffect(() => {
 
         getUser()
-        .then((data) => setUserData(data))
+        .then(async (data) => {
+
+            setUserData(data)
+
+
+
+            const savedLists = await getAllUserSavedLists(data.id)
+
+            setSavedLists(savedLists)
+
+        })
         .catch((error) => {
             
-            if(error.response.data.message === "Unauthorized") {
+            // if(error.response.data.message === "Unauthorized") {
 
-                console.log("Did not find existing user session.")
-                return;
+            //     console.log("Did not find existing user session.")
+            //     return;
 
-            }
+            // }
 
-            console.log("Error getting user: ", error)
-
-        })
-
-    }, [getUser, setUserData])
-
-
-
-    useEffect(() => {
-        
-        if(!userData) return;
-
-        getSavedListData()
-        .then((data: SavedList[]) => setSavedLists(data))
-        .catch((error) => {
-
-            console.log("Error getting user's saved lists: ", error)
+            console.log("Error getting user data: ", error)
 
         })
 
-    }, [getSavedListData, setSavedLists, userData])
+
+
+    }, [getUser, setSavedLists, setUserData])
 
 
 
-    useEffect(() => {
-        console.log("Is Logged In: ", isLoggedIn)
-    }, [isLoggedIn])
+
     
+    useEffect(() => {
+
+        console.log("Is Logged In: ", isLoggedIn)
+
+    }, [isLoggedIn])
+
 
 
 
@@ -217,7 +204,7 @@ function Router() {
             <Route element={<HomeLayout />}>
                 <Route 
                     path="/home/*"
-                    element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/>}
+                    element={ isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/> }
                 />
             </Route>
         </Routes>

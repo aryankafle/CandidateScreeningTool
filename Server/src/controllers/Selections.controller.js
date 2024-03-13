@@ -1,4 +1,4 @@
-import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList } from "../models/services/MongoDB.service.js"
+import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList, removeSavedList } from "../models/services/MongoDB.service.js"
 
 
 
@@ -126,7 +126,7 @@ export const setUserSavedSelection = async (req, res) => {
 
 export const addNewSavedList = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async setUserSavedSelection`)
+    console.log(`\n\n\nUsing Controller: async addNewSavedList`)
 
 
 
@@ -167,7 +167,7 @@ export const addNewSavedList = async (req, res) => {
 
 export const removeOldSavedList = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async setUserSavedSelection`)
+    console.log(`\n\n\nUsing Controller: async removeOldSavedList`)
 
 
 

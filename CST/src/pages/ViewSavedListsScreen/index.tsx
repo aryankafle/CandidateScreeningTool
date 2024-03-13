@@ -9,7 +9,7 @@ import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
-import { removeSavedList } from "../../requests/ResumeRequests";
+import { getAllUserSavedLists, removeSavedList } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 
 
@@ -54,6 +54,26 @@ const ViewSavedListsScreen = () => {
 
 
 
+    useEffect(() => {
+
+        getAllUserSavedLists(userData.id)
+        .then((data) => {
+
+            setSavedLists(data)
+
+        })
+        .catch((error) => {
+
+            console.log("Saved List Error: ", error)
+
+        })
+
+    }, [setSavedLists, userData.id])
+
+
+
+
+
     const handleRemoveSelection = useCallback(async () => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
 
@@ -66,8 +86,14 @@ const ViewSavedListsScreen = () => {
             }
 
             removeCurrentSelectionFromList()
+
+            const savedLists = await getAllUserSavedLists(userData.id)
+
+            setSavedLists(savedLists)
+
         }
-    }, [getAllSelectedItems, removeCurrentSelectionFromList, userData.id])
+        
+    }, [getAllSelectedItems, removeCurrentSelectionFromList, setSavedLists, userData.id])
 
 
 

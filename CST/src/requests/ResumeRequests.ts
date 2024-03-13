@@ -1,5 +1,4 @@
-import { Result, Applicant } from '../utils/Result';
-import { Location } from "react-router-dom"
+import { Result } from '../utils/Result';
 import axios from "axios";
 import { SavedList } from '../utils/SavedList';
 import { Filter } from '../utils/Filter';
@@ -72,16 +71,7 @@ export const getListResults = async (listID : string, userID : string) => {
             throw new Error(resumeResult?.error)
         }
 
-
-
-        const applicant = {
-            
-            name: resumeResult?.name !== "nouser" ? resumeResult?.name : "NO NAME FOUND",
-            
-        } as Applicant
-
-        const result = new Result(applicant, resumeResult?.file, resumeResult?.scores, resumeResult?.summary)
-        resultsArray.push(result)
+        resultsArray.push(Result.fromJSON(resumeResult))
         
     }
 
@@ -112,19 +102,9 @@ export const getAllUserSavedLists = async (userID : string) => {
             throw new Error(savedList?.error)
         }
 
-        console.log(resultsArray)
-
-        resultsArray.push(new SavedList(
-            savedList?.name || "",
-            savedList?.description || "",
-            savedList?.results || [],
-            savedList?.color || undefined,
-            savedList?.owner || ""
-        ))
+        resultsArray.push(SavedList.fromJSON(savedList))
         
     }
-
-
 
     return resultsArray
 }
@@ -163,14 +143,16 @@ export const addSavedList = async (userID : string, savedList : SavedList) => {
 
     await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/add-saved-list`, {
         userID,
-        savedList: savedList.toJSON()
+        savedList: savedList.toJSON(),
     })
 
 }
 
 export const removeSavedList = async (userID : string, listID : string) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/add-saved-list`, {
+    console.log()
+
+    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/remove-saved-list`, {
         userID,
         listID
     })

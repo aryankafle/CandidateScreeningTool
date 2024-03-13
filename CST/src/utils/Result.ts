@@ -38,18 +38,21 @@ export class Result {
 
     readonly summaries : {section : string, summary : string}[]
 
+    readonly summary : string
 
 
 
 
 
 
-    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summary : {section : string, summary : string}[]) {
+
+    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string) {
 
         this.applicant = applicant
         this.resume = resume
         this.scores = scores
-        this.summaries = summary
+        this.summaries = summaries
+        this.summary = summary
 
     }
 
@@ -106,6 +109,22 @@ export class Result {
            resume: this.resume,
            summaries: this.summaries
         }
+    }
+    
+
+
+    public static fromJSON(jsonresult : any) {
+
+        return new Result(
+            {
+                name: jsonresult.applicant.name || "name error"
+            } as Applicant,
+            {} as File, // need to replace with file lookup eventually
+            jsonresult.scores || {score: 0, filter: {} as Filter},
+            jsonresult.summaries || {summary: "summaries error, no summary", section: "summaries error, no section"},
+            jsonresult.summary || "summary error"
+        )
+
     }
 
 }

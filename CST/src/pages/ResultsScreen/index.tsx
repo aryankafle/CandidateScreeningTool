@@ -15,11 +15,10 @@ import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
-import { FlagContext } from "../../context/FlagContext";
 
 
 const ResultsScreen = () => {
-    
+
     const navigate = useNavigate()
 
     
@@ -32,11 +31,9 @@ const ResultsScreen = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
-    const { loadingState, setLoadingState } = useContext(FlagContext)
-
     const { userData } = useContext(UserContext)
 
-    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}]))
+    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -50,44 +47,49 @@ const ResultsScreen = () => {
     
 
 
-    const isPreviousSavedList = useMemo(() => {
+    const isOldList = useMemo(() => {
+        
         if(!selectionContext.currentSavedList) {
             return false;
         }
         
         return savedListContext.savedLists.includes(selectionContext.currentSavedList)
+        
     }, [savedListContext.savedLists, selectionContext.currentSavedList])
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
 
-        if(!isPreviousSavedList || !selectionContext.currentSavedList) {
-            return undefined;
-        }
+        if(!isOldList) return true;
 
-        const thisList = selectionContext.currentSavedList
+        const oldList = selectionContext.currentSavedList
 
-        if(thisList.name !== title) return true
-        if(thisList.description !== description) return true
-        // if(thisList.color !== color) return true
+        if(oldList.name !== title) return true
 
-        return false;
+        // if(oldList.color !== color) return 
         
-    }, [description, isPreviousSavedList, selectionContext.currentSavedList, title])
+        if(oldList.description !== description) return true
+
+        if(oldList.results.some((result) => !resumes.includes(result))) return true
+
+        return false
+        
+    }, [description, isOldList, resumes, selectionContext.currentSavedList, title])
+
+
 
 
 
     useEffect(() => {
+
         setTitle(selectionContext.currentSavedList?.name || "")
         setDescription(selectionContext.currentSavedList?.description || "")
         setResumes(selectionContext.currentSavedList?.results || [])
-    }, [selectionContext.currentSavedList])
 
-    useEffect(() => {
         if(!selectionContext.currentSavedList) {
             throw new Error("No currently selected saved list.")
         }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+
+    }, [selectionContext.currentSavedList])
 
 
 
@@ -96,28 +98,42 @@ const ResultsScreen = () => {
     const handleSaveList = () => {
         
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
-            if(savedListContext.savedLists[i].name === title) {
+            if(savedListContext.savedLists[i].name.trim() === title.trim() && title !== "") {
                 setListWithSameName(savedListContext.savedLists[i])
                 return;
             }
         }
 
-        const newList = new SavedList(title, description, resumes, undefined, userData.id)
-        savedListContext.setSavedLists((lists) => [...lists, newList])
-        addSavedList(userData.id, newList)
 
+
+        const newList = selectionContext.currentSavedList
         
+        newList.name = title
+        newList.description = description
+        // newList.color = color
 
-        fileContext.setUploadedFiles([])
-        fileContext.setCurrentBatchName("")
-        fileContext.setCurrentFormData({} as FormData)
+        newList.id = fileContext.currentBatchId
+        
+        savedListContext.setSavedLists((lists) => [...lists, newList])
 
-        filterContext.setSelectedFilters([])
+        addSavedList(userData.id, newList).then(() => {
 
-        navigate("/home/saved-lists")
+            fileContext.setUploadedFiles([])
+            fileContext.setCurrentBatchName("")
+            fileContext.setCurrentFormData({} as FormData)
+    
+            filterContext.setSelectedFilters([])
+    
+    
+    
+            navigate("/home/saved-lists")
+
+        })
+
     }
 
     const handleReplaceListWithSameName = () => {
+
         savedListContext.setSavedLists((savedLists) => {
             let listIndex = -1
             if(listWithSameName) listIndex = savedLists.indexOf(listWithSameName)
@@ -172,23 +188,49 @@ const ResultsScreen = () => {
         }
     }
 
-    const CandidateDescriptionPopup = () => {
+    const CandidateDescriptionPopup = (props: {candidate : Result}) => {
+
+        const summaries = useMemo(() => {
+
+            const summariesArr = []
+
+            for(const summary in props.candidate.summaries) {
+                summariesArr.push({section: props.candidate.summaries[summary], text: summary})
+            }
+
+            console.log(summariesArr)
+            return summariesArr
+
+        }, [props.candidate])
+
+        
+
         return (
             <div className="border-gray-500 border-solid rounded-md self-center h-[60%] w-[80%] bg-grayDark dark:bg-grayDark">
                 <div className='text-right text-3xl text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
                 <div className="text-center text-2xl text-white">
-                    {currentCandidate.applicant.name}
+                    {props.candidate.applicant.name}
                 </div>
-                <div className="text-blueMid mx-4">
-                    {currentCandidate.summaries[0].summary}
-                </div>
+                {
+                    summaries.map((summary : any) => (
+                        <>
+                            <div>
+                                {summary.section}
+                            </div>
+                            <div>
+                                {summary.text}
+                            </div>
+                        </>
+                    ))
+                }
                 <div className="m-4 text-blueLight">
-                    {currentCandidate.overallScore}
+                    {props.candidate.overallScore}
                 </div>
             </div>
         )
+
     }
 
     const IndividualCandidateCard = (props: {candidate : Result}) => {
@@ -219,7 +261,7 @@ const ResultsScreen = () => {
             <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-grayDark">
                 {showModal && 
                     <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                        <CandidateDescriptionPopup />
+                        <CandidateDescriptionPopup candidate={currentCandidate} />
                     </Modal>
                 }
                 {listWithSameName &&
@@ -287,7 +329,7 @@ const ResultsScreen = () => {
                                     />
                                 </div>
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
-                                    {!isPreviousSavedList &&
+                                    { ( !isOldList && hasChangedFromPreviousSavedList ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] bg-red dark:bg-yellow p-[0.5rem] rounded-[1rem]"
                                             onClick={() => { handleSaveList() }}
@@ -300,7 +342,7 @@ const ResultsScreen = () => {
                                             <IonIcon icon={saveOutline} className="self-center text-5xl"/>
                                         </Button>
                                     }
-                                    {isPreviousSavedList && (hasChangedFromPreviousSavedList || selectedResumes.length > 0) &&
+                                    { ( (isOldList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
                                             onClick={() => { handleSaveList() }}

@@ -7,7 +7,7 @@ export class SavedList implements UserOwned, UniquelyIdentified {
     private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
     private static readonly RESULTS_ROUTE = "/results"
 
-    readonly id : string = crypto.randomUUID()
+    id : string = crypto.randomUUID()
 
     readonly owner : string
     readonly shared : string[]
@@ -33,7 +33,7 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
     constructor( name : string, description : string, results : Result[], color : string = "#FFFFFFFF", owner : string, sharedTo : string[] = [] ) {
 
-        this.owner = "";
+        this.owner = owner;
         this.shared = [];
 
         this.name = name;
@@ -72,6 +72,22 @@ export class SavedList implements UserOwned, UniquelyIdentified {
             results: [...this.results.map( result => result.toJSON() ) ],
             link: this.listLink,
         }
+    }
+
+
+
+    public static fromJSON(jsonlist : any) {
+        const list = new SavedList(
+            jsonlist.name_of_list,
+            jsonlist.description_of_list,
+            jsonlist.results.map((result : any) => Result.fromJSON(result)),
+            jsonlist.owner_of_list,
+            jsonlist.users_with_access
+        )
+
+        list.id = jsonlist._id
+
+        return list
     }
     
 }

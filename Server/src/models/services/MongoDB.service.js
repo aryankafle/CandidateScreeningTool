@@ -45,12 +45,9 @@ export const uploadNewSavedList = async (original_files, file_textscans, saved_l
     const savedLists = db.collection("saved-lists")
 
 
+    const files_id = crypto.randomUUID()
 
-    const filesID = crypto.randomUUID()
-
-
-
-    await fileBatches.insertOne({ _id: filesID, original_files, file_textscans })
+    await fileBatches.insertOne({ _id: files_id, original_files, file_textscans })
 
     await savedLists.insertOne({ 
         _id: saved_list_id, 
@@ -58,7 +55,7 @@ export const uploadNewSavedList = async (original_files, file_textscans, saved_l
         users_with_access: [], 
         name_of_list,
         description_of_list : "",
-        files_id: filesID,
+        files_id,
         color: "", 
         filters: [],
         results: [],
@@ -187,14 +184,12 @@ export const getUserSavedLists = async (owner) => {
 
     const db = client.db("resumes");
     
-    const savedLists = db.collection("saved_lists");
+    const savedLists = db.collection("saved-lists");
 
 
 
-    const savedListsArray = savedLists.find({ owner }).toArray()
-
-
-
+    const savedListsArray = await savedLists.find({ owner_of_list: { $eq: owner } }).toArray()
+    
 
 
     console.log("----Done getting saved lists.")
@@ -326,7 +321,56 @@ export const setUserSelection = async (userID, selection) => {
 
 
 export const addSavedList = async (userID, savedList) => {
+
+    const db = client.db('resumes');
+
+    const users = db.collection('users');
+    const savedLists = db.collection("saved-lists");
+
+
     
+    if(await savedLists.findOne({ _id: savedList._id })) {
+
+        console.log("thing thing", savedList._id)
+
+        await savedLists.updateOne({ _id: savedList._id }, {$set: {
+            
+            name_of_list: savedList.name,
+            description_of_list: savedList.description, 
+            color: savedList.color,
+            results: savedList.results
+
+        }})
+
+        return;
+
+    }
+
+
+
+    await users.updateOne({ _id: userID }, { $push: { saved_list_ids: savedList._id } })
+
+    const filters = []
+
+    for(const result in savedList.results) {
+        for(const score in result.scores) {
+            filters.push(score.filter)
+        }
+    }
+
+    await savedLists.insertOne({ 
+        _id: savedList._id, 
+        owner_of_list: savedList.owner_of_list,
+        users_with_access: savedList.users_with_access, 
+        name_of_list: savedList.name,
+        description_of_list: savedList.description, 
+        files_id: crypto.randomUUID(),
+        color: savedList.color,
+        filters: filters,
+        results: savedList.results
+    })
+
+
 }
 
 
@@ -334,5 +378,10 @@ export const addSavedList = async (userID, savedList) => {
 
 
 export const removeSavedList = async (saved_list_id) => {
+    
+    const db = client.db('resumes');
 
+    const savedLists = db.collection("saved-lists");
+
+    savedLists.deleteMany({_id: saved_list_id})
 }
