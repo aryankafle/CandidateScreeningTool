@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const handleLogin = () => {
     window.open(
-        `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/google/callback`,
+        `${process.env.REACT_APP_SERVER_NAME}/auth/google/callback`,
         "_self"
     )
 }

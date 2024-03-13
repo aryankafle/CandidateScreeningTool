@@ -13,7 +13,7 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
     fileFormData.set("userID", userID)
     fileFormData.set("batchName", batchName)
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/upload-resumes-to-db`, fileFormData)
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/uploads/upload-resumes-to-db`, fileFormData)
     
 }
 
@@ -23,7 +23,7 @@ export const uploadFilesToDatabase = async (fileFormData : FormData, listID: str
 
 export const uploadFiltersToDatabase = async (filters : Filter[], listID : string, userID : string) => {
     
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/uploads/update-filters`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/uploads/update-filters`, {
         filters: filters.map((filter) => filter.toJSON()),
         listID,
         userID
@@ -37,7 +37,7 @@ export const uploadFiltersToDatabase = async (filters : Filter[], listID : strin
 
 export const filterExistingResumeList = async (listID : string, userID : string) => {    
     
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/apply-filters-to-resumes`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resume-filtering/apply-filters-to-resumes`, {
         listID,
         userID
     })
@@ -50,7 +50,7 @@ export const filterExistingResumeList = async (listID : string, userID : string)
 
 export const getListResults = async (listID : string, userID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/resume-filtering/get-resume-list`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resume-filtering/get-resume-list`, {
         params: {
             listID,
             userID
@@ -82,7 +82,7 @@ export const getListResults = async (listID : string, userID : string) => {
 
 export const getAllUserSavedLists = async (userID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/get-all-user-saved-lists`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/selection/get-all-user-saved-lists`, {
         params:{
             userID
         }
@@ -111,7 +111,7 @@ export const getAllUserSavedLists = async (userID : string) => {
 
 export const getUserSelection = async (userID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/get-user-saved-selection`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/selection/get-user-saved-selection`, {
         params:{
             userID
         }
@@ -123,7 +123,7 @@ export const getUserSelection = async (userID : string) => {
 
 export const postUserLocation = async (userID : string, location : string) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/selection/set-user-saved-selection`, {
         userID,
         location
     })
@@ -132,7 +132,7 @@ export const postUserLocation = async (userID : string, location : string) => {
 
 export const postUserCurrentSavedList = async (userID : string, currentSavedList : SavedList) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/set-user-saved-selection`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/selection/set-user-saved-selection`, {
         userID,
         currentSavedList
     })
@@ -141,7 +141,7 @@ export const postUserCurrentSavedList = async (userID : string, currentSavedList
 
 export const addSavedList = async (userID : string, savedList : SavedList) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/add-saved-list`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/selection/add-saved-list`, {
         userID,
         savedList: savedList.toJSON(),
     })
@@ -152,7 +152,7 @@ export const removeSavedList = async (userID : string, listID : string) => {
 
     console.log()
 
-    await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/selection/remove-saved-list`, {
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/selection/remove-saved-list`, {
         userID,
         listID
     })
