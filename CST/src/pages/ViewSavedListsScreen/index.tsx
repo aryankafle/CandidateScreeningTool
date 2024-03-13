@@ -9,6 +9,8 @@ import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
+import { removeSavedList } from "../../requests/ResumeRequests";
+import { UserContext } from "../../context/UserContext";
 
 
 
@@ -19,6 +21,8 @@ const ViewSavedListsScreen = () => {
     const navigate = useNavigate()
 
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
+
+    const { userData } = useContext(UserContext)
 
     const { setCurrentSavedList } = useContext(SelectionContext)
 
@@ -50,13 +54,20 @@ const ViewSavedListsScreen = () => {
 
 
 
-    const handleRemoveSelection = useCallback(() => {
+    const handleRemoveSelection = useCallback(async () => {
         let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
 
         if(confirmation) {
+            
+            const lists = getAllSelectedItems()
+
+            for(let i = 0; i < lists.length; i++) {
+                await removeSavedList(userData.id, lists[i].id)
+            }
+
             removeCurrentSelectionFromList()
         }
-    }, [removeCurrentSelectionFromList])
+    }, [getAllSelectedItems, removeCurrentSelectionFromList, userData.id])
 
 
 
