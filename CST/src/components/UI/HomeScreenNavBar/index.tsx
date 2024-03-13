@@ -30,31 +30,30 @@ const NavBar = () => {
 
 
 
-
     return (
         <div className="flex justify-between">
             <Button className={
                     currentTab === "resume-upload" ?
-                        `bg-gray text-black hover:bg-red 
-                        dark:bg-gray dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center `
+                        `bg-black text-white hover:bg-gray
+                        dark:bg-black dark:text-white dark:hover:bg-gray
+                        flex py-[1rem] grow justify-center border-b-4 border-white`
                     :
-                        `bg-white text-black hover:bg-red
-                        dark:bg-black dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center `
+                        `bg-black text-white hover:bg-gray
+                        dark:bg-black dark:text-white dark:hover:bg-gray
+                        flex py-[1rem] grow justify-center`
                     }
                     onClick={handleResumeUploadClick}>
                 Resume Upload
             </Button>
             <Button className={
                     currentTab === "saved-lists" ?
-                        `bg-gray text-black hover:bg-red 
-                        dark:bg-gray dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center `
+                        `bg-black text-white hover:bg-gray
+                        dark:bg-black dark:text-white dark:hover:bg-gray
+                        flex py-[1rem] grow justify-center border-b-4 border-white`
                     :
-                        `bg-white text-black hover:bg-red
-                        dark:bg-black dark:text-white dark:hover:bg-red
-                        flex py-[1rem] grow justify-center `
+                        `bg-black text-white hover:bg-gray
+                        dark:bg-black dark:text-white dark:hover:bg-gray
+                        flex py-[1rem] grow justify-center`
                     }
                     onClick={handleSavedListsClick}>
                 Saved Lists

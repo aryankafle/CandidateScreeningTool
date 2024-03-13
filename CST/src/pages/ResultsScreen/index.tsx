@@ -15,6 +15,7 @@ import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
+import { FlagContext } from "../../context/FlagContext";
 
 
 const ResultsScreen = () => {
@@ -30,6 +31,8 @@ const ResultsScreen = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
 
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
     const { userData } = useContext(UserContext)
 
     const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}]))
@@ -41,6 +44,8 @@ const ResultsScreen = () => {
     const [selectedResumes] = useState([] as Result[])
 
     const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
+    
+    setLoadingState(false)
 
 
 
@@ -209,7 +214,7 @@ const ResultsScreen = () => {
 
     return (
         <div className="flex flex-col flex-grow">
-            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-blueDark">
+            <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-grayDark">
                 {showModal && 
                     <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
                         <CandidateDescriptionPopup />

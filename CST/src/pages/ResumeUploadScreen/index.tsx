@@ -1,5 +1,5 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline } from 'ionicons/icons';
+import { cloudUploadOutline, flag } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileContext } from '../../context/FileContext';
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
+import { FlagContext } from "../../context/FlagContext"
 
 
 
@@ -31,6 +32,10 @@ const ResumeUploadScreen = () => {
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
 
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
+
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const [batchNameEntered, setBatchNameEntered] = useState(false)
 
     const {
 
@@ -75,6 +80,24 @@ const ResumeUploadScreen = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fileContext.uploadedFiles])
+
+
+
+
+
+    useEffect(() => {
+        setLoadingState(loadingState)
+    }, [loadingState])
+
+
+
+
+
+    useEffect(() => {
+        if (fileContext.currentBatchName !== "") {
+            setBatchNameEntered(true)
+        }
+    }, [fileContext.currentBatchName])
 
 
 
@@ -156,45 +179,53 @@ const ResumeUploadScreen = () => {
 
 
 
-    const ConfirmFilesPanel : React.FC = () => {
+    const ConfirmFilesPanel = () => {
         return (
-            <div className="bg-white dark:bg-blueDark
-                                flex flex-col self-center h-[80%] w-[80%]">
-                <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
-                    {`Are you sure you want to use this batch of resumes?`} <br></br>
-                    {`Batch Name: ${fileContext.currentBatchName}`}
-                </div>
-                <div className="flex flex-col border-[1px] flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto">
-                    {fileContext.uploadedFiles.map((file) => (
-                        <div key={file.name} className="mx-2">
-                            {file.name}
-                        </div>
-                    ))}
-                </div>
-                <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
-                    <Button
-                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                        onClick={async (event) => {
-                            event.preventDefault()
+            <div className="bg-white dark:bg-grayDark
+                                flex flex-col self-center text-3xl">
+                {!loadingState ? 
+                    (
+                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayLight">
+                        {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
+                    </div>
+                    <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
+                        {fileContext.uploadedFiles.map((file) => (
+                            <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
+                                {file.name}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={async (event) => {
+                                event.preventDefault();
 
-                            await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName)
+                                setLoadingState(true);
 
-                            setShowConfirmFilesModal(false)
-                            
-                            navigate("/filter")
-                        }}
-                    >
-                        Yes
-                    </Button>
-                    <Button
-                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                        onClick={() => {
-                            setShowConfirmFilesModal(false)
-                        }}
-                    >
-                        No
-                    </Button>
-                </div>
+                                await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
+
+                                setShowConfirmFilesModal(false);
+
+                                navigate("/filter");
+                            } }
+                        >
+                            Yes
+                        </Button>
+                        <Button
+                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                            onClick={() => {
+                                setShowConfirmFilesModal(false);
+                            } }
+                        >
+                            No
+                        </Button>
+                    </div></>)
+                :
+                    <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
+                        Loading...
+                    </div>
+                }
             </div>
         )
     }
@@ -203,18 +234,18 @@ const ResumeUploadScreen = () => {
 
     const FileCard = (props: {index: number}) => {
         return (
-            <div className="border-black text-black hover:bg-blueMid
-                            dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem]">
+            <div className="text-black hover:bg-grayMid/30
+                            dark:text-white flex flex-row 
+                            px-[3rem] py-[3rem] text-xl">
                 <div 
                     className={
                         selectableItems[props.index].isSelected ?
-                            `text-red border-red
-                            dark:text-red
+                            `text-black border-black
+                            dark:text-white underline font-bold
                             flex-grow select-none cursor-pointer`
                         :
                             `text-black border-black
-                            dark:text-white
+                            dark:text-white no-underline font-normal
                             flex-grow select-none cursor-pointer`
                     }
                     onClick={(event) => {
@@ -237,7 +268,7 @@ const ResumeUploadScreen = () => {
 
 
     return (
-        <div className="dark:bg-blueDark bg-white justify-center
+        <div className="dark:bg-grayDark bg-white justify-center
                         flex flex-col flex-grow">
             {
                 showFileModal && <Modal 
@@ -251,50 +282,54 @@ const ResumeUploadScreen = () => {
                     />
                 </Modal>
             }
-            <div className="dark:border-white dark:text-white
-                            border-black text-black hover:bg-blueMid
-                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <div >
-                    Upload a batch of resumes.
-                </div>
-                <Input 
-                    title={"Batch Name:"}
-                    placeholder={"Batch A-1"}
-                    value={batchName}
-                    onChange={(event) => { setBatchName(event.target.value)}}
-                    onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
-                />
-            </div>
-            <div className="flex justify-center">
-                <Button 
-                    className=" dark:border-white dark:text-white
-                                border-black text-black hover:bg-blueMid
-                                border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                    onClick={handleUploadClick}
-                >
-                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
-                    <form 
-                        method='POST'
-                        encType='multipart/form-data'
-                        action='upload'
-                    >
-                        <input
-                            accept=".doc,.docx,.pdf,.png,.jpg"
-                            type="file"
-                            name="files"
-                            multiple
-                            hidden
-                            ref={hiddenFileInput}
-                            onChange={handleFileUpload}
+            {!batchNameEntered ?
+                (
+                    <div className="dark:border-white dark:text-white text-lg
+                                    border-black text-black hover:bg-grayMid/30
+                                    border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                    <div >
+                        Upload a batch of resumes.
+                    </div>
+                        <Input 
+                            title={"Batch Name:"}
+                            placeholder={"Batch A-1"}
+                            value={batchName}
+                            onChange={(event) => { setBatchName(event.target.value)}}
+                            onSubmit={() => { fileContext.setCurrentBatchName(batchName) }}
                         />
-                    </form>
-                </Button>
-            </div>
+                    </div>
+                )
+                :
+                (            
+                <div className="flex justify-center">
+                    <Button 
+                        className=" dark:border-white dark:text-white text-lg
+                                    border-black text-black hover:bg-grayMid/30
+                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
+                        onClick={handleUploadClick}
+                    >
+                        <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
+                        { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                        <form 
+                            method='POST'
+                            encType='multipart/form-data'
+                            action='upload'
+                        >
+                            <input
+                                accept=".doc,.docx,.pdf,.png,.jpg"
+                                type="file"
+                                name="files"
+                                multiple
+                                hidden
+                                ref={hiddenFileInput}
+                                onChange={handleFileUpload}
+                            />
+                        </form>
+                    </Button>
+                </div>)
+            }
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
-                <ol className=" border-black self-center flex-grow
-                                dark:border-white
-                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
+                <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                     {selectableItems.map(
                         (selectable, index : number) => (
                             <FileCard
@@ -306,7 +341,8 @@ const ResumeUploadScreen = () => {
                 <div className="h-[5rem]
                                 text-black
                                 dark:text-white
-                                self-center">
+                                self-center
+                                text-lg">
                     { anySelected() ?
                         <div className="flex flex-col my-[1rem]">
                             <Button
@@ -337,9 +373,9 @@ const ResumeUploadScreen = () => {
             </div>
             <div className="flex justify-center">
                 <Button
-                    className=" dark:border-white dark:text-white
-                                border-black text-black hover:bg-blueMid
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem]"
+                    className=" dark:border-white dark:text-white dark:hover:bg-grayMid/30
+                                border-black text-black hover:bg-grayDark/30
+                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
@@ -355,14 +391,14 @@ const ResumeUploadScreen = () => {
                             <ConfirmFilesPanel />
                         :
                             !fileContext.currentBatchName ? 
-                            <div className="bg-white dark:bg-blue
-                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please enter a batch name!`}
                                 </div>
                                 <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
                                     <Button
-                                        className="flex flex-col justify-center w-[50%] bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
+                                        className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
                                         onClick={() => {
                                             setShowConfirmFilesModal(false)
                                         }}
@@ -372,8 +408,8 @@ const ResumeUploadScreen = () => {
                                 </div>
                             </div>
                             :
-                            <div className="bg-white dark:bg-blue
-                                            flex flex-col self-center w-[80%] h-[80%] justify-between">
+                            <div className="bg-white dark:bg-grayDark
+                                            flex flex-col self-center text-3xl text-white">
                                 <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                                     {`Please upload at least 2 resumes!`}
                                 </div>
