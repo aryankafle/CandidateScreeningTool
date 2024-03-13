@@ -39,7 +39,7 @@ app.use(
         secret: "secret_session",
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: false } //CHANGE TO TRUE EVENTUALLY IDK HOW
+        cookie: { secure: !!process.env.LOCAL }
     })
 )
 
