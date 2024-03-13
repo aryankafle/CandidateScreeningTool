@@ -1,8 +1,4 @@
-import { useNavigate } from "react-router-dom"
-
 const SplashScreen = () => {
-    const navigate = useNavigate()
-
     return (
         <div className="bg-gradient-to-t from-blueDark to-black justify-center
                         flex flex-col flex-grow">

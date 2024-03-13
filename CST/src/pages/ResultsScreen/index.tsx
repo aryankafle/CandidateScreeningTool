@@ -45,8 +45,8 @@ const ResultsScreen = () => {
 
     const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
     
-    setLoadingState(false)
 
+    
 
 
     const isPreviousSavedList = useMemo(() => {
