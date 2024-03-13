@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
 import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
@@ -31,6 +31,8 @@ import { useLocation, useNavigate, Location } from "react-router-dom"
 import axios from "axios";
 import { SavedList } from "../utils/SavedList";
 import { FlagContext } from "../context/FlagContext";
+import { FileContext } from "../context/FileContext";
+import { FilterContext } from "../context/FilterContext";
 
 
 
@@ -42,13 +44,22 @@ function Router() {
     const { setSavedLists } = useContext(SavedListsContext)
     const { setLocation } = useContext(SelectionContext)
     const { setLoadingState } = useContext(FlagContext)
+
+
+
+    const fileContext = useContext(FileContext)
+    const filterContext = useContext(FilterContext)
+    const selectionContext = useContext(SelectionContext)
+    const flagContext = useContext(FlagContext)
     
     const navigate = useNavigate()
 
     const route = useLocation()
 
     useEffect(() => {
+
         setLoadingState(false)
+        
     }, [route.key, setLoadingState])
 
     useEffect(() => {
@@ -60,7 +71,6 @@ function Router() {
             return route.pathname;
 
         })
-
         
     }, [route.pathname, setLocation])
 
@@ -205,7 +215,10 @@ function Router() {
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
             <Route element={<HomeLayout />}>
-                <Route path="/home/*" element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/>} />
+                <Route 
+                    path="/home/*"
+                    element={isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/>}
+                />
             </Route>
         </Routes>
     )

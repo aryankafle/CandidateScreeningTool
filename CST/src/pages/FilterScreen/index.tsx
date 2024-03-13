@@ -97,7 +97,7 @@ const FilterScreen = () => {
             return;
         }
 
-        if (filterList.some((filter) => !previouslySelectedFilters.includes(filter))) {
+        if (filterList.some( (filter) => !previouslySelectedFilters.some( (prevfilter) => prevfilter.id === filter.id ) ) ) {
             setFiltersChanged(true)
             return;
         }
