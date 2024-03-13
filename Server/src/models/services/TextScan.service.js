@@ -59,7 +59,7 @@ export const convertFilestoText = async (fileArray) => {
 
 
 
-        console.log(`------Done coneverting ${file.originalname}:`)
+        console.log(`------Done converting ${file.originalname}:`)
 
     }
 
