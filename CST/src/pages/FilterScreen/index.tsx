@@ -263,9 +263,9 @@ const FilterScreen = () => {
                 </div>
             :
                 <div 
-                    className=" bg-red dark:bg-blueLight rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                    className=" bg-red dark:bg-blueLight flex flex-row
+                                gap-[1rem] mb-[1rem] p-[0.7rem] text-3xl">
+                    <div className="">
                         {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
                          `${props.item.description}`}
                     </div>
