@@ -40,7 +40,7 @@ const FileContextProvider = (props: { children : ReactNode }) => {
 
     const [uploadedFiles, setUploadedFiles] = useState([] as File[])
     const [currentBatchName, setCurrentBatchName] = useState("")
-    const [currentBatchId, setCurrentBatchId] = useState(crypto.randomUUID() as string)
+    const [currentBatchId, setCurrentBatchId] = useState("crypto.randomUUID() as string")
     const [currentFormData, setCurrentFormData] = useState<FormData>({} as FormData)
     
     return (
