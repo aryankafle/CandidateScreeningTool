@@ -90,7 +90,10 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
             scores,
             summaries,
             summary: overallSummary.choices[0].message.content,
-            name: name.choices[0].message.content,
+            applicant: {
+                name: name.choices[0].message.content,
+                
+            }
         }
 
 

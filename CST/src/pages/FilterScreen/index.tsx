@@ -112,6 +112,16 @@ const FilterScreen = () => {
 
 
 
+    useEffect(() => {
+
+        setLoadingState(false)
+
+    }, [])
+
+
+
+
+
     const FilterLayerOptions = () => {
 
         const [keywordBias, setKeywordBias] = useState<string>("")
@@ -253,9 +263,9 @@ const FilterScreen = () => {
                 </div>
             :
                 <div 
-                    className=" bg-red dark:bg-blueLight rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
-                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
+                    className=" bg-red dark:bg-blueLight flex flex-row
+                                gap-[1rem] mb-[1rem] p-[0.7rem] text-3xl">
+                    <div className="">
                         {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
                          `${props.item.description}`}
                     </div>
@@ -283,26 +293,19 @@ const FilterScreen = () => {
 
 
     return (
-        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem]">
+        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem] bg-grayDark">
             {loadingState && 
                 <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
                     <FilterLoadingPanel/>
                 </Modal>
             }
-            <div className="flex flex-col h-full min-w-[17rem] w-[40vw]">
-                <div className='sticky flex flex-col z-[1] top-0'>
-                    <div
-                        className="flex flex-shrink bg-[gray] dark:bg-blueDark text-[2.2rem] p-[1rem] mb-[1rem] rounded-tr-[3rem] rounded-br-[3rem]"
-                    >
-                        Find your desired candidates.
-                    </div>
-                    <div
-                        className="flex flex-shrink bg-[gray] dark:bg-blueDark text-[1.4rem] p-[1rem] mb-0.5 rounded-tr-[3rem] rounded-br-[3rem]"
-                    >
+            <div className="flex flex-col grow min-h-auto min-w-[17rem] w-auto p-[1rem] m-[1rem] bg-grayMidDark rounded-lg">
+                <div className='sticky flex flex-row justify-center z-[1] top-0'>
+                    <div className="flex flex-col flex-shrink text-5xl text-white p-[1rem] mb-0.5">
                         Current Filter Layers:
                     </div>
                 </div>
-                <div className="flex flex-col select-none">
+                <div className="flex flex-col select-none overflow-y-scroll">
                     <div className="pb-[1.5rem]"/>
                     <DraggableList
                         uniqueIDItems={filterList}
