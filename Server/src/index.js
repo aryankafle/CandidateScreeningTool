@@ -33,6 +33,14 @@ import {
 
 const app = express();
 
+app.use(cors({
+    origin: [process.env.CLIENT, "http://localhost"],
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+}))
+
+app.set('trust proxy', 1)
+
 app.use(
     expressSession({
         secret: "secret_session",
@@ -45,16 +53,9 @@ app.use(
         }
     })
 )
-app.set('trust proxy', 1)
 
 app.use(passport.initialize())
 app.use(passport.session())
-
-app.use(cors({
-    origin: [process.env.CLIENT, "http://localhost"],
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-}))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
