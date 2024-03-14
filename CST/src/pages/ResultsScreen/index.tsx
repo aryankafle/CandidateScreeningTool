@@ -237,14 +237,14 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                className=" bg-white
-                            flex flex-row flex-grow w-[80%] rounded py-[1rem]"
+                className=" bg-grayMidDark
+                            flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
                     setCurrentCandidate(props.candidate)
                 }}
             >
-                <div className="flex flex-grow self-center justify-center animate-text bg-clip-text bg-gradient-to-r text-transparent from-grayDark to-grayMid">
+                <div className="flex flex-grow self-center justify-center animate-text bg-clip-text bg-gradient-to-r text-transparent from-white to-grayMid">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem] bor">
