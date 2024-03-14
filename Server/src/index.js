@@ -41,7 +41,6 @@ app.use(
         saveUninitialized: true,
         cookie: { 
             secure: !process.env.LOCAL,
-            sameSite: "none"
         }
     })
 )
