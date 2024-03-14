@@ -250,8 +250,8 @@ const FilterScreen = () => {
 
         return props.isDragging ? 
                 <div 
-                    className=" bg-green dark:bg-red rounded-tr-[1rem] rounded-br-[3rem]
-                                py-[0.7rem] flex flex-row leading-[1.4rem] gap-[1rem] pl-[1.5rem] mb-[1rem] justify-between pr-[2.5rem]">
+                    className=" bg-red dark:bg-grayDark/40 flex flex-row rounded-md
+                                gap-[1rem] mb-[1rem] p-[2rem] text-3xl text-white justify-between">
                     <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
                         {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
                         `${props.item.description}`}
@@ -263,14 +263,14 @@ const FilterScreen = () => {
                 </div>
             :
                 <div 
-                    className=" bg-red dark:bg-blueLight flex flex-row
-                                gap-[1rem] mb-[1rem] p-[0.7rem] text-3xl">
+                    className=" bg-red dark:bg-grayDark flex flex-row rounded-md
+                                gap-[1rem] mb-[1rem] p-[2rem] text-3xl text-white justify-between">
                     <div className="">
                         {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
                          `${props.item.description}`}
                     </div>
                     <IonIcon
-                        className="cursor-pointer text-[2rem] hover:text-redS" icon={closeCircleOutline}
+                        className="flex flex-col cursor-pointer text-[2rem] hover:text-redS" icon={closeCircleOutline}
                         onClick={handleXClicked}
                     />
                 </div>
@@ -299,7 +299,7 @@ const FilterScreen = () => {
                     <FilterLoadingPanel/>
                 </Modal>
             }
-            <div className="flex flex-col grow min-h-auto min-w-[17rem] w-auto p-[1rem] m-[1rem] bg-grayMidDark rounded-lg">
+            <div className="flex flex-col grow min-h-auto w-min p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
                 <div className='sticky flex flex-row justify-center z-[1] top-0'>
                     <div className="flex flex-col flex-shrink text-5xl text-white p-[1rem] mb-0.5">
                         Current Filter Layers:
