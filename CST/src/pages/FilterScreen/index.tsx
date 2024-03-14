@@ -46,7 +46,7 @@ class DegreeFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Level of Degree: Masters", "Does this file have at least a masters degree?", quantity)
+            super("Level of Degree: Bachelor's", "Does this file have at least a bachelor's degree?", quantity)
         }
 
         else {
@@ -183,7 +183,7 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new education masters degree filter
+                        Click to add new education bachelor's degree filter
                     </Button>
 
 
