@@ -206,7 +206,7 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray border-solid rounded-md self-center h-[60%] w-[80%] bg-grayDark dark:bg-grayDark">
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[80%] bg-grayDark dark:bg-grayDark">
                 <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
@@ -216,10 +216,10 @@ const ResultsScreen = () => {
                 {
                     summaries.map((summary : any) => (
                         <>
-                            <div>
+                            <div className="text-grayMid mx-6">
                                 {summary.section}
                             </div>
-                            <div>
+                            <div className="text-grayLight mx-4">
                                 {summary.text}
                             </div>
                         </>
