@@ -279,10 +279,10 @@ const FilterScreen = () => {
 
     const FilterLoadingPanel = () => {
         return(
-            <div className="bg-white dark:bg-blueDark
-                            flex flex-col self-center h-[80%] w-[80%]">
-                <div className="flex justify-center text-8xl text-white">
-                    Loading...
+            <div className="bg-white dark:bg-grayDark
+                            flex flex-col self-center text-3xl">
+                <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
+                Loading...
                 </div>
             </div>
         )
