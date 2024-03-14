@@ -216,11 +216,11 @@ const ResultsScreen = () => {
                 {
                     summaries.map((summary : any) => (
                         <>
-                            <div className="text-grayMid mx-6">
-                                {summary.section}
-                            </div>
                             <div className="text-grayLight mx-4">
                                 {summary.text}
+                            </div>
+                            <div className="text-grayMid mx-6">
+                                {summary.section}
                             </div>
                         </>
                     ))
