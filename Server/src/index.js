@@ -10,8 +10,6 @@ import multer from "multer"
 
 
 
-import { CLIENT_HOST, CLIENT_IP, SERVER_PORT } from "./util/ips.js";
-
 import { verifyUserRegistered } from "./middlewares/VerifyRegisteredUser.js";
 import { verifyMongoDbConnection } from "./middlewares/VerifyMongoConnection.js";
 
@@ -41,7 +39,7 @@ app.use(
         secret: "secret_session",
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: false } //CHANGE TO TRUE EVENTUALLY IDK HOW
+        cookie: { secure: !process.env.LOCAL }
     })
 )
 
@@ -49,7 +47,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-    origin: CLIENT_IP,
+    origin: process.env.CLIENT,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
 }))
@@ -89,6 +87,6 @@ app.get("/", (req, res) => {
 
 
 
-app.listen(SERVER_PORT, () => {
-    console.log(`Express is running and server is listening on ${SERVER_PORT}`)
+app.listen(process.env.EXPRESS_PORT, () => {
+    console.log(`Express is running and server is listening on ${process.env.EXPRESS_PORT}`)
 });

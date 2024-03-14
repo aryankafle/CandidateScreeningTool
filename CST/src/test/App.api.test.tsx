@@ -14,7 +14,7 @@ function App() {
   // const thing = fileContext.currentFormData
 
   const getpdftest = async () => {
-  //   const response = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing,
+  //   const response = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/fileUploads/convert-pdf-to-img`, thing,
     
   //   {
   //      params: {
@@ -31,7 +31,7 @@ function App() {
   // const getOpenAITest = async () => {
   //   // console.log(myFormData + "grahh")
   //   // const textdata  = await jQuery.ajax({
-  //   //   url: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/textScan/convert-pdf-to-img`,
+  //   //   url: `${process.env.REACT_APP_SERVER_NAME}/textScan/convert-pdf-to-img`,
   //   //   type: 'GET',
   //   //   processData: false, // important
   //   //   contentType: false, // important
@@ -44,13 +44,13 @@ function App() {
 
   //   console.log(thing)
 
-  //   const text = await axios.post(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/fileUploads/convert-pdf-to-img`, thing, {
+  //   const text = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/fileUploads/convert-pdf-to-img`, thing, {
   //     headers: {
   //        'Content-Type' : 'multipart/form-data'
   //      }
   //     })
   
-  //   const response = await axios.get(`${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/openAI/ask-question-with-role`, {
+  //   const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/openAI/ask-question-with-role`, {
   //     params: {
   //       message: "Use less than 100 tokens and List the first 5 words of the following text: " + text.data.message ,//text.data.message,
   //       role: "user"
