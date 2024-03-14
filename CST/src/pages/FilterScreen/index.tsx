@@ -317,8 +317,8 @@ const FilterScreen = () => {
                 </div>
             </div>
             <div className='sticky top-0 flex flex-grow'>
-                <div className="bg-[gray] dark:bg-blueDark
-                                flex flex-col flex-grow rounded-tl-[10rem] px-[3rem] pt-[1rem] pb-[3rem]">
+                <div className="bg-[gray] dark:bg-grayDark text-white
+                                flex flex-col flex-grow px-[3rem] pt-[1rem] pb-[3rem]">
                     <div className="self-center text-[5rem]">Filters</div>
                     <FilterLayerOptions />
                 </div>
