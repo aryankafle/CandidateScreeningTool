@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const handleLogout = () => {
     window.open(
-        `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/logout`,
+        `${process.env.REACT_APP_SERVER_NAME}/auth/logout`,
         "_self"
     )
 }

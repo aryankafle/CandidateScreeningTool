@@ -1,9 +1,8 @@
 import express from "express";
 import passport from "passport";
 import { addUser } from "../models/services/MongoDB.service.js";
-
-import { CLIENT_IP } from "../util/ips.js";
-
+import dotenv from "dotenv"
+dotenv.config()
 
 
 
@@ -59,7 +58,7 @@ router.get("/login/failed", (req, res) => {
 
 router.get("/google/callback", 
     passport.authenticate("google", {
-        successRedirect: CLIENT_IP,
+        successRedirect: process.env.CLIENT,
         failureRedirect: "login/failed"
     })
 )
@@ -70,7 +69,7 @@ router.get("/logout", (req, res, next) => {
 
     req.logout((error) => {
         if(error) { return next(error) }
-        res.redirect(`${CLIENT_IP}/`)
+        res.redirect(`${process.env.CLIENT}/`)
     })
     
 })

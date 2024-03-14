@@ -101,7 +101,7 @@ function Router() {
         if(userData) return;
 
         const { data } = await axios.get(
-            `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/login/success`
+            `${process.env.REACT_APP_SERVER_NAME}/auth/login/success`
             , { withCredentials: true }
         )
 
