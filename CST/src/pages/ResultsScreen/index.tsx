@@ -206,21 +206,21 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray-500 border-solid rounded-md self-center h-[60%] w-[80%] bg-grayDark dark:bg-grayDark">
-                <div className='text-right text-3xl text-redS' onClick={() => setShowModal(false)}>
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[80%] bg-grayDark dark:bg-grayDark">
+                <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
-                <div className="text-center text-2xl text-white">
+                <div className="text-center text-2xl text-white font-bold">
                     {props.candidate.applicant.name}
                 </div>
                 {
                     summaries.map((summary : any) => (
                         <>
-                            <div>
-                                {summary.section}
-                            </div>
-                            <div>
+                            <div className="text-grayLight mx-4">
                                 {summary.text}
+                            </div>
+                            <div className="text-grayMid mx-6">
+                                {summary.section}
                             </div>
                         </>
                     ))
@@ -237,14 +237,14 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                className=" bg-white
-                            flex flex-row flex-grow w-[80%] rounded-r-full py-[1rem]"
+                className=" bg-grayMidDark
+                            flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
                     setCurrentCandidate(props.candidate)
                 }}
             >
-                <div className="flex flex-grow self-center justify-center">
+                <div className="flex flex-grow self-center justify-center text-grayLight">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem] bor">
@@ -270,12 +270,12 @@ const ResultsScreen = () => {
                             <div className="text-grayLight leading-10 text-center">
                                 You already have a saved list named {title}.
                             </div>
-                            <div className="text-grayLight leading-10 hover:text-grayMid mx-10"
+                            <div className="text-grayLight leading-10 hover:text-grayMid mx-10 font-bold"
                                 onClick={() => setListWithSameName(undefined)}
                             >
                                 Go back
                             </div>
-                            <div className="text-blueLight leading-10 hover:text-blueMid mx-10"
+                            <div className="text-blueLight leading-10 hover:text-blueMid mx-10 font-bold"
                                 onClick={handleReplaceListWithSameName}
                             >
                                 Replace existing list (name: {listWithSameName.name}, description: {listWithSameName.description})
@@ -304,7 +304,7 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex flex-col h-full overflow-auto bg-green dark:bg-white py-[1rem] px-[2rem]">
+                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[2rem]">
                                 <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}

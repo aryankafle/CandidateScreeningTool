@@ -56,7 +56,8 @@ function Router() {
 
     useEffect(() => {
 
-        setLocation((location : string) => {
+        setLocation(
+            (location : string) => {
 
             if(!location) return location;
 
