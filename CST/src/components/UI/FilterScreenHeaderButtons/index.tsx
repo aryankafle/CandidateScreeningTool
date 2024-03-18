@@ -23,7 +23,7 @@ const HeaderButtons = () => {
     const fileContext = useContext(FileContext)
     const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
-    const { setLoadingState, filtersChanged } = useContext(FlagContext)
+    const { setLoadingState, flags } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
@@ -99,7 +99,7 @@ const HeaderButtons = () => {
 
                         setLoadingState(true)
 
-                        if(!filtersChanged) {
+                        if(!flags.active.includes('filters have changed')) {
 
                             navigate("/results")
                             return;

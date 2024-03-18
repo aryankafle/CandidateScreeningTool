@@ -82,7 +82,7 @@ const FilterScreen = () => {
 
     const { previouslySelectedFilters } = useContext(SelectionContext)
 
-    const { setFiltersChanged } = useContext(FlagContext)
+    const { updateFlag } = useContext(FlagContext)
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
@@ -93,30 +93,24 @@ const FilterScreen = () => {
     useEffect(() => {
         
         if (filterList.length !== previouslySelectedFilters.length) {
-            setFiltersChanged(true)
+
+            updateFlag({flag: 'filters have changed', action: 'activate'})
             return;
+
         }
 
         if (filterList.some( (filter) => !previouslySelectedFilters.some( (prevfilter) => prevfilter.id === filter.id ) ) ) {
-            setFiltersChanged(true)
+
+            updateFlag({flag: 'filters have changed', action: 'activate'})
             return;
+
         }
 
 
 
-        setFiltersChanged(false)
+        updateFlag({flag: 'filters have changed', action: 'deactivate'})
     
-    }, [filterList, previouslySelectedFilters, setFiltersChanged])
-
-
-
-
-
-    useEffect(() => {
-
-        setLoadingState(false)
-
-    }, [])
+    }, [filterList, previouslySelectedFilters, updateFlag])
 
 
 

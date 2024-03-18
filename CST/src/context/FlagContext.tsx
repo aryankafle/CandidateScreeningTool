@@ -1,7 +1,27 @@
-import { ReactNode, SetStateAction, createContext, useState } from "react"
+import { ReactNode, SetStateAction, createContext, useReducer, useState } from "react"
 
 
 
+
+
+type FlagTypes = 
+    'enough resumes' |
+    'batch name set' |
+    'filters have changed'
+
+type ActionTypes = {
+
+    flag : FlagTypes
+
+    action: 'toggle' | 'activate' | 'deactivate'
+
+}
+
+type FlagState = {
+
+    active : FlagTypes[]
+
+}
 
 
 
@@ -10,9 +30,9 @@ import { ReactNode, SetStateAction, createContext, useState } from "react"
 type FlagContextType = {
 
     loadingState : boolean,
-    setLoadingState : React.Dispatch<SetStateAction<boolean>>
-    filtersChanged : boolean,
-    setFiltersChanged : React.Dispatch<SetStateAction<boolean>>
+    setLoadingState : React.Dispatch<SetStateAction<boolean>>,
+    flags : FlagState,
+    updateFlag : React.Dispatch<ActionTypes>
 
 }
 
@@ -20,8 +40,8 @@ const FlagContextInitial = {
 
     loadingState : false,
     setLoadingState : {} as React.Dispatch<SetStateAction<boolean>>,
-    filtersChanged : true,
-    setFiltersChanged : {} as React.Dispatch<SetStateAction<boolean>>
+    flags : { active: [] } as FlagState,
+    updateFlag : {} as React.Dispatch<ActionTypes>
 
 }
 
@@ -33,16 +53,75 @@ export const FlagContext = createContext<FlagContextType>(FlagContextInitial)
 
 const FlagContextProvider = (props: { children : ReactNode }) => {
 
-    const [ loadingState, setLoadingState ] = useState<boolean>(false)
+    const [ loadingState, setLoadingState ] = useState<boolean>(FlagContextInitial.loadingState)
 
-    const [ filtersChanged, setFiltersChanged ] = useState<boolean>(true)
+
+
+    const [ flags, updateFlag ] = useReducer( (currentFlagState: FlagState, action: ActionTypes) => {
+
+        const copyOfState = {...currentFlagState};
+
+        const flagIndex = currentFlagState.active.indexOf(action.flag)
+
+
+        console.log("cur:", currentFlagState)
+
+        switch(action.action) {
+            
+            case 'toggle':
+                
+                if(flagIndex > -1) {
+
+                    copyOfState.active.splice(flagIndex, 1)
+        
+                    return copyOfState
+        
+                }
+
+                copyOfState.active.push(action.flag)
+
+                return copyOfState;
+            
+            case 'activate':
+
+                if(flagIndex < 0) {
+
+                    copyOfState.active.push(action.flag)
+
+                    return copyOfState;
+
+                }
+
+                return copyOfState;
+
+            case 'deactivate':
+
+                if(flagIndex > -1) {
+
+                    console.log("eayhahsdhf,", currentFlagState)
+
+                    copyOfState.active.splice(flagIndex, 1)
+
+                    console.log("eayhahsdhf,", copyOfState)
+        
+                    return copyOfState
+
+                }
+
+                return copyOfState;
+
+        }
+
+    }, { active: [] } )
+
+
 
 
 
     return (
         <FlagContext.Provider value={{
                 loadingState, setLoadingState,
-                filtersChanged, setFiltersChanged
+                flags, updateFlag,
             }}>
             {props.children}
         </FlagContext.Provider>
