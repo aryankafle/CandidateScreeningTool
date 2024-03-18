@@ -49,13 +49,11 @@ export const convertFilestoText = async (fileArray) => {
 
         const result = await getTextScanForFile(file)
 
-        console.log(`Done getting text scan for file ${file.fileName} of type ${file.mimetype}.`)
+        console.log(`Done getting text scan for file ${file.originalname} of type ${file.mimetype}.`)
 
         return result.scan
 
     }))
-
-    console.log("asdftasdfasdf", textScans)
 
 
 
@@ -75,13 +73,11 @@ async function changePdfToText(pdfFile) {
 
         const worker = await createWorker('eng')
 
-        worker.recognize(page.content).then((result) => {
+        const result = await worker.recognize(page.content)
 
-            worker.terminate()
+        worker.terminate()
 
-            return result
-
-        })
+        return result
 
     }
 
@@ -99,7 +95,7 @@ async function changePdfToText(pdfFile) {
     let text = ""
 
     scannedPages.forEach(page => {
-        text += page
+        text += page.data.text
     });
     
     const fileText = {

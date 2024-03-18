@@ -16,10 +16,6 @@ export const uploadResumesToDB = async (req, res) => {
 
     const textScans = await convertFilestoText(req.files)
 
-    textScans.forEach((text) => {
-        console.log(text)
-    })
-
     try {
 
         await uploadNewSavedList(req.files, textScans, req.body?.listID, req.body?.batchName, req.body?.userID)
