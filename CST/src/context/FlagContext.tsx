@@ -64,8 +64,6 @@ const FlagContextProvider = (props: { children : ReactNode }) => {
         const flagIndex = currentFlagState.active.indexOf(action.flag)
 
 
-        console.log("cur:", currentFlagState)
-
         switch(action.action) {
             
             case 'toggle':
