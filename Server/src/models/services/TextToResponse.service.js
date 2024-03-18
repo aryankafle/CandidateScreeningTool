@@ -12,23 +12,29 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
         const scores = [];
 
-        for(var filterIndex = 0; filterIndex < filterArray.length; filterIndex++) {
-            
-            const filterScore = await queryAI(
-                `
-                    <START_OF_FILE_TEXT> 
-                    ${file.text}
-                    <END_OF_FILE_TEXT>
+        await Promise.all(
 
-                    ${filterArray[filterIndex].query}
-                `
+            filterArray.map(async (filter) => {
 
-                , `user`
-            )
+                const filterScore = await queryAI(
+                    `
+                        <START_OF_FILE_TEXT> 
+                        ${file.text}
+                        <END_OF_FILE_TEXT>
+    
+                        ${filter.query}
+                    `
+    
+                    , `user`
+                )
 
-            scores.push({filter: filterArray[filterIndex], score: parseInt(filterScore.choices[0].message.content)})
-            
-        }
+                scores.push({filter: filter, score: parseInt(filterScore.choices[0].message.content)})
+
+            })
+
+        )
+
+
 
         const sectionSummaries = await queryAI(
             `
@@ -108,36 +114,29 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
 
 
-    const openAiResponseArr = [];
+    const openAiResponseArr = await Promise.all(fileArray.map(async (file) => {
 
-    for (var fileIndex = 0; fileIndex < fileArray.length; fileIndex++){
-
-        var GPTResponse = await getGPTResponse(fileArray[fileIndex])
-
-
-
-
+        var GPTResponse = await getGPTResponse(file)
 
         if(!GPTResponse) {
-            
-            openAiResponseArr.push({
+            return {
                 error: `Error getting GPT Response: ${error}`,
-                fileName: fileArray[fileIndex].fileName
-            })
-            
-            continue;
+                fileName: file.fileName
+            }
         }
 
-        openAiResponseArr.push({
+        return {
             ...GPTResponse,
             filters: [...filterArray],
-            fileName: fileArray[fileIndex].fileName
-        })
-        
-    }
+            fileName: file.fileName
+        }
+
+    }))
+
 
 
     
+
     return openAiResponseArr;
 
 }
