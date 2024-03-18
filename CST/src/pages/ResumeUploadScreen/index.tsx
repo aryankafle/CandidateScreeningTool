@@ -101,9 +101,7 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        if(inputtedBatchName === "") {
-
-            console.log("fuasdfha")
+        if(fileContext.currentBatchName === "") {
 
             updateFlag({flag: 'batch name set', action: "deactivate"})
 
@@ -112,8 +110,6 @@ const ResumeUploadScreen = () => {
         }
 
         updateFlag({flag: 'batch name set', action: "activate"})
-
-        console.log(flags)
 
     }, [fileContext.currentBatchName, updateFlag])
 
@@ -128,8 +124,6 @@ const ResumeUploadScreen = () => {
         }
 
         updateFlag({flag: 'enough resumes', action: "activate"})
-
-        console.log(flags)
 
     }, [fileContext.uploadedFiles, updateFlag])
 
@@ -218,11 +212,14 @@ const ResumeUploadScreen = () => {
         if(!flags.active.includes('enough resumes')) {
 
             return (
+
                 <div className="bg-white dark:bg-grayDark
                                     flex flex-col self-center text-3xl text-white">
+
                     <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                         {`Please upload at least 2 resumes!`}
                     </div>
+
                     <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
                         <Button
                             className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
@@ -233,7 +230,9 @@ const ResumeUploadScreen = () => {
                             Ok
                         </Button>
                     </div>
+
                 </div>
+
             );
 
         }
@@ -243,11 +242,14 @@ const ResumeUploadScreen = () => {
         if(!flags.active.includes('batch name set')) {
 
             return (
+
                 <div className="bg-white dark:bg-grayDark
                                 flex flex-col self-center text-3xl text-white">
+
                     <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
                         {`Please enter a batch name!`}
                     </div>
+
                     <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
                         <Button
                             className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
@@ -258,7 +260,9 @@ const ResumeUploadScreen = () => {
                             Ok
                         </Button>
                     </div>
+
                 </div>
+
             )
 
         }
@@ -268,11 +272,13 @@ const ResumeUploadScreen = () => {
         return (
             <div className="bg-white dark:bg-grayDark
                                 flex flex-col self-center text-3xl">
-                {!loadingState ? 
-                    (
-                    <><div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
+
+                { !loadingState ? 
+                <>
+                    <div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
                         {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
                     </div>
+
                     <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
                         {fileContext.uploadedFiles.map((file) => (
                             <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
@@ -280,6 +286,7 @@ const ResumeUploadScreen = () => {
                             </div>
                         ))}
                     </div>
+
                     <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                         <Button
                             className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
@@ -309,12 +316,14 @@ const ResumeUploadScreen = () => {
                         >
                             No
                         </Button>
-                    </div></>)
-                :
-                    <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
-                        Loading...
                     </div>
+                </>
+                :
+                <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
+                    Loading...
+                </div>
                 }
+
             </div>
         )
     }
@@ -345,7 +354,7 @@ const ResumeUploadScreen = () => {
                 >
                     {selectableItems[props.index].item.name}
                 </div>
-                
+
                 <div
                     className="cursor-pointer select-none"
                     onClick={() => { setShowFileModal(!showFileModal); setCurrentlyOpenedIndex(props.index)}}
