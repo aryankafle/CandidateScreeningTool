@@ -77,6 +77,7 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
 
     public static fromJSON(jsonlist : any) {
+        
         const list = new SavedList(
             jsonlist.name_of_list,
             jsonlist.description_of_list,

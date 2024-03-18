@@ -10,8 +10,6 @@ import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
-import { FileContext } from "../../context/FileContext";
-import { FilterContext } from "../../context/FilterContext";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
@@ -23,28 +21,44 @@ const ResultsScreen = () => {
 
     
 
-    const [showModal, setShowModal] = useState(false);
-    const [showSidePanel, setShowSidePanel] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ showSidePanel, setShowSidePanel ] = useState(false);
 
     const savedListContext = useContext(SavedListsContext)
     const selectionContext = useContext(SelectionContext)
-    const fileContext = useContext(FileContext)
-    const filterContext = useContext(FilterContext)
 
     const { userData } = useContext(UserContext)
 
-    const [currentCandidate, setCurrentCandidate] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
+    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [resumes, setResumes] = useState([] as Result[])
+    const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
+    const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
+    const [ resumes ] = useState(selectionContext.currentSavedList.results || [])
 
-    const [selectedResumes] = useState([] as Result[])
+    const [ selectedResumes ] = useState([] as Result[])
 
-    const [listWithSameName, setListWithSameName] = useState<SavedList | undefined>(undefined)
-    
+    const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
-    
+
+
+
+
+    useEffect(() => {
+
+        console.log(selectionContext.currentSavedList)
+
+        if(!selectionContext.currentSavedList.id) {
+                        
+            navigate("/home/resume-upload")
+            return;
+
+        }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
+
 
 
     const isOldList = useMemo(() => {
@@ -79,22 +93,6 @@ const ResultsScreen = () => {
 
 
 
-    useEffect(() => {
-
-        setTitle(selectionContext.currentSavedList?.name || "")
-        setDescription(selectionContext.currentSavedList?.description || "")
-        setResumes(selectionContext.currentSavedList?.results || [])
-
-        if(!selectionContext.currentSavedList) {
-            throw new Error("No currently selected saved list.")
-        }
-
-    }, [selectionContext.currentSavedList])
-
-
-
-
-
     const handleSaveList = () => {
         
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
@@ -112,17 +110,17 @@ const ResultsScreen = () => {
         newList.description = description
         // newList.color = color
 
-        newList.id = fileContext.currentBatchId
+        newList.id = selectionContext.currentBatchId
         
         savedListContext.setSavedLists((lists) => [...lists, newList])
 
         addSavedList(userData.id, newList).then(() => {
 
-            fileContext.setUploadedFiles([])
-            fileContext.setCurrentBatchName("")
-            fileContext.setCurrentFormData({} as FormData)
+            selectionContext.setUploadedFiles([])
+            selectionContext.setCurrentBatchName("")
+            selectionContext.setCurrentFormData({} as FormData)
     
-            filterContext.setSelectedFilters([])
+            selectionContext.setSelectedFilters([])
     
     
     
@@ -148,11 +146,11 @@ const ResultsScreen = () => {
 
         
 
-        fileContext.setUploadedFiles([])
-        fileContext.setCurrentBatchName("")
-        fileContext.setCurrentFormData({} as FormData)
+        selectionContext.setUploadedFiles([])
+        selectionContext.setCurrentBatchName("")
+        selectionContext.setCurrentFormData({} as FormData)
 
-        filterContext.setSelectedFilters([])
+        selectionContext.setSelectedFilters([])
 
         navigate("/home/saved-lists")
     }

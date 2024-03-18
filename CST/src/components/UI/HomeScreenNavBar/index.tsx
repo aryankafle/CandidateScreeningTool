@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import Button from "../../buttons/ImprovedButtonComponent"
 
 
@@ -9,22 +8,25 @@ import Button from "../../buttons/ImprovedButtonComponent"
 const NavBar = () => {
 
     const navigate = useNavigate()
-    const [currentTab, setCurrentTab] = useState("resume-upload")
+
+    const location = useLocation()
 
 
 
 
 
     function handleResumeUploadClick() {
+
         navigate("/home/resume-upload")
-        setCurrentTab("resume-upload")
+
     }
 
 
 
     function handleSavedListsClick() {
+
         navigate("/home/saved-lists")
-        setCurrentTab("saved-lists")
+
     }
 
 
@@ -33,7 +35,7 @@ const NavBar = () => {
     return (
         <div className="flex justify-between">
             <Button className={
-                    currentTab === "resume-upload" ?
+                    location.pathname === "/home/resume-upload" ?
                         `bg-black text-white hover:bg-gray
                         dark:bg-black dark:text-white dark:hover:bg-grayMidDark
                         flex py-[1rem] grow justify-center border-b-4 border-white`
@@ -46,7 +48,7 @@ const NavBar = () => {
                 Resume Upload
             </Button>
             <Button className={
-                    currentTab === "saved-lists" ?
+                    location.pathname === "/home/saved-lists" ?
                         `bg-black text-white hover:bg-gray
                         dark:bg-black dark:text-white dark:hover:bg-grayMidDark
                         flex py-[1rem] grow justify-center border-b-4 border-white`

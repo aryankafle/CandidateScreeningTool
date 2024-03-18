@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
@@ -6,7 +6,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 import HomeRoutes from "./HomeRouter";
 import AuthRoutes from "./AuthRouter"
 
-import { getAllUserSavedLists, getUserSelection } from "../requests/ResumeRequests"
+import { getAllUserSavedLists, getUser, getUserSelection } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -25,11 +25,11 @@ import BackButton from "../components/buttons/BackButton";
 
 import { UserContext } from "../context/UserContext";
 import { SavedListsContext } from "../context/SavedListsContext";
-import { SelectionContext } from "../context/SelectionContext";
-import { useCallback, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
-import axios from "axios";
 import { FlagContext } from "../context/FlagContext";
+import { SavedList } from '../utils/SavedList';
+import { SelectionContext } from '../context/SelectionContext';
 
 
 
@@ -37,108 +37,82 @@ import { FlagContext } from "../context/FlagContext";
 
 function Router() {
     
-    const { userData, setUserData, isLoggedIn } = useContext(UserContext)
+    const { setUserData, isLoggedIn, setLocation } = useContext(UserContext)
+    const { flags, updateFlag } = useContext(FlagContext)
+    const { setCurrentSavedList } = useContext(SelectionContext)
     const { setSavedLists } = useContext(SavedListsContext)
-    const { setLocation } = useContext(SelectionContext)
     const { setLoadingState } = useContext(FlagContext)
 
-
-
-
-
     const route = useLocation()
+
+    const navigate = useNavigate()
+
+
+
+
+
+    useEffect(() => {
+
+        if(flags.active.includes('initial location navigated')) {
+
+            setLocation(route.pathname)
+
+        }
+        
+    }, [flags.active, route, setLocation])
+
+
 
     useEffect(() => {
 
         setLoadingState(false)
-        
-    }, [route.key, setLoadingState])
 
-    useEffect(() => {
-
-        setLocation(
-            (location : string) => {
-
-            if(!location) return location;
-
-            return route.pathname;
-
-        })
-
-    }, [route.pathname, setLocation])
-
-
-
-
-
-    // useEffect(() => {
-        
-    //     if(!userData) return;
-
-    //     getUserSelection(userData.id)
-    //     .then((response) => {
-
-    //         const savedLocation : string = response.location
-
-    //         if(!savedLocation) navigate("/")
-
-    //         if(savedLocation) navigate(savedLocation)
-
-    //     })
-    //     .catch((error) => {
-
-    //         console.log("Error fetching user selection")
-
-    //     })
-
-    // }, [ setLocation, userData ])
-
-
-
-
-
-    const getUser = useCallback(async () => {
-
-        if(userData) return;
-
-        const { data } = await axios.get(
-            `${process.env.REACT_APP_SERVER_NAME}/auth/login/success`
-            , { withCredentials: true }
-        )
-
-        console.log("Successfully Signed In: ", data)
-        
-        return data.user
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
+    }, [route, setLoadingState])
 
 
 
     useEffect(() => {
 
         getUser()
-        .then(async (data) => {
+        .then(async (userData) => {
 
-            setUserData(data)
-
-
-
-            const savedLists = await getAllUserSavedLists(data.id)
+            const savedLists = await getAllUserSavedLists(userData.id)
 
             setSavedLists(savedLists)
+
+            await getUserSelection(userData.id).then((userSelection) => {
+
+                const location = userSelection.location
+
+                if(userSelection.currentSavedList.id) {
+
+                    console.log(userSelection.currentSavedList)
+
+                    const currentSavedList = SavedList.fromJSON(userSelection.currentSavedList)
+
+                    setCurrentSavedList(currentSavedList)
+
+                }
+
+
+
+                updateFlag({flag: 'initial location navigated', action: 'activate'})
+
+                navigate(location)
+
+            })
+
+            setUserData(userData)
 
         })
         .catch((error) => {
             
-            // if(error.response.data.message === "Unauthorized") {
+            if(error.response?.data?.message === "Unauthorized") {
 
-            //     console.log("Did not find existing user session.")
-            //     return;
+                console.log("Did not find existing user session.")
+                return;
 
-            // }
+            }
 
             console.log("Error getting user data: ", error)
 
@@ -146,17 +120,8 @@ function Router() {
 
 
 
-    }, [getUser, setSavedLists, setUserData])
-
-
-
-
-    
-    useEffect(() => {
-
-        console.log("Is Logged In: ", isLoggedIn)
-
-    }, [isLoggedIn])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
 

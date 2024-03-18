@@ -150,11 +150,22 @@ export const addSavedList = async (userID : string, savedList : SavedList) => {
 
 export const removeSavedList = async (userID : string, listID : string) => {
 
-    console.log()
-
     await axios.post(`${process.env.REACT_APP_SERVER_NAME}/selection/remove-saved-list`, {
         userID,
         listID
     })
+
+}
+
+export const getUser = async () => {
+
+    const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_NAME}/auth/login/success`
+        , { withCredentials: true }
+    )
+
+    console.log("Successfully Signed In: ", data)
+    
+    return data.user
 
 }

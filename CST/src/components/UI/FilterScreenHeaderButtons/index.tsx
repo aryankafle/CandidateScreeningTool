@@ -4,9 +4,7 @@ import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
 import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
-import { FileContext } from '../../../context/FileContext';
-import { useContext } from "react"
-import { FilterContext } from "../../../context/FilterContext"
+import { useContext, useEffect } from "react"
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';
 import { FlagContext } from "../../../context/FlagContext"
@@ -20,12 +18,25 @@ const HeaderButtons = () => {
 
     const navigate = useNavigate()
     
-    const fileContext = useContext(FileContext)
-    const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
     const { setLoadingState, flags } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
+
+
+
+
+
+    useEffect(() => {
+
+        if(!selectionContext.currentBatchId || selectionContext.uploadedFiles.length < 2 || !selectionContext.currentBatchName) {
+
+            navigate("/home/resume-upload")
+
+        }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
 
@@ -39,11 +50,11 @@ const HeaderButtons = () => {
 
 
 
-        await uploadFiltersToDatabase(filterContext.selectedFilters, fileContext.currentBatchId, userData.id)
+        await uploadFiltersToDatabase(selectionContext.selectedFilters, selectionContext.currentBatchId, userData.id)
 
-        await filterExistingResumeList(fileContext.currentBatchId, userData.id)
+        await filterExistingResumeList(selectionContext.currentBatchId, userData.id)
 
-        const listResults = await getListResults(fileContext.currentBatchId, userData.id)
+        const listResults = await getListResults(selectionContext.currentBatchId, userData.id)
 
 
 
@@ -51,13 +62,13 @@ const HeaderButtons = () => {
 
 
 
-        const newSavedList = new SavedList(fileContext.currentBatchName, "", listResults, undefined, userData.id )
+        const newSavedList = new SavedList(selectionContext.currentBatchName, "", listResults, undefined, userData.id )
 
 
 
         selectionContext.setCurrentSavedList(newSavedList)
 
-        selectionContext.setPreviouslySelectedFilters([...filterContext.selectedFilters])
+        selectionContext.setPreviouslySelectedFilters([...selectionContext.selectedFilters])
 
 
 

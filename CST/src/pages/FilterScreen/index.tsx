@@ -1,6 +1,5 @@
-import { useState, useContext, useMemo, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import InputBox from "../../components/forms/InputBox"
-import { FilterContext } from "../../context/FilterContext";
 import { Filter } from '../../utils/Filter';
 import { closeCircleOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
@@ -76,9 +75,7 @@ class IsResumeFilter extends Filter {
 
 const FilterScreen = () => {
 
-    const filterContext = useContext(FilterContext)
-
-    const [filterList, setFilterList] = useMemo(() => [filterContext.selectedFilters, filterContext.setSelectedFilters], [filterContext])
+    const { selectedFilters, setSelectedFilters } = useContext(SelectionContext)
 
     const { previouslySelectedFilters } = useContext(SelectionContext)
 
@@ -91,15 +88,23 @@ const FilterScreen = () => {
 
 
     useEffect(() => {
+
         
-        if (filterList.length !== previouslySelectedFilters.length) {
+
+    }, [])
+
+
+
+    useEffect(() => {
+        
+        if (selectedFilters.length !== previouslySelectedFilters.length) {
 
             updateFlag({flag: 'filters have changed', action: 'activate'})
             return;
 
         }
 
-        if (filterList.some( (filter) => !previouslySelectedFilters.some( (prevfilter) => prevfilter.id === filter.id ) ) ) {
+        if (selectedFilters.some( (filter) => !previouslySelectedFilters.some( (prevfilter) => prevfilter.id === filter.id ) ) ) {
 
             updateFlag({flag: 'filters have changed', action: 'activate'})
             return;
@@ -110,7 +115,7 @@ const FilterScreen = () => {
 
         updateFlag({flag: 'filters have changed', action: 'deactivate'})
     
-    }, [filterList, previouslySelectedFilters, updateFlag])
+    }, [selectedFilters, previouslySelectedFilters, updateFlag])
 
 
 
@@ -123,7 +128,7 @@ const FilterScreen = () => {
 
 
         const isDuplicateFilter = (filter : Filter) => {
-            return filterList.some((filterObj) => filterObj.equals(filter))
+            return selectedFilters.some((filterObj) => filterObj.equals(filter))
         } 
 
         const isValidKeyword = (str : string) => {
@@ -151,7 +156,7 @@ const FilterScreen = () => {
                                 console.log("Dumb Filter: ", workFilter)
 
                                 if(!isDuplicateFilter(workFilter)) {
-                                    setFilterList([...filterList, workFilter])    
+                                    setSelectedFilters((filters) => [...filters, workFilter])    
                                 }
 
                             }
@@ -171,7 +176,7 @@ const FilterScreen = () => {
                                 console.log("Dumb Filter: ", degreeFilter)
 
                                 if(!isDuplicateFilter(degreeFilter)) {
-                                    setFilterList([...filterList, degreeFilter])    
+                                    setSelectedFilters((filters) => [...filters, degreeFilter])    
                                 }
 
                             }
@@ -191,7 +196,7 @@ const FilterScreen = () => {
                                 console.log("Dumb Filter: ", isResumeFilter)
 
                                 if(!isDuplicateFilter(isResumeFilter)) {
-                                    setFilterList([...filterList, isResumeFilter])    
+                                    setSelectedFilters((filters) => [...filters, isResumeFilter])    
                                 }
 
                             }
@@ -209,7 +214,7 @@ const FilterScreen = () => {
                                         const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
 
                                         if(!isDuplicateFilter(keywordFilter)) {
-                                            setFilterList([...filterList, keywordFilter])
+                                            setSelectedFilters((filters) => [...filters, keywordFilter])    
                                         }
                                     }
                                 }
@@ -234,9 +239,9 @@ const FilterScreen = () => {
 
         function handleXClicked() {
 
-            const temp = [...filterList].filter((filter) => {return filter !== props.item})
+            const temp = [...selectedFilters].filter((filter) => {return filter !== props.item})
             
-            setFilterList(temp)
+            setSelectedFilters(temp)
             
         }
 
@@ -302,8 +307,8 @@ const FilterScreen = () => {
                 <div className="flex flex-col select-none overflow-y-scroll">
                     <div className="pb-[1.5rem]"/>
                     <DraggableList
-                        uniqueIDItems={filterList}
-                        setUniqueIDItems={setFilterList}
+                        uniqueIDItems={selectedFilters}
+                        setUniqueIDItems={setSelectedFilters}
                         ItemCard={FilterLayerCard}
                         className="flex flex-grow flex-col"
                     />

@@ -1,7 +1,6 @@
 import { IonIcon } from "@ionic/react"
 import { cloudUploadOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FileContext } from '../../context/FileContext';
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/buttons/ImprovedButtonComponent'
 import Modal from '../../components/modals/Modal';
@@ -11,7 +10,6 @@ import Input from "../../components/forms/InputBox";
 import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 import { FlagContext } from "../../context/FlagContext"
-import { FilterContext } from "../../context/FilterContext";
 import { SelectionContext } from "../../context/SelectionContext";
 import { SavedList } from "../../utils/SavedList";
 
@@ -23,8 +21,6 @@ const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
     
-    const fileContext = useContext(FileContext)
-    const filterContext = useContext(FilterContext)
     const selectionContext = useContext(SelectionContext)
     const { flags, updateFlag } = useContext(FlagContext)
 
@@ -32,7 +28,7 @@ const ResumeUploadScreen = () => {
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
-    const [inputtedBatchName, setInputtedBatchName] = useState(fileContext.currentBatchName)
+    const [inputtedBatchName, setInputtedBatchName] = useState(selectionContext.currentBatchName)
 
     const [showFileModal, setShowFileModal] = useState(false)
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
@@ -66,7 +62,7 @@ const ResumeUploadScreen = () => {
         handleSelectionOnKeyDown,
         handleSelectionOnClick
 
-    } = useSelectableList<File>(fileContext.uploadedFiles, fileContext.setUploadedFiles)
+    } = useSelectableList<File>(selectionContext.uploadedFiles, selectionContext.setUploadedFiles)
 
 
 
@@ -74,10 +70,10 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        fileContext.setCurrentBatchId(crypto.randomUUID())
-        fileContext.setCurrentBatchName("")
+        selectionContext.setCurrentBatchId(crypto.randomUUID())
+        selectionContext.setCurrentBatchName("")
 
-        filterContext.setSelectedFilters([])
+        selectionContext.setSelectedFilters([])
         selectionContext.setCurrentSavedList({} as SavedList)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,20 +84,20 @@ const ResumeUploadScreen = () => {
     useEffect(() => {
         
         let formData = new FormData()
-        for(let i = 0; i < fileContext.uploadedFiles.length; i++) {
-            formData.append("files", fileContext.uploadedFiles[i])
+        for(let i = 0; i < selectionContext.uploadedFiles.length; i++) {
+            formData.append("files", selectionContext.uploadedFiles[i])
         }
 
-        fileContext.setCurrentFormData(formData)
+        selectionContext.setCurrentFormData(formData)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fileContext.uploadedFiles])
+    }, [selectionContext.uploadedFiles])
 
 
 
     useEffect(() => {
 
-        if(fileContext.currentBatchName === "") {
+        if(selectionContext.currentBatchName === "") {
 
             updateFlag({flag: 'batch name set', action: "deactivate"})
 
@@ -111,11 +107,11 @@ const ResumeUploadScreen = () => {
 
         updateFlag({flag: 'batch name set', action: "activate"})
 
-    }, [fileContext.currentBatchName, updateFlag])
+    }, [selectionContext.currentBatchName, updateFlag])
 
     useEffect(() => {
 
-        if(fileContext.uploadedFiles.length < 2) {
+        if(selectionContext.uploadedFiles.length < 2) {
 
             updateFlag({flag: 'enough resumes', action: "deactivate"})
 
@@ -125,7 +121,7 @@ const ResumeUploadScreen = () => {
 
         updateFlag({flag: 'enough resumes', action: "activate"})
 
-    }, [fileContext.uploadedFiles, updateFlag])
+    }, [selectionContext.uploadedFiles, updateFlag])
 
 
 
@@ -142,7 +138,7 @@ const ResumeUploadScreen = () => {
 
 
         const eventFiles : File[] = [...event.target.files]
-        const uniqueFiles : File[] = [...fileContext.uploadedFiles]
+        const uniqueFiles : File[] = [...selectionContext.uploadedFiles]
 
         for(let i = 0; i < eventFiles.length; i++) {
             
@@ -156,7 +152,7 @@ const ResumeUploadScreen = () => {
 
 
 
-        fileContext.setUploadedFiles(uniqueFiles)
+        selectionContext.setUploadedFiles(uniqueFiles)
 
     }
 
@@ -276,11 +272,11 @@ const ResumeUploadScreen = () => {
                 { !loadingState ? 
                 <>
                     <div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
-                        {`Are you sure you want to use batch "${fileContext.currentBatchName}" of resumes?`}
+                        {`Are you sure you want to use batch "${selectionContext.currentBatchName}" of resumes?`}
                     </div>
 
                     <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
-                        {fileContext.uploadedFiles.map((file) => (
+                        {selectionContext.uploadedFiles.map((file) => (
                             <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
                                 {file.name}
                             </div>
@@ -296,11 +292,11 @@ const ResumeUploadScreen = () => {
 
                                 setLoadingState(true);
 
-                                await uploadFilesToDatabase(fileContext.currentFormData, fileContext.currentBatchId, userData.id, fileContext.currentBatchName);
+                                await uploadFilesToDatabase(selectionContext.currentFormData, selectionContext.currentBatchId, userData.id, selectionContext.currentBatchName);
 
                                 setShowConfirmFilesModal(false);
 
-                                selectionContext.setPreviouslySavedFiles([...fileContext.uploadedFiles])
+                                selectionContext.setPreviouslySavedFiles([...selectionContext.uploadedFiles])
 
                                 navigate("/filter");
 
@@ -381,7 +377,7 @@ const ResumeUploadScreen = () => {
             >
                 <ViewFilePopup
                     onXClicked={()=>{setShowFileModal(false)}}
-                    uploadedFiles={fileContext.uploadedFiles}
+                    uploadedFiles={selectionContext.uploadedFiles}
                     currentlySelectedIndex={currentlyOpenedIndex}
                 />
             </Modal>
@@ -401,7 +397,7 @@ const ResumeUploadScreen = () => {
                         placeholder={"Batch A-1"}
                         value={inputtedBatchName}
                         onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                        onSubmit={() => { fileContext.setCurrentBatchName(inputtedBatchName) }}
+                        onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
                 />
             </div>
             :     
@@ -417,7 +413,7 @@ const ResumeUploadScreen = () => {
                             placeholder={"Batch A-1"}
                             value={inputtedBatchName}
                             onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                            onSubmit={() => { fileContext.setCurrentBatchName(inputtedBatchName) }}
+                            onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
                     />
                 </div>                 
                 <div className="flex justify-center">
@@ -428,7 +424,7 @@ const ResumeUploadScreen = () => {
                         onClick={handleUploadClick}
                     >
                         <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                        { fileContext.currentBatchName ? `Upload Files to ${fileContext.currentBatchName}` : `Upload Files`  }
+                        { selectionContext.currentBatchName ? `Upload Files to ${selectionContext.currentBatchName}` : `Upload Files`  }
                         <form 
                             method='POST'
                             encType='multipart/form-data'

@@ -52,6 +52,8 @@ export const getUserSavedSelection = async (req, res) => {
 
         const savedSelection = await getUserSelection(req.query?.userID)
 
+        console.log(savedSelection)
+
         res.status(200).send(savedSelection)
 
     }
