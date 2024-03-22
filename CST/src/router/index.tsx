@@ -84,7 +84,7 @@ function Router() {
 
                 const location = userSelection.location
 
-                if(userSelection.currentSavedList.id) {
+                if( ( userSelection.currentSavedList !== null || undefined ) && userSelection.currentSavedList.id) {
 
                     console.log(userSelection.currentSavedList)
 
