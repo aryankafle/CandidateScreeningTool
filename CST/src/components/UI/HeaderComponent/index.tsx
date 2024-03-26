@@ -1,11 +1,32 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { UserContext } from "../../../context/UserContext"
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+
+const handleLogin = () => {
+    window.open(
+        `${process.env.REACT_APP_SERVER_NAME}/auth/google/callback`,
+        "_self"
+    )
+}
+
+const handleLogout = () => {
+    window.open(
+        `${process.env.REACT_APP_SERVER_NAME}/auth/logout`,
+        "_self"
+    )
+}
+
+
 
 const HeaderComponent = () => {
 
     const { userData, isLoggedIn } = useContext(UserContext)
-
+    
     return (
         <header className="bg-white text-black
                            dark:text-white dark:bg-black
@@ -19,19 +40,25 @@ const HeaderComponent = () => {
                     Welcome, {userData.displayName}.
                 </span>
                 <div>
-                    <Link to="/auth/signout" className="hover:text-grayMid">
+                    <button onClick = {handleLogout} className="hover:text-grayMid">
                         Sign Out
-                    </Link>
+                    </button>
                 </div>
             </div>
             :
-            <Link to="/auth/signin" className="hover:text-grayMid">
-                Log In
-            </Link>
+            <button onClick = {handleLogin} className="hover:text-grayMid">
+                Sign In
+            </button>
+            
             }
+            { isLoggedIn ? 
             <Link to="/home" className="hover:text-grayMid">
                 Home
             </Link>
+            : 
+            <div> </div>
+            }
+            {/* nate needs to fix this lmao */}
         </header>
     )
 }
