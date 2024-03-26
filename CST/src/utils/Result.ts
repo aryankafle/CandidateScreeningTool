@@ -41,7 +41,8 @@ export class Result {
 
     private static curveScore(index : number, score : number, numScores : number) {
 
-        const curvingFactor = zScore(index, numScores/2, 1)
+        const curvingFactor = zScore(index, 0, 1)
+
 
         return curvingFactor * score
     
@@ -65,12 +66,15 @@ export class Result {
 
 
 
-    
+
 
     get overallScore() {
 
         let cumulative = 0;
-        
+        // let pureScoreArr = this.scores.map(({filter: Filter, score: int}) => (int));
+
+        // let highestScore = Math.max.apply(null, pureScoreArr)
+
         for(let i = 0; i < this.scores.length; i++) {
 
             cumulative += Result.curveScore(i, this.scores[i].score, this.scores.length)
