@@ -4,7 +4,6 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 import HomeRoutes from "./HomeRouter";
-import AuthRoutes from "./AuthRouter"
 
 import { getAllUserSavedLists, getUser, getUserSelection } from "../requests/ResumeRequests"
 
@@ -142,7 +141,7 @@ function Router() {
                             </div>
                         </>
                         :
-                        <Navigate to="/auth/signin"/>
+                        <Navigate to="/"/>
                     }
                 />
                 <Route 
@@ -157,20 +156,19 @@ function Router() {
                             </div>
                         </>
                         :
-                        <Navigate to="/auth/signin"/>
+                        <Navigate to="/"/>
                     }
                 />
             </Route>
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
-                <Route path="/auth/*" element={<AuthRoutes />}/>
                 <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
             <Route element={<HomeLayout />}>
                 <Route 
                     path="/home/*"
-                    element={ isLoggedIn ? <HomeRoutes /> : <Navigate to="/auth/signin"/> }
+                    element={ isLoggedIn ? <HomeRoutes /> : <Navigate to="/"/> }
                 />
             </Route>
         </Routes>
