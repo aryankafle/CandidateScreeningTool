@@ -1,4 +1,5 @@
 import { Filter } from "./Filter"
+import { zScore } from 'simple-statistics'
 
 
 
@@ -11,8 +12,6 @@ export type Applicant = {
     linkedIn? : string
     age? : number
 }
-
-
 
 
 
@@ -40,6 +39,14 @@ export class Result {
 
     readonly summary : string
 
+    private static curveScore(index : number, score : number, numScores : number) {
+
+        const curvingFactor = zScore(index, numScores/2, 1)
+
+        return curvingFactor * score
+    
+    }
+
 
 
 
@@ -64,11 +71,14 @@ export class Result {
 
         let cumulative = 0;
         
-        this.scores.forEach(({filter, score}) => {
-            cumulative += score
-        })
+        for(let i = 0; i < this.scores.length; i++) {
+
+            cumulative += Result.curveScore(i, this.scores[i].score, this.scores.length)
+
+        }
 
         return cumulative / this.scores.length
+
     }
 
 

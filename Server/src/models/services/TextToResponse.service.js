@@ -12,28 +12,51 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
         const scores = [];
 
-        await Promise.all(
+        for(let i = 0; i < filterArray.length; i++) {
 
-            filterArray.map(async (filter) => {
+            const filter = filterArray[i]
 
-                const filterScore = await queryAI(
-                    `
-                        <START_OF_FILE_TEXT> 
-                        ${file.text}
-                        <END_OF_FILE_TEXT>
-    
-                        ${filter.query}
-                    `
-    
-                    , `user`
-                )
+            const filterScore = await queryAI(
+                `
+                    You will score the text contents of the file at the end of this prompt based on a filter statement.
+                    You will also provide a brief, 1-2 sentence rationale explaining your method of scoring.
+                    The filter statement will describe what criteria a file "should" abide by, as well as the possible ranges of scores for this particular filter.
+                    Your score needs to measure how well this file's text abides to the criteria outlined in the filter.
+                    Give resumes that do not, or barely, abide by the filter's criteria lower scores.
+                    Give resumes that abide by the filter's criteria higher scores.
 
-                scores.push({filter: filter, score: parseInt(filterScore.choices[0].message.content)})
+                    The filter statement for this file is: "${filter.query}"
 
-            })
 
-        )
 
+                    It is important to be strict and accurate. Do not assume that an applicant's resume abides by a filter unless you have clear evidence to believe so.
+                    If you have very convincing evidence that the file abides by a filter, give it a good score.
+                    Additionally, if the file does not clearly outline a resume, or a majority of it is gibberish or otherwise unintelligble, disregard the filter and give it a score of 0.
+                    
+                    The textual content of the file you will be scoring is given below:
+
+                    <START_OF_FILE_TEXT> 
+                    ${file.text}
+                    <END_OF_FILE_TEXT>
+
+                    Format your response in the following JSON format:
+
+                    {
+                        "score": <SCORE>,
+                        "rationale": <RATIONALE>
+                    }
+
+                    Do not put quotes around the score when inserting it into the JSON format, it should not parse as a string.
+                `
+
+                , `user`
+            )
+
+            const json = JSON.parse(filterScore.choices[0].message.content)
+
+            scores.push({filter: filter, score: json.score, rationale: json.rationale })
+
+        }
 
 
         const sectionSummaries = await queryAI(
@@ -114,24 +137,32 @@ export const getResultsFromFilesWithFilters = async (fileArray, filterArray) => 
 
 
 
-    const openAiResponseArr = await Promise.all(fileArray.map(async (file) => {
+    let openAiResponseArr = [];
+
+    for(let i = 0; i < fileArray.length; i++) {
+        
+        const file = fileArray[i]
 
         var GPTResponse = await getGPTResponse(file)
 
         if(!GPTResponse) {
-            return {
+            openAiResponseArr.push( {
                 error: `Error getting GPT Response: ${error}`,
                 fileName: file.fileName
-            }
+            } )
         }
-
-        return {
+    
+        openAiResponseArr.push( {
             ...GPTResponse,
             filters: [...filterArray],
             fileName: file.fileName
-        }
+        } )
 
-    }))
+    };
+
+
+
+
 
 
 

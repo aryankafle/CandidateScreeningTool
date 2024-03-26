@@ -27,10 +27,8 @@ export async function changePdfToText(pdfFile) {
         totalText += textFromPage.text
     });
 
-    console.log(totalText)
 
 
-    
 
 
     const fileText = {

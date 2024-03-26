@@ -19,7 +19,7 @@ class KeywordBiasFilter extends Filter {
     constructor(keyword : string) {
         super(
             `Keyword Bias: ${keyword}`,
-            `How well does the file include the keyword: ${keyword}, or similar keywords? Similar keywords are less important than original keyword, so weight them into your answer less based on how far they are from the original keyword.`,
+            `The resume should contain the word or phrase: "${keyword}".`,
         )
     }
 
@@ -27,44 +27,42 @@ class KeywordBiasFilter extends Filter {
 
 
 
-class WorkFilter extends Filter {
+class YearsOfWorkExperienceFilter extends Filter {
 
     constructor(quantity : number) {
         if(quantity !== 0) {
-            super("Years of Work Experience: 5+", "Does this file have 5+ years of work experience?", quantity)
+            super(
+                `Years of Work Experience: ${quantity}`, 
+                `The resume should indicate or strongly imply that the applicant has ${quantity} or more years of professional work experience.`,
+                quantity
+            )
         }
 
         else {
+
             throw new RangeError("Quantity must be a positive integer.")
+
         }
     }
 
 }
 
-class DegreeFilter extends Filter {
+class HasDegreeFilter extends Filter {
 
-    constructor(quantity : number) {
-        if(quantity !== 0) {
-            super("Level of Degree: Bachelor's", "Does this file have at least a bachelor's degree?", quantity)
-        }
+    constructor() {
 
-        else {
-            throw new RangeError("Quantity must be a positive integer.")
-        }
+        super("Resume Mentions Collegiate Degree", "The resume should indicate that the applicant has graduated college and has a college degree of some kind.")
+    
     }
 
 }
 
-class IsResumeFilter extends Filter {
+class HasWorkExperienceFilter extends Filter {
 
-    constructor(quantity : number) {
-        if(quantity !== 0) {
-            super("File is a resume", "Is this file a resume?", quantity)
-        }
+    constructor() {
+        
+        super("Resume Contains Work Experience", "The resume should contain professional work experience.")
 
-        else {
-            throw new RangeError("Quantity must be a positive integer.")
-        }
     }
 
 }
@@ -88,14 +86,6 @@ const FilterScreen = () => {
 
 
     useEffect(() => {
-
-        
-
-    }, [])
-
-
-
-    useEffect(() => {
         
         if (selectedFilters.length !== previouslySelectedFilters.length) {
 
@@ -104,10 +94,13 @@ const FilterScreen = () => {
 
         }
 
-        if (selectedFilters.some( (filter) => !previouslySelectedFilters.some( (prevfilter) => prevfilter.id === filter.id ) ) ) {
+        for(let i = 0; i < selectedFilters.length; i++) {
 
-            updateFlag({flag: 'filters have changed', action: 'activate'})
-            return;
+            if(selectedFilters[i].id !== previouslySelectedFilters[i].id) {
+
+                updateFlag({flag: 'filters have changed', action: 'activate'})
+                return;
+            }
 
         }
 
@@ -151,12 +144,10 @@ const FilterScreen = () => {
                         onClick={
                             () => {
 
-                                const workFilter : Filter = new WorkFilter(Math.floor(Math.random() * 99999999999) + 1)
+                                const YearsOfWorkFilter : Filter = new YearsOfWorkExperienceFilter(5)
 
-                                console.log("Dumb Filter: ", workFilter)
-
-                                if(!isDuplicateFilter(workFilter)) {
-                                    setSelectedFilters((filters) => [...filters, workFilter])    
+                                if(!isDuplicateFilter(YearsOfWorkFilter)) {
+                                    setSelectedFilters((filters) => [...filters, YearsOfWorkFilter])    
                                 }
 
                             }
@@ -171,18 +162,16 @@ const FilterScreen = () => {
                         onClick={
                             () => {
 
-                                const degreeFilter : Filter = new DegreeFilter(Math.floor(Math.random() * 99999999999) + 1)
+                                const DegreeFilter : Filter = new HasDegreeFilter()
 
-                                console.log("Dumb Filter: ", degreeFilter)
-
-                                if(!isDuplicateFilter(degreeFilter)) {
-                                    setSelectedFilters((filters) => [...filters, degreeFilter])    
+                                if(!isDuplicateFilter(DegreeFilter)) {
+                                    setSelectedFilters((filters) => [...filters, DegreeFilter])    
                                 }
 
                             }
                         }
                     >
-                        Click to add new education bachelor's degree filter
+                        Click to add new has college degree filter
                     </Button>
 
 
@@ -191,18 +180,16 @@ const FilterScreen = () => {
                         onClick={
                             () => {
 
-                                const isResumeFilter : Filter = new IsResumeFilter(Math.floor(Math.random() * 99999999999) + 1)
+                                const HasWorkExperience : Filter = new HasWorkExperienceFilter()
 
-                                console.log("Dumb Filter: ", isResumeFilter)
-
-                                if(!isDuplicateFilter(isResumeFilter)) {
-                                    setSelectedFilters((filters) => [...filters, isResumeFilter])    
+                                if(!isDuplicateFilter(HasWorkExperience)) {
+                                    setSelectedFilters((filters) => [...filters, HasWorkExperience])    
                                 }
 
                             }
                         }
                     >
-                        Click to add new resume check filter
+                        Click to add new has work experience filter
                     </Button>
                 </div>
                 <div className="flex flex-col flex-shrink">

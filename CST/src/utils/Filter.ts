@@ -4,28 +4,9 @@ export abstract class Filter implements UniquelyIdentified {
 
     readonly id : string = crypto.randomUUID()
 
-    protected static MAX_STRENGTH = 1000;
     protected static MAX_SCORE = 1000
 
-    public readonly totalQuery;
-    public readonly initialQuery = `
-        Filters are questions about a file's text. They will ask about a certain aspect of its text.
-        A score measures how well a file's text answers the question posed by the filter. It is your job to assign a score value for the above file's text. 
-        A score near 0 would associate with a file text that does not, or barely, answers the question.
-        A score near ${Filter.MAX_SCORE} associates with a file text that answers the question very well. 
-        Scores are a floating point number between the values 0 and ${Filter.MAX_SCORE}.
-        If the Filter question is something that can be answered with a yes or a no, assign a score of ${Filter.MAX_SCORE} for yes, and 0 for no.
-        Assign the file text above a score based upon how well it answers the following Filter question: 
-    `;
     public readonly filterQuery;
-    public readonly endQuery = `
-        ONLY include in your response the numerical value of the score.
-        Do NOT include anything but this numerical score value.
-        Make sure to ONLY score the resume based on the criteria specified in the filter.
-    `
-
-
-
     public readonly description;
     public readonly quantity?
 
@@ -34,7 +15,11 @@ export abstract class Filter implements UniquelyIdentified {
     constructor(description : string, filterQuery : string, quantity? : number) {
         
         this.filterQuery = filterQuery
-        this.totalQuery = `${this.initialQuery} "${filterQuery}" ${this.endQuery}`
+        this.filterQuery = `
+            ${filterQuery}
+
+            The score must be between 0 and ${Filter.MAX_SCORE}
+        `
 
         this.description = description
         this.quantity = quantity
@@ -58,7 +43,7 @@ export abstract class Filter implements UniquelyIdentified {
             filterName: this.description,
             filterQuantity: this.quantity,
 
-            query: this.totalQuery,
+            query: this.filterQuery,
 
         }
     }
