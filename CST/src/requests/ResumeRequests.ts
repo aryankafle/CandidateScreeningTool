@@ -102,7 +102,13 @@ export const getAllUserSavedLists = async (userID : string) => {
             throw new Error(savedList?.error)
         }
 
-        resultsArray.push(SavedList.fromJSON(savedList))
+        const listFromJSON = SavedList.fromJSON(savedList)
+
+        if(!listFromJSON) continue;
+
+        
+        
+        resultsArray.push(listFromJSON)
         
     }
 

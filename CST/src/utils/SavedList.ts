@@ -77,16 +77,35 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
 
     public static fromJSON(jsonlist : any) {
+
+        const translatedList = {
+            name: jsonlist.name_of_list,
+            description: jsonlist.description_of_list,
+            results: jsonlist.results?.map((result : any) => Result.fromJSON(result)),
+            owner: jsonlist.owner_of_list,
+            shared: jsonlist.usersWithAcess,
+            id: jsonlist._id
+        }
+
+        for(const item in translatedList) {
+
+            if(!item) return undefined
+
+        }
+
+        if(translatedList.results?.length < 1) return undefined
+
+
         
         const list = new SavedList(
-            jsonlist.name_of_list,
-            jsonlist.description_of_list,
-            jsonlist.results.map((result : any) => Result.fromJSON(result)),
-            jsonlist.owner_of_list,
-            jsonlist.users_with_access
+            translatedList.name,
+            translatedList.description,
+            translatedList.results,
+            translatedList.owner,
+            translatedList.shared
         )
 
-        list.id = jsonlist._id
+        list.id = translatedList.id
 
         return list
     }

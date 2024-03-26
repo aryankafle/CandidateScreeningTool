@@ -88,7 +88,7 @@ function Router() {
 
                     console.log(userSelection.currentSavedList)
 
-                    const currentSavedList = SavedList.fromJSON(userSelection.currentSavedList)
+                    const currentSavedList = SavedList.fromJSON(userSelection.currentSavedList) || {} as SavedList
 
                     setCurrentSavedList(currentSavedList)
 
