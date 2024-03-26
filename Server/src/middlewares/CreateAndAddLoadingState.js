@@ -1,4 +1,4 @@
-async function addUploadLoadingState(req, res, next) {
+export async function addUploadLoadingState(req, res, next) {
 
     req.write({
         loadingState: {
@@ -16,7 +16,7 @@ async function addUploadLoadingState(req, res, next) {
 
 }
 
-async function addFilteringLoadingState(req, res, next) {
+export async function addFilteringLoadingState(req, res, next) {
 
     req.write({
         loadingState: {
