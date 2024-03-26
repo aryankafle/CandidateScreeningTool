@@ -5,10 +5,9 @@ import express from "express";
 import {
     applyFiltersToResumes,
     getResumeList,
-    getAllUserSavedLists
 } from "../controllers/ResumeFiltering.controller.js";
 
-import { verifyUserOwnsList } from "../middlewares/VerifyUserOwnsList.js";
+import { verifyUserOwnsList } from "../middlewares/authorization/VerifyUserOwnsList.js";
 
 
 

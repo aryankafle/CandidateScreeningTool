@@ -14,7 +14,7 @@ import {
 
 import {
     verifyUserOwnsList
-} from "../middlewares/VerifyUserOwnsList.js"
+} from "../middlewares/authorization/VerifyUserOwnsList.js"
 
 
 

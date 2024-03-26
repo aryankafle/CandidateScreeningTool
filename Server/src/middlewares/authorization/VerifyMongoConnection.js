@@ -1,4 +1,4 @@
-import { testMongoDBConnection } from "../models/services/MongoDB.service.js";
+import { testMongoDBConnection } from "../../models/services/MongoDB.service.js";
 
 
 

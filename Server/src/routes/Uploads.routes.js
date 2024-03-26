@@ -5,7 +5,7 @@ import {
     updateFilters
 } from "../controllers/Uploads.controller.js"
 
-import { verifyUserOwnsList } from "../middlewares/VerifyUserOwnsList.js";
+import { verifyUserOwnsList } from "../middlewares/authorization/VerifyUserOwnsList.js";
 
 
 

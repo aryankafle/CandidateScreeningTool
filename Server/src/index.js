@@ -10,8 +10,8 @@ import multer from "multer"
 
 
 
-import { verifyUserRegistered } from "./middlewares/VerifyRegisteredUser.js";
-import { verifyMongoDbConnection } from "./middlewares/VerifyMongoConnection.js";
+import { verifyUserRegistered } from "./middlewares/authorization/VerifyRegisteredUser.js";
+import { verifyMongoDbConnection } from "./middlewares/authorization/VerifyMongoConnection.js";
 
 import { 
 

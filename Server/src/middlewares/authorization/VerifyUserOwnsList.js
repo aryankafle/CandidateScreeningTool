@@ -1,4 +1,4 @@
-import { client } from '../inits/MongoDB.init.js'
+import { client } from '../../inits/MongoDB.init.js'
 
 
 
