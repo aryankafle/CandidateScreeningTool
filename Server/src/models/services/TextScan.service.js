@@ -1,6 +1,6 @@
-import {pdfToPng} from 'pdf-to-png-converter'
-import { createWorker } from 'tesseract.js';
-import WordExtractor from "word-extractor"
+import { changePdfToText } from "../utils/TextConversions.js"
+import { changeWordToText } from "../utils/TextConversions.js"
+import { changePngToText } from "../utils/TextConversions.js"
 
 
 
@@ -22,19 +22,19 @@ export const convertFilestoText = async (fileArray) => {
                 
                 const pdfText = await changePdfToText(file)
 
-                return {file: file, scan: pdfText}
+                return { file: file, scan: pdfText }
             
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 
                 const wordText = await changeWordToText(file)
 
-                return {file: file, scan: wordText}
+                return { file: file, scan: wordText }
             
             case "image/png":
 
                 const pngText = await changePngToText(file)
 
-                return {file: file, scan: pngText}
+                return { file: file, scan: pngText }
 
             default: 
 
@@ -61,83 +61,4 @@ export const convertFilestoText = async (fileArray) => {
 
     return textScans
     
-}
-
-
-
-
-
-async function changePdfToText(pdfFile) {
-    
-    async function scanSinglePage (page) {
-
-        const worker = await createWorker('eng')
-
-        const result = await worker.recognize(page.content)
-
-        worker.terminate()
-
-        return result
-
-    }
-
-    const pngPages = await pdfToPng(pdfFile.buffer, {
-        viewportScale: 2.0,
-    });
-
-    const scannedPages = await Promise.all(
-        pngPages.map(
-            (page) => {
-                return scanSinglePage(page)
-            }
-    ))
-
-    let text = ""
-
-    scannedPages.forEach(page => {
-        text += page.data.text
-    });
-    
-    const fileText = {
-        text,
-        fileName: pdfFile.originalname
-    }
-    
-    return fileText
-
-}
-
-async function changeWordToText(wordFile) {
-
-    const extractor = new WordExtractor()
-    const extracted = extractor.extract(wordFile.buffer)
-
-    const text = (await extracted).getBody()
-    
-
-
-    const fileText = {
-        text: text,
-        fileName: wordFile.originalname
-    }
-    
-    return fileText
-
-}
-
-async function changePngToText(pngFile) {
-
-    const worker = await createWorker('eng');
-    const ret = await worker.recognize(pngFile.buffer)
-
-    await worker.terminate();
-    
-
-    
-    const fileText = {
-        text: ret.data.text,
-        fileName: pngFile.originalname
-    }
-    
-    return fileText
 }
