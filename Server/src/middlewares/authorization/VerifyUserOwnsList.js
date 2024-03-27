@@ -6,8 +6,6 @@ import { client } from '../../inits/MongoDB.init.js'
 
 export const verifyUserOwnsList = async (req, res, next) => {
 
-    console.log(req.body?.listID)
-
     const userID = req.body?.userID || req.query?.userID
     const listID = req.body?.listID || req.query?.listID
 
@@ -20,10 +18,6 @@ export const verifyUserOwnsList = async (req, res, next) => {
 
 
     const savedList = await listTable.findOne({ _id: listID })
-
-    console.log("saved,", savedList)
-    console.log("user", userID)
-    console.log("listididid", listID)
 
 
 

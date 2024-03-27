@@ -1,16 +1,11 @@
 export async function addUploadLoadingState(req, res, next) {
 
-    req.write({
-        loadingState: {
+    res.append("Loading-State", 
+        JSON.stringify({
             batchLength: Infinity,
             numUploaded: 0,
-            currentUpload: {
-                name: "",
-                scanned: false,
-                uploaded: false
-            }
         }
-    })
+    ))
 
     next()
 
@@ -18,8 +13,8 @@ export async function addUploadLoadingState(req, res, next) {
 
 export async function addFilteringLoadingState(req, res, next) {
 
-    req.write({
-        loadingState: {
+    res.append("Loading-State", 
+        JSON.stringify({
             batchLength: Infinity,
             numFilesFiltered: 0,
             currentFile: {
@@ -31,7 +26,7 @@ export async function addFilteringLoadingState(req, res, next) {
                 numFiltersUsed: 0
             }
         }
-    })
+    ))
 
     next()
 
