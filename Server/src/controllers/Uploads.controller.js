@@ -21,18 +21,11 @@ export const uploadResumesToDB = async (req, res) => {
 
 
 
-    res.set("Loading-State", {...previousLoadingState, batchLength: fileArray.length})
-
     const textScanArray = await Promise.all(fileArray.map(async (file) => {
 
         const result = await convertFileToText(file)
 
         if( !result ) return null
-
-        res.set("Loading-State", {
-            ...previousLoadingState,
-            numUploaded: previousLoadingState.numUploaded + 1            
-        })
 
 
         

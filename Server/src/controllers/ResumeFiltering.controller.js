@@ -44,8 +44,6 @@ export const applyFiltersToResumes = async (req, res) => {
 
         const file = files[fileIndex]
 
-        console.log("file", file)
-
         const fileResult = {
 
             filters,

@@ -6,7 +6,7 @@ import {
 } from "../controllers/Uploads.controller.js"
 
 import { verifyUserOwnsList } from "../middlewares/authorization/VerifyUserOwnsList.js";
-import { addUploadLoadingState } from "../middlewares/CreateAndAddLoadingState.js"
+import { appendLoadingState } from "../middlewares/CreateAndAddLoadingState.js"
 
 
 
@@ -16,7 +16,7 @@ const router = express.Router();
 
 
 
-router.post("/upload-resumes-to-db", addUploadLoadingState, uploadResumesToDB)
+router.post("/upload-resumes-to-db", appendLoadingState, uploadResumesToDB)
 router.post("/update-filters", verifyUserOwnsList, updateFilters)
 
 
