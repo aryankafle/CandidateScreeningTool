@@ -1,4 +1,21 @@
-import { filterResumes, getSavedList, getUserSavedLists } from "../models/services/MongoDB.service.js";
+import { 
+    
+    getSavedList,
+    getUserSavedLists,
+    getTextScansFromBatch,
+    getFiltersFromBatch,
+    updateSavedListResults,
+
+} from "../models/services/MongoDB.service.js";
+
+import {
+
+    getResumeScore,
+    getResumeSummaries,
+    getResumeOverallSummary,
+    getResumeApplicant
+
+} from "../models/services/TextToResponse.service.js"
 
 
 
@@ -7,21 +24,74 @@ import { filterResumes, getSavedList, getUserSavedLists } from "../models/servic
 export const applyFiltersToResumes = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async applyFiltersToResumes`)
-    console.log(`--Request Body: ${req.body.toString()}\n`)
+
+    const listID = req.body?.listID
+    const userID = req.body?.userID
 
 
 
 
+    
+    const files = await getTextScansFromBatch(listID)
 
-    await filterResumes(req.body?.listID)
-
-    res.status(200).json({message: "Successful Upload to Db!"})
-
-
+    const filters = await getFiltersFromBatch(listID)
 
 
 
-    console.log("Controller function finished.\n")
+    const resultsArray = []
+    
+    for(let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+
+        const file = files[fileIndex]
+
+        const fileResult = {
+
+            filters,
+            fileName: file.originalname,
+
+
+
+            scores: [],
+
+
+
+            summaries: await getResumeSummaries(file),
+
+            summary: await getResumeOverallSummary(file),
+
+            applicant: await getResumeApplicant(file)
+
+        }
+
+
+
+        for(let filterIndex = 0; filterIndex < filters.length; filterIndex++) {
+
+            const filter = filters[filterIndex]
+
+            fileResult.scores.push( await getResumeScore(file, filter) )
+
+        }
+
+
+
+        resultsArray.push(fileResult)
+
+    }
+
+
+
+    await updateSavedListResults(listID, userID, resultsArray)
+
+
+
+
+    res.status(200).send({
+        error: false,
+        message: "Successfully applied filters to resumes!"
+    })
+
+    console.log("Controller function finished.\n\n\n")
 
 }
 

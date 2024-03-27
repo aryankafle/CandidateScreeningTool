@@ -1,6 +1,5 @@
 import * as database from '../../database/MongoDB.database.js'; 
 import { client } from '../../inits/MongoDB.init.js'
-import { getResultsFromFilesWithFilters } from './TextToResponse.service.js';
 import crypto from "crypto"
 
 
@@ -131,46 +130,52 @@ export const updateResumeFilters = async (listID, filters) => {
 
 
 
-
-export const filterResumes = async (listID) => {
-
-    console.log(`----Filtering resumes for saved list with id ${listID}.`)
-
-
-
-
+export const getTextScansFromBatch = async (listID) => {
 
     const db = client.db("resumes")
 
     const fileBatches = db.collection("file-batches")
     const savedLists = db.collection("saved-lists")
 
-
-
     const savedList = await savedLists.findOne({ _id: listID })
-
-    
 
     const files = await fileBatches.findOne({ _id: savedList.files_id })
     const fileTextScans = files?.file_textscans
 
-
-
-    const results = await getResultsFromFilesWithFilters(fileTextScans, savedList.filters)
-
-
-
-    savedLists.updateOne({ _id: listID }, { $set: { results } })
-
-
-
-
-
-    console.log("----Finished filtering resumes.")
+    return fileTextScans
 
 }
 
 
+
+export const getFiltersFromBatch = async (listID) => {
+    
+    const db = client.db("resumes")
+
+    const savedLists = db.collection("saved-lists")
+
+    const savedList = await savedLists.findOne({ _id: listID })
+
+    return savedList.filters
+
+}
+
+
+
+export const updateSavedListResults = async (listID, userID, results) => {
+
+    const db = client.db("resumes")
+
+    const users = db.collection('users');
+    const savedLists = db.collection("saved-lists")
+
+    await savedLists.updateOne({ _id: listID }, { $set: { results } })
+
+    await users.updateOne({ _id: userID }, { 
+        $push: { saved_list_ids: listID }, 
+    })
+
+} 
 
 
 

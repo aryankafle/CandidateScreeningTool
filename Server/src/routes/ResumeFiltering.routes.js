@@ -5,11 +5,10 @@ import express from "express";
 import {
     applyFiltersToResumes,
     getResumeList,
-    getAllUserSavedLists
 } from "../controllers/ResumeFiltering.controller.js";
 
-import { verifyUserOwnsList } from "../middlewares/VerifyUserOwnsList.js";
-
+import { verifyUserOwnsList } from "../middlewares/authorization/VerifyUserOwnsList.js";
+import { appendLoadingState } from "../middlewares/CreateAndAddLoadingState.js";
 
 
 
@@ -18,7 +17,7 @@ const router = express.Router();
 
 
 
-router.post("/apply-filters-to-resumes", verifyUserOwnsList, applyFiltersToResumes)
+router.post("/apply-filters-to-resumes", appendLoadingState, verifyUserOwnsList, applyFiltersToResumes)
 router.get("/get-resume-list", verifyUserOwnsList, getResumeList)
 
 
