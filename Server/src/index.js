@@ -33,7 +33,7 @@ import {
 
 const app = express();
 
-app.disable("X-Powered-By");
+
 
 app.set('trust proxy', 1)
 
@@ -43,21 +43,12 @@ app.use(cors({
     credentials: true,
 }))
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header("Access-Control-Allow-Origin", "https://archnatincandidatescreeningtool.netlify.app");
-    res.header("Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-HTTP-Method-Override, Set-Cookie, Cookie");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    next();  
-});
-
 app.use(
     expressSession({
         secret: "secret_session",
         resave: false,
         saveUninitialized: true,
-        cookie: { 
+        cookie: {
             partitioned: true,
             sameSite: "none",
             secure: !process.env.LOCAL,
