@@ -58,6 +58,7 @@ app.use(
         resave: false,
         saveUninitialized: true,
         cookie: { 
+            sameSite: false,
             secure: !process.env.LOCAL,
         }
     })
