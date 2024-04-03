@@ -44,7 +44,12 @@ app.use(cors({
     credentials: true,
 }))
 
-app.options('*', cors());
+app.use((req, res, next) => {
+
+    res.header('Access-Control-Allow-Origin', "https://archnatincandidatescreeningtool.netlify.app")
+    next()
+    
+})
 
 app.use(
     expressSession({
@@ -53,8 +58,8 @@ app.use(
         saveUninitialized: true,
         cookie: {
             partitioned: true,
-            sameSite: "none",
-            secure: !process.env.LOCAL,
+            sameSite: "strict",
+            secure: true,
         }
     })
 )
