@@ -40,8 +40,11 @@ app.set('trust proxy', 1)
 app.use(cors({
     origin: "https://archnatincandidatescreeningtool.netlify.app",
     methods: "GET,POST,PUT,DELETE",
+    optionsSuccessStatus: 200,
     credentials: true,
 }))
+
+app.options('*', cors());
 
 app.use(
     expressSession({
