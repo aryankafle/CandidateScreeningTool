@@ -6,11 +6,11 @@ export const sessionConfig = {
     secret: config.SESSION_SECRET,
     store: mongoStore.create({
         client,
-        dbName: 'sessions'
+        dbName: 'authentication'
     }),
     resave: false,
     saveUninitialized: true,
-    origin: config.CLIENT,
+    maxAge: 1000*60*24*7, // 1 week
     cookie: {
         partitioned: true,
         sameSite: "none",
