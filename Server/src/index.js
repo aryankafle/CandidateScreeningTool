@@ -34,6 +34,19 @@ import {
 
 const app = express();
 
+app.use(express.json());
+
+app.get("/ping", (req, res) => {
+    res.status(200).json({message: "pong"})
+});
+
+app.get("/", (req, res) => {
+    res.status(200).json({message: "Archnatin CST Back-end Server"})
+})
+
+
+
+
 
 
 app.set('trust proxy', 1)
@@ -51,12 +64,8 @@ app.use(expressSession(sessionConfig))
 
 
 
-
-
 app.use(passport.initialize())
 app.use(passport.session())
-
-app.use(express.json());
 
 
 
@@ -75,17 +84,6 @@ app.use("/resume-filtering", verifyMongoDbConnection, verifyUserRegistered, resu
 app.use("/test", testRoutes)
 
 app.use("/selection", verifyMongoDbConnection, verifyUserRegistered, selectionRoutes)
-
-
-
-
-app.get("/ping", (req, res) => {
-    res.status(200).json({message: "pong"})
-});
-
-app.get("/", (req, res) => {
-    res.status(200).json({message: "Archnatin CST Back-end Server"})
-})
 
 
 
