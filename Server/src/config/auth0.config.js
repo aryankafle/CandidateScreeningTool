@@ -1,6 +1,4 @@
-import dotenv from "dotenv"
-
-dotenv.config()
+import config from "./env.config.js";
 
 
 
@@ -9,10 +7,10 @@ dotenv.config()
 const auth0Config = {
   authRequired: false,
   auth0Logout: true,
-  secret: `${process.env.AUTH0_CLIENT_SECRET}`,
-  baseURL: 'http://localhost:3000',
-  clientID: `${process.env.AUTO0_CLIENT_ID}`,
-  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
+  secret: `${config.AUTH0_CLIENT_SECRET}`,
+  baseURL: config.CLIENT,
+  clientID: `${config.AUTO0_CLIENT_ID}`,
+  issuerBaseURL: config.AUTH0_ISSUER_BASE_URL
 }; 
 
 

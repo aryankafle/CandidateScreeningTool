@@ -1,13 +1,12 @@
 import mongoConfig from "../config/MongoDB.config.js"
 import { MongoClient } from 'mongodb';
-import dotenv from "dotenv"
-dotenv.config();
+import config from "../config/env.config.js";
 
 
 
 
 
-export const client = new MongoClient(process.env.MONGODB_ACCESS_URI, mongoConfig);
+export const client = new MongoClient(config.MONGODB_ACCESS_URI, mongoConfig);
 
 export var isConnected = false;
 

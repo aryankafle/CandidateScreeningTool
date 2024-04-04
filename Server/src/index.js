@@ -2,8 +2,9 @@ import express from "express";
 import expressSession from "express-session";
 import passport from "./passport.js"
 
-import dotenv from "dotenv";
-dotenv.config()
+import config from "./config/env.config.js"
+import { corsConfig } from "./config/cors.config.js";
+import { sessionConfig } from "./config/session.config.js"
 
 import cors from "cors";
 import multer from "multer"
@@ -37,33 +38,18 @@ const app = express();
 
 app.set('trust proxy', 1)
 
-app.use(cors({
-    origin: "https://archnatincandidatescreeningtool.netlify.app",
-    methods: "GET,POST,PUT,DELETE",
-    optionsSuccessStatus: 200,
-    credentials: true,
-}))
-
-app.use(
-    expressSession({
-        secret: "secret_session",
-        resave: false,
-        saveUninitialized: true,
-        origin: "https://archnatincandidatescreeningtool.netlify.app",
-        cookie: {
-            partitioned: true,
-            sameSite: "none",
-            secure: true,
-        }
-    })
-)
-
 app.use((req, res, next) => {
-
-    res.header('Access-Control-Allow-Origin', "https://archnatincandidatescreeningtool.netlify.app")
+    res.header('Access-Control-Allow-Origin', config.CLIENT)
     next()
-    
 })
+
+
+
+app.use(cors(corsConfig))
+
+app.use(expressSession(sessionConfig))
+
+
 
 
 
@@ -105,6 +91,6 @@ app.get("/", (req, res) => {
 
 
 
-app.listen(process.env.EXPRESS_PORT, () => {
-    console.log(`Express is running and server is listening on ${process.env.EXPRESS_PORT}`)
+app.listen(config.EXPRESS_PORT, () => {
+    console.log(`Express is running and server is listening on ${config.EXPRESS_PORT}`)
 });
