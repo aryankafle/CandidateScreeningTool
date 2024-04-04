@@ -44,6 +44,20 @@ app.use(cors({
     credentials: true,
 }))
 
+app.use(
+    expressSession({
+        secret: "secret_session",
+        resave: false,
+        saveUninitialized: true,
+        origin: "https://archnatincandidatescreeningtool.netlify.app",
+        cookie: {
+            partitioned: true,
+            sameSite: "none",
+            secure: true,
+        }
+    })
+)
+
 app.use((req, res, next) => {
 
     res.header('Access-Control-Allow-Origin', "https://archnatincandidatescreeningtool.netlify.app")
@@ -51,18 +65,7 @@ app.use((req, res, next) => {
     
 })
 
-app.use(
-    expressSession({
-        secret: "secret_session",
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            partitioned: true,
-            sameSite: "strict",
-            secure: true,
-        }
-    })
-)
+
 
 app.use(passport.initialize())
 app.use(passport.session())
