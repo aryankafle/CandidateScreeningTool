@@ -6,29 +6,6 @@ import crypto from "crypto"
 
 
 
-export const testMongoDBConnection = () => {
-
-    return database.checkMongoDBConnection()
-
-}
-
-
-
-
-
-export const viewTable = async () => {
-
-    const db = client.db("resumes")
-    const coll = db.collection("example_list")
-
-    await coll.find().toArray()
-
-}
-
-
-
-
-
 export const uploadNewSavedList = async (original_files, file_textscans, saved_list_id, name_of_list, owner_of_list) => {
 
     console.log("----Inserting resume data.")
