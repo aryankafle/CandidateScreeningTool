@@ -17,3 +17,9 @@ export const sessionConfig = {
         secure: !config.IS_LOCAL,
     }
 }
+
+if(config.IS_LOCAL) {
+    sessionConfig.cookie = {
+        secure: !config.IS_LOCAL,
+    }
+}
