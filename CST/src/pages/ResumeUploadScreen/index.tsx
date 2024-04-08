@@ -439,6 +439,13 @@ const ResumeUploadScreen = () => {
                                 ref={hiddenFileInput}
                                 onChange={handleFileUpload}
                             />
+                            {/* 
+                                .docx: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                                .doc:  application/msword
+                                .pdf:  application/pdf
+                                .png:  image/png
+                                .jpg:  image/jpeg
+                            */}
                         </form>
                     </Button>
                 </div>
