@@ -15,8 +15,6 @@ export const uploadResumesToDB = async (req, res) => {
     const batchName = req.body?.batchName
     const fileArray = req.files
 
-    const previousLoadingState = res.get("Loading-State")
-
 
 
 
