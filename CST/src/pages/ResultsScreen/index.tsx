@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
+import { useSelectableList } from "../../hooks/SelectableList";
+
 
 
 const ResultsScreen = () => {
@@ -28,6 +30,8 @@ const ResultsScreen = () => {
     const selectionContext = useContext(SelectionContext)
 
     const { userData } = useContext(UserContext)
+
+    const {savedLists, setSavedLists} = useContext(SavedListsContext)
 
     const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
@@ -90,10 +94,30 @@ const ResultsScreen = () => {
     }, [description, isOldList, resumes, selectionContext.currentSavedList, title])
 
 
+    const {
+
+        selectableItems,
+
+        anySelected,
+
+        getAllSelectedItems,
+
+        selectAll,
+        removeCurrentSelectionFromList,
+        
+        handleSelectionOnKeyDown,
+        handleSelectionOnClick
+
+    } = useSelectableList<SavedList>(savedLists, setSavedLists)
+
+    const checkSelectedCandidates = () =>{
 
 
+    }
+    
 
-    const handleSaveList = () => {
+
+    const handleSaveList = () => { //change this
         
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
             if(savedListContext.savedLists[i].name.trim() === title.trim() && title !== "") {
