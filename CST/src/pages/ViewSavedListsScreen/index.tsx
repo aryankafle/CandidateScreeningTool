@@ -103,8 +103,8 @@ const ViewSavedListsScreen = () => {
 
         if(getAllSelectedItems().length !== 2) return;
 
-        const firstList = selected[1]
-        const secondList = selected[2]
+        const firstList = selected[0]
+        const secondList = selected[1]
 
         const combined = SavedList.combine(firstList, secondList)
 
