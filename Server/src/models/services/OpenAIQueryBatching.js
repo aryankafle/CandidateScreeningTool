@@ -14,7 +14,12 @@ let tokensRemainingThisMinute = tokenLimits.PER_MINUTE
 
 function resetTokenPerMinuteLimit() {
 
+
+    console.log("Refreshing Token Limit... ")
+
     tokensRemainingThisMinute = tokenLimits.PER_MINUTE
+
+    console.log(`OpenAI Tokens-Per-Minute Limit Refreshed. Tokens Remaining: ${tokensRemainingThisMinute}`)
 
 }
 
@@ -48,6 +53,14 @@ async function removeQueryFromStack(index) {
 
         tokensRemainingThisMinute -= query.numTokens
 
+        console.log(
+            `
+            Requesting OpenAI...
+            Request Index: ${index};
+            Tokens Used: ${query.numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}
+            `
+        )
+
         makeChatGPTRequest(query.messages).then(
             (GPTResponse) => {
 
@@ -69,7 +82,7 @@ async function removeQueryFromStack(index) {
 
 
 
-export async function makeAIRequest (messages) {
+export function makeAIRequest (messages) {
 
     let numTokens = getNumTokensFromRequest(messages)
 
@@ -96,6 +109,6 @@ export async function makeAIRequest (messages) {
 
     queryStack.push(query)
 
-    return await getQueryResponse(query)
+    return getQueryResponse(query)
 
 }

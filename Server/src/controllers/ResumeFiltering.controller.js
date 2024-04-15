@@ -39,11 +39,9 @@ export const applyFiltersToResumes = async (req, res) => {
 
 
     const resultsArray = []
-    
-    for(let fileIndex = 0; fileIndex < files.length; fileIndex++) {
 
-        const file = files[fileIndex]
-
+    await Promise.all(files.map(async (file) => {
+        
         const fileResult = {
 
             filters,
@@ -77,7 +75,7 @@ export const applyFiltersToResumes = async (req, res) => {
 
         resultsArray.push(fileResult)
 
-    }
+    }))
 
 
 

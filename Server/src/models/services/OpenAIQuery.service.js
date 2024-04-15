@@ -1,7 +1,9 @@
-import {openAICllient} from "../../inits/OpenAI.init.js"
 import openaiConfig from "../../config/openai.config.js"
+import OpenAI from "openai"
 
 export async function makeChatGPTRequest (messages) {
+
+    const openAICllient = new OpenAI(openaiConfig.apiKey);
 
     const GPTResponse = await openAICllient.chat.completions.create({
         messages,
