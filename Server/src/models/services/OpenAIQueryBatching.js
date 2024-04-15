@@ -26,7 +26,7 @@ setInterval(resetTokenPerMinuteLimit, 1000*60) // Reset tokens every minute
 
 async function getQueryResponse (query) {
 
-    const index = queryStack.findIndex(query)
+    const index = queryStack.indexOf(query)
 
     if(index === -1) throw new Error("Query not added to the OpenAI request stack!")
 
@@ -38,7 +38,7 @@ async function getQueryResponse (query) {
 
 async function removeQueryFromStack(index) {
 
-    return new Promise<AIMessage>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
         while(queryStack.length !== index + 1) continue
 
