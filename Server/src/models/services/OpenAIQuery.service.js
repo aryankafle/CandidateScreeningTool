@@ -1,31 +1,20 @@
 import {openAICllient} from "../../inits/OpenAI.init.js"
 import openaiConfig from "../../config/openai.config.js"
 
-export const queryAI = async (message, role) => {
+export async function makeChatGPTRequest (messages) {
 
-    const query = openaiConfig.query
-    query.messages.pop();
+    const GPTResponse = await openAICllient.chat.completions.create({
+        messages,
+        model: openaiConfig.model
+    })
+
+    const response = {
+
+        content: GPTResponse.choices[0].message.content || "No Content.",
+        role: GPTResponse.choices[0].message.role
     
-
-
-    const newQuery = {
-        role: role,
-        content: message
     }
 
-    query.messages.push(newQuery)
-
-    try {
-
-        const GPTResponse = await openAICllient.chat.completions.create(query)
-
-        return GPTResponse 
-
-    }
-    catch (err) {
-
-        throw new Error(`Error creating GPTResponse: ${err}`)
-
-    }
+    return response
 
 }
