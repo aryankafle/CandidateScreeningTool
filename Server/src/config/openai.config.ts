@@ -1,6 +1,12 @@
+import { TiktokenEncoding } from "js-tiktoken"
 import config from "./env.config.js"
 
 export default {
+    apiKey: config.OPENAI_API_KEY,
+    model: "gpt-3.5-turbo",
+    tokenEncoding: "cl100k_base" as TiktokenEncoding,
+
+
     openAI: {
         apiKey: config.OPENAI_API_KEY,
     },
