@@ -498,10 +498,21 @@ const ResumeUploadScreen = () => {
 
 
             <div className="flex justify-center">
+
                 <Button
-                    className=" dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                                border-black text-black hover:bg-grayMidDark
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
+                    // className=" dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                    //             border-black text-black hover:bg-grayMidDark
+                    //             flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
+                    className={
+                        selectionContext.uploadedFiles.length > 1 ?
+                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                            border-black text-black hover:bg-grayMidDark animate-pulse
+                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                        :
+                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                            border-black text-black hover:bg-grayMidDark
+                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                    }
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
