@@ -275,6 +275,20 @@ const FilterScreen = () => {
     }
 
 
+    const instructionPanel = () => {
+        return(
+            <div className="bg-white dark:bg-grayDark
+                            flex flex-col self-center text-xl">
+                <div className="flex justify-center text-white">
+                    This section contains the current layers of filters that are going to be applied to your resumes.
+                    Click on predetermined filters to add them to the list, or add your own by typing in a custom keyword bias.
+                    Arrange the importance of each filter by dragging them to different positions within the list. 
+                </div>
+            </div>
+        )
+    }
+
+
 
 
 
