@@ -51,7 +51,7 @@ class HasDegreeFilter extends Filter {
 
     constructor() {
 
-        super("Resume Mentions Collegiate Degree", "The resume should indicate that the applicant has graduated college and has a college degree of some kind.")
+        super("Resume Mentions Collegiate Degree", "The resume must show that the applicant is a COLLEGE GRADUATE and ALREADY HAS a collegiate level degree. This must be expliclity stated. Give a score of 0 if they attend high school.")
     
     }
 

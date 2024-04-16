@@ -1,5 +1,5 @@
 import { tokenLimits } from "../../config/openai.config.js"
-import { getNumTokensFromRequest } from '../utils/OpenAIQueryHelpers.js';
+import { getNumTokensFromRequest } from './OpenAIQueryHelpers.js';
 import { makeChatGPTRequest } from "./OpenAIQuery.service.js";
 
 
@@ -57,14 +57,19 @@ async function removeQueryFromStack(index) {
             `
             Requesting OpenAI...
             Request Index: ${index};
-            Tokens Used: ${query.numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}
             `
         )
 
-        makeChatGPTRequest(query.messages).then(
+        makeChatGPTRequest(query.messages, query.chatInstance).then(
             (GPTResponse) => {
 
                 queryStack.pop()
+
+                tokensRemainingThisMinute += query.numTokens
+                tokensRemainingThisMinute -= GPTResponse.totalTokensUsed
+
+                console.log(`Request Complete. Tokens Used: ${query.numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}`)
+
                 resolve(GPTResponse)
             
             },
@@ -82,7 +87,7 @@ async function removeQueryFromStack(index) {
 
 
 
-export function makeAIRequest (messages) {
+export function makeAIRequest (messages, chatInstance) {
 
     let numTokens = getNumTokensFromRequest(messages)
 
@@ -103,7 +108,8 @@ export function makeAIRequest (messages) {
     const query = {
 
         messages,
-        numTokens
+        numTokens,
+        chatInstance
     
     }
 

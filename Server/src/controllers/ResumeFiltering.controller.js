@@ -10,12 +10,12 @@ import {
 
 import {
 
-    getResumeScore,
-    getResumeSummaries,
-    getResumeOverallSummary,
-    getResumeApplicant
+    getFilterScoresForResume,
+    getSectionSummariesForResume,
+    getOverallSummaryForResume,
+    getCandidateNameFromResume
 
-} from "../models/services/TextToResponse.service.js"
+} from "../models/services/ResumeScreening.service.js"
 
 
 
@@ -41,39 +41,31 @@ export const applyFiltersToResumes = async (req, res) => {
     const resultsArray = []
 
     await Promise.all(files.map(async (file) => {
-        
-        const fileResult = {
 
-            filters,
+        let result = {
+
+            filters: filters,
             fileName: file.originalname,
-
-
-
             scores: [],
-
-
-
-            summaries: await getResumeSummaries(file),
-
-            summary: await getResumeOverallSummary(file),
-
-            applicant: await getResumeApplicant(file)
+            summaries: [],
+            summary: "",
+            applicant: {name: undefined}
 
         }
 
-
-
-        for(let filterIndex = 0; filterIndex < filters.length; filterIndex++) {
-
-            const filter = filters[filterIndex]
-
-            fileResult.scores.push( await getResumeScore(file, filter) )
-
-        }
-
-
-
-        resultsArray.push(fileResult)
+        await Promise.all([
+            
+            getFilterScoresForResume(file, filters).then((scores) => result.scores = scores),
+            
+            getSectionSummariesForResume(file).then((summaries) => result.summaries = summaries),
+            
+            getOverallSummaryForResume(file).then((summary) => result.summary = summary),
+            
+            getCandidateNameFromResume(file).then((applicant) => result.applicant = applicant)
+        
+        ])
+        
+        resultsArray.push(result)
 
     }))
 
