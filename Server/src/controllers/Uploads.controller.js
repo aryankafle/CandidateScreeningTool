@@ -1,6 +1,8 @@
 import { updateResumeFilters } from "../models/services/MongoDB.service.js";
 import { uploadNewSavedList } from "../models/services/MongoDB.service.js";
 import { convertFileToText } from "../models/services/TextScan.service.js";
+import { tokenLimits } from "../config/openai.config.js";
+import { getNumTokensFromRequest } from "../models/utils/OpenAIQueryHelpers.js";
 
 
 
@@ -40,6 +42,33 @@ export const uploadResumesToDB = async (req, res) => {
             fileName: file.originalname,
             fileType: file.mimetype,
             message: `Error getting text scan for file ${file.originalname} of type ${file.mimetype}.`
+        })
+
+    }
+
+    const scansOverLimit = textScanArray.filter((scan) => {
+
+        try {
+
+            const scanTokens = getNumTokensFromRequest([{
+                role: "user",
+                content: scan.text
+            }])
+
+            if(scanTokens >= tokenLimits.SCAN_TOKEN_LIMIT) return true
+
+        } catch (error) { return true }
+
+        return false;
+
+    })
+
+    if(scansOverLimit.length > 0) {
+        
+        return res.status(500).json({
+            error: true,
+            scans: scansOverLimit,
+            message: `Some text scans over maximum scan token limit of ${tokenLimits.SCAN_TOKEN_LIMIT}.`
         })
 
     }
