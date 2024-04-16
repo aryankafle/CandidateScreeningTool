@@ -286,7 +286,8 @@ const FilterScreen = () => {
                 <div className="flex justify-center text-white p-10">
                     This section contains the current layers of filters that are going to be applied to your resumes.
                     Click on predetermined filters to add them to the list, or add your own by typing in a custom keyword bias.
-                    Arrange the importance of each filter by dragging them to different positions within the list. 
+                    Arrange the importance of each filter by dragging them to different positions within the list.
+                    Once you are happy with your filters, click "Apply Filters" at the top right of the page.
                 </div>
 
                 <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
