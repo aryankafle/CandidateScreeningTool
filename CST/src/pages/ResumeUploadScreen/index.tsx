@@ -329,9 +329,13 @@ const ResumeUploadScreen = () => {
     const FileCard = (props: {index: number}) => {
         return (
 
-            <div className="text-black hover:bg-grayMidDark
+            <div className="text-black hover:bg-black/25
                             dark:text-white flex flex-row 
-                            px-[3rem] py-[3rem] text-xl">
+                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
+                            
+                            onClick={(event) => {
+                                handleSelectionOnClick(event, props.index)
+                            }}>
 
                 <div 
                     className={
@@ -344,9 +348,6 @@ const ResumeUploadScreen = () => {
                             dark:text-white no-underline font-normal
                             flex-grow select-none cursor-pointer`
                     }
-                    onClick={(event) => {
-                        handleSelectionOnClick(event, props.index)
-                    }}
                 >
                     {selectableItems[props.index].item.name}
                 </div>
