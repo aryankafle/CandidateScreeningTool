@@ -259,7 +259,7 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                className=" bg-grayMidDark
+                className=" bg-grayMidDark text-4xl
                             flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
