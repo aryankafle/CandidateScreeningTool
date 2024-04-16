@@ -326,7 +326,7 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[2rem]">
+                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[2rem] rounded-tl-lg">
                                 <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}
@@ -389,7 +389,7 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretBackOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex w-[1rem] h-full bg-green dark:bg-white" />
+                            <div className="flex w-[1rem] h-full bg-green dark:bg-white rounded-tl-lg" />
                         </div>
                     }
                 </div>
