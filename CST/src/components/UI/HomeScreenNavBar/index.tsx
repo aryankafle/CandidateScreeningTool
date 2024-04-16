@@ -37,11 +37,11 @@ const NavBar = () => {
             <Button className={
                     location.pathname === "/home/resume-upload" ?
                         `bg-black text-white hover:bg-gray
-                        dark:bg-black dark:text-white dark:hover:bg-grayMidDark
+                        dark:bg-black dark:text-white dark:hover:bg-black/90
                         flex py-[1rem] grow justify-center border-b-4 border-white`
                     :
                         `bg-black text-white hover:bg-gray
-                        dark:bg-black dark:text-white dark:hover:bg-grayMidDark
+                        dark:bg-black dark:text-white dark:hover:bg-black/90
                         flex py-[1rem] grow justify-center`
                     }
                     onClick={handleResumeUploadClick}>
@@ -50,11 +50,11 @@ const NavBar = () => {
             <Button className={
                     location.pathname === "/home/saved-lists" ?
                         `bg-black text-white hover:bg-gray
-                        dark:bg-black dark:text-white dark:hover:bg-grayMidDark
+                        dark:bg-black dark:text-white dark:hover:bg-black/90
                         flex py-[1rem] grow justify-center border-b-4 border-white`
                     :
                         `bg-black text-white hover:bg-gray
-                        dark:bg-black dark:text-white dark:hover:bg-grayMidDark
+                        dark:bg-black dark:text-white dark:hover:bg-black/90
                         flex py-[1rem] grow justify-center`
                     }
                     onClick={handleSavedListsClick}>
