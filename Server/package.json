@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "set NODE_ENV=development&& nodemon ./src/index.js",
-    "build": "set NODE_ENV=production&& nodemon ./src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
+    "build": "cross-env NODE_ENV=production nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -33,5 +33,8 @@
     "start": "^5.1.0",
     "tesseract.js": "^5.0.4",
     "word-extractor": "^1.0.4"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
