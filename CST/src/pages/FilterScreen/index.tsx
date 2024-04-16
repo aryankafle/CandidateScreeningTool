@@ -9,6 +9,7 @@ import DraggableList from '../../components/views/DraggableList/';
 import { SelectionContext } from '../../context/SelectionContext';
 import { FlagContext } from '../../context/FlagContext';
 import Modal from '../../components/modals/Modal';
+import { helpCircleOutline } from 'ionicons/icons';
 
 
 
@@ -80,6 +81,8 @@ const FilterScreen = () => {
     const { updateFlag } = useContext(FlagContext)
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
 
 
 
@@ -275,15 +278,20 @@ const FilterScreen = () => {
     }
 
 
-    const instructionPanel = () => {
+    const InstructionPanel = () => {
         return(
             <div className="bg-white dark:bg-grayDark
-                            flex flex-col self-center text-xl">
-                <div className="flex justify-center text-white">
+                            flex flex-col self-center text-3xl
+                            max-w-5xl">
+                <div className="flex justify-center text-white p-10">
                     This section contains the current layers of filters that are going to be applied to your resumes.
                     Click on predetermined filters to add them to the list, or add your own by typing in a custom keyword bias.
                     Arrange the importance of each filter by dragging them to different positions within the list. 
                 </div>
+
+                <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
+                    OK
+                </Button>
             </div>
         )
     }
@@ -304,7 +312,13 @@ const FilterScreen = () => {
                     <div className="flex flex-col flex-shrink text-5xl text-white p-[1rem] mb-0.5">
                         Current Filter Layers:
                     </div>
+                    <IonIcon className="text-4xl text-white flex justify-center" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
                 </div>
+                {instructionsPanelClicked && 
+                    <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                        <InstructionPanel />
+                    </Modal>
+                }
                 <div className="flex flex-col select-none overflow-y-scroll">
                     <div className="pb-[1.5rem]"/>
                     <DraggableList
