@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
@@ -14,6 +14,8 @@ import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
+import { event } from "jquery";
+import { index } from "mathjs";
 
 
 
@@ -31,19 +33,19 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const {savedLists, setSavedLists} = useContext(SavedListsContext)
-
     const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
     const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
     const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
     const [ resumes ] = useState(selectionContext.currentSavedList.results || [])
 
-    const [ selectedResumes ] = useState([] as Result[])
+    //const [ selectedResumes ] = useState([] as Result[])
+
+    const [ selectedResumes, setSelectedResumes] = useState(resumes);
 
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
-
+    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
 
 
 
@@ -98,22 +100,50 @@ const ResultsScreen = () => {
 
         selectableItems,
 
-        anySelected,
-
         getAllSelectedItems,
 
         selectAll,
         removeCurrentSelectionFromList,
         
+        handleShiftClickSelect,
+        handleCtrlKeySelect,
         handleSelectionOnKeyDown,
-        handleSelectionOnClick
 
-    } = useSelectableList<SavedList>(savedLists, setSavedLists)
-
-    const checkSelectedCandidates = () =>{
+    } = useSelectableList<Result>(selectedResumes, setSelectedResumes)
 
 
-    }
+
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        if(event.key === "Delete") {
+            removeCurrentSelectionFromList()
+        }
+        handleSelectionOnKeyDown(event)
+    }, [removeCurrentSelectionFromList, handleSelectionOnKeyDown])
+
+
+    const handleSelectionOnClick = useCallback((event : React.MouseEvent<any, MouseEvent>, itemIndex : number) => {
+
+        if (event.shiftKey) {
+            handleShiftClickSelect(itemIndex);
+        }
+        else if (event.ctrlKey) {
+            handleCtrlKeySelect(itemIndex);
+        }
+
+        setPreviouslySelectedIndex(itemIndex);
+    }, [handleCtrlKeySelect, handleShiftClickSelect])
+    
+
+    
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
     
 
 
@@ -310,10 +340,18 @@ const ResultsScreen = () => {
                     <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
-                    <div className="flex flex-col justify-center gap-[1.3rem]">
-                        {resumes?.map((candidate) => <IndividualCandidateCard 
+                    <div className=
+                    {
+                        true?
+                        `flex flex-col justify-center gap-[1.3rem] text-red`
+                        :
+                        "flex flex-col justify-center gap-[1.3rem] text-white"
+                    }
+                    >
+                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
+                            //selected={selectableItems[index].isSelected}
                         />)}
                     </div>
                 </div>  
