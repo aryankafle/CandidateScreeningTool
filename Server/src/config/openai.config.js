@@ -13,6 +13,8 @@ export const tokenLimits = {
 
     PER_MINUTE: 59000, // (exact 60000)
     MEMORY_PER_REQUEST: 4000, // (exact 4096)
+
+    SCAN_TOKEN_LIMIT: 2000,
     
     defaults: {
     

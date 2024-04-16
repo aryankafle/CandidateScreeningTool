@@ -89,21 +89,7 @@ async function removeQueryFromStack(index) {
 
 export function makeAIRequest (messages, chatInstance) {
 
-    let numTokens = getNumTokensFromRequest(messages)
-
-    try {
-        
-        numTokens = getNumTokensFromRequest(messages)
-    
-    }
-    catch (error) {
-        
-        return {
-            role: "MAX TOKENS EXCEEDED",
-            content: "MAX TOKENS EXCEEDED"
-        }
-
-    }
+    const numTokens = getNumTokensFromRequest(messages)
 
     const query = {
 
