@@ -266,7 +266,7 @@ const ResultsScreen = () => {
                     setCurrentCandidate(props.candidate)
                 }}
             >
-                <div className="flex flex-grow self-center justify-center text-grayLight">
+                <div className="flex flex-grow self-center justify-center text-white">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem] bor">
@@ -307,7 +307,7 @@ const ResultsScreen = () => {
                 }
                 <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
                     
-                    <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
+                    <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-3xl">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
                     <div className="flex flex-col justify-center gap-[1.3rem]">
@@ -326,11 +326,11 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[2rem] rounded-tl-lg">
-                                <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
+                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[4rem] rounded-tl-lg">
+                                <div className="flex flex-col py-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}
-                                        placeholder={selectionContext.currentSavedList?.name ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.name ? "" : "Name"}
                                         onChange={
                                             (event) => {
                                                 setTitle(event.target.value)
@@ -340,7 +340,7 @@ const ResultsScreen = () => {
                                     />
                                     <MultilineInput
                                         title={"List Description"}
-                                        placeholder={selectionContext.currentSavedList?.description ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.description ? "" : "Description"}
                                         onChange={
                                             (event) => {
                                                 setDescription(event.target.value)
