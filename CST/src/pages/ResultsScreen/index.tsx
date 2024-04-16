@@ -228,7 +228,7 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[80%] bg-grayDark dark:bg-grayDark">
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] bg-grayDark dark:bg-grayDark">
                 <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
