@@ -41,7 +41,7 @@ const ResultsScreen = () => {
 
     //const [ selectedResumes ] = useState([] as Result[])
 
-    const [ selectedResumes, setSelectedResumes] = useState(resumes);
+    const [ selectedResumes, setSelectedResumes] = useState([] as Result[]);
 
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
@@ -258,7 +258,7 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] bg-grayDark dark:bg-grayDark">
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] max-h-[80%] bg-grayDark dark:bg-grayDark overflow-auto">
                 <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
