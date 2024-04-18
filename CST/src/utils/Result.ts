@@ -71,9 +71,11 @@ export class Result {
     get overallScore() {
 
         let cumulative = 0;
-        // let pureScoreArr = this.scores.map(({filter: Filter, score: int}) => (int));
+        //let pureScoreArr = this.scores.map(({filter: Filter, score: int}) => (int));
 
-        // let highestScore = Math.max.apply(null, pureScoreArr)
+        //let highestScore = Math.max.apply(null, pureScoreArr)
+
+        //make curved scores processes an array
 
         for(let i = 0; i < this.scores.length; i++) {
 
