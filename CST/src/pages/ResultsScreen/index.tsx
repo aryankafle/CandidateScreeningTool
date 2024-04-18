@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
@@ -13,6 +13,10 @@ import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
+import { useSelectableList } from "../../hooks/SelectableList";
+import { event } from "jquery";
+import { index } from "mathjs";
+
 
 
 const ResultsScreen = () => {
@@ -35,11 +39,13 @@ const ResultsScreen = () => {
     const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
     const [ resumes ] = useState(selectionContext.currentSavedList.results || [])
 
-    const [ selectedResumes ] = useState([] as Result[])
+    //const [ selectedResumes ] = useState([] as Result[])
+
+    const [ selectedResumes, setSelectedResumes] = useState(resumes);
 
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
-
+    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
 
 
 
@@ -90,10 +96,58 @@ const ResultsScreen = () => {
     }, [description, isOldList, resumes, selectionContext.currentSavedList, title])
 
 
+    const {
+
+        selectableItems,
+
+        getAllSelectedItems,
+
+        selectAll,
+        removeCurrentSelectionFromList,
+        
+        handleShiftClickSelect,
+        handleCtrlKeySelect,
+        handleSelectionOnKeyDown,
+
+    } = useSelectableList<Result>(selectedResumes, setSelectedResumes)
 
 
 
-    const handleSaveList = () => {
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        if(event.key === "Delete") {
+            removeCurrentSelectionFromList()
+        }
+        handleSelectionOnKeyDown(event)
+    }, [removeCurrentSelectionFromList, handleSelectionOnKeyDown])
+
+
+    const handleSelectionOnClick = useCallback((event : React.MouseEvent<any, MouseEvent>, itemIndex : number) => {
+
+        if (event.shiftKey) {
+            handleShiftClickSelect(itemIndex);
+        }
+        else if (event.ctrlKey) {
+            handleCtrlKeySelect(itemIndex);
+        }
+
+        setPreviouslySelectedIndex(itemIndex);
+    }, [handleCtrlKeySelect, handleShiftClickSelect])
+    
+
+    
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
+    
+
+
+    const handleSaveList = () => { //change this
         
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
             if(savedListContext.savedLists[i].name.trim() === title.trim() && title !== "") {
@@ -204,7 +258,7 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[80%] bg-grayDark dark:bg-grayDark">
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] bg-grayDark dark:bg-grayDark">
                 <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
@@ -242,7 +296,7 @@ const ResultsScreen = () => {
                     setCurrentCandidate(props.candidate)
                 }}
             >
-                <div className="flex flex-grow self-center justify-center text-grayLight">
+                <div className="flex flex-grow self-center justify-center text-white">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem] bor">
@@ -265,7 +319,7 @@ const ResultsScreen = () => {
                 {listWithSameName &&
                     <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
                         <div className="flex flex-col h-[80%] w-[60%] bg-green dark:bg-grayDark self-center border-2 border-grayMid rounded">
-                            <div className="text-grayLight leading-10 text-center">
+                            <div className="text-grayLight leading-10 text-center text-lg">
                                 You already have a saved list named {title}.
                             </div>
                             <div className="text-grayLight leading-10 hover:text-grayMid mx-10 font-bold"
@@ -283,13 +337,21 @@ const ResultsScreen = () => {
                 }
                 <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
                     
-                    <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-full">
+                    <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-3xl">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
-                    <div className="flex flex-col justify-center gap-[1.3rem]">
-                        {resumes?.map((candidate) => <IndividualCandidateCard 
+                    <div className=
+                    {
+                        true?
+                        `flex flex-col justify-center gap-[1.3rem] text-red`
+                        :
+                        "flex flex-col justify-center gap-[1.3rem] text-white"
+                    }
+                    >
+                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
+                            //selected={selectableItems[index].isSelected}
                         />)}
                     </div>
                 </div>  
@@ -302,11 +364,11 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[2rem]">
-                                <div className="flex flex-col pt-[1rem] pb-[1rem] gap-[4rem]">
+                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[4rem] rounded-tl-lg">
+                                <div className="flex flex-col py-[1rem] gap-[4rem]">
                                     <InputBox
                                         title={"List Name"}
-                                        placeholder={selectionContext.currentSavedList?.name ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.name ? "" : "Name"}
                                         onChange={
                                             (event) => {
                                                 setTitle(event.target.value)
@@ -316,7 +378,7 @@ const ResultsScreen = () => {
                                     />
                                     <MultilineInput
                                         title={"List Description"}
-                                        placeholder={selectionContext.currentSavedList?.description ? "" : "name"}
+                                        placeholder={selectionContext.currentSavedList?.description ? "" : "Description"}
                                         onChange={
                                             (event) => {
                                                 setDescription(event.target.value)
@@ -342,11 +404,11 @@ const ResultsScreen = () => {
                                     }
                                     { ( (isOldList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
-                                                className="text-1xl self-center"
+                                                className="text-1xl self-center font-semibold"
                                             >
                                                 {"Save As New List"}
                                             </div>
@@ -365,7 +427,7 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretBackOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex w-[1rem] h-full bg-green dark:bg-white" />
+                            <div className="flex w-[1rem] h-full bg-green dark:bg-white rounded-tl-lg" />
                         </div>
                     }
                 </div>

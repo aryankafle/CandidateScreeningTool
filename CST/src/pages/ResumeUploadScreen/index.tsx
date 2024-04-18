@@ -329,9 +329,13 @@ const ResumeUploadScreen = () => {
     const FileCard = (props: {index: number}) => {
         return (
 
-            <div className="text-black hover:bg-grayMidDark
+            <div className="text-black hover:bg-black/25
                             dark:text-white flex flex-row 
-                            px-[3rem] py-[3rem] text-xl">
+                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
+                            
+                            onClick={(event) => {
+                                handleSelectionOnClick(event, props.index)
+                            }}>
 
                 <div 
                     className={
@@ -344,9 +348,6 @@ const ResumeUploadScreen = () => {
                             dark:text-white no-underline font-normal
                             flex-grow select-none cursor-pointer`
                     }
-                    onClick={(event) => {
-                        handleSelectionOnClick(event, props.index)
-                    }}
                 >
                     {selectableItems[props.index].item.name}
                 </div>
@@ -497,10 +498,21 @@ const ResumeUploadScreen = () => {
 
 
             <div className="flex justify-center">
+
                 <Button
-                    className=" dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                                border-black text-black hover:bg-grayMidDark
-                                flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
+                    // className=" dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                    //             border-black text-black hover:bg-grayMidDark
+                    //             flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
+                    className={
+                        selectionContext.uploadedFiles.length > 1 ?
+                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                            border-black text-black hover:bg-grayMidDark animate-pulse
+                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                        :
+                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
+                            border-black text-black hover:bg-grayMidDark
+                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                    }
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
