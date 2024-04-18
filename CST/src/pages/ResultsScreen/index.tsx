@@ -319,7 +319,7 @@ const ResultsScreen = () => {
                 {listWithSameName &&
                     <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
                         <div className="flex flex-col h-[80%] w-[60%] bg-green dark:bg-grayDark self-center border-2 border-grayMid rounded">
-                            <div className="text-grayLight leading-10 text-center">
+                            <div className="text-grayLight leading-10 text-center text-lg">
                                 You already have a saved list named {title}.
                             </div>
                             <div className="text-grayLight leading-10 hover:text-grayMid mx-10 font-bold"
@@ -404,11 +404,11 @@ const ResultsScreen = () => {
                                     }
                                     { ( (isOldList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
-                                                className="text-1xl self-center"
+                                                className="text-1xl self-center font-semibold"
                                             >
                                                 {"Save As New List"}
                                             </div>
