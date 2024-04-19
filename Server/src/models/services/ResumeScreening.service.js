@@ -91,6 +91,7 @@ export async function getSectionSummariesForResume(resumeFile) {
                     2. "Experience"
                     If you cannot find information that pertains to one of these default sections, simply say that you were not able to find such information.
                     Still include more sections than just these two.
+                    Do not include contact information in these sections.
                     Do not make more than 10 sections in total.`
     })
 
@@ -123,8 +124,12 @@ export async function getSectionSummariesForResume(resumeFile) {
 
     const response = (await makeAIRequest(messages, chatInstance)).content
 
-    const JSONParsedResponse = JSON.parse(response) 
+    var JSONParsedResponse = JSON.parse(response) 
 
+    JSONParsedResponse.summaries.emailAddress = resumeFile.contactInfo.emailAddress
+    JSONParsedResponse.summaries.phoneNumber = resumeFile.contactInfo.phoneNumber
+
+    //console.log(JSONParsedResponse.summaries)
     return JSONParsedResponse.summaries
 
 }

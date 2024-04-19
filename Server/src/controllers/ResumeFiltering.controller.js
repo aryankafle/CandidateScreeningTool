@@ -43,7 +43,7 @@ export const applyFiltersToResumes = async (req, res) => {
     await Promise.all(files.map(async (file) => {
 
         let result = {
-
+            contactInfo: file.contactInfo,
             filters: filters,
             fileName: file.originalname,
             scores: [],

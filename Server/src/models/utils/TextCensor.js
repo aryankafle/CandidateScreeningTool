@@ -11,7 +11,7 @@ export async function censorPhone(string) {
    
     if (!usPhoneNumRegex.test(string)) return {text: string, phoneNumber: "No phone number found"}
 
-    const text = string.replaceAll(usPhoneNumRegex, "")
+    const text = string.replaceAll(usPhoneNumRegex, "555-132-9394")
 
     const censor = {
         text: text,
@@ -34,8 +34,8 @@ export async function censorEmail(string) {
 
     if (!usEmailRegex.test(string)) return {text: string, emailAddress: "No email found"}
 
-    const text = string.replaceAll(usEmailRegex, "")
-
+    const text = string.replaceAll(usEmailRegex, "grum.business@gmail.com")
+    
     const censor = {
         text: text,
         emailAddress: email[0]    

@@ -26,6 +26,7 @@ export const uploadNewSavedList = async (original_files, file_textscans, saved_l
     await fileBatches.insertOne({ _id: files_id, original_files, file_textscans })
 
     await savedLists.insertOne({ 
+        files_id: files_id,
         _id: saved_list_id, 
         owner_of_list,
         users_with_access: [], 
@@ -63,17 +64,28 @@ export const getSavedList = async (listID) => {
 
 
     const db = client.db("resumes")
+    // const fileBatches = db.collection("file-batches")
     const savedLists = db.collection("saved-lists")
-
     const savedList = await savedLists.findOne({ _id: listID })
-
-
-
-
-
+    // console.log(savedList.files_id + "haii")
+    // const fileBatch = await fileBatches.findOne({ _id: savedList.files_id })
+    // var contactInfo = []
+    
+    
+    // for (var i = 0; i < fileBatch.file_textscans.length; i++){
+    //     contactInfo.push(fileBatch.file_textscans[i].contactInfo)
+    // }
+    
+    // console.log(contactInfo)
     console.log("----Done getting saved list.")
+        
 
     return savedList
+    // return {
+    //      savedList: savedList,
+    //      originalFile: fileBatch.original_files,
+    //      contactInfo: contactInfo,
+    // }
 
 }
 
