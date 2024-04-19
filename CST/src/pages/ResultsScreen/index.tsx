@@ -391,11 +391,11 @@ const ResultsScreen = () => {
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
                                     { ( !isOldList && hasChangedFromPreviousSavedList ) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
-                                                className="text-4xl self-center"
+                                                className="text-1xl self-center font-semibold"
                                             >
                                                 {"Save List"}
                                             </div>
