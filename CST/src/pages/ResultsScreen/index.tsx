@@ -16,6 +16,7 @@ import { addSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import { event } from "jquery";
 import { index } from "mathjs";
+import uFuzzy from "@leeoniya/ufuzzy"
 
 
 
@@ -46,6 +47,8 @@ const ResultsScreen = () => {
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
     const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
+
+    const [ searchQuery ] = useState("")
 
 
 
