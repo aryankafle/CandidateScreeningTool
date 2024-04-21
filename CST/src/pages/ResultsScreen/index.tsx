@@ -310,6 +310,30 @@ const ResultsScreen = () => {
     }
 
 
+    useEffect(() => {
+        const haystack = ['example', 'otherthing', 'perchance']
+        const needle = searchQuery
+        const opts = {}
+        const uf = new uFuzzy(opts)
+        const idxs = uf.filter(haystack, needle)
+        if (idxs != null && idxs.length > 0) {
+            let infoThresh = 1e3;
+            if (idxs.length <= infoThresh) {
+              let info = uf.info(idxs, haystack, needle);
+              let order = uf.sort(info, haystack, needle);
+              for (let i = 0; i < order.length; i++) {
+                console.log(haystack[info.idx[order[i]]]);
+              }
+            }
+            else {
+              for (let i = 0; i < idxs.length; i++) {
+                console.log(haystack[idxs[i]]);
+              }
+            }
+          }
+    }, [searchQuery])
+
+
 
     return (
         <div className="flex flex-col flex-grow">
