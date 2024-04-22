@@ -312,7 +312,7 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        const haystack = resumes.map(r => `${r.summary}`)
+        const haystack = resumes.map(r => `${r.applicant.name}¦${r.summary}`)
         const needle = searchQuery
         const opts = {}
         const uf = new uFuzzy(opts)
@@ -323,6 +323,9 @@ const ResultsScreen = () => {
                 let info = uf.info(idxs, haystack, needle);
                 let order = uf.sort(info, haystack, needle);
                 for (let i = 0; i < order.length; i++) {
+                    // for (let u = 0; u < resumes.length; u++) {
+                    //     if
+                    // }
                     console.log(haystack[info.idx[order[i]]]);
                 }
             }
@@ -370,7 +373,7 @@ const ResultsScreen = () => {
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
 
-                    <div className="flex flex-row justify-center">
+                    <div className="flex flex-row justify-center mb-5">
                         <div className="mb-3 xl:w-96">
                             <input
                                 type="search"
@@ -380,7 +383,7 @@ const ResultsScreen = () => {
                                             transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none 
                                             dark:border-white dark:text-white dark:placeholder:text-neutral-200 dark:focus:border-primary"
                                 id="exampleSearch"
-                                placeholder="Type query" 
+                                placeholder="Type search query" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
@@ -405,13 +408,13 @@ const ResultsScreen = () => {
                     {showSidePanel ?
                         <div className="flex flex-row items-start">
                             <Button 
-                                className="flex self-end bg-green dark:bg-white rounded-l-full py-[3rem] mb-[2rem]"
+                                className="flex self-end bg-green dark:bg-grayMidDark rounded-l-full py-[3rem] mb-[2rem]"
                                 onClick={() => { setShowSidePanel(false) }}
                             >
-                                <IonIcon icon={caretForwardOutline} className="self-center text-5xl" />
+                                <IonIcon icon={caretForwardOutline} className="self-center text-5xl text-white" />
                             </Button>
-                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-white py-[1rem] px-[4rem] rounded-tl-lg">
-                                <div className="flex flex-col py-[1rem] gap-[4rem]">
+                            <div className="flex flex-col h-full overflow-auto bg-grayLight dark:bg-grayMidDark py-[1rem] px-[4rem] rounded-tl-lg">
+                                <div className="flex flex-col py-[1rem] gap-[4rem] text-white">
                                     <InputBox
                                         title={"List Name"}
                                         placeholder={selectionContext.currentSavedList?.name ? "" : "Name"}
@@ -437,7 +440,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
                                     { ( !isOldList && hasChangedFromPreviousSavedList ) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] border border-white text-white p-[0.5rem] rounded-[1rem] hover:bg-grayDark"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
@@ -468,10 +471,10 @@ const ResultsScreen = () => {
                     :
                         <div className="flex flex-row items-start">
                             <Button 
-                                className="flex self-end bg-green dark:bg-white rounded-l-full py-[3rem] mb-[2rem]"
+                                className="flex self-end bg-green dark:bg-grayMidDark rounded-l-full py-[3rem] mb-[2rem]"
                                 onClick={() => { setShowSidePanel(true) }}
                             >
-                                <IonIcon icon={caretBackOutline} className="self-center text-5xl" />
+                                <IonIcon icon={caretBackOutline} className="self-center text-5xl text-white" />
                             </Button>
                         </div>
                     }
