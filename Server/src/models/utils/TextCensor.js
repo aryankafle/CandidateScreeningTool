@@ -48,4 +48,11 @@ export async function censorEmail(string) {
 
 
 
+export async function censorEmailGoogle(string){
+    
+}
+
+
+
+
 

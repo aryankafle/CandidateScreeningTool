@@ -368,8 +368,8 @@ export async function getSectionSummariesForResume(resumeFile) {
 
     var JSONParsedResponse = JSON.parse(response) 
 
-    JSONParsedResponse.summaries.emailAddress = resumeFile.contactInfo.emailAddress
-    JSONParsedResponse.summaries.phoneNumber = resumeFile.contactInfo.phoneNumber
+    JSONParsedResponse.summaries.Email = resumeFile.contactInfo.emailAddress
+    JSONParsedResponse.summaries.Phone = resumeFile.contactInfo.phoneNumber
 
     //console.log(JSONParsedResponse.summaries)
     return JSONParsedResponse.summaries
