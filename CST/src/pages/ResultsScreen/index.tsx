@@ -216,25 +216,31 @@ const ResultsScreen = () => {
     const getRatingImage = (grade : Grades) => {
         switch(grade) {
             case Grades.A:
-                return <img alt="'A' Rating" src="assets/a-rating.png"
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
+                // return <img alt="'A' Rating" src="assets/a-rating.png"
+                return <p
+                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
+                        justify-center font-bold bg-green text-5xl text-white">
+                A</p> ;
             case Grades.B:
-                return <img alt="'B' Rating" src="assets/b-rating.png"
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
+                return <p
+                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
+                        justify-center font-bold bg-lightGreen text-5xl text-white">
+                B</p> ;
             case Grades.C:
-                return <img alt="'C' Rating" src="assets/c-rating.png"
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
+                return <p
+                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
+                        justify-center font-bold bg-yellow text-5xl text-white">
+                C</p> ;
             case Grades.D:
-                return <img alt="'D' Rating" src="assets/d-rating.png"
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
+                return <p
+                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
+                        justify-center font-bold bg-orange text-5xl text-white">
+                D</p> ;
             case Grades.F:
-                return <img alt="'F' Rating" src="assets/f-rating.png"
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
+                return <p
+                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
+                        justify-center font-bold bg-redS text-5xl text-white">
+                F</p> ;
             default:
                 throw new Error(`Grade: ${grade} is out of range!`)
         }
@@ -289,8 +295,8 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                className=" bg-grayMidDark
-                            flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
+                className=" bg-grayMidDark border-r-2 border-b-2 border-t-2
+                            flex flex-row flex-grow w-[80%] rounded-r-2xl py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
                     setCurrentCandidate(props.candidate)
@@ -301,7 +307,9 @@ const ResultsScreen = () => {
                 </div>
                 <div className="pr-[2rem] bor">
                     { getRatingImage(props.candidate.grade ) || "asdf" }
-                </div>
+                    {/* <p className="self-center w-[4rem] h-[4rem] border-2 rounded-3xl
+                        text-center ">{}</p> */}
+                </div> 
             </div>
         )
     }
@@ -343,9 +351,9 @@ const ResultsScreen = () => {
                     <div className=
                     {
                         true?
-                        `flex flex-col justify-center gap-[1.3rem] text-red`
+                        `flex flex-col justify-center gap-[1.3rem] text-darkerWhite`
                         :
-                        "flex flex-col justify-center gap-[1.3rem] text-white"
+                        "flex flex-col justify-center gap-[1.3rem] text-red"
                     }
                     >
                         {resumes?.map((candidate, index) => <IndividualCandidateCard 
