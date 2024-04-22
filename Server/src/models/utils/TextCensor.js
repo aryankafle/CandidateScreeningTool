@@ -1,8 +1,5 @@
 
 
-
-
-
 export async function censorPhone(string) {
     
     const usPhoneNumRegex = /\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*/g
@@ -48,9 +45,6 @@ export async function censorEmail(string) {
 
 
 
-export async function censorEmailGoogle(string){
-    
-}
 
 
 
