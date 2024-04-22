@@ -1,3 +1,4 @@
+import crypto from "crypto"
 import { 
     
     getSavedList,
@@ -36,14 +37,12 @@ export const applyFiltersToResumes = async (req, res) => {
 
     const filters = await getFiltersFromBatch(listID)
 
-
-
     const resultsArray = []
 
     await Promise.all(files.map(async (file) => {
 
         let result = {
-
+            fileId: crypto.randomUUID(),
             filters: filters,
             fileName: file.originalname,
             scores: [],
