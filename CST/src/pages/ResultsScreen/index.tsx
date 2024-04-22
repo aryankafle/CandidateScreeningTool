@@ -349,7 +349,9 @@ const ResultsScreen = () => {
                     alongside an OpenAI generated score of the resume based on the filters. You can input a 
                     search query into the search bar in order to search through the resumes for a certain word or name.
                     Click the tab at the bottom of the screen to be able to save this list of resumes and results, 
-                    giving the list a name, the batch name by default, and a description of the list. 
+                    giving the list a name, the batch name by default, and a description of the list. When you are done
+                    browsing through this list, you can click the "Home" button at the top right of the screen to return
+                    to the resume upload page.
                 </div>
 
                 <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
