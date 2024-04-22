@@ -366,7 +366,7 @@ const ResultsScreen = () => {
                 }
                 <div className="overflow-auto h-full text-2xl flex flex-col flex-grow" >
                     
-                    <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-3xl">
+                    <div className="flex flex-row justify-center text-white text-4xl my-10">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
 
