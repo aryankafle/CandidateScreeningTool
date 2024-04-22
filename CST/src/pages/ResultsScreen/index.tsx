@@ -308,7 +308,7 @@ const ResultsScreen = () => {
                 <div className="flex flex-grow self-center justify-center text-white">
                     {props.candidate.applicant.name || "asdf"}
                 </div>
-                <div className="pr-[2rem] bor">
+                <div className="pr-[2rem] bor flex justify-center">
                     { getRatingImage(props.candidate.grade ) || "asdf" }
                 </div>
             </div>
