@@ -1,12 +1,14 @@
+import { GridFSBucket } from 'mongodb';
 import * as database from '../../database/MongoDB.database.js'; 
 import { client } from '../../inits/MongoDB.init.js'
 import crypto from "crypto"
+import streamifier from "streamifier"
 
 
 
 
 
-export const uploadNewSavedList = async (original_files, file_textscans, saved_list_id, name_of_list, owner_of_list) => {
+export const uploadNewSavedList = async (original_files, file_textscans, _id, name_of_list, owner_of_list) => {
 
     console.log("----Inserting resume data.")
 
@@ -16,32 +18,70 @@ export const uploadNewSavedList = async (original_files, file_textscans, saved_l
 
     const db = client.db("resumes")
 
+    const fileBucket = new GridFSBucket(db, {bucketName: "file-buckets"})
     const users = db.collection("users")
-    const fileBatches = db.collection("file-batches")
     const savedLists = db.collection("saved-lists")
 
 
-    const files_id = crypto.randomUUID()
 
-    await fileBatches.insertOne({ _id: files_id, original_files, file_textscans })
+    const file_ids = []
+
+    original_files.map((file, index) => {
+
+        const CHUNK_SIZE = 65536 // 2^16
+
+        const file_id = `${_id}@${index}`
+        const file_name = file.originalname
+        const text_scan = file_textscans[index]
+
+        file_ids.push(file_id)
+
+
+
+        streamifier
+        .createReadStream(file.buffer)
+        .pipe(fileBucket.openUploadStream(
+            file_name,
+            {
+                _id: file_id,
+                chunkSizeBytes: CHUNK_SIZE,
+                metadata: {
+                    from_saved_list: _id,
+                    file_name,
+                    text_scan
+                }
+            }
+        ))
+
+    })
+
+    
 
     await savedLists.insertOne({ 
-        files_id: files_id,
-        _id: saved_list_id, 
+        
+        _id, 
+        file_ids,
+
+
+
         owner_of_list,
         users_with_access: [], 
+
         name_of_list,
         description_of_list : "",
-        files_id,
-        color: "", 
+        color_of_list: "", 
+
+
+
         filters: [],
         results: [],
+
     })
 
 
 
     await users.updateOne({ _id: owner_of_list }, { 
-        $push: { saved_list_ids: saved_list_id }, 
+        $push: { saved_list_ids: _id }, 
     })
 
 
@@ -123,13 +163,17 @@ export const getTextScansFromBatch = async (listID) => {
 
     const db = client.db("resumes")
 
-    const fileBatches = db.collection("file-batches")
-    const savedLists = db.collection("saved-lists")
+    const files = db.collection("file-buckets.files")
 
-    const savedList = await savedLists.findOne({ _id: listID })
+    const textScans = ( await 
+        (
+            files.find({"metadata.from_saved_list": listID})
+            .project({ metadata: 1 })
+        )
+        .toArray()
+    ).map(file => file.metadata.text_scan)
 
-    const files = await fileBatches.findOne({ _id: savedList.files_id })
-    const fileTextScans = files?.file_textscans
+    const fileTextScans = textScans
 
     return fileTextScans
 
@@ -325,8 +369,6 @@ export const addSavedList = async (userID, savedList) => {
     
     if(await savedLists.findOne({ _id: savedList._id })) {
 
-        console.log("thing thing", savedList._id)
-
         await savedLists.updateOne({ _id: savedList._id }, {$set: {
             
             name_of_list: savedList.name,
@@ -353,15 +395,21 @@ export const addSavedList = async (userID, savedList) => {
     }
 
     await savedLists.insertOne({ 
+        
         _id: savedList._id, 
+        file_ids: [],
+
         owner_of_list: savedList.owner_of_list,
-        users_with_access: savedList.users_with_access, 
+        users_with_access: savedList.users_with_access,
+
         name_of_list: savedList.name,
         description_of_list: savedList.description, 
         files_id: crypto.randomUUID(),
         color: savedList.color,
+        
         filters: filters,
         results: savedList.results
+
     })
 
 
