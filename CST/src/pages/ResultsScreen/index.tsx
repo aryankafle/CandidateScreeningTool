@@ -389,7 +389,6 @@ const ResultsScreen = () => {
                             >
                                 <IonIcon icon={caretBackOutline} className="self-center text-5xl" />
                             </Button>
-                            <div className="flex w-[1rem] h-full bg-green dark:bg-white rounded-tl-lg" />
                         </div>
                     }
                 </div>
