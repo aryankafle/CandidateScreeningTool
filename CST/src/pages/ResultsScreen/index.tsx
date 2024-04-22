@@ -50,7 +50,7 @@ const ResultsScreen = () => {
 
     const [ searchQuery, setSearchQuery ] = useState("")
 
-    const [ filteredResumes ] = useState([])
+    const [ filteredResumes, setFilteredResumes ] = useState([])
 
 
 
@@ -312,8 +312,7 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        console.log(resumes)
-        const haystack = ['example', 'otherthing', 'perchance']
+        const haystack = resumes.map(r => `${r.summary}`)
         const needle = searchQuery
         const opts = {}
         const uf = new uFuzzy(opts)
@@ -324,12 +323,12 @@ const ResultsScreen = () => {
                 let info = uf.info(idxs, haystack, needle);
                 let order = uf.sort(info, haystack, needle);
                 for (let i = 0; i < order.length; i++) {
-                console.log(haystack[info.idx[order[i]]]);
+                    console.log(haystack[info.idx[order[i]]]);
                 }
             }
             else {
                 for (let i = 0; i < idxs.length; i++) {
-                console.log(haystack[idxs[i]]);
+                    console.log(haystack[idxs[i]]);
                 }
             }
             }
