@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
-import { caretBackOutline, caretForwardOutline, saveOutline} from 'ionicons/icons';
+import { caretBackOutline, caretForwardOutline, saveOutline, search} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
@@ -14,6 +14,9 @@ import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
 import { addSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
+import { event } from "jquery";
+import { index } from "mathjs";
+import uFuzzy from "@leeoniya/ufuzzy"
 
 
 
@@ -31,19 +34,23 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const {savedLists, setSavedLists} = useContext(SavedListsContext)
-
     const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
     const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
     const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
     const [ resumes ] = useState(selectionContext.currentSavedList.results || [])
 
-    const [ selectedResumes ] = useState([] as Result[])
+    //const [ selectedResumes ] = useState([] as Result[])
+
+    const [ selectedResumes, setSelectedResumes] = useState([] as Result[]);
 
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
+    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
 
+    const [ searchQuery, setSearchQuery ] = useState("")
+
+    const [ filteredResumes, setFilteredResumes ] = useState([])
 
 
 
@@ -98,22 +105,50 @@ const ResultsScreen = () => {
 
         selectableItems,
 
-        anySelected,
-
         getAllSelectedItems,
 
         selectAll,
         removeCurrentSelectionFromList,
         
+        handleShiftClickSelect,
+        handleCtrlKeySelect,
         handleSelectionOnKeyDown,
-        handleSelectionOnClick
 
-    } = useSelectableList<SavedList>(savedLists, setSavedLists)
-
-    const checkSelectedCandidates = () =>{
+    } = useSelectableList<Result>(selectedResumes, setSelectedResumes)
 
 
-    }
+
+    const handleKeyDown = useCallback((event : KeyboardEvent) => {
+        if(event.key === "Delete") {
+            removeCurrentSelectionFromList()
+        }
+        handleSelectionOnKeyDown(event)
+    }, [removeCurrentSelectionFromList, handleSelectionOnKeyDown])
+
+
+    const handleSelectionOnClick = useCallback((event : React.MouseEvent<any, MouseEvent>, itemIndex : number) => {
+
+        if (event.shiftKey) {
+            handleShiftClickSelect(itemIndex);
+        }
+        else if (event.ctrlKey) {
+            handleCtrlKeySelect(itemIndex);
+        }
+
+        setPreviouslySelectedIndex(itemIndex);
+    }, [handleCtrlKeySelect, handleShiftClickSelect])
+    
+
+    
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+
+    }, [handleKeyDown])
     
 
 
@@ -228,7 +263,7 @@ const ResultsScreen = () => {
         
 
         return (
-            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] bg-grayDark dark:bg-grayDark">
+            <div className="border-gray border-solid rounded-md self-center flex flex-col w-[60%] max-h-[80%] bg-grayDark dark:bg-grayDark overflow-auto">
                 <div className='text-right text-3xl text-grayMid hover:text-redS' onClick={() => setShowModal(false)}>
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
@@ -276,6 +311,30 @@ const ResultsScreen = () => {
         )
     }
 
+    useEffect(() => {
+        const haystack = resumes.map(r => `${r.summary}`)
+        const needle = searchQuery
+        const opts = {}
+        const uf = new uFuzzy(opts)
+        const idxs = uf.filter(haystack, needle)
+        if (idxs != null && idxs.length > 0) {
+            let infoThresh = 1e3;
+            if (idxs.length <= infoThresh) {
+                let info = uf.info(idxs, haystack, needle);
+                let order = uf.sort(info, haystack, needle);
+                for (let i = 0; i < order.length; i++) {
+                    console.log(haystack[info.idx[order[i]]]);
+                }
+            }
+            else {
+                for (let i = 0; i < idxs.length; i++) {
+                    console.log(haystack[idxs[i]]);
+                }
+            }
+            }
+    }, [searchQuery])
+    
+
 
 
     return (
@@ -289,7 +348,7 @@ const ResultsScreen = () => {
                 {listWithSameName &&
                     <Modal modalTrigger={!!listWithSameName} onClose={()=>{setListWithSameName(undefined)}}>
                         <div className="flex flex-col h-[80%] w-[60%] bg-green dark:bg-grayDark self-center border-2 border-grayMid rounded">
-                            <div className="text-grayLight leading-10 text-center">
+                            <div className="text-grayLight leading-10 text-center text-lg">
                                 You already have a saved list named {title}.
                             </div>
                             <div className="text-grayLight leading-10 hover:text-grayMid mx-10 font-bold"
@@ -310,10 +369,35 @@ const ResultsScreen = () => {
                     <div className="flex my-10 max-w-screen-sm p-6 dark:bg-white bg-blue rounded-r-3xl">
                         <h1>Here are some great candidates based on your needs:</h1>
                     </div>
-                    <div className="flex flex-col justify-center gap-[1.3rem]">
-                        {resumes?.map((candidate) => <IndividualCandidateCard 
+
+                    <div className="flex flex-row justify-center">
+                        <div className="mb-3 xl:w-96">
+                            <input
+                                type="search"
+                                className=" relative m-0 block w-full min-w-0 flex-auto 
+                                            rounded border border-solid border-black bg-transparent bg-clip-padding px-3 py-[0.25rem] 
+                                            text-base font-normal leading-[1.6] text-neutral-700 outline-none 
+                                            transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none 
+                                            dark:border-white dark:text-white dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                                id="exampleSearch"
+                                placeholder="Type query" 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)} />
+                        </div>
+                    </div>
+
+                    <div className=
+                    {
+                        true?
+                        `flex flex-col justify-center gap-[1.3rem] text-red`
+                        :
+                        "flex flex-col justify-center gap-[1.3rem] text-white"
+                    }
+                    >
+                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
+                            //selected={selectableItems[index].isSelected}
                         />)}
                     </div>
                 </div>  
@@ -366,11 +450,11 @@ const ResultsScreen = () => {
                                     }
                                     { ( (isOldList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
                                         <Button
-                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem]"
+                                            className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
-                                                className="text-1xl self-center"
+                                                className="text-1xl self-center font-semibold"
                                             >
                                                 {"Save As New List"}
                                             </div>
