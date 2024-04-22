@@ -165,21 +165,20 @@ const ViewSavedListsScreen = () => {
     
     const SavedListCard =  (props: {savedList : SavedList, index: number}) => {
         return (
-            <div className="border-black text-black hover:bg-grayMidDark
-                            dark:border-white dark:text-white
-                            flex flex-row border-[0.1rem] px-[2rem] 
-                            py-[1rem] justify-between text-xl"
+            <div className="text-black hover:bg-black/25
+                            dark:text-white flex flex-row 
+                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
                             onClick={(event) => { handleSelectionOnClick(event, props.index) }}>
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
-                                `text-red border-red
-                                dark:text-red
-                                flex flex-grow select-none cursor-pointer overflow-x-clip text-ellipsis`
+                                `text-black
+                                dark:text-white underline font-bold
+                                flex-grow select-none cursor-pointer`
                             :
-                                `text-black border-black
-                                dark:text-white
-                                flex flex-grow select-none cursor-pointer overflow-x-clip text-ellipsis`
+                                `text-black
+                                dark:text-white no-underline font-normal
+                                flex-grow select-none cursor-pointer`
                         }
                         // onClick={(event) => { handleSelectionOnClick(event, props.index) }}
                 >
@@ -220,9 +219,7 @@ const ViewSavedListsScreen = () => {
                 />
             </div>
             <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
-                <ol className=" border-black self-center flex-grow
-                                dark:border-white
-                                border-[0.1rem] overflow-y-auto min-w-[35rem] w-[60vw]">
+                <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                         {selectableItems.map(
                             (selectable, index : number) => (
                                 <SavedListCard
