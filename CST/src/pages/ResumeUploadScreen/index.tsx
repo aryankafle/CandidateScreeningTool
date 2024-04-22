@@ -436,9 +436,16 @@ const ResumeUploadScreen = () => {
                 <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-grayMidDark
                                 border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                    <span>
-                        Change batch name:
-                    </span>
+                    <div className="flex flex-row justify-center text-white text-3xl">
+                        Change batch name. 
+                        <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
+                    </div>
+                    {instructionsPanelClicked && 
+                        <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                            <InstructionPanel />
+                        </Modal>
+                    }
+                    
                         <Input 
                             title={"Batch Name:"}
                             placeholder={"Batch A-1"}
