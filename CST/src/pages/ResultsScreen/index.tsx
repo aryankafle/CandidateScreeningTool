@@ -50,6 +50,8 @@ const ResultsScreen = () => {
 
     const [ searchQuery, setSearchQuery ] = useState("")
 
+    const [ filteredResumes ] = useState([])
+
 
 
     useEffect(() => {
@@ -309,8 +311,8 @@ const ResultsScreen = () => {
         )
     }
 
-
     useEffect(() => {
+        console.log(resumes)
         const haystack = ['example', 'otherthing', 'perchance']
         const needle = searchQuery
         const opts = {}
@@ -319,19 +321,20 @@ const ResultsScreen = () => {
         if (idxs != null && idxs.length > 0) {
             let infoThresh = 1e3;
             if (idxs.length <= infoThresh) {
-              let info = uf.info(idxs, haystack, needle);
-              let order = uf.sort(info, haystack, needle);
-              for (let i = 0; i < order.length; i++) {
+                let info = uf.info(idxs, haystack, needle);
+                let order = uf.sort(info, haystack, needle);
+                for (let i = 0; i < order.length; i++) {
                 console.log(haystack[info.idx[order[i]]]);
-              }
+                }
             }
             else {
-              for (let i = 0; i < idxs.length; i++) {
+                for (let i = 0; i < idxs.length; i++) {
                 console.log(haystack[idxs[i]]);
-              }
+                }
             }
-          }
+            }
     }, [searchQuery])
+    
 
 
 
