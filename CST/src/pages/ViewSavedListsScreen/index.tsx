@@ -168,7 +168,8 @@ const ViewSavedListsScreen = () => {
             <div className="border-black text-black hover:bg-grayMidDark
                             dark:border-white dark:text-white
                             flex flex-row border-[0.1rem] px-[2rem] 
-                            py-[1rem] justify-between text-xl">
+                            py-[1rem] justify-between text-xl"
+                            onClick={(event) => { handleSelectionOnClick(event, props.index) }}>
                 <div 
                     className={
                             selectableItems[props.index].isSelected ?
@@ -180,7 +181,7 @@ const ViewSavedListsScreen = () => {
                                 dark:text-white
                                 flex flex-grow select-none cursor-pointer overflow-x-clip text-ellipsis`
                         }
-                        onClick={(event) => { handleSelectionOnClick(event, props.index) }}
+                        // onClick={(event) => { handleSelectionOnClick(event, props.index) }}
                 >
                     {props.savedList.name}
                 </div>

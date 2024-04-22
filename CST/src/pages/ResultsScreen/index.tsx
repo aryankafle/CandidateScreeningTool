@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
-import { caretBackOutline, caretForwardOutline, saveOutline, search} from 'ionicons/icons';
+import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline, search} from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
@@ -50,7 +50,7 @@ const ResultsScreen = () => {
 
     const [ searchQuery, setSearchQuery ] = useState("")
 
-    const [ filteredResumes, setFilteredResumes ] = useState([])
+    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
 
 
 
@@ -336,6 +336,28 @@ const ResultsScreen = () => {
             }
             }
     }, [searchQuery])
+
+
+    const InstructionPanel = () => {
+        return(
+            <div className="bg-white dark:bg-grayDark
+                            flex flex-col self-center text-3xl
+                            max-w-5xl">
+                <div className="flex justify-center text-white p-10">
+                    This page contains the results of your filters being applied to the submitted resumes. 
+                    Clicking on individual cards for candidates will bring up a summary of their resume,
+                    alongside an OpenAI generated score of the resume based on the filters. You can input a 
+                    search query into the search bar in order to search through the resumes for a certain word or name.
+                    Click the tab at the bottom of the screen to be able to save this list of resumes and results, 
+                    giving the list a name, the batch name by default, and a description of the list. 
+                </div>
+
+                <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
+                    OK
+                </Button>
+            </div>
+        )
+    }
     
 
 
@@ -371,7 +393,13 @@ const ResultsScreen = () => {
                     
                     <div className="flex flex-row justify-center text-white text-4xl my-10">
                         <h1>Here are some great candidates based on your needs:</h1>
+                        <IonIcon className="text-4xl text-white flex justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
                     </div>
+                    {instructionsPanelClicked && 
+                        <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                            <InstructionPanel />
+                        </Modal>
+                    }
 
                     <div className="flex flex-row justify-center mb-5">
                         <div className="mb-3 xl:w-96">
