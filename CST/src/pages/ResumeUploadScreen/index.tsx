@@ -1,5 +1,5 @@
 import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline } from 'ionicons/icons';
+import { cloudUploadOutline, helpCircleOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from '../../components/buttons/ImprovedButtonComponent'
@@ -36,6 +36,8 @@ const ResumeUploadScreen = () => {
     const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
 
     const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
 
     const {
 
@@ -365,6 +367,27 @@ const ResumeUploadScreen = () => {
         
     }
 
+    const InstructionPanel = () => {
+        return(
+            <div className="bg-white dark:bg-grayDark
+                            flex flex-col self-center text-3xl
+                            max-w-5xl">
+                <div className="flex justify-center text-white p-10">
+                    Upload resumes on this page. Enter a batch name, or a name for the list of resumes you will be inputting. 
+                    The app will take resumes of types PDF, Word doc/x, PNG, and JPG. After inputting the resumes, you will
+                    be able to select resumes, clear the selection, and delete them from the list if you do not want them. 
+                    There is also an option to open the files for a simple document view to get a final look at the resumes 
+                    you want to input. Once you are happy with the uploaded resumes, click "Add Filters to Uploaded Files"
+                    at the bottom of the screen to proceed to the next step.
+                </div>
+
+                <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
+                    OK
+                </Button>
+            </div>
+        )
+    }
+
 
 
     return (
@@ -387,18 +410,25 @@ const ResumeUploadScreen = () => {
 
 
             { !flags.active.includes('batch name set') ?   
-            <div className="dark:border-white dark:text-white text-lg
+            <div className="dark:border-white dark:text-white text-3xl
                             border-black text-black hover:bg-grayMidDark
                             border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <span>
+                <div className="flex flex-row justify-center text-white text-3xl">
                     Upload a batch of resumes.
-                </span>
-                    <Input 
-                        title={"Batch Name:"}
-                        placeholder={"Batch A-1"}
-                        value={inputtedBatchName}
-                        onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                        onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
+                    <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
+                </div>
+                {instructionsPanelClicked && 
+                    <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                        <InstructionPanel />
+                    </Modal>
+                }
+
+                <Input 
+                    title={"Batch Name:"}
+                    placeholder={"Batch A-1"}
+                    value={inputtedBatchName}
+                    onChange={(event) => { setInputtedBatchName(event.target.value)}}
+                    onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
                 />
             </div>
             :     
