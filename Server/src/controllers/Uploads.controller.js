@@ -8,6 +8,56 @@ import { getNumTokensFromRequest } from "../models/utils/OpenAIQueryHelpers.js";
 
 
 
+export const uploadSingleFileToDB = async (req, res) => {
+
+    const listID = req.body?.listID
+    const userID = req.body?.userID
+    const file = req.files[0]
+
+
+
+
+
+    const textScan = await convertFileToText(file)
+
+    if(textScan === null || !textScan) {
+
+        return res.status(500).json({
+            error: true,
+            fileName: file.originalname,
+            fileType: file.mimetype,
+            message: `Error getting text scan for file ${file.originalname} of type ${file.mimetype}.`
+        })
+
+    }
+
+    const textScanTokenNum = await getNumTokensFromRequest([{role: "user", content: textScan.scan.text}])
+    
+    if(textScanTokenNum  > tokenLimits.SCAN_TOKEN_LIMIT) {
+
+        return res.status(500).json({
+            error: true,
+            fileName: file.originalname,
+            fileType: file.mimetype,
+            tokensUsed: textScanTokenNum,
+            maxTokens: tokenLimits.SCAN_TOKEN_LIMIT,
+            message: `Text scan for file ${file.originalname} of type ${file.mimetype}, which uses ${textScanTokenNum} is over the token limit of ${tokenLimits.SCAN_TOKEN_LIMIT}!`
+        })
+
+    }
+
+    const result = {
+        
+    } 
+
+
+
+}
+
+
+
+
+
 export const uploadResumesToDB = async (req, res) => {
     
     console.log(`\n\n\nUsing Controller: async uploadResumesToDB`)
