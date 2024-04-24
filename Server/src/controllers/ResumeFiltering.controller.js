@@ -6,6 +6,7 @@ import {
     getTextScansFromBatch,
     getFiltersFromBatch,
     updateSavedListResults,
+    downloadFile,
 
 } from "../models/services/MongoDB.service.js";
 
@@ -22,7 +23,7 @@ import {
 
 
 
-export const getResultsForResume = async (req, res) => {
+export const createResultsForResume = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async getResultsForResume`)
 
@@ -36,7 +37,7 @@ export const getResultsForResume = async (req, res) => {
 
 
 
-    // const { file, textScan } = await getFileFromBucket(fileID)
+    const { file, textScan } = await downloadFile(fileID, userID)
 
     const scores = await getFilterScoresForResume(textScan, filters)
     const summaries = await getSectionSummariesForResume(textScan)
@@ -50,7 +51,7 @@ export const getResultsForResume = async (req, res) => {
 
     const result = {
 
-        file, listID, filters,
+        file, fileID, listID, filters,
         scores, summaries, summary, applicant,
 
     }
@@ -59,17 +60,60 @@ export const getResultsForResume = async (req, res) => {
 
     
 
-    // await addResultToDatabase(fileID, listID, result)
-
     res.status(200).send({
+
         error: false,
         result,
         message: "Successfully applied filters to resumes!"
+
     })
 
     console.log("Controller function finished.\n\n\n")
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

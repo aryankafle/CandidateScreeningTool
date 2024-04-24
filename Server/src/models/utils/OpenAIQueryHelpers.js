@@ -7,6 +7,8 @@ import openaiConfig, { tokenLimits } from "../../config/openai.config.js"
 
 const enc = encodingForModel(openaiConfig.model)
 
+
+
 export function getNumTokensFromRequest(messages) {
     
     let totalTokens = 0
@@ -38,3 +40,12 @@ export function getNumTokensFromRequest(messages) {
 }
 
 
+
+export function getNumTokensFromString(string) {
+
+    return getNumTokensFromRequest([
+        {role: "system", content: "this is a system prompt."},
+        {role: "user", content: string}
+    ])
+
+}

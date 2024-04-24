@@ -1,4 +1,4 @@
-import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList, removeSavedList } from "../models/services/MongoDB.service.js"
+import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList, removeSavedList, downloadFile } from "../models/services/MongoDB.service.js"
 
 
 
@@ -8,13 +8,15 @@ export const getAllUserSavedLists = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async getAllUserSavedLists`)
 
+    const userID = req.query?.userID
+
 
 
 
 
     try {
 
-        const savedLists = await getUserSavedLists(req.query?.userID)
+        const savedLists = await getUserSavedLists(userID)
 
         res.status(200).send(savedLists)
 
@@ -22,8 +24,46 @@ export const getAllUserSavedLists = async (req, res) => {
     catch (error) {
 
         res.status(500).json({
-            error: error,
+
+            error: true,
             message: "Error getting user saved lists."
+
+        })
+
+    }
+
+
+
+
+
+    console.log("Controller function finished.\n\n\n")
+
+}
+
+export const getResumeFile = async (req, res) => {
+
+    console.log(`\n\n\nUsing Controller: async getResumeFile`)
+
+    const fileID = req.query?.fileID;
+
+
+
+
+
+    try {
+
+        const file = await downloadFile(fileID)
+
+        res.status(200).send(file)
+
+    }
+    catch (error) {
+
+        res.status(500).json({
+
+            error: true,
+            message: "Error downloading resume file."
+
         })
 
     }
