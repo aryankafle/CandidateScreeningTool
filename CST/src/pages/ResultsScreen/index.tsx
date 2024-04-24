@@ -34,7 +34,7 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
+    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading...", "loading..."))
 
     const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
     const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
@@ -312,7 +312,7 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        const haystack = resumes.map(r => `${r.applicant.name}¦${r.summary}`)
+        const haystack = resumes.map(r => `${r.fileID}¦${r.applicant.name}¦${r.summary}`)
         const needle = searchQuery
         const opts = {}
         const uf = new uFuzzy(opts)
@@ -323,9 +323,6 @@ const ResultsScreen = () => {
                 let info = uf.info(idxs, haystack, needle);
                 let order = uf.sort(info, haystack, needle);
                 for (let i = 0; i < order.length; i++) {
-                    // for (let u = 0; u < resumes.length; u++) {
-                    //     if
-                    // }
                     console.log(haystack[info.idx[order[i]]]);
                 }
             }

@@ -39,6 +39,8 @@ export class Result {
 
     readonly summary : string
 
+    readonly fileID : string
+
     private static curveScore(index : number, score : number, numScores : number) {
 
         const curvingFactor = zScore(index, 0, 1)
@@ -54,13 +56,14 @@ export class Result {
 
 
 
-    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string) {
+    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string, fileID : string) {
 
         this.applicant = applicant
         this.resume = resume
         this.scores = scores
         this.summaries = summaries
         this.summary = summary
+        this.fileID = fileID
 
     }
 
@@ -138,7 +141,8 @@ export class Result {
             {} as File, // need to replace with file lookup eventually
             jsonresult.scores || {score: 0, filter: {} as Filter},
             jsonresult.summaries || {summary: "summaries error, no summary", section: "summaries error, no section"},
-            jsonresult.summary || "summary error"
+            jsonresult.summary || "summary error",
+            jsonresult.fileID || "fileID error"
         )
 
     }
