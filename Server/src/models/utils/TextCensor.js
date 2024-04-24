@@ -2,7 +2,7 @@
 
 export async function censorPhone(string) {
     
-    const usPhoneNumRegex = /\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*/g
+    const usPhoneNumRegex = /\s*(?:\+?(\d{1,3}))*([ ])*[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*/g
 
     const phone = string.match(usPhoneNumRegex)
    
