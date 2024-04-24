@@ -42,14 +42,15 @@ export const applyFiltersToResumes = async (req, res) => {
     await Promise.all(files.map(async (file) => {
 
         let result = {
-            fileId: crypto.randomUUID(),
+
             contactInfo: file.contactInfo,            
             filters: filters,
             fileName: file.originalname,
             scores: [],
             summaries: [],
             summary: "",
-            applicant: {name: undefined}
+            applicant: {name: undefined},
+            fileId: crypto.randomUUID()
 
         }
 

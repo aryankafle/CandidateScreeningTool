@@ -126,7 +126,8 @@ export class Result {
            applicant: this.applicant,
            scores: this.scores,
            resume: this.resume,
-           summaries: this.summaries
+           summaries: this.summaries,
+           fileID: this.fileID
         }
     }
     
