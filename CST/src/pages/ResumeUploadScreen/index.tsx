@@ -174,6 +174,22 @@ const ResumeUploadScreen = () => {
 
 
 
+    async function handleConfirmModal() {
+
+        setLoadingState(true);
+
+        await uploadFilesToDatabase(selectionContext.currentFormData, selectionContext.currentBatchId, userData.id, selectionContext.currentBatchName);
+
+        setShowConfirmFilesModal(false);
+
+        selectionContext.setPreviouslySavedFiles([...selectionContext.uploadedFiles])
+
+        navigate("/filter");
+
+    }
+
+
+
     const handleDeleteFiles = useCallback(() => {
         if(window.confirm("Are you sure you want to delete the currently selected files from the batch?")) {
             removeCurrentSelectionFromList()
@@ -288,21 +304,7 @@ const ResumeUploadScreen = () => {
                     <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
                         <Button
                             className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                            onClick={async (event) => {
-
-                                event.preventDefault();
-
-                                setLoadingState(true);
-
-                                await uploadFilesToDatabase(selectionContext.currentFormData, selectionContext.currentBatchId, userData.id, selectionContext.currentBatchName);
-
-                                setShowConfirmFilesModal(false);
-
-                                selectionContext.setPreviouslySavedFiles([...selectionContext.uploadedFiles])
-
-                                navigate("/filter");
-
-                            } }
+                            onClick={handleConfirmModal}
                         >
                             Yes
                         </Button>
