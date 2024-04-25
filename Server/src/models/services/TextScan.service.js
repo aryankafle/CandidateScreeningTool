@@ -1,6 +1,12 @@
-import { changePdfToText } from "../utils/TextConversions.js"
-import { changeWordToText } from "../utils/TextConversions.js"
-import { changePngToText } from "../utils/TextConversions.js"
+import {
+
+    changePdfToText,
+    changeWordToText,
+    changePngToText,
+
+} from "../utils/TextConversions.js"
+
+
 
 
 
@@ -12,19 +18,19 @@ export async function convertFileToText(file) {
             
             const pdfText = await changePdfToText(file)
 
-            return { file: file, scan: pdfText }
+            return { text: pdfText }
         
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 
             const wordText = await changeWordToText(file)
 
-            return { file: file, scan: wordText }
+            return { text: wordText }
         
         case "image/png":
 
             const pngText = await changePngToText(file)
 
-            return { file: file, scan: pngText }
+            return { text: pngText }
 
         default: 
 

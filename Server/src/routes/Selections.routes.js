@@ -12,10 +12,6 @@ import {
 
 } from "../controllers/Selections.controller.js";
 
-import {
-    verifyUserOwnsList
-} from "../middlewares/authorization/VerifyUserOwnsList.js"
-
 
 
 
@@ -24,12 +20,12 @@ const router = express.Router();
 
 
 
-router.get("/get-all-user-saved-lists", getAllUserSavedLists)
-router.post("/add-saved-list", addNewSavedList)
-router.post("/remove-saved-list", verifyUserOwnsList, removeOldSavedList)
+router.get("/get-user-lists", getAllUserSavedLists)
+router.post("/create-list", addNewSavedList)
+router.put("/remove-list", removeOldSavedList)
 
-router.get("/get-user-saved-selection", getUserSavedSelection)
-router.post("/set-user-saved-selection", setUserSavedSelection)
+router.get("/get-user-selection", getUserSavedSelection)
+router.put("/set-user-selection", setUserSavedSelection)
 
 
 
