@@ -140,6 +140,7 @@ export const applyFiltersToResumes = async (req, res) => {
 
         let result = {
             fileId: crypto.randomUUID(),
+            contactInfo: file.contactInfo,            
             filters: filters,
             fileName: file.originalname,
             scores: [],
