@@ -1,4 +1,4 @@
-import { users } from "../../database/MongoDB.database";
+import { users, savedLists } from "../../database/MongoDB.database.js";
 
 
 
@@ -8,7 +8,13 @@ export const addUser = async (userToken) => {
 
     try {
 
-        await users.insertOne({ _id: userToken.id, user_token: userToken, saved_list_ids: [], current_location: null, current_saved_list: null })
+        await users.insertOne({ 
+            _id: userToken.id,
+            user_token: userToken,
+            saved_list_ids: [],
+            current_location: null,
+            current_saved_list: null
+        })
     
     }
     catch (error) {
@@ -57,4 +63,14 @@ export const setUserSelection = async (userID, selection) => {
         await users.updateOne({ _id: userID }, { $set: { current_saved_list: currentSavedList } }) 
     }
 
+}
+
+
+
+
+
+export const getUserSavedLists = async (owner) => {
+    
+    return await savedLists.find({ owner_of_list: { $eq: owner } }).toArray();
+    
 }

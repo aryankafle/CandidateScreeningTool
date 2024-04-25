@@ -2,13 +2,19 @@ import crypto from "crypto"
 import { 
     
     getSavedList,
-    getUserSavedLists,
     getTextScansFromBatch,
     getFiltersFromBatch,
     updateSavedListResults,
-    downloadFile,
 
 } from "../models/services/MongoDB.service.js";
+
+import {
+    downloadFile
+} from "../models/services/DatabaseFiles.service.js"
+
+import {
+    getUserSavedLists
+} from "../models/services/UserAccounts.service.js"
 
 import {
 

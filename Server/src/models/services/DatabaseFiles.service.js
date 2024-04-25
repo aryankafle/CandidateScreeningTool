@@ -1,4 +1,4 @@
-import { fileBuckets } from "../../database/MongoDB.database"
+import { fileBuckets } from "../../database/MongoDB.database.js"
 
 
 

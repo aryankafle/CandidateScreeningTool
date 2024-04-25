@@ -1,5 +1,5 @@
 import config from "../config/env.config.js";
-import { client } from "../inits/MongoDB.init.js"
+import { client } from "../database/MongoDB.database.js"
 import mongoStore from "connect-mongo"
 
 export const sessionConfig = {

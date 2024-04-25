@@ -1,4 +1,23 @@
-import { getUserSavedLists, getUserSelection, setUserSelection, addSavedList, removeSavedList, downloadFile } from "../models/services/MongoDB.service.js"
+import { 
+
+    getUserSavedLists,
+    getUserSelection,
+    setUserSelection,
+
+} from "../models/services/UserAccounts.service.js"
+
+import {
+
+    uploadSavedList,
+    deleteSavedList, 
+
+} from "../models/services/SavedLists.service.js"
+
+import {
+
+    downloadFile,
+
+} from "../models/services/DatabaseFiles.service.js"
 
 
 
@@ -176,7 +195,7 @@ export const addNewSavedList = async (req, res) => {
 
     try {
 
-        await addSavedList(req.body?.userID, req.body?.savedList)
+        await uploadSavedList(req.body?.userID, req.body?.savedList)
 
         res.status(200).json({
             error: false,
@@ -217,7 +236,7 @@ export const removeOldSavedList = async (req, res) => {
 
     try {
 
-        await removeSavedList(req.body?.listID)
+        await deleteSavedList(req.body?.listID)
 
         res.status(200).json({
             error: false,

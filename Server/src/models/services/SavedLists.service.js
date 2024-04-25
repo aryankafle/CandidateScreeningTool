@@ -1,4 +1,4 @@
-import { savedLists, users } from "../../database/MongoDB.database"
+import { savedLists, users } from "../../database/MongoDB.database.js"
 
 
 
@@ -23,18 +23,8 @@ export const uploadSavedList = async (listID, fileIDs, userID) => {
 
 
 
-export const deleteUploadedSavedList = async (listID) => {
+export const deleteSavedList = async (listID) => {
 
     await savedLists.deleteOne({_id: listID})
 
-}
-
-
-
-
-
-export const getUserSavedLists = async (owner) => {
-    
-    return await savedLists.find({ owner_of_list: { $eq: owner } }).toArray();
-    
 }
