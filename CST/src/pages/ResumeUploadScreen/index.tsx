@@ -332,8 +332,8 @@ const ResumeUploadScreen = () => {
         return (
 
             <div className="text-black hover:bg-black/25
-                            dark:text-white flex flex-row 
-                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
+                            dark:text-white flex flex-row
+                            px-[3rem] text-xl border-b-2 last:border-none h-1/5"
                             
                             onClick={(event) => {
                                 handleSelectionOnClick(event, props.index)
@@ -412,7 +412,7 @@ const ResumeUploadScreen = () => {
             { !flags.active.includes('batch name set') ?   
             <div className="dark:border-white dark:text-white text-3xl
                             border-black text-black hover:bg-grayMidDark
-                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem] w-2/6">
                 <div className="flex flex-row justify-center text-white text-3xl">
                     Upload a batch of resumes.
                     <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
@@ -435,7 +435,7 @@ const ResumeUploadScreen = () => {
             <>
                 <div className="dark:border-white dark:text-white text-lg
                                     border-black text-black hover:bg-grayMidDark
-                                border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                                border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem] w-2/6">
                     <div className="flex flex-row justify-center text-white text-3xl">
                         Change batch name. 
                         <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
