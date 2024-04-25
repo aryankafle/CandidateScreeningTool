@@ -308,7 +308,7 @@ const FilterScreen = () => {
                     <FilterLoadingPanel/>
                 </Modal>
             }
-            <div className="flex flex-col grow min-h-auto w-min p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
+            <div className="flex flex-col grow min-h-auto w-1/3 p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
                 <div className='sticky flex flex-row justify-center z-[1] top-0'>
                     <div className="flex flex-col flex-shrink text-5xl text-white p-[1rem] mb-0.5">
                         Current Filter Layers:
@@ -334,7 +334,7 @@ const FilterScreen = () => {
             <div className='sticky top-0 flex flex-grow'>
                 <div className="bg-[gray] dark:bg-grayDark text-white
                                 flex flex-col flex-grow px-[3rem] pt-[1rem] pb-[3rem]">
-                    <div className="self-center text-[5rem]">Filters</div>
+                    <div className="self-center text-5xl my-[1rem]">Filters</div>
                     <FilterLayerOptions />
                 </div>
             </div> 
