@@ -40,9 +40,8 @@ const ResultsScreen = () => {
     const [ description, setDescription ] = useState("")
     const [ color, setColor ] = useState("")
     
-    //const [ selectedResumes ] = useState([] as Result[])
 
-    const [ selectedResumes, setSelectedResumes] = useState([] as Result[]);
+    const [ selectedResults, setSelectedResults] = useState([] as Result[]);
 
     const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
 
@@ -132,7 +131,7 @@ const ResultsScreen = () => {
         handleCtrlKeySelect,
         handleSelectionOnKeyDown,
 
-    } = useSelectableList<Result>(selectedResumes, setSelectedResumes)
+    } = useSelectableList<Result>(selectedResults, setSelectedResults)
 
 
 
@@ -185,7 +184,9 @@ const ResultsScreen = () => {
 
         }
 
-        saveList(selectionContext.currentBatchId, selectionContext.currentBatchFileIds, userData.id).then(() => {
+        const newList = new SavedList(title, description, results, color, userData.id, [])
+
+        saveList(newList, selectionContext.currentBatchId, selectionContext.currentBatchFileIds, userData.id).then(() => {
 
             selectionContext.setUploadedFiles([])
             selectionContext.setCurrentSavedList({} as SavedList)
@@ -203,10 +204,12 @@ const ResultsScreen = () => {
 
     const handleReplaceListWithSameName = async () => {
 
-        await deleteSavedList(selectionContext.currentSavedList.id, userData.id)
+        if(!listWithSameName) return;
+
+        await deleteSavedList(listWithSameName.id, userData.id)
 
         savedListContext.setSavedLists(
-            (savedLists) => [...savedLists].filter(list => list.id !== selectionContext.currentSavedList.id)
+            (savedLists) => [...savedLists].filter(list => list.id !== listWithSameName.id)
         )
 
         handleSaveList()
@@ -311,7 +314,7 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        const haystack = resumes.map(r => `${r.applicant.name}¦${r.summary}`)
+        const haystack = results.map(r => `${r.applicant.name}¦${r.summary}`)
         const needle = searchQuery
         const opts = {}
         const uf = new uFuzzy(opts)
@@ -322,7 +325,7 @@ const ResultsScreen = () => {
                 let info = uf.info(idxs, haystack, needle);
                 let order = uf.sort(info, haystack, needle);
                 for (let i = 0; i < order.length; i++) {
-                    // for (let u = 0; u < resumes.length; u++) {
+                    // for (let u = 0; u < results.length; u++) {
                     //     if
                     // }
                     console.log(haystack[info.idx[order[i]]]);
@@ -334,7 +337,7 @@ const ResultsScreen = () => {
                 }
             }
             }
-    }, [searchQuery])
+    }, [results, searchQuery])
 
 
     const InstructionPanel = () => {
@@ -426,7 +429,7 @@ const ResultsScreen = () => {
                         "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
-                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
+                        {results?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
                             //selected={selectableItems[index].isSelected}
@@ -467,7 +470,7 @@ const ResultsScreen = () => {
                                     />
                                 </div>
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
-                                    { ( !previouslySavedList && hasChangedFromPreviousSavedList ) &&
+                                    { ( !selectionContext.currentSavedList && hasChangedFromPreviousSavedList ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] border border-white text-white p-[0.5rem] rounded-[1rem] hover:bg-grayDark"
                                             onClick={() => { handleSaveList() }}
@@ -480,7 +483,7 @@ const ResultsScreen = () => {
                                             <IonIcon icon={saveOutline} className="self-center text-5xl"/>
                                         </Button>
                                     }
-                                    { ( (previouslySavedList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
+                                    { ( (selectionContext.currentSavedList && hasChangedFromPreviousSavedList) || (selectedResults.length > 0) ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}

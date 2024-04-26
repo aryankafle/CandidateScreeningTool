@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react"
 import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
-import { getListResults, filterExistingResumeList, uploadFiltersToDatabase, createResumeResult } from "../../../requests/ResumeRequests"
+import { createResumeResult } from "../../../requests/ResumeRequests"
 import { useContext, useEffect } from "react"
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';

@@ -5,7 +5,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 import HomeRoutes from "./HomeRouter";
 
-import { getAllUserSavedLists, getUser, getUserSelection } from "../requests/ResumeRequests"
+import { getUserSavedLists, getUser, getUserSelection } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -75,7 +75,7 @@ function Router() {
         getUser()
         .then(async (userData) => {
 
-            const savedLists = await getAllUserSavedLists(userData.id)
+            const savedLists = await getUserSavedLists(userData.id)
 
             setSavedLists(savedLists)
 

@@ -62,7 +62,7 @@ const SelectionContextInitial = {
     setBatchResults : {} as React.Dispatch<React.SetStateAction<Result[] | undefined>>,
 
     currentSavedList : {} as SavedList | undefined,
-    setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList>> | undefined,
+    setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList | undefined>>,
 
 }
 
@@ -88,9 +88,9 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
     const [selectedFilters, setSelectedFilters] = useState([] as Filter[])
     const [previouslySelectedFilters, setPreviouslySelectedFilters] = useState<Filter[]>([])
 
-    const [batchResults, setBatchResults] = useState([] as Result[])
+    const [batchResults, setBatchResults] = useState<Result[] | undefined>(undefined)
 
-    const [currentSavedList, setCurrentSavedList] = useState<SavedList>({} as SavedList)
+    const [currentSavedList, setCurrentSavedList] = useState<SavedList | undefined>(undefined)
 
 
 
@@ -99,6 +99,8 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
     useEffect(() => {
 
         if(!userData) return;
+
+        if(!currentSavedList) return;
 
         postUserCurrentSavedList(userData.id, currentSavedList)
     

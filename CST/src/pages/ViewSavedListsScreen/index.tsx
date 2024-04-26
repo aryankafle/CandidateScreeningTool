@@ -9,7 +9,7 @@ import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
-import { getAllUserSavedLists, removeSavedList } from "../../requests/ResumeRequests";
+import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 
 
@@ -56,7 +56,7 @@ const ViewSavedListsScreen = () => {
 
     useEffect(() => {
 
-        getAllUserSavedLists(userData.id)
+        getUserSavedLists(userData.id)
         .then((data) => {
 
             setSavedLists(data)
@@ -82,12 +82,12 @@ const ViewSavedListsScreen = () => {
             const lists = getAllSelectedItems()
 
             for(let i = 0; i < lists.length; i++) {
-                await removeSavedList(userData.id, lists[i].id)
+                await deleteSavedList(lists[i].id, userData.id)
             }
 
             removeCurrentSelectionFromList()
 
-            const savedLists = await getAllUserSavedLists(userData.id)
+            const savedLists = await getUserSavedLists(userData.id)
 
             setSavedLists(savedLists)
 
