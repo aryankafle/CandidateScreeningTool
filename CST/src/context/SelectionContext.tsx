@@ -5,6 +5,7 @@ import { SavedList } from "../utils/SavedList"
 import { postUserCurrentSavedList } from "../requests/ResumeRequests"
 import { FlagContext } from "./FlagContext"
 import { UserContext } from "./UserContext"
+import { Result } from "../utils/Result"
 
 
 
@@ -20,21 +21,22 @@ type SelectionContextType = {
 
     uploadedFiles: File[]
     setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>
+
+    batchResults : Result[] | undefined
+    setBatchResults : React.Dispatch<React.SetStateAction<Result[] | undefined>>
+
     currentBatchName: string
     setCurrentBatchName: React.Dispatch<React.SetStateAction<string>>
     currentBatchId : string
     setCurrentBatchId : React.Dispatch<React.SetStateAction<string>>
-    currentFormData : FormData
-    setCurrentFormData : React.Dispatch<React.SetStateAction<FormData>>
+    currentBatchFileIds : string[]
+    setCurrentBatchFileIds : React.Dispatch<React.SetStateAction<string[]>>
 
     selectedFilters: Filter[]
     setSelectedFilters: React.Dispatch<React.SetStateAction<Filter[]>>
 
-    currentSavedList : SavedList,
-    setCurrentSavedList : React.Dispatch<SetStateAction<SavedList>>
-    
-    previouslySavedFiles : File[]
-    setPreviouslySavedFiles : React.Dispatch<SetStateAction<File[]>>
+    currentSavedList : SavedList | undefined,
+    setCurrentSavedList : React.Dispatch<SetStateAction<SavedList | undefined>>
 
 }
 
@@ -45,21 +47,22 @@ const SelectionContextInitial = {
 
     uploadedFiles: [] as File[],
     setUploadedFiles: {} as React.Dispatch<React.SetStateAction<File[]>>,
+
     currentBatchName: "",
     setCurrentBatchName: {} as React.Dispatch<React.SetStateAction<string>>,
     currentBatchId: crypto.randomUUID() as string,
     setCurrentBatchId: {} as React.Dispatch<React.SetStateAction<string>>,
-    currentFormData : {} as FormData,
-    setCurrentFormData : {} as React.Dispatch<React.SetStateAction<FormData>>,
+    currentBatchFileIds: [] as string[],
+    setCurrentBatchFileIds: {} as React.Dispatch<React.SetStateAction<string[]>>,
 
     selectedFilters: [] as Filter[],
     setSelectedFilters: {} as React.Dispatch<React.SetStateAction<Filter[]>>,
 
-    currentSavedList : {} as SavedList,
-    setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList>>,
+    batchResults : [] as Result[] | undefined,
+    setBatchResults : {} as React.Dispatch<React.SetStateAction<Result[] | undefined>>,
 
-    previouslySavedFiles : [],
-    setPreviouslySavedFiles : {} as React.Dispatch<SetStateAction<File[]>>,
+    currentSavedList : {} as SavedList | undefined,
+    setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList>> | undefined,
 
 }
 
@@ -77,16 +80,17 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
 
 
     const [uploadedFiles, setUploadedFiles] = useState([] as File[])
+
     const [currentBatchName, setCurrentBatchName] = useState("")
-    const [currentBatchId, setCurrentBatchId] = useState("crypto.randomUUID() as string")
-    const [currentFormData, setCurrentFormData] = useState<FormData>({} as FormData)
+    const [currentBatchId, setCurrentBatchId] = useState(crypto.randomUUID() as string)
+    const [currentBatchFileIds, setCurrentBatchFileIds] = useState([] as string[])
 
     const [selectedFilters, setSelectedFilters] = useState([] as Filter[])
     const [previouslySelectedFilters, setPreviouslySelectedFilters] = useState<Filter[]>([])
 
-    const [currentSavedList, setCurrentSavedList] = useState<SavedList>({} as SavedList)
+    const [batchResults, setBatchResults] = useState([] as Result[])
 
-    const [previouslySavedFiles, setPreviouslySavedFiles] = useState([] as File[])
+    const [currentSavedList, setCurrentSavedList] = useState<SavedList>({} as SavedList)
 
 
 
@@ -108,16 +112,17 @@ const SelectionContextProvider = (props: { children : ReactNode }) => {
         <SelectionContext.Provider value={{
                 
                 uploadedFiles, setUploadedFiles,
+
                 currentBatchName, setCurrentBatchName,
                 currentBatchId, setCurrentBatchId,
-                currentFormData, setCurrentFormData,
+                currentBatchFileIds, setCurrentBatchFileIds,
 
                 selectedFilters, setSelectedFilters,
                 previouslySelectedFilters, setPreviouslySelectedFilters,
+                
+                batchResults, setBatchResults,
 
                 currentSavedList, setCurrentSavedList, 
-
-                previouslySavedFiles, setPreviouslySavedFiles,
                 
             }}>
             {props.children}

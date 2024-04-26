@@ -64,8 +64,8 @@ export class SavedList implements UserOwned, UniquelyIdentified {
     public toJSON() {
         return {
             _id: this.id,
-            owner_of_list: this.owner,
-            users_with_access: [ ...this.shared ],
+            owner: this.owner,
+            sharedUsers: [ ...this.shared ],
             name: this.name,
             description: this.description,
             color: this.color,

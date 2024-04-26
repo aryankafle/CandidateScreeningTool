@@ -7,7 +7,7 @@ import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
-import { uploadFilesToDatabase } from "../../requests/ResumeRequests";
+import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
 import { UserContext } from "../../context/UserContext";
 import { FlagContext } from "../../context/FlagContext"
 import { SelectionContext } from "../../context/SelectionContext";
@@ -82,18 +82,6 @@ const ResumeUploadScreen = () => {
     }, [])
 
 
-
-    useEffect(() => {
-        
-        let formData = new FormData()
-        for(let i = 0; i < selectionContext.uploadedFiles.length; i++) {
-            formData.append("files", selectionContext.uploadedFiles[i])
-        }
-
-        selectionContext.setCurrentFormData(formData)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectionContext.uploadedFiles])
 
 
 
@@ -178,11 +166,11 @@ const ResumeUploadScreen = () => {
 
         setLoadingState(true);
 
-        await uploadFilesToDatabase(selectionContext.currentFormData, selectionContext.currentBatchId, userData.id, selectionContext.currentBatchName);
+        const fileIDs = await Promise.all(selectionContext.uploadedFiles.map(file => uploadResumeToDatabase(file, selectionContext.currentBatchId, userData.id)))
+
+        selectionContext.setCurrentBatchFileIds(fileIDs)
 
         setShowConfirmFilesModal(false);
-
-        selectionContext.setPreviouslySavedFiles([...selectionContext.uploadedFiles])
 
         navigate("/filter");
 

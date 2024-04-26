@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react"
 import { colorWandOutline } from "ionicons/icons"
 import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
-import { getListResults, filterExistingResumeList, uploadFiltersToDatabase } from "../../../requests/ResumeRequests"
+import { getListResults, filterExistingResumeList, uploadFiltersToDatabase, createResumeResult } from "../../../requests/ResumeRequests"
 import { useContext, useEffect } from "react"
 import { UserContext } from "../../../context/UserContext"
 import { SelectionContext } from '../../../context/SelectionContext';
@@ -43,53 +43,21 @@ const HeaderButtons = () => {
 
 
     const handleFilterResumes = async () => {
-        
-        let uploadError;
-        let filterError;
-        let fetchError;        
 
+        setLoadingState(true)
 
+        if(!flags.active.includes('filters have changed')) {
 
-        await uploadFiltersToDatabase(selectionContext.selectedFilters, selectionContext.currentBatchId, userData.id)
-
-        await filterExistingResumeList(selectionContext.currentBatchId, userData.id)
-
-        const listResults = await getListResults(selectionContext.currentBatchId, userData.id)
-
-
-
-        if(!listResults) throw Error("List results are undefined.");
-
-
-
-        const newSavedList = new SavedList(selectionContext.currentBatchName, "", listResults, undefined, userData.id )
-
-
-
-        selectionContext.setCurrentSavedList(newSavedList)
-
-        selectionContext.setPreviouslySelectedFilters([...selectionContext.selectedFilters])
-
-
-
-        if(uploadError) {
-            alert("error uploading filters")
+            navigate("/results")
             return;
+
         }
 
-        if(filterError) {
-            alert("error filtering")
-            return;
-        }
+        await Promise.all(selectionContext.currentBatchFileIds.map(
+            id => createResumeResult(selectionContext.selectedFilters, id, userData.id
+        )))
 
-        if(fetchError) {
-            alert("error fetching results")
-            return;
-        }
-
-
-
-        setLoadingState(false)
+        navigate("/results")
 
     }
 
@@ -106,20 +74,7 @@ const HeaderButtons = () => {
                 <Button
                     className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                 border-black text-black bg-white hover:bg-gray active:bg-blue"
-                    onClick={ async () => {
-
-                        setLoadingState(true)
-
-                        if(!flags.active.includes('filters have changed')) {
-
-                            navigate("/results")
-                            return;
-
-                        }
-
-                        handleFilterResumes().then(() => navigate("/results"))
-
-                    } }
+                    onClick={ handleFilterResumes }
                 >
                     <IonIcon
                         icon={colorWandOutline}

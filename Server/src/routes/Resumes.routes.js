@@ -31,11 +31,11 @@ const router = express.Router();
 
 
 router.post("/create-list", addNewSavedList)
-router.put("/remove-list", removeOldSavedList)
+router.delete("/remove-list", removeOldSavedList)
 router.put("/modify-list", modifySavedList)
 
 router.get("/get-result", getResumeResult)
-router.put("/delete-result", deleteResumeResult)
+router.delete("/delete-result", deleteResumeResult)
 
 
 

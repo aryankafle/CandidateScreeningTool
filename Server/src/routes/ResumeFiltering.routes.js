@@ -16,7 +16,7 @@ const router = express.Router();
 
 
 
-router.put("/apply-filters-to-resumes", createResultsForResume)
+router.put("/create-resume-result", createResultsForResume)
 
 
 

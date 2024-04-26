@@ -14,7 +14,7 @@ const router = express.Router();
 
 
 
-router.post("/upload-resumes-to-db", uploadResumeToDatabase)
+router.post("/upload-resume", uploadResumeToDatabase)
 
 
 

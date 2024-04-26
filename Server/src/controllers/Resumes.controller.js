@@ -24,13 +24,19 @@ export const addNewSavedList = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async addNewSavedList`)
 
+    const userID = req.body?.userID
+    const fileIDs = req.body?.fileIDs
+    const listID = req.body?.listID
+
+    const savedList = req.body?.savedList
+
 
 
 
 
     try {
 
-        await uploadSavedList(req.body?.userID, req.body?.savedList)
+        await uploadSavedList(savedList, listID, fileIDs, userID)
 
         res.status(200).json({
             error: false,
@@ -63,13 +69,15 @@ export const removeOldSavedList = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async removeOldSavedList`)
 
+    const listID = req.query?.listID
+
 
 
 
 
     try {
 
-        await deleteSavedList(req.body?.listID)
+        await deleteSavedList(listID)
 
         res.status(200).json({
             error: false,
@@ -180,7 +188,7 @@ export const getResumeResult = async (req, res) => {
 
 export const deleteResumeResult = async (req, res) => {
     
-    const fileID = req.body?.fileID
+    const fileID = req.query?.fileID
 
 
 

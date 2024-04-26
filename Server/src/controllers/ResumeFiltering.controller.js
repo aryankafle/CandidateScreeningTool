@@ -21,7 +21,6 @@ export const createResultsForResume = async (req, res) => {
 
     console.log(`\n\n\nUsing Controller: async getResultsForResume`)
 
-    const listID = req.body?.listID
     const userID = req.body?.userID
     const fileID = req.body?.fileID
 
@@ -45,7 +44,7 @@ export const createResultsForResume = async (req, res) => {
 
     const result = {
 
-        file, fileID, listID, filters,
+        file, fileID, filters,
         scores, summaries, summary, applicant,
 
     }

@@ -12,7 +12,7 @@ import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
 import { UserContext } from "../../context/UserContext";
-import { addSavedList } from "../../requests/ResumeRequests";
+import { saveList, deleteSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import { event } from "jquery";
 import { index } from "mathjs";
@@ -36,10 +36,10 @@ const ResultsScreen = () => {
 
     const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
 
-    const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
-    const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
-    const [ resumes ] = useState(selectionContext.currentSavedList.results || [])
-
+    const [ title, setTitle ] = useState("")
+    const [ description, setDescription ] = useState("")
+    const [ color, setColor ] = useState("")
+    
     //const [ selectedResumes ] = useState([] as Result[])
 
     const [ selectedResumes, setSelectedResumes] = useState([] as Result[]);
@@ -54,39 +54,27 @@ const ResultsScreen = () => {
 
 
 
-    useEffect(() => {
-
-        console.log(selectionContext.currentSavedList)
-
-        if(!selectionContext.currentSavedList.id) {
-                        
-            navigate("/home/resume-upload")
-            return;
-
-        }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-
-
-
-    const isOldList = useMemo(() => {
+    const results = useMemo(() : Result[] => {
         
-        if(!selectionContext.currentSavedList) {
-            return false;
-        }
-        
-        return savedListContext.savedLists.includes(selectionContext.currentSavedList)
-        
-    }, [savedListContext.savedLists, selectionContext.currentSavedList])
+        if(!selectionContext.currentSavedList && selectionContext.batchResults) return selectionContext.batchResults
+
+        if(!selectionContext.currentSavedList) return []
+
+        setTitle(selectionContext.currentSavedList.name)
+        setDescription(selectionContext.currentSavedList.description)
+        setColor(selectionContext.currentSavedList.color)
+
+        return selectionContext.currentSavedList.results
+
+    }, [selectionContext.batchResults, selectionContext.currentSavedList])
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
 
-        if(!isOldList) return true;
-
         const oldList = selectionContext.currentSavedList
+
+
+
+        if(!oldList) return true;
 
         if(oldList.name !== title) return true
 
@@ -94,11 +82,41 @@ const ResultsScreen = () => {
         
         if(oldList.description !== description) return true
 
-        if(oldList.results.some((result) => !resumes.includes(result))) return true
+        if(oldList.results.some((result) => !results.includes(result))) return true
 
         return false
         
-    }, [description, isOldList, resumes, selectionContext.currentSavedList, title])
+    }, [description, results, selectionContext.currentSavedList, title])
+
+
+
+
+
+    useEffect(() => {
+
+        if(results.length < 1) {
+            
+            navigate("/home/resume-upload")
+
+        }
+
+    }, [navigate, results])
+
+
+
+    useEffect(() => {
+
+        if(!selectionContext.currentSavedList) return;
+
+        setTitle(selectionContext.currentSavedList.name)
+        setDescription(selectionContext.currentSavedList.description)
+        setColor(selectionContext.currentSavedList.color)
+
+    }, [selectionContext.currentSavedList])
+
+
+
+
 
 
     const {
@@ -152,32 +170,26 @@ const ResultsScreen = () => {
     
 
 
-    const handleSaveList = () => { //change this
+    const handleSaveList = () => {
         
+        let listWithSameName;
+
         for(let i = 0; i < savedListContext.savedLists.length; i++) {
+
             if(savedListContext.savedLists[i].name.trim() === title.trim() && title !== "") {
-                setListWithSameName(savedListContext.savedLists[i])
+                
+                setListWithSameName(listWithSameName)
                 return;
+
             }
+
         }
 
-
-
-        const newList = selectionContext.currentSavedList
-        
-        newList.name = title
-        newList.description = description
-        // newList.color = color
-
-        newList.id = selectionContext.currentBatchId
-        
-        savedListContext.setSavedLists((lists) => [...lists, newList])
-
-        addSavedList(userData.id, newList).then(() => {
+        saveList(selectionContext.currentBatchId, selectionContext.currentBatchFileIds, userData.id).then(() => {
 
             selectionContext.setUploadedFiles([])
+            selectionContext.setCurrentSavedList({} as SavedList)
             selectionContext.setCurrentBatchName("")
-            selectionContext.setCurrentFormData({} as FormData)
     
             selectionContext.setSelectedFilters([])
     
@@ -189,29 +201,16 @@ const ResultsScreen = () => {
 
     }
 
-    const handleReplaceListWithSameName = () => {
+    const handleReplaceListWithSameName = async () => {
 
-        savedListContext.setSavedLists((savedLists) => {
-            let listIndex = -1
-            if(listWithSameName) listIndex = savedLists.indexOf(listWithSameName)
+        await deleteSavedList(selectionContext.currentSavedList.id, userData.id)
 
-            const newList = new SavedList(title, description, resumes, undefined, userData.id)
-            
-            const temp = [...savedLists]
-            temp.splice(listIndex, 1, newList)
+        savedListContext.setSavedLists(
+            (savedLists) => [...savedLists].filter(list => list.id !== selectionContext.currentSavedList.id)
+        )
 
-            return temp
-        })
+        handleSaveList()
 
-        
-
-        selectionContext.setUploadedFiles([])
-        selectionContext.setCurrentBatchName("")
-        selectionContext.setCurrentFormData({} as FormData)
-
-        selectionContext.setSelectedFilters([])
-
-        navigate("/home/saved-lists")
     }
 
 
@@ -386,7 +385,7 @@ const ResultsScreen = () => {
                             <div className="text-blueLight leading-10 hover:text-blueMid mx-10 font-bold"
                                 onClick={handleReplaceListWithSameName}
                             >
-                                Replace existing list (name: {listWithSameName.name}, description: {listWithSameName.description})
+                                Replace existing list (name: {listWithSameName.name}, description: {listWithSameName.description})?
                             </div>
                         </div>
                     </Modal>
@@ -468,7 +467,7 @@ const ResultsScreen = () => {
                                     />
                                 </div>
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
-                                    { ( !isOldList && hasChangedFromPreviousSavedList ) &&
+                                    { ( !previouslySavedList && hasChangedFromPreviousSavedList ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] border border-white text-white p-[0.5rem] rounded-[1rem] hover:bg-grayDark"
                                             onClick={() => { handleSaveList() }}
@@ -481,7 +480,7 @@ const ResultsScreen = () => {
                                             <IonIcon icon={saveOutline} className="self-center text-5xl"/>
                                         </Button>
                                     }
-                                    { ( (isOldList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
+                                    { ( (previouslySavedList && hasChangedFromPreviousSavedList) || (selectedResumes.length > 0) ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}
