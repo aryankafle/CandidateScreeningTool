@@ -18,13 +18,12 @@ import {
 
     authRoutes, 
 
-    resumeFilteringRoutes, 
     uploadRoutes, 
+    
+    userDataRoutes,
 
-    testRoutes,
-    
-    selectionRoutes
-    
+    resumeFilteringRoutes, 
+    resumeRoutes,
 
 } from "./routes/index.js"
 
@@ -73,17 +72,31 @@ app.use(passport.session())
 
 app.use("/auth", authRoutes)
 
+
+
 const storage = multer.memoryStorage()
 const upload = multer({
     storage: storage
 });
 
-app.use("/uploads", upload.array("files"), verifyMongoDbConnection, verifyUserRegistered, uploadRoutes)
-app.use("/resume-filtering", verifyMongoDbConnection, verifyUserRegistered, resumeFilteringRoutes)
+app.use("/uploads",
+    upload.array("files"),
+    uploadRoutes
+)
 
-app.use("/test", testRoutes)
 
-app.use("/selection", verifyMongoDbConnection, verifyUserRegistered, selectionRoutes)
+
+app.use("/users",
+    userDataRoutes
+)
+
+app.use("/filtering",
+    resumeFilteringRoutes
+)
+
+app.use("/resumes",
+    resumeRoutes
+)
 
 
 
