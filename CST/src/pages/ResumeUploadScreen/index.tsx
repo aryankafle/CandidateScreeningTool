@@ -411,19 +411,8 @@ const ResumeUploadScreen = () => {
 
 
             { !flags.active.includes('batch name set') ?   
-            <div className="dark:border-white dark:text-white text-3xl
-                            border-black text-black hover:bg-grayMidDark
-                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem] w-2/6">
-                <div className="flex flex-row justify-center text-white text-[3rem] py-2">
-                    Upload a batch of resumes.
-                    <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-                </div>
-                {instructionsPanelClicked && 
-                    <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                        <InstructionPanel />
-                    </Modal>
-                }
-
+            <div className="dark:text-white text-[3rem] text-black
+                            flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                 <Input 
                     title={"Batch Name:"}
                     placeholder={"Batch A-1"}
@@ -434,27 +423,17 @@ const ResumeUploadScreen = () => {
             </div>
             :     
             <>
-                <div className="dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-grayMidDark
-                                border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem] w-2/6">
-                    <div className="flex flex-row justify-center text-white text-[3rem] py-2">
-                        Change batch name. 
-                        <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-                    </div>
-                    {instructionsPanelClicked && 
-                        <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                            <InstructionPanel />
-                        </Modal>
-                    }
-                    
-                        <Input 
-                            title={"Batch Name:"}
-                            placeholder={"Batch A-1"}
-                            value={inputtedBatchName}
-                            onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                            onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
+                <div className="dark:text-white text-[3rem] text-black
+                                flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                    <Input 
+                        title={"Batch Name:"}
+                        placeholder={"Batch A-1"}
+                        value={inputtedBatchName}
+                        onChange={(event) => { setInputtedBatchName(event.target.value)}}
+                        onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
                     />
-                </div>                 
+                </div>
+
                 <div className="flex justify-center">
                     <Button 
                         className=" dark:border-white dark:text-white text-lg
@@ -556,6 +535,17 @@ const ResumeUploadScreen = () => {
                     Add Filters to Uploaded Files
                 </Button>
             </div>
+
+
+            <div className="absolute bottom-0 right-0 text-white pb-2 pr-2">
+                <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
+            </div>
+
+            {instructionsPanelClicked && 
+                <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                    <InstructionPanel />
+                </Modal>
+            }
 
 
 
