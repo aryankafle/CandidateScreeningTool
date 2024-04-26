@@ -141,9 +141,9 @@ const FilterScreen = () => {
 
         return (
             <div className="flex flex-col flex-grow">
-                <div className="flex-grow overflow-auto">
+                <div className="flex flex-row flex-grow pt-10">
                     <Button
-                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
                         onClick={
                             () => {
 
@@ -156,12 +156,12 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add a new 5+ years work experience filter
+                        5+ years work experience
                     </Button>
 
 
                     <Button
-                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
                         onClick={
                             () => {
 
@@ -174,12 +174,12 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new has college degree filter
+                        Has college degree
                     </Button>
 
 
                     <Button
-                        className="flex flex-col flex-shrink w-fit border-[0.1rem]"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
                         onClick={
                             () => {
 
@@ -192,7 +192,7 @@ const FilterScreen = () => {
                             }
                         }
                     >
-                        Click to add new has work experience filter
+                        Has work experience
                     </Button>
                 </div>
                 <div className="flex flex-col flex-shrink">
@@ -308,9 +308,9 @@ const FilterScreen = () => {
                     <FilterLoadingPanel/>
                 </Modal>
             }
-            <div className="flex flex-col grow min-h-auto w-1/3 p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
+            <div className="flex flex-col grow min-h-auto w-1/5 p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
                 <div className='sticky flex flex-row justify-center z-[1] top-0'>
-                    <div className="flex flex-col flex-shrink text-5xl text-white p-[1rem] mb-0.5">
+                    <div className="flex flex-col flex-shrink text-[3rem] text-white p-[1rem] mb-0.5">
                         Current Filter Layers:
                     </div>
                     <IonIcon className="text-4xl text-white flex justify-center" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
@@ -334,7 +334,7 @@ const FilterScreen = () => {
             <div className='sticky top-0 flex flex-grow'>
                 <div className="bg-[gray] dark:bg-grayDark text-white
                                 flex flex-col flex-grow px-[3rem] pt-[1rem] pb-[3rem]">
-                    <div className="self-center text-5xl my-[1rem]">Filters</div>
+                    <div className="self-center text-[3rem] my-[1rem]">Filters</div>
                     <FilterLayerOptions />
                 </div>
             </div> 
