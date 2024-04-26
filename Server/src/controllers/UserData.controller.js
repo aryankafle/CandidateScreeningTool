@@ -6,19 +6,6 @@ import {
 
 } from "../models/services/UserAccounts.service.js"
 
-import {
-
-    uploadSavedList,
-    deleteSavedList, 
-
-} from "../models/services/SavedLists.service.js"
-
-import {
-
-    downloadFile,
-
-} from "../models/services/DatabaseFiles.service.js"
-
 
 
 
@@ -59,41 +46,11 @@ export const getAllUserSavedLists = async (req, res) => {
 
 }
 
-export const getResumeFile = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async getResumeFile`)
-
-    const fileID = req.query?.fileID;
 
 
 
 
 
-    try {
-
-        const file = await downloadFile(fileID)
-
-        res.status(200).send(file)
-
-    }
-    catch (error) {
-
-        res.status(500).json({
-
-            error: true,
-            message: "Error downloading resume file."
-
-        })
-
-    }
-
-
-
-
-
-    console.log("Controller function finished.\n\n\n")
-
-}
 
 
 
@@ -179,86 +136,4 @@ export const setUserSavedSelection = async (req, res) => {
 
     console.log("Controller function finished.\n\n\n")
     
-}
-
-
-
-
-
-export const addNewSavedList = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async addNewSavedList`)
-
-
-
-
-
-    try {
-
-        await uploadSavedList(req.body?.userID, req.body?.savedList)
-
-        res.status(200).json({
-            error: false,
-            message: "Successfully added saved list."
-        })
-
-    }
-    catch (error) {
-
-        console.log("Error adding saved list: ", error)
-
-        res.status(500).json({
-            error: error,
-            message: "Error adding saved list."
-        })
-
-    }
-    
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
-
-}
-
-
-
-
-
-export const removeOldSavedList = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async removeOldSavedList`)
-
-
-
-
-
-    try {
-
-        await deleteSavedList(req.body?.listID)
-
-        res.status(200).json({
-            error: false,
-            message: "Successfully removed saved list."
-        })
-
-    }
-    catch (error) {
-
-        console.log("Error removing saved list: ", error)
-
-        res.status(500).json({
-            error: error,
-            message: "Error removing saved list."
-        })
-
-    }
-    
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
-
 }
