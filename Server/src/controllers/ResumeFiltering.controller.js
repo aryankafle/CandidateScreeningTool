@@ -50,7 +50,7 @@ export const applyFiltersToResumes = async (req, res) => {
             summaries: [],
             summary: "",
             applicant: {name: undefined},
-            fileId: crypto.randomUUID()
+            fileID: crypto.randomUUID()
 
         }
 
