@@ -221,31 +221,25 @@ const ResultsScreen = () => {
     const getRatingImage = (grade : Grades) => {
         switch(grade) {
             case Grades.A:
-                // return <img alt="'A' Rating" src="assets/a-rating.png"
-                return <p
-                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
-                        justify-center font-bold bg-green text-5xl text-white">
-                A</p> ;
+                return <img alt="'A' Rating" src="assets/a-rating.png"
+                            className="self-center w-[4rem] h-[4rem]"
+                />;
             case Grades.B:
-                return <p
-                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
-                        justify-center font-bold bg-lightGreen text-5xl text-white">
-                B</p> ;
+                return <img alt="'B' Rating" src="assets/b-rating.png"
+                            className="self-center w-[4rem] h-[4rem]"
+                />;
             case Grades.C:
-                return <p
-                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
-                        justify-center font-bold bg-yellow text-5xl text-white">
-                C</p> ;
+                return <img alt="'C' Rating" src="assets/c-rating.png"
+                            className="self-center w-[4rem] h-[4rem]"
+                />;
             case Grades.D:
-                return <p
-                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
-                        justify-center font-bold bg-orange text-5xl text-white">
-                D</p> ;
+                return <img alt="'D' Rating" src="assets/d-rating.png"
+                            className="self-center w-[4rem] h-[4rem]"
+                />;
             case Grades.F:
-                return <p
-                    className="self-center w-[4rem] h-[4rem] flex border-2 rounded-3xl 
-                        justify-center font-bold bg-redS text-5xl text-white">
-                F</p> ;
+                return <img alt="'F' Rating" src="assets/f-rating.png"
+                            className="self-center w-[4rem] h-[4rem]"
+                />;
             default:
                 throw new Error(`Grade: ${grade} is out of range!`)
         }
@@ -300,21 +294,22 @@ const ResultsScreen = () => {
 
         return (
             <div 
-                 onClick={() => {
+                className=" bg-grayMidDark text-4xl
+                            flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
+                onClick={() => {
                     setShowModal(true)
                     setCurrentCandidate(props.candidate)
                 }}
             >
                 <div className="flex flex-grow self-center justify-center text-white">
                     {props.candidate.applicant.name || "asdf"}
-                    <div className="pr-[2rem] bor px-8">
-                        { getRatingImage(props.candidate.grade ) || "asdf" }
-                    </div>
+                </div>
+                <div className="pr-[2rem] bor">
+                    { getRatingImage(props.candidate.grade ) || "asdf" }
                 </div>
             </div>
         )
     }
-    
 
     useEffect(() => {
         const haystack = resumes.map(r => `${r.applicant.name}¦${r.summary}`)
@@ -427,9 +422,9 @@ const ResultsScreen = () => {
                     <div className=
                     {
                         true?
-                        `flex flex-col justify-center gap-[1.3rem] text-darkerWhite`
+                        `flex flex-col justify-center gap-[1.3rem] text-red`
                         :
-                        "flex flex-col justify-center gap-[1.3rem] text-red"
+                        "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
                         {resumes?.map((candidate, index) => <IndividualCandidateCard 
@@ -479,7 +474,7 @@ const ResultsScreen = () => {
                                             onClick={() => { handleSaveList() }}
                                         >
                                             <div
-                                                className="text-1xl self-center font-semibold"
+                                                className="text-4xl self-center"
                                             >
                                                 {"Save List"}
                                             </div>
