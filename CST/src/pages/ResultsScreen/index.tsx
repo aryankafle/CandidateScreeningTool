@@ -324,6 +324,7 @@ const ResultsScreen = () => {
                 let order = uf.sort(info, haystack, needle);
                 for (let i = 0; i < order.length; i++) {
                     console.log(haystack[info.idx[order[i]]]);
+                    const tempArr = haystack[info.idx[order[i]]].split("¦")
                 }
             }
             else {
