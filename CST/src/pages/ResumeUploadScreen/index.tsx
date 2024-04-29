@@ -332,33 +332,34 @@ const ResumeUploadScreen = () => {
         return (
 
             <div className="text-black hover:bg-black/25
-                            dark:text-white flex flex-row 
-                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
+                            dark:text-white flex flex-col justify-center
+                            px-[3rem] text-[2rem] border-b-2 last:border-none h-1/5"
                             
                             onClick={(event) => {
                                 handleSelectionOnClick(event, props.index)
                             }}>
+                <div className="flex flex-row justify-center">
+                    <div 
+                        className={
+                            selectableItems[props.index].isSelected ?
+                                `text-black border-black
+                                dark:text-white underline font-bold
+                                flex-grow select-none cursor-pointer`
+                            :
+                                `text-black border-black
+                                dark:text-white no-underline font-normal
+                                flex-grow select-none cursor-pointer`
+                        }
+                    >
+                        {selectableItems[props.index].item.name}
+                    </div>
 
-                <div 
-                    className={
-                        selectableItems[props.index].isSelected ?
-                            `text-black border-black
-                            dark:text-white underline font-bold
-                            flex-grow select-none cursor-pointer`
-                        :
-                            `text-black border-black
-                            dark:text-white no-underline font-normal
-                            flex-grow select-none cursor-pointer`
-                    }
-                >
-                    {selectableItems[props.index].item.name}
-                </div>
-
-                <div
-                    className="cursor-pointer select-none"
-                    onClick={() => { setShowFileModal(!showFileModal); setCurrentlyOpenedIndex(props.index)}}
-                >
-                    Open File
+                    <div
+                        className="cursor-pointer select-none"
+                        onClick={() => { setShowFileModal(!showFileModal); setCurrentlyOpenedIndex(props.index)}}
+                    >
+                        Open File
+                    </div>
                 </div>
 
             </div>
@@ -410,19 +411,8 @@ const ResumeUploadScreen = () => {
 
 
             { !flags.active.includes('batch name set') ?   
-            <div className="dark:border-white dark:text-white text-3xl
-                            border-black text-black hover:bg-grayMidDark
-                            border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <div className="flex flex-row justify-center text-white text-3xl">
-                    Upload a batch of resumes.
-                    <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-                </div>
-                {instructionsPanelClicked && 
-                    <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                        <InstructionPanel />
-                    </Modal>
-                }
-
+            <div className="dark:text-white text-[3rem] text-black
+                            flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
                 <Input 
                     title={"Batch Name:"}
                     placeholder={"Batch A-1"}
@@ -433,27 +423,17 @@ const ResumeUploadScreen = () => {
             </div>
             :     
             <>
-                <div className="dark:border-white dark:text-white text-lg
-                                    border-black text-black hover:bg-grayMidDark
-                                border-[0.1rem] flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                    <div className="flex flex-row justify-center text-white text-3xl">
-                        Change batch name. 
-                        <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-                    </div>
-                    {instructionsPanelClicked && 
-                        <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                            <InstructionPanel />
-                        </Modal>
-                    }
-                    
-                        <Input 
-                            title={"Batch Name:"}
-                            placeholder={"Batch A-1"}
-                            value={inputtedBatchName}
-                            onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                            onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
+                <div className="dark:text-white text-[3rem] text-black
+                                flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
+                    <Input 
+                        title={"Batch Name:"}
+                        placeholder={"Batch A-1"}
+                        value={inputtedBatchName}
+                        onChange={(event) => { setInputtedBatchName(event.target.value)}}
+                        onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
                     />
-                </div>                 
+                </div>
+
                 <div className="flex justify-center">
                     <Button 
                         className=" dark:border-white dark:text-white text-lg
@@ -485,7 +465,7 @@ const ResumeUploadScreen = () => {
 
 
 
-            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
+            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem]">
 
                 <ul className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
                 { selectableItems.map( (selectable, index : number) => (
@@ -500,7 +480,7 @@ const ResumeUploadScreen = () => {
                                 text-black
                                 dark:text-white
                                 self-center
-                                text-lg">
+                                text-[1.5rem]">
                     { anySelected() ?
                     <div className="flex flex-col my-[1rem]">
                         <Button
@@ -544,17 +524,28 @@ const ResumeUploadScreen = () => {
                         selectionContext.uploadedFiles.length > 1 ?
                             `dark:border-white dark:text-white dark:hover:bg-grayMidDark
                             border-black text-black hover:bg-grayMidDark animate-pulse
-                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                            flex justify-center p-[1rem] my-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
                         :
                             `dark:border-white dark:text-white dark:hover:bg-grayMidDark
                             border-black text-black hover:bg-grayMidDark
-                            flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg`
+                            flex justify-center p-[1rem] mb-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
                     }
                     onClick={()=>handleAddFiltersClick()}
                 >
                     Add Filters to Uploaded Files
                 </Button>
             </div>
+
+
+            <div className="absolute bottom-0 right-0 text-white pb-2 pr-2">
+                <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
+            </div>
+
+            {instructionsPanelClicked && 
+                <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
+                    <InstructionPanel />
+                </Modal>
+            }
 
 
 
