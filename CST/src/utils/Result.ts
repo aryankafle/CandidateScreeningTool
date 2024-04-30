@@ -39,6 +39,8 @@ export class Result {
 
     readonly summary : string
 
+    readonly fileID : string
+
     private static curveScore(index : number, score : number, numScores : number) {
 
         const curvingFactor = zScore(index, 0, 1)
@@ -54,13 +56,14 @@ export class Result {
 
 
 
-    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string) {
+    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string, fileID : string) {
 
         this.applicant = applicant
         this.resume = resume
         this.scores = scores
         this.summaries = summaries
         this.summary = summary
+        this.fileID = fileID
 
     }
 
@@ -123,7 +126,8 @@ export class Result {
            applicant: this.applicant,
            scores: this.scores,
            resume: this.resume,
-           summaries: this.summaries
+           summaries: this.summaries,
+           fileID: this.fileID
         }
     }
     
