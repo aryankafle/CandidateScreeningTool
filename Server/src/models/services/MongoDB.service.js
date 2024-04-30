@@ -99,22 +99,16 @@ export const getSavedList = async (listID) => {
 
     console.log(`----Getting saved list with id: ${listID}.`)
 
-
-
-
-
+    
     const db = client.db("resumes")
     const savedLists = db.collection("saved-lists")
-
     const savedList = await savedLists.findOne({ _id: listID })
 
-
-
-
-
     console.log("----Done getting saved list.")
+        
 
     return savedList
+
 
 }
 

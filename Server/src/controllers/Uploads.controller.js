@@ -3,7 +3,7 @@ import { uploadNewSavedList } from "../models/services/MongoDB.service.js";
 import { convertFileToText } from "../models/services/TextScan.service.js";
 import { tokenLimits } from "../config/openai.config.js";
 import { getNumTokensFromRequest } from "../models/utils/OpenAIQueryHelpers.js";
-
+import { censorContactInfo } from "../models/services/InfoCensor.service.js";
 
 
 
@@ -23,15 +23,16 @@ export const uploadResumesToDB = async (req, res) => {
 
     const textScanArray = await Promise.all(fileArray.map(async (file) => {
 
-        const result = await convertFileToText(file)
+        const scanResult = await convertFileToText(file)
 
-        if( !result ) return null
+        if( !scanResult ) return null
+
+        const censorResult = await censorContactInfo(scanResult.scan)
 
 
-        
         console.log(`Done getting text scan for file ${file.originalname} of type ${file.mimetype}.`)
-
-        return result.scan
+        console.log(`Phone Number for file is ${censorResult.contactInfo.phoneNumber}, Email Address is ${censorResult.contactInfo.emailAddress}`)
+        return censorResult
 
     }))
 
@@ -76,8 +77,6 @@ export const uploadResumesToDB = async (req, res) => {
 
 
     await uploadNewSavedList(fileArray, textScanArray, listID, batchName, userID)
-
-
 
 
 
