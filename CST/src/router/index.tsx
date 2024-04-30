@@ -79,7 +79,7 @@ function Router() {
 
             setSavedLists(savedLists)
 
-            await getUserSelection(userData.id).then((userSelection) => {
+            await getUserSelection(userData.id).then(async (userSelection) => {
 
                 const location = userSelection.location
 
@@ -87,7 +87,7 @@ function Router() {
 
                     console.log(userSelection.currentSavedList)
 
-                    const currentSavedList = SavedList.fromJSON(userSelection.currentSavedList) || {} as SavedList
+                    const currentSavedList = await SavedList.fromJSON(userSelection.currentSavedList)
 
                     setCurrentSavedList(currentSavedList)
 

@@ -76,7 +76,7 @@ const ResumeUploadScreen = () => {
         selectionContext.setCurrentBatchName("")
 
         selectionContext.setSelectedFilters([])
-        selectionContext.setCurrentSavedList({} as SavedList)
+        selectionContext.setCurrentSavedList(undefined)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

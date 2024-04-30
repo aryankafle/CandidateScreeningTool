@@ -1,3 +1,4 @@
+import { getResume } from "../requests/ResumeRequests";
 import { Result } from "./Result";
 import { UniquelyIdentified } from "./UniquelyIdentified";
 import { UserOwned } from "./UserOwned";
@@ -76,14 +77,18 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
 
 
-    public static fromJSON(jsonlist : any) {
+    public static async fromJSON(jsonlist : any) {
 
         const translatedList = {
-            name: jsonlist.name_of_list,
-            description: jsonlist.description_of_list,
-            results: jsonlist.results?.map((result : any) => Result.fromJSON(result)),
+            name: jsonlist.name,
+            description: jsonlist.description,
+            color: jsonlist.color,
+            results: await Promise.all(
+                jsonlist.file_ids.map(
+                    async (fileID : string) => getResume(fileID, jsonlist._id)
+            )),
             owner: jsonlist.owner_of_list,
-            shared: jsonlist.usersWithAcess,
+            shared: jsonlist.shared_with,
             id: jsonlist._id
         }
 
@@ -93,7 +98,7 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
         }
 
-        if(translatedList.results?.length < 1) return undefined
+        if(translatedList.results.length < 1) return undefined
 
 
         
@@ -101,6 +106,7 @@ export class SavedList implements UserOwned, UniquelyIdentified {
             translatedList.name,
             translatedList.description,
             translatedList.results,
+            translatedList.color,
             translatedList.owner,
             translatedList.shared
         )

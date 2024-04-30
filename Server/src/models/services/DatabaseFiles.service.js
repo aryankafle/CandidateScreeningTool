@@ -53,6 +53,20 @@ export const downloadFile = async (fileID) => {
 
 
 
+export const downloadResult = async (fileID) => {
+
+    const data = await fileBuckets.find({ _id: fileID }).project({metadata: 1}).toArray()
+
+
+
+    if(data === null) throw { error: `A file with id: ${fileID} does not exist.` }
+
+    return data
+
+}
+
+
+
 export const deleteFile = async (fileID) => {
 
     fileBuckets.deleteOne({_id: fileID})

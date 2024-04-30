@@ -57,7 +57,7 @@ export async function deleteResumeFromDatabase(fileID : string, userID : string)
 
 
 
-export async function getResume(fileID : string, userID : string) : Promise<any> {
+export async function getResume(fileID : string, userID : string) : Promise<Result> {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-resume-result`, { params: {
 
@@ -66,7 +66,7 @@ export async function getResume(fileID : string, userID : string) : Promise<any>
 
     }})
 
-    return response.data
+    return Result.fromJSON(response.data)
 
 }
 
@@ -119,15 +119,19 @@ export async function modifySavedList(listID : string, userID : string, newName?
 
 
 
-export async function getUserSavedLists (userID : string) : Promise<any> {
+export async function getUserSavedLists (userID : string) : Promise<SavedList[]> {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-user-lists`, { params: {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-user-lists`, { params: {
 
         userID
 
     }})
 
-    return response.data
+    const savedListsArr : SavedList[] = await Promise.all(
+        response.data.map(
+            async (data : SavedList) => SavedList.fromJSON(response.data))
+    )
+    return savedListsArr
 
 }
 
@@ -150,7 +154,7 @@ export const getUser = async () => {
 
 export const getUserSelection = async (userID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-user-saved-selection`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-user-selection`, {
         params:{
             userID
         }
@@ -162,7 +166,7 @@ export const getUserSelection = async (userID : string) => {
 
 export const postUserLocation = async (userID : string, location : string) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-saved-selection`, {
+    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-selection`, {
         userID,
         location
     })
@@ -173,7 +177,7 @@ export const postUserLocation = async (userID : string, location : string) => {
 
 export const postUserCurrentSavedList = async (userID : string, currentSavedList : SavedList) => {
 
-    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-saved-selection`, {
+    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-selection`, {
         userID,
         currentSavedList
     })

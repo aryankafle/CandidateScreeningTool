@@ -131,14 +131,41 @@ export class Result {
 
     public static fromJSON(jsonresult : any) {
 
+        // _id: file_id,
+        // chunkSizeBytes: CHUNK_SIZE,
+        // metadata: {
+        //     from_saved_list: _id,
+        //     file_name,
+        //     text_scan,
+        //     result: null,
+        //     user_id: userID
+        // }
+
+
+        // result = {
+
+        //     file, fileID, filters,
+        //     scores, summaries, summary, applicant,
+    
+        // }
+
+        const result = jsonresult.result
+
+        const translated = {
+
+            applicant: result.applicant,
+            scores: result.scores,
+            summaries: result.summaries,
+            summary: result.summary
+
+        }
+
         return new Result(
-            {
-                name: jsonresult.applicant.name || "name error"
-            } as Applicant,
+            translated.applicant as Applicant,
             {} as File, // need to replace with file lookup eventually
-            jsonresult.scores || {score: 0, filter: {} as Filter},
-            jsonresult.summaries || {summary: "summaries error, no summary", section: "summaries error, no section"},
-            jsonresult.summary || "summary error"
+            translated.scores || {score: 0, filter: {} as Filter},
+            translated.summaries || {summary: "summaries error, no summary", section: "summaries error, no section"},
+            translated.summary || "summary error"
         )
 
     }

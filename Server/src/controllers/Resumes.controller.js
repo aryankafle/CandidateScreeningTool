@@ -1,6 +1,6 @@
 import {
 
-    downloadFile,
+    downloadResult,
 
 } from "../models/services/DatabaseFiles.service.js"
 
@@ -160,9 +160,9 @@ export const getResumeResult = async (req, res) => {
 
     try {
 
-        const file = await downloadFile(fileID)
+        const result = await downloadResult(fileID)
 
-        res.status(200).send(file)
+        res.status(200).send(result)
 
     }
     catch (error) {

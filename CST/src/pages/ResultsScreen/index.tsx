@@ -189,7 +189,7 @@ const ResultsScreen = () => {
         saveList(newList, selectionContext.currentBatchId, selectionContext.currentBatchFileIds, userData.id).then(() => {
 
             selectionContext.setUploadedFiles([])
-            selectionContext.setCurrentSavedList({} as SavedList)
+            selectionContext.setCurrentSavedList(undefined)
             selectionContext.setCurrentBatchName("")
     
             selectionContext.setSelectedFilters([])
