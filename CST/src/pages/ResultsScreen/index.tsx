@@ -34,7 +34,7 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading..."))
+    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading...", "loading..."))
 
     const [ title, setTitle ] = useState(selectionContext.currentSavedList.name || "")
     const [ description, setDescription ] = useState(selectionContext.currentSavedList.description || "")
@@ -51,6 +51,8 @@ const ResultsScreen = () => {
     const [ searchQuery, setSearchQuery ] = useState("")
 
     const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
+
+    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState(resumes)
 
 
 
@@ -312,29 +314,37 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        const haystack = resumes.map(r => `${r.applicant.name}¦${r.summary}`)
-        const needle = searchQuery
-        const opts = {}
-        const uf = new uFuzzy(opts)
-        const idxs = uf.filter(haystack, needle)
-        if (idxs != null && idxs.length > 0) {
-            let infoThresh = 1e3;
-            if (idxs.length <= infoThresh) {
-                let info = uf.info(idxs, haystack, needle);
-                let order = uf.sort(info, haystack, needle);
-                for (let i = 0; i < order.length; i++) {
-                    // for (let u = 0; u < resumes.length; u++) {
-                    //     if
-                    // }
-                    console.log(haystack[info.idx[order[i]]]);
+        if (searchQuery !== "") {
+            const fuzziedResumes = []
+            const haystack = resumes.map(r => `${r.fileID}¦${r.applicant.name}¦${r.summary}`)
+            const needle = searchQuery
+            const opts = {}
+            const uf = new uFuzzy(opts)
+            const idxs = uf.filter(haystack, needle)
+            if (idxs != null && idxs.length > 0) {
+                let infoThresh = 1e3;
+                if (idxs.length <= infoThresh) {
+                    let info = uf.info(idxs, haystack, needle);
+                    let order = uf.sort(info, haystack, needle);
+                    for (let i = 0; i < order.length; i++) {
+                        const tempArr = haystack[info.idx[order[i]]].split("¦")
+                        for (let y = 0; y < resumes.length; y++) {
+                            if (tempArr[0] === resumes[y].fileID) {
+                                fuzziedResumes.push(resumes[y])
+                            }
+                        }
+                    }
+                    setFuzzySearchResumes(fuzziedResumes)
                 }
-            }
             else {
-                for (let i = 0; i < idxs.length; i++) {
-                    console.log(haystack[idxs[i]]);
+                    for (let i = 0; i < idxs.length; i++) {
+                        console.log(haystack[idxs[i]]);
+                    }
                 }
             }
-            }
+        } else {
+            setFuzzySearchResumes(resumes)
+        }
     }, [searchQuery])
 
 
@@ -427,7 +437,7 @@ const ResultsScreen = () => {
                         "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
-                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
+                        {fuzzySearchResumes?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
                             //selected={selectableItems[index].isSelected}
