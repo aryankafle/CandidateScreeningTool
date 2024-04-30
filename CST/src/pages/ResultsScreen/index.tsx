@@ -327,7 +327,6 @@ const ResultsScreen = () => {
                     let info = uf.info(idxs, haystack, needle);
                     let order = uf.sort(info, haystack, needle);
                     for (let i = 0; i < order.length; i++) {
-                        console.log(haystack[info.idx[order[i]]]);
                         const tempArr = haystack[info.idx[order[i]]].split("¦")
                         for (let y = 0; y < resumes.length; y++) {
                             if (tempArr[0] === resumes[y].fileID) {
