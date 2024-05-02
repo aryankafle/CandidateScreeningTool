@@ -143,7 +143,7 @@ const FilterScreen = () => {
             <div className="flex flex-col flex-grow">
                 <div className="flex flex-row flex-grow pt-10">
                     <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
                         onClick={
                             () => {
 
@@ -161,7 +161,7 @@ const FilterScreen = () => {
 
 
                     <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
                         onClick={
                             () => {
 
@@ -179,7 +179,7 @@ const FilterScreen = () => {
 
 
                     <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[2rem] m-5 rounded-lg p-1"
+                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
                         onClick={
                             () => {
 
