@@ -436,7 +436,7 @@ const ResumeUploadScreen = () => {
 
                 <div className="flex justify-center">
                     <Button 
-                        className=" dark:border-white dark:text-white text-lg
+                        className=" dark:border-white dark:text-white text-lg rounded-md
                                     border-black text-black hover:bg-grayMidDark
                                     border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
                         onClick={handleUploadClick}
@@ -523,11 +523,11 @@ const ResumeUploadScreen = () => {
                     className={
                         selectionContext.uploadedFiles.length > 1 ?
                             `dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                            border-black text-black hover:bg-grayMidDark animate-pulse
+                            border-black text-black hover:bg-grayMidDark animate-pulse rounded-md
                             flex justify-center p-[1rem] my-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
                         :
                             `dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                            border-black text-black hover:bg-grayMidDark
+                            border-black text-black hover:bg-grayMidDark rounded-md
                             flex justify-center p-[1rem] mb-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
                     }
                     onClick={()=>handleAddFiltersClick()}
