@@ -31,15 +31,13 @@ export class Result {
 
     readonly scores : {filter : Filter, score : number}[]
 
-    readonly resume : File
+    readonly resumeID : String
 
     readonly applicant : Applicant
 
     readonly summaries : {section : string, summary : string}[]
 
     readonly summary : string
-
-    readonly fileID : string
 
     private static curveScore(index : number, score : number, numScores : number) {
 
@@ -56,14 +54,13 @@ export class Result {
 
 
 
-    constructor(applicant : Applicant, resume : File, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string, fileID : string) {
+    constructor(applicant : Applicant, resumeID : string, scores : {filter : Filter, score : number}[], summaries : {section : string, summary : string}[], summary : string) {
 
         this.applicant = applicant
-        this.resume = resume
+        this.resumeID = resumeID
         this.scores = scores
         this.summaries = summaries
         this.summary = summary
-        this.fileID = fileID
 
     }
 
@@ -125,9 +122,9 @@ export class Result {
         return {
            applicant: this.applicant,
            scores: this.scores,
-           resume: this.resume,
+           resumeID: this.resumeID,
            summaries: this.summaries,
-           fileID: this.fileID
+           summary: this.summary
         }
     }
     
@@ -158,6 +155,7 @@ export class Result {
         const translated = {
 
             applicant: result.applicant,
+            resumeID: jsonresult._id,
             scores: result.scores,
             summaries: result.summaries,
             summary: result.summary
@@ -166,10 +164,10 @@ export class Result {
 
         return new Result(
             translated.applicant as Applicant,
-            {} as File, // need to replace with file lookup eventually
+            translated.resumeID || null,
             translated.scores || {score: 0, filter: {} as Filter},
             translated.summaries || {summary: "summaries error, no summary", section: "summaries error, no section"},
-            translated.summary || "summary error"
+            translated.summary || "summary error",
         )
 
     }

@@ -34,7 +34,7 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const [ currentCandidate, setCurrentCandidate ] = useState<Result>(new Result({name: "loading..."}, {} as File, [], [{section: "loading...", summary: "loading..."}], "loading...", "loading..."))
+    const [ currentCandidate, setCurrentCandidate ] = useState<Result>({} as Result)
 
     const [ title, setTitle ] = useState("")
     const [ description, setDescription ] = useState("")
@@ -51,7 +51,7 @@ const ResultsScreen = () => {
 
     const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
 
-    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState(resumes)
+    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState([] as Result[])
 
 
 
@@ -434,7 +434,7 @@ const ResultsScreen = () => {
                         "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
-                        {resumes?.map((candidate, index) => <IndividualCandidateCard 
+                        {results?.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
                             //selected={selectableItems[index].isSelected}

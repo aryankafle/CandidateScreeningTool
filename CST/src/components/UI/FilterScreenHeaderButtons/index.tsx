@@ -44,6 +44,17 @@ const HeaderButtons = () => {
 
     const handleFilterResumes = async () => {
 
+        const settleResults = await Promise.allSettled(
+            selectionContext.currentBatchFileIds
+            .map( id => createResumeResult(selectionContext.selectedFilters, id, userData.id )
+        ))
+        
+    }
+
+    
+    
+    const handleNext = () => {
+
         setLoadingState(true)
 
         if(!flags.active.includes('filters have changed')) {
@@ -53,11 +64,9 @@ const HeaderButtons = () => {
 
         }
 
-        await Promise.all(selectionContext.currentBatchFileIds.map(
-            id => createResumeResult(selectionContext.selectedFilters, id, userData.id
-        )))
+        handleFilterResumes()
+        .then( () => navigate("/results") )
 
-        navigate("/results")
 
     }
 
@@ -74,7 +83,7 @@ const HeaderButtons = () => {
                 <Button
                     className=" rounded-md justify-center gap-[0.5rem] border-[0.1rem] flex p-[0.5rem] dark:border-white dark:text-white dark:bg-black dark:hover:bg-gray dark:active:bg-blue
                                 border-black text-black bg-white hover:bg-gray active:bg-blue"
-                    onClick={ handleFilterResumes }
+                    onClick={ handleNext }
                 >
                     <IonIcon
                         icon={colorWandOutline}

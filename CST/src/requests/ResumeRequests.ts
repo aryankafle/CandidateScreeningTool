@@ -31,17 +31,26 @@ export const uploadResumeToDatabase = (
 
     })
 
-    if( !response.data.fileID ) resolve( response.data.fileID );
+    if( response.status < 400 || !response.data.fileID ) {
+        
+        reject( "Uploading file did not recieve a fileID." )
+        return;
 
-    reject( "Uploading file did not recieve a fileID." )
+    }
+
+    resolve( response.data.fileID );
 
 })
 
 
 
-export async function createResumeResult(filters : Filter[], fileID : string, userID : string) {
+export const createResumeResult = (
+    filters : Filter[],
+    fileID : string,
+    userID : string
+) => new Promise<void>( async (resolve, reject) => {
 
-    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/filtering/create-resume-result`, {
+    const { status } = await axios.put(`${process.env.REACT_APP_SERVER_NAME}/filtering/create-resume-result`, {
         
         userID,
         fileID,
@@ -50,7 +59,16 @@ export async function createResumeResult(filters : Filter[], fileID : string, us
 
     })
 
-}
+    if( status >= 400 ) {
+
+        resolve()
+        return;
+
+    }
+
+    reject()
+
+})
 
 
 
