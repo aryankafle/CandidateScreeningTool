@@ -116,6 +116,13 @@ const ResumeUploadScreen = () => {
 
 
 
+    useEffect(() => {
+
+        console.log(selectionContext.currentBatchFileIds)
+
+    }, [selectionContext.currentBatchFileIds])
+
+
 
     const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
 
@@ -173,6 +180,7 @@ const ResumeUploadScreen = () => {
 
         for(const settleResult of fileIDSettleResults) {
 
+            console.log("yeahhah")
             if(settleResult.status === "fulfilled") {
 
                 const fileID : string = settleResult.value
@@ -193,7 +201,7 @@ const ResumeUploadScreen = () => {
 
         setLoadingState(true)
 
-        getFileIds()
+        await getFileIds()
 
         setShowConfirmFilesModal(false);
 

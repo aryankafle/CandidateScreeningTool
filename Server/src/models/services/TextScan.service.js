@@ -18,19 +18,19 @@ export async function convertFileToText(file) {
             
             const pdfText = await changePdfToText(file)
 
-            return { text: pdfText }
+            return pdfText
         
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 
             const wordText = await changeWordToText(file)
 
-            return { text: wordText }
+            return wordText
         
         case "image/png":
 
             const pngText = await changePngToText(file)
 
-            return { text: pngText }
+            return pngText
 
         default: 
 

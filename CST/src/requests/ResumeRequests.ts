@@ -23,7 +23,7 @@ export const uploadResumeToDatabase = (
 
 
     
-    const response = await axios.post( `${process.env.REACT_APP_SERVER_NAME}/uploads/upload-resume`, fileFormData, {
+    const response = axios.post( `${process.env.REACT_APP_SERVER_NAME}/uploads/upload-resume`, fileFormData, {
 
         headers: {
             "Content-Type": "multipart/form-data"
@@ -31,14 +31,27 @@ export const uploadResumeToDatabase = (
 
     })
 
-    if( response.status < 400 || !response.data.fileID ) {
+    
+
+    try {
+        
+        var { data } = await response
+        
+    }
+    catch (error) {
+
+        data = null;
+
+    }
+
+    if( !data.fileID ) {
         
         reject( "Uploading file did not recieve a fileID." )
         return;
 
     }
 
-    resolve( response.data.fileID );
+    resolve( data.fileID );
 
 })
 

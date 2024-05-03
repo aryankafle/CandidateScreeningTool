@@ -34,7 +34,7 @@ export const uploadResumeToDatabase = async (req, res) => {
 
     }
 
-
+    console.log(textScan)
 
     const censoredScan = await censorContactInfo(textScan)
 
