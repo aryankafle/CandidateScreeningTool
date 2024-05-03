@@ -162,17 +162,42 @@ const ResumeUploadScreen = () => {
 
 
 
-    async function handleConfirmModal() {
+    async function getFileIds() {
 
-        setLoadingState(true);
+        const fileIDPromises = Promise.allSettled(
+            selectionContext.uploadedFiles
+            .map(async file => uploadResumeToDatabase(file, selectionContext.currentBatchId, userData.id))
+        )
 
-        const fileIDs = await Promise.all(selectionContext.uploadedFiles.map(file => uploadResumeToDatabase(file, selectionContext.currentBatchId, userData.id)))
+        const fileIDSettleResults = await fileIDPromises
 
-        selectionContext.setCurrentBatchFileIds(fileIDs)
+        for(const settleResult of fileIDSettleResults) {
+
+            if(settleResult.status === "fulfilled") {
+
+                const fileID : string = settleResult.value
+
+                selectionContext.setCurrentBatchFileIds( ( previousIDs => [...previousIDs, fileID] ) )
+
+                continue;
+
+            }
+
+            // Do thing with error files here
+
+        }
+
+    }
+
+    async function handleConfirmModal () {
+
+        setLoadingState(true)
+
+        getFileIds()
 
         setShowConfirmFilesModal(false);
 
-        navigate("/filter");
+        navigate("/filter")
 
     }
 

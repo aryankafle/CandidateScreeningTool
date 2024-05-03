@@ -7,7 +7,13 @@ import { Filter } from '../utils/Filter';
 
 
 
-export async function uploadResumeToDatabase(file: File, batchID: string, userID : string) : Promise<string> {
+export const uploadResumeToDatabase = (
+
+    file: File,
+    batchID: string,
+    userID : string
+
+) => new Promise<string>( async ( resolve, reject ) => {
 
     const fileFormData = new FormData()
 
@@ -15,17 +21,21 @@ export async function uploadResumeToDatabase(file: File, batchID: string, userID
     fileFormData.set("listID", batchID)
     fileFormData.set("userID", userID)
 
-    const response = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/uploads/upload-resume`, fileFormData, {
+
+    
+    const response = await axios.post( `${process.env.REACT_APP_SERVER_NAME}/uploads/upload-resume`, fileFormData, {
+
         headers: {
             "Content-Type": "multipart/form-data"
         }
+
     })
 
-    if(!response.data.fileID) throw Error("Error getting fileID!")
+    if( !response.data.fileID ) resolve( response.data.fileID );
 
-    return response.data.fileID
+    reject( "Uploading file did not recieve a fileID." )
 
-}
+})
 
 
 
