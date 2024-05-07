@@ -1,4 +1,4 @@
-import { users, savedLists } from "../../database/MongoDB.database.js";
+import { users, savedLists, getUser } from "../../database/MongoDB.database.js";
 
 
 
@@ -6,23 +6,24 @@ import { users, savedLists } from "../../database/MongoDB.database.js";
 
 export const addUser = async (userToken) => {
 
-    try {
-
-        await users.insertOne({ 
-            _id: userToken.id,
-            user_token: userToken,
-            saved_list_ids: [],
-            current_location: null,
-            current_saved_list: null
-        })
     
-    }
-    catch (error) {
+    const id = userToken?.id
 
-        console.log("----User already registered.")
-        return;
+    if(!id) return;
 
-    }
+    const existingUser = await getUser(id)
+    
+    if(existingUser) return;
+
+    await users.insertOne({ 
+        _id: id,
+        user_token: userToken,
+        saved_list_ids: [],
+        current_location: "/home",
+        current_saved_list: null
+    })
+
+    console.log(id)
 
 }
 
@@ -49,6 +50,8 @@ export const getUserSelection = async (userID) => {
 export const setUserSelection = async (userID, selection) => {
     
     const user = await users.findOne( { _id: userID } )
+
+    if(!user) return;
 
     const currentSavedList = selection.currentSavedList || user.current_saved_list
     const location = selection.location || user.current_location

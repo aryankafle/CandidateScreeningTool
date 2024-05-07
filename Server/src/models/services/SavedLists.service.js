@@ -23,11 +23,3 @@ export const uploadSavedList = async (savedList, listID, fileIDs, userID) => {
     })
 
 }
-
-
-
-export const deleteSavedList = async (listID) => {
-
-    await savedLists.deleteOne({_id: listID})
-
-}

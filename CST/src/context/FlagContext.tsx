@@ -28,15 +28,6 @@ type FlagState = {
 
 
 
-type FlagContextType = {
-
-    loadingState : boolean,
-    setLoadingState : React.Dispatch<SetStateAction<boolean>>,
-    flags : FlagState,
-    updateFlag : React.Dispatch<ActionTypes>
-
-}
-
 const FlagContextInitial = {
 
     loadingState : false,
@@ -46,13 +37,19 @@ const FlagContextInitial = {
 
 }
 
+type FlagContextType = typeof FlagContextInitial
 
 
 
 
-export const FlagContext = createContext<FlagContextType>(FlagContextInitial)
 
-const FlagContextProvider = (props: { children : ReactNode }) => {
+const FlagContext = createContext<FlagContextType>(FlagContextInitial)
+
+export default FlagContext
+
+
+
+export const FlagContextProvider = (props: { children : ReactNode }) => {
 
     const [ loadingState, setLoadingState ] = useState<boolean>(FlagContextInitial.loadingState)
 
@@ -97,11 +94,7 @@ const FlagContextProvider = (props: { children : ReactNode }) => {
 
                 if(flagIndex > -1) {
 
-                    console.log("eayhahsdhf,", currentFlagState)
-
                     copyOfState.active.splice(flagIndex, 1)
-
-                    console.log("eayhahsdhf,", copyOfState)
         
                     return copyOfState
 
@@ -118,14 +111,20 @@ const FlagContextProvider = (props: { children : ReactNode }) => {
 
 
     return (
-        <FlagContext.Provider value={{
+        <FlagContext.Provider
+
+            value={{
+
                 loadingState, setLoadingState,
                 flags, updateFlag,
-            }}>
+
+            }}
+
+        >
+            
             {props.children}
+        
         </FlagContext.Provider>
     )
 
 }
-
-export default FlagContextProvider

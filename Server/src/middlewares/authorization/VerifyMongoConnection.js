@@ -1,4 +1,4 @@
-import { checkMongoDBConnection } from "../../database/MongoDB.database.js";
+import { isConnected } from "../../database/MongoDB.database.js";
 
 
 
@@ -6,7 +6,7 @@ import { checkMongoDBConnection } from "../../database/MongoDB.database.js";
 
 export const verifyMongoDbConnection = (req, res, next) => {
 
-    if(!checkMongoDBConnection()) {
+    if(!isConnected()) {
 
         return res.status(500).send("MongoDb Server is not connected.")
 

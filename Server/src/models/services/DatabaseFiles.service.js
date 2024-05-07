@@ -1,16 +1,20 @@
 import { fileBuckets } from "../../database/MongoDB.database.js"
-
+import { ObjectId } from "mongodb" 
+import streamifier from "streamifier"
 
 
 
 
 export const uploadFile = async (file, textScan, listID, userID) => {
 
-    const newIndex = (await fileBuckets.find({"metadata.from_saved_list": listID}).toArray()).length
+    const uploadsFromSameList = await fileBuckets.find({"metadata.from_saved_list": listID}).toArray()
+    const newIndex = uploadsFromSameList.length
 
-    const file_id = `${listID}@${newIndex}`
+    const file_id = new ObjectId(`${listID}@${newIndex}`)
     const file_name = file.originalname
-    const text_scan = textScan
+    const text_scan = 
+    
+    console.log(file_id)
 
 
 
@@ -18,13 +22,13 @@ export const uploadFile = async (file, textScan, listID, userID) => {
 
     streamifier
     .createReadStream(file.buffer)
-    .pipe(fileBucket.openUploadStream(
+    .pipe(fileBuckets.openUploadStream(
         file_name,
         {
             _id: file_id,
             chunkSizeBytes: CHUNK_SIZE,
             metadata: {
-                from_saved_list: _id,
+                from_saved_list: listID,
                 file_name,
                 text_scan,
                 result: null,
@@ -38,40 +42,6 @@ export const uploadFile = async (file, textScan, listID, userID) => {
 }
 
 
-
-export const downloadFile = async (fileID) => {
-
-    const file = await fileBuckets.findOne({ _id: fileID })
-
-
-
-    if(file === null) throw { error: `A file with id: ${fileID} does not exist.` }
-
-    return file
-
-}
-
-
-
-export const downloadResult = async (fileID) => {
-
-    const data = await fileBuckets.find({ _id: fileID }).project({metadata: 1}).toArray()
-
-
-
-    if(data === null) throw { error: `A file with id: ${fileID} does not exist.` }
-
-    return data
-
-}
-
-
-
-export const deleteFile = async (fileID) => {
-
-    fileBuckets.deleteOne({_id: fileID})
-
-}
 
 
 

@@ -34,8 +34,6 @@ export const uploadResumeToDatabase = async (req, res) => {
 
     }
 
-    console.log(textScan)
-
     const censoredScan = await censorContactInfo(textScan)
 
 
@@ -61,7 +59,7 @@ export const uploadResumeToDatabase = async (req, res) => {
 
     try {
 
-        const fileID = await uploadFile(file, censoredScan, fileID, listID, userID)
+        const fileID = await uploadFile(file, censoredScan, listID, userID)
 
         return res.status(200).json({
             

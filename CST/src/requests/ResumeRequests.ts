@@ -113,13 +113,11 @@ export async function getResume(fileID : string, userID : string) : Promise<Resu
 
 
 
-export async function saveList(savedList : SavedList, batchID : string, fileIDs : string[], userID : string) {
+export async function saveList(savedList : SavedList, fileIDs : string[], userID : string) {
 
     await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/create-list`, {
 
         savedList: savedList.toJSON(),
-        
-        listID: batchID,
         fileIDs,
 
         userID
@@ -184,8 +182,6 @@ export const getUser = async () => {
         `${process.env.REACT_APP_SERVER_NAME}/auth/login/success`
         , { withCredentials: true }
     )
-
-    console.log("Successfully Signed In: ", data)
     
     return data.user
 

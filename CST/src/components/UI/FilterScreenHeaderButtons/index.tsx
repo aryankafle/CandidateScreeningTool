@@ -5,10 +5,10 @@ import Button from "../../buttons/ImprovedButtonComponent"
 import { useNavigate } from "react-router-dom"
 import { createResumeResult } from "../../../requests/ResumeRequests"
 import { useContext, useEffect } from "react"
-import { UserContext } from "../../../context/UserContext"
-import { SelectionContext } from '../../../context/SelectionContext';
-import { FlagContext } from "../../../context/FlagContext"
-import { SavedList } from "../../../utils/SavedList"
+import UserContext from "../../../context/UserContext"
+import SelectionContext from '../../../context/SelectionContext';
+import BatchContext from '../../../context/BatchContext';
+import FlagContext from "../../../context/FlagContext"
 
 
 
@@ -18,7 +18,8 @@ const HeaderButtons = () => {
 
     const navigate = useNavigate()
     
-    const selectionContext = useContext(SelectionContext)
+    const { selectedFilters, uploadedFiles } = useContext(SelectionContext)
+    const { fileIDs } = useContext(BatchContext)
     const { setLoadingState, flags } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
@@ -29,7 +30,7 @@ const HeaderButtons = () => {
 
     useEffect(() => {
 
-        if(!selectionContext.currentBatchId || selectionContext.uploadedFiles.length < 2 || !selectionContext.currentBatchName) {
+        if(uploadedFiles.length < 2) {
 
             navigate("/home/resume-upload")
 
@@ -45,8 +46,7 @@ const HeaderButtons = () => {
     const handleFilterResumes = async () => {
 
         const settleResults = await Promise.allSettled(
-            selectionContext.currentBatchFileIds
-            .map( id => createResumeResult(selectionContext.selectedFilters, id, userData.id )
+            fileIDs.map( id => createResumeResult(selectedFilters, id, userData.id )
         ))
         
     }

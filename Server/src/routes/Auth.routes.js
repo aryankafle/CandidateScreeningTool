@@ -6,6 +6,7 @@ import config from "../config/env.config.js";
 
 
 
+
 const router = express.Router();
 
 
@@ -13,11 +14,12 @@ const router = express.Router();
 router.get("/login/success", async (req, res) => {
 
     if(!req.user) {
-        res.status(403).json({ 
+        
+        return res.status(403).json({ 
             error: true,
             message: "Unauthorized" 
         })
-        return;
+        
     }
 
 
@@ -29,7 +31,7 @@ router.get("/login/success", async (req, res) => {
     }
     catch (error) {
 
-        res.status(400).json({
+        return res.status(400).json({
             error: error,
             message: "Error adding user to user table."
         })
@@ -56,10 +58,12 @@ router.get("/login/failed", (req, res) => {
 })
 
 router.get("/google/callback", 
+
     passport.authenticate("google", {
         successRedirect: config.CLIENT,
         failureRedirect: "login/failed"
     })
+
 )
 
 router.get("/google", passport.authenticate("google", ["profile", "email"]))
@@ -67,8 +71,10 @@ router.get("/google", passport.authenticate("google", ["profile", "email"]))
 router.get("/logout", (req, res, next) => {
 
     req.logout((error) => {
+
         if(error) { return next(error) }
         res.redirect(`${config.CLIENT}/`)
+
     })
     
 })

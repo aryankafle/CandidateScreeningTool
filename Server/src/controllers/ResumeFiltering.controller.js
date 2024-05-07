@@ -1,8 +1,8 @@
 import {
 
-    downloadFile,
+    downloadFileMetadata,
 
-} from "../models/services/DatabaseFiles.service.js"
+} from "../database/MongoDB.database.js"
 
 import {
 
@@ -19,9 +19,6 @@ import {
 
 export const createResultsForResume = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async getResultsForResume`)
-
-    const userID = req.body?.userID
     const fileID = req.body?.fileID
 
     const filters = req.body?.filters
@@ -30,24 +27,53 @@ export const createResultsForResume = async (req, res) => {
 
 
 
-    const { file, textScan } = await downloadFile(fileID, userID)
+    const metadata = await downloadFileMetadata(fileID)
 
-    const scores = await getFilterScoresForResume(textScan, filters)
-    const summaries = await getSectionSummariesForResume(textScan)
-    const summary = await getOverallSummaryForResume(textScan)
+    if(!metadata) {
+
+        return res.status(404).send({
+
+            error: true,
+            message: "File does not exist."
+
+        })
+
+    }
+
+    
+
+    const scores = await getFilterScoresForResume(metadata.text_scan, filters)
+    const summaries = await getSectionSummariesForResume(metadata.text_scan)
+    const summary = await getOverallSummaryForResume(metadata.text_scan)
 
     const applicant = {
 
-        name: await getCandidateNameFromResume(textScan)
+        name: await getCandidateNameFromResume().text_scan
         
     }
 
     const result = {
 
-        file, fileID, filters,
-        scores, summaries, summary, applicant,
+        fileID, scores, summaries, summary, applicant,
 
     }
+
+
+
+
+
+
+    if(!stream) {
+
+        res.status(500).send({
+
+            error: true,
+            message: "File has no data."
+            
+        })
+
+    }
+
 
 
 
@@ -60,7 +86,5 @@ export const createResultsForResume = async (req, res) => {
         message: "Successfully applied filters to resumes!"
 
     })
-
-    console.log("Controller function finished.\n\n\n")
 
 }

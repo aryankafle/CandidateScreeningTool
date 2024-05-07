@@ -3,14 +3,14 @@ import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { useClipboard } from "../../hooks/Clipboard"
 import { SavedListsContext } from "../../context/SavedListsContext";
-import { SelectionContext } from "../../context/SelectionContext";
+import SelectionContext from "../../context/SelectionContext";
 
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
 import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
-import { UserContext } from "../../context/UserContext";
+import UserContext from "../../context/UserContext";
 
 
 

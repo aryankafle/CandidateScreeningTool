@@ -12,7 +12,7 @@ import {
 
 export const getAllUserSavedLists = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async getAllUserSavedLists`)
+    (`\n\n\nUsing Controller: async getAllUserSavedLists`)
 
     const userID = req.query?.userID
 
@@ -38,19 +38,7 @@ export const getAllUserSavedLists = async (req, res) => {
 
     }
 
-
-
-
-
-    console.log("Controller function finished.\n\n\n")
-
 }
-
-
-
-
-
-
 
 
 
@@ -58,17 +46,9 @@ export const getAllUserSavedLists = async (req, res) => {
 
 export const getUserSavedSelection = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async getUserSavedSelection`)
-
-
-
-
-
     try {
 
         const savedSelection = await getUserSelection(req.query?.userID)
-
-        console.log(savedSelection)
 
         res.status(200).send(savedSelection)
 
@@ -82,25 +62,11 @@ export const getUserSavedSelection = async (req, res) => {
 
     }
     
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
-
 }
 
 
 
-
-
 export const setUserSavedSelection = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async setUserSavedSelection`)
-
-
-
-
 
     try {
 
@@ -121,19 +87,11 @@ export const setUserSavedSelection = async (req, res) => {
     }
     catch (error) {
 
-        console.log("Error setting user saved selection: ", error)
-
         res.status(500).json({
             error: error,
             message: "Error setting user saved selection."
         })
 
     }
-    
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
-    
+        
 }

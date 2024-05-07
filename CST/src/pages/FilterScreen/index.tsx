@@ -6,10 +6,11 @@ import { IonIcon } from "@ionic/react";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
-import { SelectionContext } from '../../context/SelectionContext';
-import { FlagContext } from '../../context/FlagContext';
+import SelectionContext from '../../context/SelectionContext';
+import FlagContext from '../../context/FlagContext';
 import Modal from '../../components/modals/Modal';
 import { helpCircleOutline } from 'ionicons/icons';
+import BatchContext from '../../context/BatchContext';
 
 
 

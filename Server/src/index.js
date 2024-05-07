@@ -1,9 +1,10 @@
-import express from "express";
-import expressSession from "express-session";
+import express from "express"
+import morgan from "morgan"
+import expressSession from "express-session"
 import passport from "./passport.js"
 
 import config from "./config/env.config.js"
-import { corsConfig } from "./config/cors.config.js";
+import { corsConfig } from "./config/cors.config.js"
 import { sessionConfig } from "./config/session.config.js"
 
 import cors from "cors";
@@ -33,7 +34,13 @@ import {
 
 const app = express();
 
+app.use(morgan('common'))
+
 app.use(express.json());
+
+app.use(express.urlencoded({
+    extended: true
+}))
 
 app.get("/ping", (req, res) => {
     res.status(200).json({message: "pong"})
@@ -103,5 +110,5 @@ app.use("/resumes",
 
 
 app.listen(config.EXPRESS_PORT, () => {
-    console.log(`Express is running and server is listening on ${config.EXPRESS_PORT}`)
+    console.log(`Express running. Server listening on port ${config.EXPRESS_PORT}.`)
 });

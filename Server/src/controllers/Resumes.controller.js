@@ -1,14 +1,15 @@
 import {
 
-    downloadResult,
+    downloadFileMetadata,
+    downloadFileReadStream,
 
-} from "../models/services/DatabaseFiles.service.js"
+} from "../database/MongoDB.database.js"
 
 import {
 
     deleteFile,
 
-} from "../models/services/DatabaseFiles.service.js";
+} from "../database/MongoDB.database.js";
 
 import {
 
@@ -21,8 +22,6 @@ import {
 
 
 export const addNewSavedList = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async addNewSavedList`)
 
     const userID = req.body?.userID
     const fileIDs = req.body?.fileIDs
@@ -46,8 +45,6 @@ export const addNewSavedList = async (req, res) => {
     }
     catch (error) {
 
-        console.log("Error adding saved list: ", error)
-
         res.status(500).json({
             error: error,
             message: "Error adding saved list."
@@ -55,19 +52,11 @@ export const addNewSavedList = async (req, res) => {
 
     }
     
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
-
 }
 
 
 
 export const removeOldSavedList = async (req, res) => {
-
-    console.log(`\n\n\nUsing Controller: async removeOldSavedList`)
 
     const listID = req.query?.listID
 
@@ -87,20 +76,12 @@ export const removeOldSavedList = async (req, res) => {
     }
     catch (error) {
 
-        console.log("Error removing saved list: ", error)
-
         res.status(500).json({
             error: error,
             message: "Error removing saved list."
         })
 
     }
-    
-
-    
-
-
-    console.log("Controller function finished.\n\n\n")
 
 }
 
@@ -150,7 +131,37 @@ export const modifySavedList = async (req, res) => {
 
 export const getResumeResult = async (req, res) => {
 
-    console.log(`\n\n\nUsing Controller: async getResumeFile`)
+    const fileID = req.query?.fileID;
+
+
+
+
+
+    try {
+
+        const result = await downloadFileMetadata(fileID)
+
+        res.status(200).send(result)
+
+    }
+    catch (error) {
+
+        res.status(500).json({
+
+            error: true,
+            message: "Error downloading resume result."
+
+        })
+
+    }
+
+}
+
+
+
+
+
+export const getResumeFile = async (req, res) => {
 
     const fileID = req.query?.fileID;
 
@@ -160,9 +171,15 @@ export const getResumeResult = async (req, res) => {
 
     try {
 
-        const result = await downloadResult(fileID)
+        const result = await downloadFileReadStream(fileID)
 
-        res.status(200).send(result)
+        result.pipe(res)
+        res.status(200).send({
+
+            error: false,
+            message: "Successfully fetched resume file."
+
+        })
 
     }
     catch (error) {
@@ -175,12 +192,6 @@ export const getResumeResult = async (req, res) => {
         })
 
     }
-
-
-
-
-
-    console.log("Controller function finished.\n\n\n")
 
 }
 
@@ -205,8 +216,6 @@ export const deleteResumeResult = async (req, res) => {
 
     }
     catch (error) {
-
-        console.log(`Error deleting file with fileID: ${fileID}: `, error)
 
         res.status(500).send({
             error: true,

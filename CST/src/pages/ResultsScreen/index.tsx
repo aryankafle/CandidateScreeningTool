@@ -1,22 +1,21 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
-import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline, search} from 'ionicons/icons';
+import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
-import { SelectionContext } from "../../context/SelectionContext";
+import SelectionContext from "../../context/SelectionContext";
 import { Result, Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
-import { UserContext } from "../../context/UserContext";
+import UserContext from "../../context/UserContext";
 import { saveList, deleteSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
-import { event } from "jquery";
-import { index } from "mathjs";
 import uFuzzy from "@leeoniya/ufuzzy"
+import BatchContext from '../../context/BatchContext';
 
 
 
@@ -26,52 +25,55 @@ const ResultsScreen = () => {
 
     
 
-    const [ showModal, setShowModal ] = useState(false);
-    const [ showSidePanel, setShowSidePanel ] = useState(false);
+    const { 
+        
+        currentSavedList, setCurrentSavedList,
+        savedLists, setSavedLists 
+    
+    } = useContext(SavedListsContext)
 
-    const savedListContext = useContext(SavedListsContext)
-    const selectionContext = useContext(SelectionContext)
+    const {
+
+        setSelectedFilters,
+        setUploadedFiles,
+        setPreviouslySelectedFilters
+
+    } = useContext(SelectionContext)
+
+    const {
+
+        batchResults,
+        fileIDs
+
+    } = useContext(BatchContext)
 
     const { userData } = useContext(UserContext)
 
-    const [ currentCandidate, setCurrentCandidate ] = useState<Result>({} as Result)
 
-    const [ title, setTitle ] = useState("")
-    const [ description, setDescription ] = useState("")
-    const [ color, setColor ] = useState("")
+
+
     
-
-    const [ selectedResults, setSelectedResults] = useState([] as Result[]);
-
-    const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
-
-    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
-
-    const [ searchQuery, setSearchQuery ] = useState("")
-
-    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
-
-    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState([] as Result[])
+    const [ title, setTitle ] = useState(currentSavedList?.name || "")
+    const [ description, setDescription ] = useState(currentSavedList?.description || "")
+    const [ color, setColor ] = useState(currentSavedList?.color || "")
 
 
 
-    const results = useMemo(() : Result[] => {
-        
-        if(!selectionContext.currentSavedList && selectionContext.batchResults) return selectionContext.batchResults
+    const results = useMemo(() => {
 
-        if(!selectionContext.currentSavedList) return []
+        if(currentSavedList) {
 
-        setTitle(selectionContext.currentSavedList.name)
-        setDescription(selectionContext.currentSavedList.description)
-        setColor(selectionContext.currentSavedList.color)
+            return currentSavedList.results
 
-        return selectionContext.currentSavedList.results
+        }
 
-    }, [selectionContext.batchResults, selectionContext.currentSavedList])
+        return batchResults
+
+    }, [batchResults, currentSavedList]) 
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
 
-        const oldList = selectionContext.currentSavedList
+        const oldList = currentSavedList
 
 
 
@@ -87,7 +89,38 @@ const ResultsScreen = () => {
 
         return false
         
-    }, [description, results, selectionContext.currentSavedList, title])
+    }, [description, results, currentSavedList, title])
+
+
+
+    const [ selectedResults, setSelectedResults] = useState([] as Result[]);
+
+    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
+
+
+
+    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
+
+    const [ showModal, setShowModal ] = useState(false);
+    const [ showSidePanel, setShowSidePanel ] = useState(false);
+
+    const [ currentCandidate, setCurrentCandidate ] = useState<Result>({} as Result)
+
+
+
+    const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
+
+
+
+    const [ searchQuery, setSearchQuery ] = useState("")
+
+    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState([] as Result[])
+
+
+
+
+
+
 
 
 
@@ -102,19 +135,6 @@ const ResultsScreen = () => {
         }
 
     }, [navigate, results])
-
-
-
-    useEffect(() => {
-
-        if(!selectionContext.currentSavedList) return;
-
-        setTitle(selectionContext.currentSavedList.name)
-        setDescription(selectionContext.currentSavedList.description)
-        setColor(selectionContext.currentSavedList.color)
-
-    }, [selectionContext.currentSavedList])
-
 
 
 
@@ -175,9 +195,9 @@ const ResultsScreen = () => {
         
         let listWithSameName;
 
-        for(let i = 0; i < savedListContext.savedLists.length; i++) {
+        for(let i = 0; i < savedLists.length; i++) {
 
-            if(savedListContext.savedLists[i].name.trim() === title.trim() && title !== "") {
+            if(savedLists[i].name.trim() === title.trim() && title !== "") {
                 
                 setListWithSameName(listWithSameName)
                 return;
@@ -188,13 +208,12 @@ const ResultsScreen = () => {
 
         const newList = new SavedList(title, description, results, color, userData.id, [])
 
-        saveList(newList, selectionContext.currentBatchId, selectionContext.currentBatchFileIds, userData.id).then(() => {
+        saveList(newList, fileIDs, userData.id).then(() => {
 
-            selectionContext.setUploadedFiles([])
-            selectionContext.setCurrentSavedList(undefined)
-            selectionContext.setCurrentBatchName("")
-    
-            selectionContext.setSelectedFilters([])
+            setUploadedFiles([])
+            setCurrentSavedList(undefined)
+            setSelectedFilters([])
+            setPreviouslySelectedFilters([])
     
     
     
@@ -210,7 +229,7 @@ const ResultsScreen = () => {
 
         await deleteSavedList(listWithSameName.id, userData.id)
 
-        savedListContext.setSavedLists(
+        setSavedLists(
             (savedLists) => [...savedLists].filter(list => list.id !== listWithSameName.id)
         )
 
@@ -454,7 +473,7 @@ const ResultsScreen = () => {
                                 <div className="flex flex-col py-[1rem] gap-[4rem] text-white">
                                     <InputBox
                                         title={"List Name"}
-                                        placeholder={selectionContext.currentSavedList?.name ? "" : "Name"}
+                                        placeholder={currentSavedList?.name ? "" : "Name"}
                                         onChange={
                                             (event) => {
                                                 setTitle(event.target.value)
@@ -464,7 +483,7 @@ const ResultsScreen = () => {
                                     />
                                     <MultilineInput
                                         title={"List Description"}
-                                        placeholder={selectionContext.currentSavedList?.description ? "" : "Description"}
+                                        placeholder={currentSavedList?.description ? "" : "Description"}
                                         onChange={
                                             (event) => {
                                                 setDescription(event.target.value)
@@ -475,7 +494,7 @@ const ResultsScreen = () => {
                                     />
                                 </div>
                                 <div className="flex flex-row flex-grow items-end pb-[1rem]">
-                                    { ( !selectionContext.currentSavedList && hasChangedFromPreviousSavedList ) &&
+                                    { ( !currentSavedList && hasChangedFromPreviousSavedList ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] border border-white text-white p-[0.5rem] rounded-[1rem] hover:bg-grayDark"
                                             onClick={() => { handleSaveList() }}
@@ -488,7 +507,7 @@ const ResultsScreen = () => {
                                             <IonIcon icon={saveOutline} className="self-center text-5xl"/>
                                         </Button>
                                     }
-                                    { ( (selectionContext.currentSavedList && hasChangedFromPreviousSavedList) || (selectedResults.length > 0) ) &&
+                                    { ( (currentSavedList && hasChangedFromPreviousSavedList) || (selectedResults.length > 0) ) &&
                                         <Button
                                             className="flex flex-row gap-[1rem] bg-red dark:bg-blueLight p-[0.5rem] rounded-[1rem] border-2"
                                             onClick={() => { handleSaveList() }}

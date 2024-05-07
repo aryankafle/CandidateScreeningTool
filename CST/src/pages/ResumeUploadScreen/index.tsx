@@ -8,10 +8,9 @@ import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
 import Input from "../../components/forms/InputBox";
 import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
-import { UserContext } from "../../context/UserContext";
-import { FlagContext } from "../../context/FlagContext"
-import { SelectionContext } from "../../context/SelectionContext";
-import { SavedList } from "../../utils/SavedList";
+import UserContext from "../../context/UserContext";
+import FlagContext from "../../context/FlagContext"
+import SelectionContext from "../../context/SelectionContext";
 
 
 
@@ -116,14 +115,7 @@ const ResumeUploadScreen = () => {
 
 
 
-    useEffect(() => {
-
-        console.log(selectionContext.currentBatchFileIds)
-
-    }, [selectionContext.currentBatchFileIds])
-
-
-
+    
     const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
 
         event.preventDefault()
@@ -169,7 +161,7 @@ const ResumeUploadScreen = () => {
 
 
 
-    async function getFileIds() {
+    const getFileIds = useCallback(async () => {
 
         const fileIDPromises = Promise.allSettled(
             selectionContext.uploadedFiles
@@ -180,12 +172,13 @@ const ResumeUploadScreen = () => {
 
         for(const settleResult of fileIDSettleResults) {
 
-            console.log("yeahhah")
+            console.log(settleResult)
+
             if(settleResult.status === "fulfilled") {
 
                 const fileID : string = settleResult.value
 
-                selectionContext.setCurrentBatchFileIds( ( previousIDs => [...previousIDs, fileID] ) )
+                selectionContext.setCurrentBatchFileIds( previousIDs => [...previousIDs, fileID] )
 
                 continue;
 
@@ -195,9 +188,11 @@ const ResumeUploadScreen = () => {
 
         }
 
-    }
+    }, [selectionContext, userData])
 
-    async function handleConfirmModal () {
+
+
+    const handleConfirmModal = useCallback(async () => {
 
         setLoadingState(true)
 
@@ -207,7 +202,7 @@ const ResumeUploadScreen = () => {
 
         navigate("/filter")
 
-    }
+    }, [getFileIds, navigate, setLoadingState])
 
 
 

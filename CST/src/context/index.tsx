@@ -1,8 +1,9 @@
 import { ReactNode, createContext } from "react"
-import SavedListsContextProvider from "./SavedListsContext"
-import UserContextProvider from "./UserContext"
-import SelectionContextProvider from "./SelectionContext"
-import FlagContextProvider from "./FlagContext"
+import { SavedListsContextProvider } from "./SavedListsContext"
+import { UserContextProvider } from "./UserContext"
+import { SelectionContextProvider } from "./SelectionContext"
+import { FlagContextProvider } from "./FlagContext"
+import { BatchContextProvider } from "./BatchContext"
 
 
 
@@ -25,7 +26,9 @@ const AppContextProvider = (props: { children : ReactNode }) => {
                 <SavedListsContextProvider>
                     <SelectionContextProvider>
                         <FlagContextProvider>
-                            {props.children}
+                            <BatchContextProvider>
+                                {props.children}
+                            </BatchContextProvider>
                         </FlagContextProvider>
                     </SelectionContextProvider>
                 </SavedListsContextProvider>

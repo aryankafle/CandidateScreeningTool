@@ -1,49 +1,49 @@
 import { ReactNode, SetStateAction, createContext, useContext, useEffect, useMemo, useState } from "react"
+
 import { postUserLocation } from "../requests/ResumeRequests"
-import { FlagContext } from "./FlagContext"
+
+import FlagContext from "./FlagContext"
 
 
 
 
-
-type UserContextType = {
-
-    userData : any
-    isLoggedIn : boolean
-    setUserData : React.Dispatch<any>,
-    location : string ,
-    setLocation : React.Dispatch<SetStateAction<string>>
-
-}
 
 const UserContextInitial = {
 
-    userData: null,
-    isLoggedIn: false,
-    setUserData: {} as React.Dispatch<any>,
-    location : "",
+    userData : null as any | null,
+    isLoggedIn : false,
+    setUserData : {} as React.Dispatch<any>,
+    location : "/home",
     setLocation : {} as React.Dispatch<SetStateAction<string>>
 
-}
+} 
+
+type UserContextType = typeof UserContextInitial
 
 
 
 
 
-export const UserContext = createContext<UserContextType>(UserContextInitial)
+const UserContext = createContext<UserContextType>(UserContextInitial)
 
-const UserContextProvider = (props: { children : ReactNode }) => {
+export default UserContext
 
-    const [ userData, setUserData ] = useState<any>(null)
 
-    const [ location, setLocation ] = useState<string>("")
+
+export const UserContextProvider = (props: { children : ReactNode }) => {
+
+    const [ userData, setUserData ] = useState(UserContextInitial.userData)
+
+    const [ location, setLocation ] = useState(UserContextInitial.location)
 
     const { updateFlag } = useContext(FlagContext)
     
 
 
     const isLoggedIn = useMemo(() => {
+        
         return !!userData
+
     }, [userData])
 
 
@@ -77,11 +77,19 @@ const UserContextProvider = (props: { children : ReactNode }) => {
 
     
     return (
-        <UserContext.Provider value={{ userData, setUserData, isLoggedIn, location, setLocation }}>
+        <UserContext.Provider
+
+            value={{
+
+                userData, setUserData, isLoggedIn, location, setLocation
+                
+            }}
+
+        >
+
             {props.children}
+        
         </UserContext.Provider>
     )
 
 }
-
-export default UserContextProvider

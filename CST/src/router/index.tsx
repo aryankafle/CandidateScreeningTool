@@ -22,13 +22,13 @@ import BackButton from "../components/buttons/BackButton";
 
 
 
-import { UserContext } from "../context/UserContext";
+import UserContext from "../context/UserContext";
 import { SavedListsContext } from "../context/SavedListsContext";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
-import { FlagContext } from "../context/FlagContext";
+import FlagContext from "../context/FlagContext";
 import { SavedList } from '../utils/SavedList';
-import { SelectionContext } from '../context/SelectionContext';
+import SelectionContext from '../context/SelectionContext';
 
 
 
@@ -84,8 +84,6 @@ function Router() {
                 const location = userSelection.location
 
                 if( ( userSelection.currentSavedList !== null || undefined ) && userSelection.currentSavedList.id) {
-
-                    console.log(userSelection.currentSavedList)
 
                     const currentSavedList = await SavedList.fromJSON(userSelection.currentSavedList)
 
