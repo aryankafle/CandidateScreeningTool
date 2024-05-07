@@ -38,8 +38,7 @@ function Router() {
     
     const { setUserData, isLoggedIn, setLocation } = useContext(UserContext)
     const { flags, updateFlag } = useContext(FlagContext)
-    const { setCurrentSavedList } = useContext(SelectionContext)
-    const { setSavedLists } = useContext(SavedListsContext)
+    const { setSavedLists, setCurrentSavedList } = useContext(SavedListsContext)
     const { setLoadingState } = useContext(FlagContext)
 
     const route = useLocation()

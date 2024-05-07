@@ -10,7 +10,6 @@ import { Filter } from '../utils/Filter';
 export const uploadResumeToDatabase = (
 
     file: File,
-    batchID: string,
     userID : string
 
 ) => new Promise<string>( async ( resolve, reject ) => {
@@ -18,7 +17,6 @@ export const uploadResumeToDatabase = (
     const fileFormData = new FormData()
 
     fileFormData.append("files", file)
-    fileFormData.set("listID", batchID)
     fileFormData.set("userID", userID)
 
 

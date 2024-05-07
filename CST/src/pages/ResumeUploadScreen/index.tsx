@@ -6,11 +6,12 @@ import Button from '../../components/buttons/ImprovedButtonComponent'
 import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
-import Input from "../../components/forms/InputBox";
 import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
 import UserContext from "../../context/UserContext";
 import FlagContext from "../../context/FlagContext"
 import SelectionContext from "../../context/SelectionContext";
+import SavedListsContext from "../../context/SavedListsContext";
+import BatchContext from "../../context/BatchContext";
 
 
 
@@ -20,14 +21,14 @@ const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
     
-    const selectionContext = useContext(SelectionContext)
+    const { setSelectedFilters, uploadedFiles, setUploadedFiles } = useContext(SelectionContext)
+    const { setCurrentSavedList } = useContext(SavedListsContext)
+    const { setFileIDs } = useContext(BatchContext)
     const { flags, updateFlag } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
 
     const hiddenFileInput = useRef<HTMLInputElement>(null)
-
-    const [inputtedBatchName, setInputtedBatchName] = useState(selectionContext.currentBatchName)
 
     const [showFileModal, setShowFileModal] = useState(false)
     const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
@@ -63,7 +64,7 @@ const ResumeUploadScreen = () => {
         handleSelectionOnKeyDown,
         handleSelectionOnClick
 
-    } = useSelectableList<File>(selectionContext.uploadedFiles, selectionContext.setUploadedFiles)
+    } = useSelectableList<File>(uploadedFiles, setUploadedFiles)
 
 
 
@@ -71,11 +72,8 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        selectionContext.setCurrentBatchId(crypto.randomUUID())
-        selectionContext.setCurrentBatchName("")
-
-        selectionContext.setSelectedFilters([])
-        selectionContext.setCurrentSavedList(undefined)
+        setSelectedFilters([])
+        setCurrentSavedList(undefined)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -86,21 +84,7 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        if(selectionContext.currentBatchName === "") {
-
-            updateFlag({flag: 'batch name set', action: "deactivate"})
-
-            return;
-
-        }
-
-        updateFlag({flag: 'batch name set', action: "activate"})
-
-    }, [selectionContext.currentBatchName, updateFlag])
-
-    useEffect(() => {
-
-        if(selectionContext.uploadedFiles.length < 2) {
+        if(uploadedFiles.length < 2) {
 
             updateFlag({flag: 'enough resumes', action: "deactivate"})
 
@@ -110,7 +94,7 @@ const ResumeUploadScreen = () => {
 
         updateFlag({flag: 'enough resumes', action: "activate"})
 
-    }, [selectionContext.uploadedFiles, updateFlag])
+    }, [uploadedFiles, updateFlag])
 
 
 
@@ -127,7 +111,7 @@ const ResumeUploadScreen = () => {
 
 
         const eventFiles : File[] = [...event.target.files]
-        const uniqueFiles : File[] = [...selectionContext.uploadedFiles]
+        const uniqueFiles : File[] = [...uploadedFiles]
 
         for(let i = 0; i < eventFiles.length; i++) {
             
@@ -141,7 +125,7 @@ const ResumeUploadScreen = () => {
 
 
 
-        selectionContext.setUploadedFiles(uniqueFiles)
+        setUploadedFiles(uniqueFiles)
 
     }
 
@@ -164,8 +148,8 @@ const ResumeUploadScreen = () => {
     const getFileIds = useCallback(async () => {
 
         const fileIDPromises = Promise.allSettled(
-            selectionContext.uploadedFiles
-            .map(async file => uploadResumeToDatabase(file, selectionContext.currentBatchId, userData.id))
+            uploadedFiles
+            .map(async file => uploadResumeToDatabase(file, userData.id))
         )
 
         const fileIDSettleResults = await fileIDPromises
@@ -178,7 +162,7 @@ const ResumeUploadScreen = () => {
 
                 const fileID : string = settleResult.value
 
-                selectionContext.setCurrentBatchFileIds( previousIDs => [...previousIDs, fileID] )
+                setFileIDs( previousIDs => [...previousIDs, fileID] )
 
                 continue;
 
@@ -188,7 +172,7 @@ const ResumeUploadScreen = () => {
 
         }
 
-    }, [selectionContext, userData])
+    }, [uploadedFiles, userData])
 
 
 
@@ -269,36 +253,6 @@ const ResumeUploadScreen = () => {
 
 
 
-        if(!flags.active.includes('batch name set')) {
-
-            return (
-
-                <div className="bg-white dark:bg-grayDark
-                                flex flex-col self-center text-3xl text-white">
-
-                    <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
-                        {`Please enter a batch name!`}
-                    </div>
-
-                    <div className="flex flex-row w-[100%] h-[15%] justify-center px-[13rem] pb-[0.5rem]">
-                        <Button
-                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                            onClick={() => {
-                                setShowConfirmFilesModal(false)
-                            }}
-                        >
-                            Ok
-                        </Button>
-                    </div>
-
-                </div>
-
-            )
-
-        }
-
-
-
         return (
             <div className="bg-white dark:bg-grayDark
                                 flex flex-col self-center text-3xl">
@@ -306,11 +260,11 @@ const ResumeUploadScreen = () => {
                 { !loadingState ? 
                 <>
                     <div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
-                        {`Are you sure you want to use batch "${selectionContext.currentBatchName}" of resumes?`}
+                        {`Are you sure you want to use this batch of resumes?`}
                     </div>
 
                     <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
-                        {selectionContext.uploadedFiles.map((file) => (
+                        {uploadedFiles.map((file) => (
                             <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
                                 {file.name}
                             </div>
@@ -411,75 +365,34 @@ const ResumeUploadScreen = () => {
 
     return (
         <div className="dark:bg-grayDark bg-white justify-center
-                        flex flex-col flex-grow">
-            
-            { showFileModal && 
-            <Modal 
-                modalTrigger={showFileModal}
-                onClose={()=>{setShowFileModal(false)}}
-            >
-                <ViewFilePopup
-                    onXClicked={()=>{setShowFileModal(false)}}
-                    uploadedFiles={selectionContext.uploadedFiles}
-                    currentlySelectedIndex={currentlyOpenedIndex}
-                />
-            </Modal>
-            }
-            
+                        flex flex-col flex-grow">  
 
-
-            { !flags.active.includes('batch name set') ?   
-            <div className="dark:text-white text-[3rem] text-black
-                            flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                <Input 
-                    title={"Batch Name:"}
-                    placeholder={"Batch A-1"}
-                    value={inputtedBatchName}
-                    onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                    onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
-                />
-            </div>
-            :     
-            <>
-                <div className="dark:text-white text-[3rem] text-black
-                                flex flex-col self-center gap-[0.5rem] p-[0.7rem] mt-[1.5rem]">
-                    <Input 
-                        title={"Batch Name:"}
-                        placeholder={"Batch A-1"}
-                        value={inputtedBatchName}
-                        onChange={(event) => { setInputtedBatchName(event.target.value)}}
-                        onSubmit={() => { selectionContext.setCurrentBatchName(inputtedBatchName) }}
-                    />
-                </div>
-
-                <div className="flex justify-center">
-                    <Button 
-                        className=" dark:border-white dark:text-white text-lg rounded-md
-                                    border-black text-black hover:bg-grayMidDark
-                                    border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                        onClick={handleUploadClick}
+            <div className="flex justify-center">
+                <Button 
+                    className=" dark:border-white dark:text-white text-lg rounded-md
+                                border-black text-black hover:bg-grayMidDark
+                                border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
+                    onClick={handleUploadClick}
+                >
+                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
+                    { `Upload Files` }
+                    <form 
+                        method='POST'
+                        encType='multipart/form-data'
+                        action='upload'
                     >
-                        <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                        { selectionContext.currentBatchName ? `Upload Files to ${selectionContext.currentBatchName}` : `Upload Files`  }
-                        <form 
-                            method='POST'
-                            encType='multipart/form-data'
-                            action='upload'
-                        >
-                            <input
-                                accept=".doc,.docx,.pdf,.png,.jpg"
-                                type="file"
-                                name="files"
-                                multiple
-                                hidden
-                                ref={hiddenFileInput}
-                                onChange={handleFileUpload}
-                            />
-                        </form>
-                    </Button>
-                </div>
-            </>
-            }
+                        <input
+                            accept=".doc,.docx,.pdf,.png,.jpg"
+                            type="file"
+                            name="files"
+                            multiple
+                            hidden
+                            ref={hiddenFileInput}
+                            onChange={handleFileUpload}
+                        />
+                    </form>
+                </Button>
+            </div>
 
 
 
@@ -539,7 +452,7 @@ const ResumeUploadScreen = () => {
                     //             border-black text-black hover:bg-grayMidDark
                     //             flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
                     className={
-                        selectionContext.uploadedFiles.length > 1 ?
+                        uploadedFiles.length > 1 ?
                             `dark:border-white dark:text-white dark:hover:bg-grayMidDark
                             border-black text-black hover:bg-grayMidDark animate-pulse rounded-md
                             flex justify-center p-[1rem] my-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`

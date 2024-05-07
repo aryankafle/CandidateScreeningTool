@@ -24,7 +24,7 @@ const ViewSavedListsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const { setCurrentSavedList } = useContext(SelectionContext)
+    const { setCurrentSavedList } = useContext(SavedListsContext)
 
     const [nameInput, setNameInput] = useState<string>("");
 

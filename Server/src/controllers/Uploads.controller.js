@@ -11,7 +11,6 @@ import { getNumTokensFromString } from "../models/utils/OpenAIQueryHelpers.js";
 
 export const uploadResumeToDatabase = async (req, res) => {
 
-    const listID = req.body?.listID
     const userID = req.body?.userID
     const file = req.files[0]
 
@@ -59,7 +58,7 @@ export const uploadResumeToDatabase = async (req, res) => {
 
     try {
 
-        const fileID = await uploadFile(file, censoredScan, listID, userID)
+        const fileID = await uploadFile(file, censoredScan, userID)
 
         return res.status(200).json({
             
