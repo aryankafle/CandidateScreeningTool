@@ -99,24 +99,24 @@ const ViewSavedListsScreen = () => {
 
     const createCombinedList = useCallback(() => {
         
-        const selected = getAllSelectedItems()
+        // const selected = getAllSelectedItems()
 
-        if(getAllSelectedItems().length !== 2) return;
+        // if(getAllSelectedItems().length !== 2) return;
 
-        const firstList = selected[0]
-        const secondList = selected[1]
+        // const firstList = selected[0]
+        // const secondList = selected[1]
 
-        const combined = SavedList.combine(firstList, secondList)
+        // const combined = SavedList.combine(firstList, secondList)
 
-        setSavedLists((savedLists) => {
+        // setSavedLists((savedLists) => {
 
-            if(savedLists.some(savedList => savedList.name === combined.name)) {
-                return savedLists
-            }
+        //     if(savedLists.some(savedList => savedList.name === combined.name)) {
+        //         return savedLists
+        //     }
 
-            return [...savedLists, combined]
+        //     return [...savedLists, combined]
 
-        })
+        // })
 
     }, [setSavedLists, getAllSelectedItems])
 

@@ -113,9 +113,15 @@ export async function getResume(fileID : string, userID : string) : Promise<Resu
 
 
 
-export async function saveList(savedList : SavedList, fileIDs : string[], userID : string) {
+export const saveList = (
 
-    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/create-list`, {
+    savedList : SavedList,
+    fileIDs : string[],
+    userID : string,
+
+) => new Promise<string>( async ( resolve, reject ) => {
+
+    const { data, status } = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/create-list`, {
 
         savedList: savedList.toJSON(),
         fileIDs,
@@ -124,7 +130,18 @@ export async function saveList(savedList : SavedList, fileIDs : string[], userID
 
     })
 
-}
+    if( status < 300 ) {
+
+        const id = data.id
+        resolve(id)
+
+        return;
+
+    }
+
+    reject("Request Failed")
+
+})
 
 
 

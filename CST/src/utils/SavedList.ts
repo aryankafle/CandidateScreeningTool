@@ -6,21 +6,21 @@ export class SavedList {
     private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
     private static readonly RESULTS_ROUTE = "/results"
 
-    private readonly id : string
+    readonly id : string
 
     readonly owner : string
     readonly shared : string[]
 
 
 
-    public readonly listLink : string;
+    readonly listLink : string;
 
 
-    public name : string
+    name : string
 
-    public description : string;
+    description : string;
 
-    public color : string;
+    color : string;
 
 
 
@@ -67,6 +67,7 @@ export class SavedList {
     public static async fromJSON(jsonlist : any) {
 
         const translatedList = {
+            id: jsonlist._id,
             name: jsonlist.name,
             description: jsonlist.description,
             color: jsonlist.color,
@@ -76,7 +77,6 @@ export class SavedList {
             )),
             owner: jsonlist.owner_of_list,
             shared: jsonlist.shared_with,
-            id: jsonlist._id
         }
 
         for(const item in translatedList) {
@@ -90,6 +90,7 @@ export class SavedList {
 
         
         const list = new SavedList(
+            translatedList.id,
             translatedList.name,
             translatedList.description,
             translatedList.results,
@@ -97,8 +98,6 @@ export class SavedList {
             translatedList.owner,
             translatedList.shared
         )
-
-        list.id = translatedList.id
 
         return list
     }

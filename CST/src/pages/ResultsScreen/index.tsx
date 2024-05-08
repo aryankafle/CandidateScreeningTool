@@ -206,9 +206,9 @@ const ResultsScreen = () => {
 
         }
 
-        const newList = new SavedList(title, description, results, color, userData.id, [])
+        const tempList = new SavedList("__temporary-id__", title, description, results, color, userData.id, [])
 
-        saveList(newList, fileIDs, userData.id).then(() => {
+        saveList(tempList, fileIDs, userData.id).then((id) => {
 
             setUploadedFiles([])
             setCurrentSavedList(undefined)

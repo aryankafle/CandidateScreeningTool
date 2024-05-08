@@ -20,7 +20,7 @@ export const uploadList = async (savedList, fileIDs, userID) => {
 
     })
 
-    await users.updateOne({ _id: userID }, { 
+    await users.updateOne({ _id: userID }, {
         $push: { saved_list_ids: listID }, 
     })
 
@@ -37,15 +37,17 @@ export async function getList(listID) {
     if(!list) return undefined
   
     return list
-  
+
 }
 
 
 
 export async function deleteList(listID) {
 
+    const _id = new ObjectId(listID)
+
     await users.updateMany( {}, { $pull: { saved_list_ids : listID } } )
 
-    await savedLists.deleteMany( { _id: listID } )
+    await savedLists.deleteMany( { _id } )
 
 }

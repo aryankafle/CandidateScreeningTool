@@ -23,8 +23,6 @@ export const addUser = async (userToken) => {
         current_saved_list: null
     })
 
-    console.log(id)
-
 }
 
 
