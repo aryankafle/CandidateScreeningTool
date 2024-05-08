@@ -61,7 +61,7 @@ const ResultsScreen = () => {
 
     const results = useMemo(() => {
 
-        if(currentSavedList) {
+        if(currentSavedList?.results) {
 
             return currentSavedList.results
 
@@ -130,7 +130,7 @@ const ResultsScreen = () => {
 
         if(results.length < 1) {
             
-            navigate("/home/resume-upload")
+            //navigate("/home/resume-upload")
 
         }
 

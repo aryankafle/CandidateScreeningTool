@@ -9,6 +9,7 @@ import UserContext from "../../../context/UserContext"
 import SelectionContext from '../../../context/SelectionContext';
 import BatchContext from '../../../context/BatchContext';
 import FlagContext from "../../../context/FlagContext"
+import { Result } from "../../../utils/Result"
 
 
 
@@ -19,7 +20,7 @@ const HeaderButtons = () => {
     const navigate = useNavigate()
     
     const { selectedFilters, uploadedFiles } = useContext(SelectionContext)
-    const { fileIDs } = useContext(BatchContext)
+    const { fileIDs, setBatchResults } = useContext(BatchContext)
     const { setLoadingState, flags } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
@@ -45,15 +46,38 @@ const HeaderButtons = () => {
 
     const handleFilterResumes = async () => {
 
-        const settleResults = await Promise.allSettled(
-            fileIDs.map( id => createResumeResult(selectedFilters, id, userData.id )
-        ))
+        const scoredResumePromises = fileIDs.map( id => createResumeResult( selectedFilters, id, userData.id ) )
+
+        const scoredResumeSettleResults = await Promise.allSettled( scoredResumePromises )
+
+        for(const settleResult of scoredResumeSettleResults) {
+
+            console.log(settleResult)
+
+            if(settleResult.status === "fulfilled") {
+
+                const result : Result = settleResult.value
+
+                console.log(result)
+                
+                setBatchResults( previousResults => [...previousResults, result] )
+
+                continue;
+
+            }
+
+            // Do thing with error files here
+
+        }
+
+
+
         
     }
 
     
     
-    const handleNext = () => {
+    const handleNext = async () => {
 
         setLoadingState(true)
 
@@ -64,8 +88,9 @@ const HeaderButtons = () => {
 
         }
 
-        handleFilterResumes()
-        .then( () => navigate("/results") )
+        await handleFilterResumes()
+        
+        navigate("/results")
 
 
     }

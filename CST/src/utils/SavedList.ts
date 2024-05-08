@@ -1,14 +1,12 @@
 import { getResume } from "../requests/ResumeRequests";
 import { Result } from "./Result";
-import { UniquelyIdentified } from "./UniquelyIdentified";
-import { UserOwned } from "./UserOwned";
 
-export class SavedList implements UserOwned, UniquelyIdentified {
+export class SavedList {
 
     private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
     private static readonly RESULTS_ROUTE = "/results"
 
-    id : string = crypto.randomUUID()
+    private readonly id : string
 
     readonly owner : string
     readonly shared : string[]
@@ -32,7 +30,9 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
 
 
-    constructor( name : string, description : string, results : Result[], color : string = "#FFFFFFFF", owner : string, sharedTo : string[] = [] ) {
+    constructor(id : string, name : string, description : string, results : Result[], color : string = "#FFFFFFFF", owner : string, sharedTo : string[] = [] ) {
+
+        this.id = id
 
         this.owner = owner;
         this.shared = [];
@@ -45,19 +45,6 @@ export class SavedList implements UserOwned, UniquelyIdentified {
 
         this.listLink = `${SavedList.PUBLIC_URL}${SavedList.RESULTS_ROUTE}/${this.id}`
 
-    }
-
-
-
-    public static combine(listA : SavedList, listB : SavedList) {
-
-        return new SavedList(
-            "name",
-            `Combination of ${listA.name} & ${listB.name}`,
-            [...listA.results, ...listB.results],
-            undefined,
-            listA.owner,
-        )
     }
 
 

@@ -1,4 +1,4 @@
-import { users, savedLists, getUser } from "../../database/MongoDB.database.js";
+import { users, savedLists } from "../../database/MongoDB.database.js";
 
 
 
@@ -24,6 +24,18 @@ export const addUser = async (userToken) => {
     })
 
     console.log(id)
+
+}
+
+
+
+export async function getUser(userID) {
+
+    const user = await users.findOne( { _id: userID } )
+
+    if(!user) return undefined
+
+    return user
 
 }
 

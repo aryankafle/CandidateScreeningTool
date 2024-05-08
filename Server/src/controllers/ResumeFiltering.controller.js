@@ -1,8 +1,9 @@
 import {
 
+    changeResultOfFile,
     downloadFileMetadata,
 
-} from "../database/MongoDB.database.js"
+} from "../models/services/DatabaseFiles.service.js"
 
 import {
 
@@ -41,16 +42,16 @@ export const createResultsForResume = async (req, res) => {
     }
 
     
+    const [scores, summaries, summary, applicant] = await Promise.all(
 
-    const scores = await getFilterScoresForResume(metadata.text_scan, filters)
-    const summaries = await getSectionSummariesForResume(metadata.text_scan)
-    const summary = await getOverallSummaryForResume(metadata.text_scan)
+        [
+            getFilterScoresForResume(metadata.text_scan, filters),
+            getSectionSummariesForResume(metadata.text_scan, filters),
+            getOverallSummaryForResume(metadata.text_scan, filters),
+            getCandidateNameFromResume(metadata.text_scan, filters),
+        ]
 
-    const applicant = {
-
-        name: await getCandidateNameFromResume().text_scan
-        
-    }
+    )
 
     const result = {
 
@@ -58,26 +59,11 @@ export const createResultsForResume = async (req, res) => {
 
     }
 
+    await changeResultOfFile(fileID, result)
 
 
 
 
-
-    if(!stream) {
-
-        res.status(500).send({
-
-            error: true,
-            message: "File has no data."
-            
-        })
-
-    }
-
-
-
-
-    
 
     res.status(200).send({
 

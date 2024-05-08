@@ -156,8 +156,6 @@ const ResumeUploadScreen = () => {
 
         for(const settleResult of fileIDSettleResults) {
 
-            console.log(settleResult)
-
             if(settleResult.status === "fulfilled") {
 
                 const fileID : string = settleResult.value
@@ -172,7 +170,7 @@ const ResumeUploadScreen = () => {
 
         }
 
-    }, [uploadedFiles, userData])
+    }, [setFileIDs, uploadedFiles, userData.id])
 
 
 

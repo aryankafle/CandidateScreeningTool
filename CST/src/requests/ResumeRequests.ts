@@ -59,9 +59,9 @@ export const createResumeResult = (
     filters : Filter[],
     fileID : string,
     userID : string
-) => new Promise<void>( async (resolve, reject) => {
+) => new Promise<Result>( async (resolve, reject) => {
 
-    const { status } = await axios.put(`${process.env.REACT_APP_SERVER_NAME}/filtering/create-resume-result`, {
+    const { data, status } = await axios.put(`${process.env.REACT_APP_SERVER_NAME}/filtering/create-resume-result`, {
         
         userID,
         fileID,
@@ -70,14 +70,16 @@ export const createResumeResult = (
 
     })
 
-    if( status >= 400 ) {
+    if( status < 300 ) {
 
-        resolve()
+        const result = Result.fromJSON(data)
+        resolve(result)
+
         return;
 
     }
 
-    reject()
+    reject("Request Failed")
 
 })
 
@@ -98,7 +100,7 @@ export async function deleteResumeFromDatabase(fileID : string, userID : string)
 
 export async function getResume(fileID : string, userID : string) : Promise<Result> {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-resume-result`, { params: {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-result`, { params: {
 
         userID,
         fileID
@@ -166,7 +168,7 @@ export async function getUserSavedLists (userID : string) : Promise<SavedList[]>
 
     const savedListsArr : SavedList[] = await Promise.all(
         response.data.map(
-            async (data : SavedList) => SavedList.fromJSON(response.data))
+            async (data : SavedList) => SavedList.fromJSON(data))
     )
     return savedListsArr
 

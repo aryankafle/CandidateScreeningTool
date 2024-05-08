@@ -1,10 +1,12 @@
 import { savedLists, users } from "../../database/MongoDB.database.js"
+import { ObjectId } from "mongodb"
 
 
 
 
+export const uploadList = async (savedList, fileIDs, userID) => {
 
-export const uploadSavedList = async (savedList, listID, fileIDs, userID) => {
+    const listID = new ObjectId()
 
     await savedLists.insertOne({
 
@@ -21,5 +23,29 @@ export const uploadSavedList = async (savedList, listID, fileIDs, userID) => {
     await users.updateOne({ _id: userID }, { 
         $push: { saved_list_ids: listID }, 
     })
+
+    return listID
+
+}
+
+
+
+export async function getList(listID) {
+
+    const list = await savedLists.findOne( { _id: listID } )
+  
+    if(!list) return undefined
+  
+    return list
+  
+}
+
+
+
+export async function deleteList(listID) {
+
+    await users.updateMany( {}, { $pull: { saved_list_ids : listID } } )
+
+    await savedLists.deleteMany( { _id: listID } )
 
 }

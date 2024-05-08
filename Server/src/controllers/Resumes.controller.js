@@ -1,19 +1,15 @@
 import {
 
+    deleteFile,
     downloadFileMetadata,
     downloadFileReadStream,
 
-} from "../database/MongoDB.database.js"
+} from "../models/services/DatabaseFiles.service.js";
 
 import {
 
-    deleteFile,
-
-} from "../database/MongoDB.database.js";
-
-import {
-
-    uploadSavedList,
+    uploadList,
+    deleteList
 
 } from "../models/services/SavedLists.service.js";
 
@@ -25,7 +21,6 @@ export const addNewSavedList = async (req, res) => {
 
     const userID = req.body?.userID
     const fileIDs = req.body?.fileIDs
-    const listID = req.body?.listID
 
     const savedList = req.body?.savedList
 
@@ -35,10 +30,11 @@ export const addNewSavedList = async (req, res) => {
 
     try {
 
-        await uploadSavedList(savedList, listID, fileIDs, userID)
+        const listID = await uploadList(savedList, fileIDs, userID)
 
         res.status(200).json({
             error: false,
+            listID,
             message: "Successfully added saved list."
         })
 
@@ -66,7 +62,7 @@ export const removeOldSavedList = async (req, res) => {
 
     try {
 
-        await deleteSavedList(listID)
+        await deleteList(listID)
 
         res.status(200).json({
             error: false,
