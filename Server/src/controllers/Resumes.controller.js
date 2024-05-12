@@ -259,11 +259,6 @@ export const modifyResumeResult = async (req, res) => {
 
 
 export const deleteUnusedFiles = async (req, res) => {
-    
-    const fileID = req.query?.listID
-
-
-
 
 
     try {

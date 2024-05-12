@@ -1,4 +1,4 @@
-import { fileBuckets, fileMetadata } from "../../database/MongoDB.database.js"
+import { fileBuckets, fileMetadata, savedLists } from "../../database/MongoDB.database.js"
 import { ObjectId } from "mongodb"
 import streamifier from "streamifier"
 
@@ -61,9 +61,41 @@ export async function downloadFileReadStream(fileID) {
 
 
 export async function deleteUnusedFileIDs(){
-    //const fileIdArray = 
-    console.log(await fileMetadata.find({_id:1}).toArray())
-    console.log("bruh")
+
+    const fileIdArray = await fileMetadata.find({}, {_id: 1}).map(doc => doc._id).toArray()
+    const savedListArray = await savedLists.find({}, {_id: 1}).map(doc => doc.file_ids).toArray()
+    const deletionIdArray = []
+
+    if (fileIdArray.length > 0){
+
+        fileIdArray.forEach(fileIdElement => {
+
+            var includes = false;
+
+            savedListArray.forEach(savedListElement => {
+                
+                if (savedListElement.includes(fileIdElement.toString())){
+                    
+                    includes = true;
+                }
+
+            });
+            if (!includes){
+
+                deletionIdArray.push(fileIdElement)
+                
+            }
+        });
+    
+
+        if (deletionIdArray.length > 0 ){
+            deletionIdArray.forEach(deletionIdElement => {
+                deleteSingleFileMetaData(deletionIdElement) 
+            });
+        }
+    }
+
+    
 }
 
 
@@ -84,5 +116,11 @@ export async function deleteFile(fileID) {
     await fileBuckets.deleteMany( { _id: fileID } )
 
     await savedLists.updateMany( {}, { $pull: { file_ids : listID } } )
+
+}
+
+export async function deleteSingleFileMetaData(fileID) {
+
+    await fileMetadata.deleteOne({_id: fileID})
 
 }

@@ -70,7 +70,7 @@ function Router() {
 
 
     useEffect(() => {
-        
+        deleteUnusedFiles()
         
         getUser()
         .then(async (userData) => {
@@ -100,7 +100,7 @@ function Router() {
             })
 
             setUserData(userData)
-            deleteUnusedFiles("bruh")
+            
         })
         .catch((error) => {
             

@@ -156,13 +156,9 @@ export async function deleteSavedList(listID : string, userID : string) {
 
 }
 
-export async function deleteUnusedFiles(listID: string) {
-    listID = "bruh"
-    await axios.delete(`${process.env.REACT_APP_SERVER_NAME}/resumes/delete-unused`, { params: {
-        
-        listID,
-
-    }})
+export async function deleteUnusedFiles() {
+    
+    await axios.delete(`${process.env.REACT_APP_SERVER_NAME}/resumes/delete-unused`)
 
 }
 
