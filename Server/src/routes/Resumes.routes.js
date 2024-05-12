@@ -12,6 +12,8 @@ import {
     deleteResumeResult,
     modifyResumeResult,
 
+    deleteUnusedFiles,
+
 } from "../controllers/Resumes.controller.js";
 
 import {
@@ -36,6 +38,8 @@ router.put("/modify-list", modifySavedList)
 
 router.get("/get-result", getResumeResult)
 router.delete("/delete-result", deleteResumeResult)
+
+router.delete("/delete-unused", deleteUnusedFiles)
 
 
 

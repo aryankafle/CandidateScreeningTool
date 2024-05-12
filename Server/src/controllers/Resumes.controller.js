@@ -3,6 +3,7 @@ import {
     deleteFile,
     downloadFileMetadata,
     downloadFileReadStream,
+    deleteUnusedFileIDs,
 
 } from "../models/services/DatabaseFiles.service.js";
 
@@ -251,5 +252,37 @@ export const modifyResumeResult = async (req, res) => {
 
     }
 
+
+}
+
+
+
+
+export const deleteUnusedFiles = async (req, res) => {
+    
+    const fileID = req.query?.listID
+
+
+
+
+
+    try {
+
+        await deleteUnusedFileIDs()
+
+        res.status(200).send({
+            error: false,
+            message: `Successfully deleted files not in saved lists!`
+        })
+
+    }
+    catch (error) {
+
+        res.status(500).send({
+            error: true,
+            message: `Error deleting file with fileID: BRUH moment.`
+        })
+
+    }  
 
 }

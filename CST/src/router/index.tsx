@@ -5,7 +5,7 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 import HomeRoutes from "./HomeRouter";
 
-import { getUserSavedLists, getUser, getUserSelection } from "../requests/ResumeRequests"
+import { getUserSavedLists, getUser, getUserSelection, deleteUnusedFiles } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
@@ -70,10 +70,11 @@ function Router() {
 
 
     useEffect(() => {
-
+        
+        
         getUser()
         .then(async (userData) => {
-
+            
             const savedLists = await getUserSavedLists(userData.id)
 
             setSavedLists(savedLists)
@@ -99,7 +100,7 @@ function Router() {
             })
 
             setUserData(userData)
-
+            deleteUnusedFiles("bruh")
         })
         .catch((error) => {
             

@@ -60,7 +60,11 @@ export async function downloadFileReadStream(fileID) {
 }
 
 
-
+export async function deleteUnusedFileIDs(){
+    //const fileIdArray = 
+    console.log(await fileMetadata.find({_id:1}).toArray())
+    console.log("bruh")
+}
 
 
 export const changeResultOfFile = async (fileID, result) => {

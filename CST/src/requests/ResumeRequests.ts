@@ -146,11 +146,21 @@ export const saveList = (
 
 
 export async function deleteSavedList(listID : string, userID : string) {
-
+    
     await axios.delete(`${process.env.REACT_APP_SERVER_NAME}/resumes/remove-list`, { params: {
         
         listID,
         userID
+
+    }})
+
+}
+
+export async function deleteUnusedFiles(listID: string) {
+    listID = "bruh"
+    await axios.delete(`${process.env.REACT_APP_SERVER_NAME}/resumes/delete-unused`, { params: {
+        
+        listID,
 
     }})
 
@@ -237,3 +247,4 @@ export const postUserCurrentSavedList = async (userID : string, currentSavedList
     })
 
 }
+
