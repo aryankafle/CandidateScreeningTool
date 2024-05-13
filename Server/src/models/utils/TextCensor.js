@@ -5,7 +5,7 @@ export async function censorPhone(string) {
     const usPhoneNumRegex = /\s*(?:\+?(\d{1,3}))*([ ])*[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*/g
 
     const phone = string.match(usPhoneNumRegex)
-   
+
     if (!usPhoneNumRegex.test(string)) return {text: string, phoneNumber: "No phone number found"}
 
     const text = string.replaceAll(usPhoneNumRegex, "555-132-9394")
