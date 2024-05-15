@@ -1,11 +1,6 @@
 import dotenv from "dotenv"
-import path from "path"
 
-const __dirname = import.meta.dirname;
-const stage = process.env.NODE_ENV
-const envPath = {path: path.resolve(__dirname, stage === "development" ? `../../.env.local`: `../../.env.production`)}  
-
-const envError = dotenv.config(envPath).error
+const envError = dotenv.config().error
 
 if(envError) throw new Error(envError)
 
