@@ -59,6 +59,8 @@ app.set('trust proxy', 1)
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', config.CLIENT)
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Controll-Allow-Headers', '*')
     next()
 })
 
