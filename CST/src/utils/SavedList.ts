@@ -1,105 +1,31 @@
-import { getResume } from "../requests/ResumeRequests";
-import { Result } from "./Result";
+export function savedListFromJSON(jsonlist : any) {
 
-export class SavedList {
+    const savedList : SavedList = {
 
-    private static readonly PUBLIC_URL = `${process.env.PUBLIC_URL}`
-    private static readonly RESULTS_ROUTE = "/results"
-
-    readonly id : string
-
-    readonly owner : string
-    readonly shared : string[]
-
-
-
-    readonly listLink : string;
-
-
-    name : string
-
-    description : string;
-
-    color : string;
-
-
-
-    public readonly results : Result[];
-
-
-
-
-
-    constructor(id : string, name : string, description : string, results : Result[], color : string = "#FFFFFFFF", owner : string, sharedTo : string[] = [] ) {
-
-        this.id = id
-
-        this.owner = owner;
-        this.shared = [];
-
-        this.name = name;
-        this.description = description;
-        this.color = color
-
-        this.results = [...results].sort((a : Result, b : Result) => b.overallScore - a.overallScore )
-
-        this.listLink = `${SavedList.PUBLIC_URL}${SavedList.RESULTS_ROUTE}/${this.id}`
+        _id: jsonlist._id,
+        file_ids: jsonlist.file_ids,
+        list_link: jsonlist.list_link,
+        owner_of_list: jsonlist.owner_of_list,
+        shared_with: jsonlist.shared_with,
+        name: jsonlist.name,
+        description: jsonlist.description,
+        color: jsonlist.color
 
     }
 
+    return savedList
 
+}
 
-    public toJSON() {
-        return {
-            _id: this.id,
-            owner: this.owner,
-            sharedUsers: [ ...this.shared ],
-            name: this.name,
-            description: this.description,
-            color: this.color,
-            results: [...this.results.map( result => result.toJSON() ) ],
-            link: this.listLink,
-        }
-    }
+export type SavedList = {
 
+    readonly _id : string,
+    readonly file_ids : string[]
+    readonly list_link : string,
+    readonly owner_of_list : string,
+    readonly shared_with : string[],
+    readonly name : string,
+    readonly description : string,
+    readonly color : string,
 
-
-    public static async fromJSON(jsonlist : any) {
-
-        const translatedList = {
-            id: jsonlist._id,
-            name: jsonlist.name,
-            description: jsonlist.description,
-            color: jsonlist.color,
-            results: await Promise.all(
-                jsonlist.file_ids.map(
-                    async (fileID : string) => getResume(fileID, jsonlist._id)
-            )),
-            owner: jsonlist.owner_of_list,
-            shared: jsonlist.shared_with,
-        }
-
-        for(const item in translatedList) {
-
-            if(!item) return undefined
-
-        }
-
-        if(translatedList.results.length < 1) return undefined
-
-
-        
-        const list = new SavedList(
-            translatedList.id,
-            translatedList.name,
-            translatedList.description,
-            translatedList.results,
-            translatedList.color,
-            translatedList.owner,
-            translatedList.shared
-        )
-
-        return list
-    }
-    
 }

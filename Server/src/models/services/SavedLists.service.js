@@ -4,27 +4,39 @@ import { ObjectId } from "mongodb"
 
 
 
-export const uploadList = async (savedList, fileIDs, userID) => {
 
-    const listID = new ObjectId()
+export const uploadList = async (
+
+    file_ids,
+    name,
+    description,
+    color,
+    owner_of_list
+
+) => {
+
+    const _id = new ObjectId()
 
     await savedLists.insertOne({
 
-        _id: listID,
-        file_ids: fileIDs,
+        _id,
+        file_ids,
+        list_link: "link",
         owner_of_list: userID,
-        shared_with: savedList.sharedUsers,
-        name: savedList.name,
-        description: savedList.description,
-        color: savedList.color
+        shared_with: [],
+        name: name,
+        description: description,
+        color: color
 
     })
 
-    await users.updateOne({ _id: userID }, {
-        $push: { saved_list_ids: listID }, 
+    await users.updateOne({ _id: owner_of_list }, {
+
+        $push: { saved_list_ids: _id }, 
+
     })
 
-    return listID
+    return _id
 
 }
 

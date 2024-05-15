@@ -1,21 +1,22 @@
+import type { SavedList } from "../../utils/SavedList";
+
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Modal from '../../components/modals/Modal';
 import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
-import SelectionContext from "../../context/SelectionContext";
-import { Result, Grades } from "../../utils/Result";
+import Result, { Grades } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
-import { SavedList } from "../../utils/SavedList";
 import UserContext from "../../context/UserContext";
 import { saveList, deleteSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
+import useWeighedScores from "../../hooks/UseWeighedScores";
 
 
 
@@ -28,22 +29,15 @@ const ResultsScreen = () => {
     const { 
         
         currentSavedList, setCurrentSavedList,
-        savedLists, setSavedLists 
+        savedLists, setSavedLists
     
     } = useContext(SavedListsContext)
 
     const {
 
-        setSelectedFilters,
-        setUploadedFiles,
-        setPreviouslySelectedFilters
-
-    } = useContext(SelectionContext)
-
-    const {
-
         batchResults,
-        fileIDs
+        fileIDs,
+        clearBatchContext
 
     } = useContext(BatchContext)
 
@@ -59,17 +53,9 @@ const ResultsScreen = () => {
 
 
 
-    const results = useMemo(() => {
+    const weighedScores = useWeighedScores(batchResults)
 
-        if(currentSavedList?.results) {
 
-            return currentSavedList.results
-
-        }
-
-        return batchResults
-
-    }, [batchResults, currentSavedList]) 
 
     const hasChangedFromPreviousSavedList = useMemo(() => {
 
@@ -85,11 +71,11 @@ const ResultsScreen = () => {
         
         if(oldList.description !== description) return true
 
-        if(oldList.results.some((result) => !results.includes(result))) return true
+        if(oldList.file_ids.some((fileID) => batchResults.some(result => result._id !== fileID))) return true
 
         return false
         
-    }, [description, results, currentSavedList, title])
+    }, [description, batchResults, currentSavedList, title])
 
 
 
@@ -128,13 +114,13 @@ const ResultsScreen = () => {
 
     useEffect(() => {
 
-        if(results.length < 1) {
+        if(batchResults.length < 1) {
             
-            //navigate("/home/resume-upload")
+            navigate("/home/resume-upload")
 
         }
 
-    }, [navigate, results])
+    }, [navigate, batchResults])
 
 
 
@@ -191,7 +177,7 @@ const ResultsScreen = () => {
     
 
 
-    const handleSaveList = () => {
+    const handleSaveList = async () => {
         
         let listWithSameName;
 
@@ -206,20 +192,14 @@ const ResultsScreen = () => {
 
         }
 
-        const tempList = new SavedList("__temporary-id__", title, description, results, color, userData.id, [])
+        await saveList(title, description, color, fileIDs, userData.id)
 
-        saveList(tempList, fileIDs, userData.id).then((id) => {
 
-            setUploadedFiles([])
-            setCurrentSavedList(undefined)
-            setSelectedFilters([])
-            setPreviouslySelectedFilters([])
-    
-    
-    
-            navigate("/home/saved-lists")
 
-        })
+        clearBatchContext()
+        setCurrentSavedList(undefined)
+
+        navigate("/home/saved-lists")
 
     }
 
@@ -227,10 +207,10 @@ const ResultsScreen = () => {
 
         if(!listWithSameName) return;
 
-        await deleteSavedList(listWithSameName.id, userData.id)
+        await deleteSavedList(listWithSameName._id, userData._id)
 
         setSavedLists(
-            (savedLists) => [...savedLists].filter(list => list.id !== listWithSameName.id)
+            (savedLists) => [...savedLists].filter(list => list._id !== listWithSameName._id)
         )
 
         handleSaveList()
@@ -335,7 +315,7 @@ const ResultsScreen = () => {
     }
 
     useEffect(() => {
-        const haystack = results.map(r => `${r.applicant.name}¦${r.summary}`)
+        const haystack = batchResults.map(r => `${r.applicant.name}¦${r.summary}`)
         const needle = searchQuery
         const opts = {}
         const uf = new uFuzzy(opts)
@@ -359,9 +339,9 @@ const ResultsScreen = () => {
                 }
             }
         else {
-            setFuzzySearchResumes(results)
+            setFuzzySearchResumes(batchResults)
         }
-    }, [results, searchQuery])
+    }, [batchResults, searchQuery])
 
 
     const InstructionPanel = () => {
@@ -453,7 +433,7 @@ const ResultsScreen = () => {
                         "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
-                        {results?.map((candidate, index) => <IndividualCandidateCard 
+                        {batchResults.map((candidate, index) => <IndividualCandidateCard 
                             key={Math.random()*9999}
                             candidate={candidate}
                             //selected={selectableItems[index].isSelected}

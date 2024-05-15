@@ -1,6 +1,6 @@
-import { Result } from '../utils/Result';
+import Result, { resultFromJSON } from '../utils/Result';
 import axios from "axios";
-import { SavedList } from '../utils/SavedList';
+import { SavedList, savedListFromJSON } from '../utils/SavedList';
 import { Filter } from '../utils/Filter';
  
 
@@ -56,9 +56,11 @@ export const uploadResumeToDatabase = (
 
 
 export const createResumeResult = (
+
     filters : Filter[],
     fileID : string,
     userID : string
+
 ) => new Promise<Result>( async (resolve, reject) => {
 
     const { data, status } = await axios.put(`${process.env.REACT_APP_SERVER_NAME}/filtering/create-resume-result`, {
@@ -72,10 +74,16 @@ export const createResumeResult = (
 
     if( status < 300 ) {
 
-        const result = Result.fromJSON(data)
+        const result = resultFromJSON(data.result)
         resolve(result)
 
         return;
+
+    }
+
+    if(status < 400) {
+
+        // Handle partial result
 
     }
 
@@ -98,7 +106,7 @@ export async function deleteResumeFromDatabase(fileID : string, userID : string)
 
 
 
-export async function getResume(fileID : string, userID : string) : Promise<Result> {
+export async function getResumeResult(fileID : string, userID : string) : Promise<Result> {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-result`, { params: {
 
@@ -107,7 +115,7 @@ export async function getResume(fileID : string, userID : string) : Promise<Resu
 
     }})
 
-    return Result.fromJSON(response.data)
+    return resultFromJSON(response.data)
 
 }
 
@@ -115,7 +123,9 @@ export async function getResume(fileID : string, userID : string) : Promise<Resu
 
 export const saveList = (
 
-    savedList : SavedList,
+    name : string,
+    description : string,
+    color : string,
     fileIDs : string[],
     userID : string,
 
@@ -123,9 +133,15 @@ export const saveList = (
 
     const { data, status } = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/create-list`, {
 
-        savedList: savedList.toJSON(),
-        fileIDs,
+        savedList: {
 
+            name,
+            description,
+            color
+
+        },
+
+        fileIDs,
         userID
 
     })
@@ -148,7 +164,7 @@ export const saveList = (
 export async function deleteSavedList(listID : string, userID : string) {
     
     await axios.delete(`${process.env.REACT_APP_SERVER_NAME}/resumes/remove-list`, { params: {
-        
+
         listID,
         userID
 
@@ -191,7 +207,7 @@ export async function getUserSavedLists (userID : string) : Promise<SavedList[]>
 
     const savedListsArr : SavedList[] = await Promise.all(
         response.data.map(
-            async (data : SavedList) => SavedList.fromJSON(data))
+            async (data : SavedList) => savedListFromJSON(data))
     )
     return savedListsArr
 
@@ -221,15 +237,6 @@ export const getUserSelection = async (userID : string) => {
     })
 
     return response.data
-
-}
-
-export const postUserLocation = async (userID : string, location : string) => {
-
-    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-selection`, {
-        userID,
-        location
-    })
 
 }
 

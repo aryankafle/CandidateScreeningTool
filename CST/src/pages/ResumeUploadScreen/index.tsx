@@ -21,7 +21,15 @@ const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
     
-    const { setSelectedFilters, uploadedFiles, setUploadedFiles } = useContext(SelectionContext)
+    const {
+
+        setSelectedFilters,
+        uploadedFiles,
+        setUploadedFiles,
+        clearSelectionContext
+
+    } = useContext(SelectionContext)
+
     const { setCurrentSavedList } = useContext(SavedListsContext)
     const { setFileIDs } = useContext(BatchContext)
     const { flags, updateFlag } = useContext(FlagContext)
@@ -72,8 +80,7 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        setSelectedFilters([])
-        setCurrentSavedList(undefined)
+        clearSelectionContext()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

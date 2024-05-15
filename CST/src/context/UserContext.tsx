@@ -1,6 +1,4 @@
-import { ReactNode, SetStateAction, createContext, useContext, useEffect, useMemo, useState } from "react"
-
-import { postUserLocation } from "../requests/ResumeRequests"
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react"
 
 import FlagContext from "./FlagContext"
 
@@ -13,8 +11,6 @@ const UserContextInitial = {
     userData : null as any | null,
     isLoggedIn : false,
     setUserData : {} as React.Dispatch<any>,
-    location : "/home",
-    setLocation : {} as React.Dispatch<SetStateAction<string>>
 
 } 
 
@@ -34,8 +30,6 @@ export const UserContextProvider = (props: { children : ReactNode }) => {
 
     const [ userData, setUserData ] = useState(UserContextInitial.userData)
 
-    const [ location, setLocation ] = useState(UserContextInitial.location)
-
     const { updateFlag } = useContext(FlagContext)
     
 
@@ -45,18 +39,6 @@ export const UserContextProvider = (props: { children : ReactNode }) => {
         return !!userData
 
     }, [userData])
-
-
-
-
-
-    useEffect(() => {
-
-        if(!userData) return;
-
-        postUserLocation(userData.id, location)
-    
-    }, [location, userData])
 
 
 
@@ -81,7 +63,7 @@ export const UserContextProvider = (props: { children : ReactNode }) => {
 
             value={{
 
-                userData, setUserData, isLoggedIn, location, setLocation
+                userData, setUserData, isLoggedIn
                 
             }}
 

@@ -1,6 +1,6 @@
-import { ReactNode, createContext, useState } from "react"
+import { ReactNode, createContext, useCallback, useState } from "react"
 
-import { Result } from "../utils/Result"
+import Result from "../utils/Result"
 
 
 
@@ -13,6 +13,8 @@ const BatchContextInitial = {
 
     fileIDs : [] as string[],
     setFileIDs : {} as React.Dispatch<React.SetStateAction<string[]>>,
+
+    clearBatchContext : {} as () => void
 
 }
 
@@ -35,11 +37,20 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
 
     const [fileIDs, setFileIDs] = useState(BatchContextInitial.fileIDs)
 
+    const clearBatchContext = useCallback(() => {
+
+        setBatchResults([])
+        setFileIDs([])
+
+    }, [setBatchResults, setFileIDs])
+
     return (
         <BatchContext.Provider value={{
                 
                 batchResults, setBatchResults,
-                fileIDs,  setFileIDs
+                fileIDs,  setFileIDs,
+
+                clearBatchContext
                 
             }}>
 

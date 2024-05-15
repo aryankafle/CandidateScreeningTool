@@ -10,7 +10,7 @@ import {
     getFilterScoresForResume,
     getSectionSummariesForResume,
     getOverallSummaryForResume,
-    getCandidateNameFromResume
+    getApplicantFromResume
 
 } from "../models/services/ResumeScreening.service.js"
 
@@ -42,26 +42,65 @@ export const createResultsForResume = async (req, res) => {
     }
 
     
-    const [scores, summaries, summary, applicant] = await Promise.all(
+    
+    const resultPromises = [
 
-        [
-            getFilterScoresForResume(metadata.text_scan, filters),
-            getSectionSummariesForResume(metadata.text_scan, filters),
-            getOverallSummaryForResume(metadata.text_scan, filters),
-            getCandidateNameFromResume(metadata.text_scan, filters),
-        ]
+        getFilterScoresForResume(metadata.text_scan, filters),
+        getSectionSummariesForResume(metadata.text_scan, filters),
+        getOverallSummaryForResume(metadata.text_scan, filters),
+        getApplicantFromResume(metadata.text_scan, filters),
+    
+    ]
 
-    )
+    const [
 
-    const result = {
+        scores,
+        summaries,
+        summary,
+        applicant 
 
-        fileID, scores, summaries, summary, applicant,
+    ] = await Promise.allSettled(resultPromises)
+
+    if(scores.status === "rejected") {
+
+        return res.status(500).send({
+            
+            error: true,
+            message: "Unable to create scores."
+            
+        })
 
     }
 
-    await changeResultOfFile(fileID, result)
 
 
+    const result = {
+
+        _id: fileID, scores, summaries, summary, applicant
+
+    }
+
+    await changeResultOfFile(result._id, result)
+
+
+
+
+
+    for(const key in result) {
+
+        if(result[key].status === "rejected") {
+
+            return res.status(300).send({
+
+                error: false,
+                result,
+                message: "Some result promises did not work."
+                
+            })
+
+        }
+
+    }
 
 
 

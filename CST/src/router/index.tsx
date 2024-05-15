@@ -28,7 +28,6 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
 import FlagContext from "../context/FlagContext";
 import { SavedList } from '../utils/SavedList';
-import SelectionContext from '../context/SelectionContext';
 
 
 
@@ -36,28 +35,13 @@ import SelectionContext from '../context/SelectionContext';
 
 function Router() {
     
-    const { setUserData, isLoggedIn, setLocation } = useContext(UserContext)
-    const { flags, updateFlag } = useContext(FlagContext)
+    const { setUserData, isLoggedIn } = useContext(UserContext)
     const { setSavedLists, setCurrentSavedList } = useContext(SavedListsContext)
     const { setLoadingState } = useContext(FlagContext)
 
     const route = useLocation()
 
     const navigate = useNavigate()
-
-
-
-
-
-    useEffect(() => {
-
-        if(flags.active.includes('initial location navigated')) {
-
-            setLocation(route.pathname)
-
-        }
-        
-    }, [flags.active, route, setLocation])
 
 
 
@@ -74,33 +58,25 @@ function Router() {
         
         getUser()
         .then(async (userData) => {
-            
+
+            setUserData(userData)
+
             const savedLists = await getUserSavedLists(userData.id)
 
             setSavedLists(savedLists)
 
-            await getUserSelection(userData.id).then(async (userSelection) => {
+            const selection = await getUserSelection(userData.id)
 
-                const location = userSelection.location
+            if(selection.currentSavedList) {
 
-                if( ( userSelection.currentSavedList !== null || undefined ) && userSelection.currentSavedList.id) {
+                const savedList = savedLists.find((list) => list._id === selection.currentSavedList)
 
-                    const currentSavedList = await SavedList.fromJSON(userSelection.currentSavedList)
+                setCurrentSavedList(savedList)
 
-                    setCurrentSavedList(currentSavedList)
+            }
 
-                }
+            navigate("/home")
 
-
-
-                updateFlag({flag: 'initial location navigated', action: 'activate'})
-
-                navigate(location)
-
-            })
-
-            setUserData(userData)
-            
         })
         .catch((error) => {
             

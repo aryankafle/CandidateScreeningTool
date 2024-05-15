@@ -7,7 +7,6 @@ import { ReactNode, SetStateAction, createContext, useReducer, useState } from "
 type FlagTypes = 'enough resumes' |
                  'batch name set' |
                  'filters have changed' |
-                 'initial location navigated' |
                  'user is logged in'
 
 type ActionTypes = {

@@ -5,6 +5,7 @@ import streamifier from "streamifier"
 
 
 
+
 export const uploadFile = async (file, textScan, userID) => {
 
     const file_name = file.originalname

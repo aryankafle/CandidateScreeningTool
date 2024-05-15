@@ -19,11 +19,16 @@ import {
 
 
 export const addNewSavedList = async (req, res) => {
+    
+    const {
+        
+        userID,
+        fileIDs,
+        name,
+        description,
+        color
 
-    const userID = req.body?.userID
-    const fileIDs = req.body?.fileIDs
-
-    const savedList = req.body?.savedList
+    } = req.body?.listToSave
 
 
 
@@ -31,11 +36,19 @@ export const addNewSavedList = async (req, res) => {
 
     try {
 
-        const listID = await uploadList(savedList, fileIDs, userID)
+        const outputID = await uploadList(
+
+            fileIDs,
+            name,
+            description,
+            color,
+            userID
+            
+        )
 
         res.status(200).json({
             error: false,
-            listID,
+            outputID,
             message: "Successfully added saved list."
         })
 
@@ -76,46 +89,6 @@ export const removeOldSavedList = async (req, res) => {
         res.status(500).json({
             error: error,
             message: "Error removing saved list."
-        })
-
-    }
-
-}
-
-
-
-export const modifySavedList = async (req, res) => {
-
-    const newName = req.body?.name
-    const newDescription = req.body?.description
-    const newColor = req.body?.newColor
-
-    const listID = req.body?.listID
-
-
-
-
-    try {
-
-        if(req.newName) await changeSavedListName(listID, newName)
-        if(req.newDescription) await changeSavedListDescription(listID, newDescription)
-        if(req.newColor) await changeSavedListColor(listID, newColor)
-
-        res.status(200).json({
-
-            error: false,
-            message: `Successfully modified list of id ${listID}`
-            
-        })
-
-    }
-    catch (error) {
-
-        res.status(500).json({
-            
-            error: true,
-            message: `Error modifying list of id ${listID}`
-
         })
 
     }

@@ -3,7 +3,6 @@ import Input from '../../components/forms/InputBox'
 import { useSelectableList } from "../../hooks/SelectableList";
 import { useClipboard } from "../../hooks/Clipboard"
 import { SavedListsContext } from "../../context/SavedListsContext";
-import SelectionContext from "../../context/SelectionContext";
 
 import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
@@ -82,7 +81,7 @@ const ViewSavedListsScreen = () => {
             const lists = getAllSelectedItems()
 
             for(let i = 0; i < lists.length; i++) {
-                await deleteSavedList(lists[i].id, userData.id)
+                await deleteSavedList(lists[i]._id, userData.id)
             }
 
             removeCurrentSelectionFromList()
@@ -122,7 +121,7 @@ const ViewSavedListsScreen = () => {
 
     const copyListLink = useCallback(async (savedList : SavedList) => {
 
-        await copyTextToClipboard(savedList.listLink, true)
+        await copyTextToClipboard(savedList.list_link, true)
 
     }, [copyTextToClipboard])
 
