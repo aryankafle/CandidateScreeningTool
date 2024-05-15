@@ -8,10 +8,12 @@
         "heroku-postbuild": "cd Server && npm i && npm run build"
     },
     "engines": {
-      "node": ">=20.11.0"
+        "node": ">=20.11.0"
     },
     "keywords": [],
     "author": "",
-    "license": "ISC"
-  }
-  
+    "license": "ISC",
+    "dependencies": {
+        "cross-env": "^7.0.3"
+    }
+}
