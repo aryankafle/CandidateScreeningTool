@@ -1,0 +1,17 @@
+{
+    "name": "CandidateScreeningTool",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "heroku-postbuild": "cd server && npm i && npm run build"
+    },
+    "engines": {
+      "node": ">=20.11.0"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
+  
