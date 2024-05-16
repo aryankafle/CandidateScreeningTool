@@ -41,16 +41,9 @@ export const createResultsForResume = async (req, res) => {
 
     }
 
-    
-    
-    const resultPromises = [
 
-        getFilterScoresForResume(metadata.text_scan, filters),
-        getSectionSummariesForResume(metadata.text_scan, filters),
-        getOverallSummaryForResume(metadata.text_scan, filters),
-        getApplicantFromResume(metadata.text_scan, filters),
+
     
-    ]
 
     const [
 
@@ -59,7 +52,14 @@ export const createResultsForResume = async (req, res) => {
         summary,
         applicant 
 
-    ] = await Promise.allSettled(resultPromises)
+    ] = await Promise.allSettled([
+
+        getFilterScoresForResume(metadata.text_scan, filters),
+        getSectionSummariesForResume(metadata.text_scan, filters),
+        getOverallSummaryForResume(metadata.text_scan, filters),
+        getApplicantFromResume(metadata.text_scan, filters),
+    
+    ])
 
     if(scores.status === "rejected") {
 
@@ -76,7 +76,14 @@ export const createResultsForResume = async (req, res) => {
 
     const result = {
 
-        _id: fileID, scores, summaries, summary, applicant
+        _id: fileID,
+        
+        scores: scores.value,
+        
+        summaries: summaries.value,
+        summary:summary.value,
+        
+        applicant: applicant.value
 
     }
 

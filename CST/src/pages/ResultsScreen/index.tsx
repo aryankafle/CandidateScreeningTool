@@ -6,7 +6,7 @@ import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline }
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
-import Result, { Grades } from "../../utils/Result";
+import Result, { LetterGrade } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
@@ -16,7 +16,8 @@ import { saveList, deleteSavedList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
-import useWeighedScores from "../../hooks/UseWeighedScores";
+import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
+import { WeighedScores } from '../../utils/Result';
 
 
 
@@ -53,7 +54,7 @@ const ResultsScreen = () => {
 
 
 
-    const weighedScores = useWeighedScores(batchResults)
+    const weighedResults = useWeighedScores(batchResults)
 
 
 
@@ -90,7 +91,7 @@ const ResultsScreen = () => {
     const [ showModal, setShowModal ] = useState(false);
     const [ showSidePanel, setShowSidePanel ] = useState(false);
 
-    const [ currentCandidate, setCurrentCandidate ] = useState<Result>({} as Result)
+    const [ currentlyViewedResult, setCurrentlyViewedResult ] = useState<WeighedResult>({} as WeighedResult)
 
 
 
@@ -221,25 +222,25 @@ const ResultsScreen = () => {
 
 
 
-    const getRatingImage = (grade : Grades) => {
+    const getRatingImage = (grade : LetterGrade) => {
         switch(grade) {
-            case Grades.A:
+            case LetterGrade.A:
                 return <img alt="'A' Rating" src="assets/a-rating.png"
                             className="self-center w-[4rem] h-[4rem]"
                 />;
-            case Grades.B:
+            case LetterGrade.B:
                 return <img alt="'B' Rating" src="assets/b-rating.png"
                             className="self-center w-[4rem] h-[4rem]"
                 />;
-            case Grades.C:
+            case LetterGrade.C:
                 return <img alt="'C' Rating" src="assets/c-rating.png"
                             className="self-center w-[4rem] h-[4rem]"
                 />;
-            case Grades.D:
+            case LetterGrade.D:
                 return <img alt="'D' Rating" src="assets/d-rating.png"
                             className="self-center w-[4rem] h-[4rem]"
                 />;
-            case Grades.F:
+            case LetterGrade.F:
                 return <img alt="'F' Rating" src="assets/f-rating.png"
                             className="self-center w-[4rem] h-[4rem]"
                 />;
@@ -248,20 +249,20 @@ const ResultsScreen = () => {
         }
     }
 
-    const CandidateDescriptionPopup = (props: {candidate : Result}) => {
+    const CandidateDescriptionPopup = (props: {result : WeighedResult}) => {
 
         const summaries = useMemo(() => {
 
             const summariesArr = []
 
-            for(const summary in props.candidate.summaries) {
-                summariesArr.push({section: props.candidate.summaries[summary], text: summary})
+            for(const summary in props.result.summaries) {
+                summariesArr.push({section: props.result.summaries[summary], text: summary})
             }
 
             console.log(summariesArr)
             return summariesArr
 
-        }, [props.candidate])
+        }, [props.result])
 
         
 
@@ -271,7 +272,7 @@ const ResultsScreen = () => {
                     <IonIcon icon={closeCircleOutline}></IonIcon>
                 </div>
                 <div className="text-center text-2xl text-white font-bold">
-                    {props.candidate.applicant.name}
+                    {props.result.applicant.name}
                 </div>
                 {
                     summaries.map((summary : any) => (
@@ -286,14 +287,14 @@ const ResultsScreen = () => {
                     ))
                 }
                 <div className="m-4 text-blueLight">
-                    {props.candidate.overallScore}
+                    {props.result.overall}
                 </div>
             </div>
         )
 
     }
 
-    const IndividualCandidateCard = (props: {candidate : Result}) => {
+    const IndividualCandidateCard = (props: {result : WeighedResult}) => {
 
         return (
             <div 
@@ -301,14 +302,14 @@ const ResultsScreen = () => {
                             flex flex-row flex-grow w-[80%] rounded-r-3xl py-[1rem]"
                 onClick={() => {
                     setShowModal(true)
-                    setCurrentCandidate(props.candidate)
+                    setCurrentlyViewedResult(props.result)
                 }}
             >
                 <div className="flex flex-grow self-center justify-center text-white">
-                    {props.candidate.applicant.name || "asdf"}
+                    {props.result.applicant.name || "asdf"}
                 </div>
                 <div className="pr-[2rem] bor">
-                    { getRatingImage(props.candidate.grade ) || "asdf" }
+                    { getRatingImage(props.result.grade ) || "asdf" }
                 </div>
             </div>
         )
@@ -375,7 +376,7 @@ const ResultsScreen = () => {
             <div className="overflow-clip flex h-full w-full flex-row bg-white dark:bg-grayDark">
                 {showModal && 
                     <Modal modalTrigger={showModal} onClose={()=>{setShowModal(false)}}>
-                        <CandidateDescriptionPopup candidate={currentCandidate} />
+                        <CandidateDescriptionPopup result={currentlyViewedResult} />
                     </Modal>
                 }
                 {listWithSameName &&
@@ -433,9 +434,9 @@ const ResultsScreen = () => {
                         "flex flex-col justify-center gap-[1.3rem] text-white"
                     }
                     >
-                        {batchResults.map((candidate, index) => <IndividualCandidateCard 
-                            key={Math.random()*9999}
-                            candidate={candidate}
+                        {weighedResults.map(result => <IndividualCandidateCard 
+                            key={result.applicant.name + Math.random()*9999}
+                            result={result}
                             //selected={selectableItems[index].isSelected}
                         />)}
                     </div>

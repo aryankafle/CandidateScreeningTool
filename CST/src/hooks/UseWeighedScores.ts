@@ -1,20 +1,26 @@
 import { useMemo } from "react";
-import Result, { weighScoresForOneResult } from "../utils/Result";
+import Result, { WeighedScores, weighScoresForOneResult } from "../utils/Result";
+
+export type WeighedResult = Result & WeighedScores
 
 
 
-function useWeighedScores(results : Result[]) {
+function useWeighedScores(results : Result[]) : WeighedResult[] {
 
     const weighedScores = useMemo(() => {
 
-        return results.map(result => {
+        return results.map( ( result : Result ) => {
 
-            return {
+            const weighedScoresAndOverall : WeighedScores = weighScoresForOneResult(result.filterScores)
 
-                weighedScore: weighScoresForOneResult(result.filterScores),
-                result,
+            const weighedResult : WeighedResult = {
+
+                ...weighedScoresAndOverall,
+                ...result,
 
             }
+
+            return weighedResult
 
         })
 

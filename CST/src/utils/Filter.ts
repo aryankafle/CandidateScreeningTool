@@ -1,10 +1,9 @@
 import { UniquelyIdentified } from "./UniquelyIdentified";
+import { MAX_SCORE } from "./Result";
 
 export abstract class Filter implements UniquelyIdentified {
 
     readonly id : string = crypto.randomUUID()
-
-    protected static MAX_SCORE = 1000
 
     public readonly filterQuery;
     public readonly description;
@@ -18,7 +17,7 @@ export abstract class Filter implements UniquelyIdentified {
         this.filterQuery = `
             ${filterQuery}
 
-            The score must be between 0 and ${Filter.MAX_SCORE}
+            The score must be between 0 and ${MAX_SCORE}
         `
 
         this.description = description

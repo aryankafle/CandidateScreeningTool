@@ -1,16 +1,19 @@
 import { mean } from "simple-statistics"
 
 import { Filter } from "./Filter"
+import { clamp } from "lodash"
 
 
 
 
 
-const MINIMUM_CURVE_FACTOR = 0.5
+export const MINIMUM_CURVE_FACTOR = 0.5
+export const MAX_SCORE = 1000
 
 
 
-export enum Grades {
+
+export enum LetterGrade {
     F = 1, D, C, B, A,
 }
 
@@ -28,8 +31,16 @@ export type Score  = {
 
     filter : Filter,
     value : number,
-    rationale : string
+    rationale : string,
 
+}
+
+export type WeighedScores = {
+
+    weighedScores : Score[]
+    overall : number
+    grade : LetterGrade
+    
 }
 
 export type SectionSummary = {
@@ -48,12 +59,10 @@ export function resultFromJSON(jsonresult : any) {
     const result : Result = {
 
         filterScores: jsonresult.scores,
-        overallScore : mean(jsonresult.scores),
         _id: jsonresult._id,
         applicant: jsonresult.applicant,
         summaries: jsonresult.summaries,
         summary: jsonresult.summary,
-        grade: jsonresult.grade
 
     }
 
@@ -63,29 +72,48 @@ export function resultFromJSON(jsonresult : any) {
 
 
 
-export function weighScoresForOneResult(scores : Score[]) : Score[] {
+export function weighScoresForOneResult(scores : Score[]) : WeighedScores {
 
     const scoreVals = scores.map(score => score.value)
 
-    const curvedScores = scoreVals
+    const weighedScores = scoreVals
     .map( (value, index) : Score => {
 
         const scaleFactor = -Math.log(MINIMUM_CURVE_FACTOR)
 
         const curveFactor = Math.exp( -( ( scaleFactor * index ) / scoreVals.length ) )
 
+        const curvedScore = curveFactor * value
+
         return {
 
             rationale: scores[index].rationale,
             filter: scores[index].filter,
 
-            value: curveFactor * value,
-
+            value: curvedScore,
         }
 
     })
 
-    return curvedScores
+
+
+    const overall = mean(weighedScores.map(score => score.value))
+
+    const grade = clamp( Math.ceil( 5 * ( overall + 1 ) / MAX_SCORE ) , 5 ) as LetterGrade
+
+    
+
+
+
+
+
+    return {
+
+        weighedScores,
+        overall,
+        grade
+    
+    }
     
 }
 
@@ -95,17 +123,13 @@ export type Result = {
 
     readonly filterScores : Score[]
 
-    readonly overallScore : number
-
-    readonly _id : String
+    readonly _id : string
 
     readonly applicant : Applicant
 
     readonly summaries : SectionSummary[]
 
     readonly summary : string
-
-    readonly grade : Grades
 
 }
 

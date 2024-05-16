@@ -57,8 +57,6 @@ const HeaderButtons = () => {
             if(settleResult.status === "fulfilled") {
 
                 const result : Result = settleResult.value
-
-                console.log(result)
                 
                 setBatchResults( previousResults => [...previousResults, result] )
 
