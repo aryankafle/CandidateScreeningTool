@@ -304,7 +304,7 @@ export async function getFilterScoresForResume(resumeFile, filters) {
     const JSONParsedResponse = JSON.parse(response)
 
     JSONParsedResponse.scores.sort((
-        (scoreA, scoreB) => scoreA.value - scoreB.value
+        (scoreA, scoreB) => scoreB.value - scoreA.value
     ))
 
     return JSONParsedResponse.scores

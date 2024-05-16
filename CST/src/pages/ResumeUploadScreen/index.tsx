@@ -23,14 +23,11 @@ const ResumeUploadScreen = () => {
     
     const {
 
-        setSelectedFilters,
         uploadedFiles,
         setUploadedFiles,
-        clearSelectionContext
 
     } = useContext(SelectionContext)
 
-    const { setCurrentSavedList } = useContext(SavedListsContext)
     const { setFileIDs } = useContext(BatchContext)
     const { flags, updateFlag } = useContext(FlagContext)
 
@@ -73,17 +70,6 @@ const ResumeUploadScreen = () => {
         handleSelectionOnClick
 
     } = useSelectableList<File>(uploadedFiles, setUploadedFiles)
-
-
-
-
-
-    useEffect(() => {
-
-        clearSelectionContext()
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
 
 

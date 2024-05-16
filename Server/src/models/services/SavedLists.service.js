@@ -22,7 +22,7 @@ export const uploadList = async (
         _id,
         file_ids,
         list_link: "link",
-        owner_of_list: userID,
+        owner_of_list,
         shared_with: [],
         name: name,
         description: description,

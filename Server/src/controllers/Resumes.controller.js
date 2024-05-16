@@ -28,7 +28,7 @@ export const addNewSavedList = async (req, res) => {
         description,
         color
 
-    } = req.body?.listToSave
+    } = req.body
 
 
 
@@ -109,9 +109,9 @@ export const getResumeResult = async (req, res) => {
 
     try {
 
-        const result = await downloadFileMetadata(fileID)
+        const resumeMetadata = await downloadFileMetadata(fileID)
 
-        res.status(200).send(result)
+        res.status(200).send(resumeMetadata.result)
 
     }
     catch (error) {

@@ -18,6 +18,7 @@ import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
 import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
 import { WeighedScores } from '../../utils/Result';
+import SelectionContext from "../../context/SelectionContext";
 
 
 
@@ -42,12 +43,14 @@ const ResultsScreen = () => {
 
     } = useContext(BatchContext)
 
+    const { setPreviouslySelectedFilters, selectedFilters } = useContext(SelectionContext)
+
     const { userData } = useContext(UserContext)
 
 
 
 
-    
+
     const [ title, setTitle ] = useState(currentSavedList?.name || "")
     const [ description, setDescription ] = useState(currentSavedList?.description || "")
     const [ color, setColor ] = useState(currentSavedList?.color || "")
@@ -115,13 +118,9 @@ const ResultsScreen = () => {
 
     useEffect(() => {
 
-        if(batchResults.length < 1) {
-            
-            navigate("/home/resume-upload")
+        setPreviouslySelectedFilters([...selectedFilters])
 
-        }
-
-    }, [navigate, batchResults])
+    }, [])
 
 
 
@@ -259,7 +258,6 @@ const ResultsScreen = () => {
                 summariesArr.push({section: props.result.summaries[summary], text: summary})
             }
 
-            console.log(summariesArr)
             return summariesArr
 
         }, [props.result])

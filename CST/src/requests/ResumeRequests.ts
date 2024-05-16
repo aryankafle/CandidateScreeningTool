@@ -132,15 +132,10 @@ export const saveList = (
 ) => new Promise<string>( async ( resolve, reject ) => {
 
     const { data, status } = await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/create-list`, {
-
-        savedList: {
-
-            name,
-            description,
-            color
-
-        },
-
+        
+        name,
+        description,
+        color,
         fileIDs,
         userID
 

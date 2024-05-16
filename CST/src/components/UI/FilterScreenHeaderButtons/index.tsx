@@ -50,15 +50,16 @@ const HeaderButtons = () => {
 
         const scoredResumeSettleResults = await Promise.allSettled( scoredResumePromises )
 
-        for(const settleResult of scoredResumeSettleResults) {
+        const results = []
 
-            console.log(settleResult)
+        for(const settleResult of scoredResumeSettleResults) {
 
             if(settleResult.status === "fulfilled") {
 
                 const result : Result = settleResult.value
                 
-                setBatchResults( previousResults => [...previousResults, result] )
+                results.push(result)
+                setBatchResults( results )
 
                 continue;
 

@@ -8,8 +8,9 @@ import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
-import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
+import { getUserSavedLists, deleteSavedList, getResumeResult } from "../../requests/ResumeRequests";
 import UserContext from "../../context/UserContext";
+import BatchContext from "../../context/BatchContext";
 
 
 
@@ -20,6 +21,8 @@ const ViewSavedListsScreen = () => {
     const navigate = useNavigate()
 
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
+
+    const { setFileIDs, setBatchResults } = useContext(BatchContext)
 
     const { userData } = useContext(UserContext)
 
@@ -125,12 +128,27 @@ const ViewSavedListsScreen = () => {
 
     }, [copyTextToClipboard])
 
-    const sendToList = useCallback((list : SavedList) => {
+    const sendToList = useCallback(async (list : SavedList) => {
 
         setCurrentSavedList(list)
+        setFileIDs(list.file_ids)
+
+        const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, userData.id ) ) )
+
+        for(const settleResult of settleResults) {
+
+            if(settleResult.status === "fulfilled") {
+
+                setBatchResults( previousBatchResults => [...previousBatchResults, settleResult.value] )
+                
+            }
+
+        }
+
+
         navigate("/results")
 
-    }, [navigate, setCurrentSavedList])
+    }, [navigate, setBatchResults, setCurrentSavedList, setFileIDs, userData.id])
 
     const addExternalListToSavedLists = useCallback(() => {  
 
