@@ -375,7 +375,7 @@ const ResumeUploadScreen = () => {
                         <input
                             accept=".doc,.docx,.pdf,.png,.jpg"
                             type="file"
-                            name="files"
+                            name="file"
                             multiple
                             hidden
                             ref={hiddenFileInput}

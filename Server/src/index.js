@@ -89,7 +89,7 @@ const upload = multer({
 });
 
 app.use("/uploads",
-    upload.array("files"),
+    upload.single("file"),
     uploadRoutes
 )
 

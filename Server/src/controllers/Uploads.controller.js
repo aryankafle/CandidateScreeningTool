@@ -12,7 +12,7 @@ import { getNumTokensFromString } from "../models/utils/OpenAIQueryHelpers.js";
 export const uploadResumeToDatabase = async (req, res) => {
 
     const userID = req.body?.userID
-    const file = req.files[0]
+    const file = req.file
 
 
 

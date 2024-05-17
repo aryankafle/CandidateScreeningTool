@@ -16,7 +16,7 @@ export const uploadResumeToDatabase = (
 
     const fileFormData = new FormData()
 
-    fileFormData.append("files", file)
+    fileFormData.append("file", file)
     fileFormData.set("userID", userID)
 
 
