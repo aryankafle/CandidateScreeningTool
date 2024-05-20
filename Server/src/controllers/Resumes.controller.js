@@ -4,6 +4,7 @@ import {
     downloadFileMetadata,
     downloadFileReadStream,
     deleteUnusedFileIDs,
+    getFileStream,
 
 } from "../models/services/DatabaseFiles.service.js";
 
@@ -252,5 +253,36 @@ export const deleteUnusedFiles = async (req, res) => {
         })
 
     }  
+
+}
+
+
+
+
+
+export const getSingleFileStream = async (req, res) => {
+
+    const fileID = req.query?.fileID;
+    const userID = req.query?.userID;
+
+
+
+
+
+    try {
+
+        res.status(200).send(await getFileStream(fileID, userID).result)
+
+    }
+    catch (error) {
+
+        res.status(500).json({
+
+            error: true,
+            message: "Error downloading resume result."
+
+        })
+
+    }
 
 }
