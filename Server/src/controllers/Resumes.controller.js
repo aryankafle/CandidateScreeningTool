@@ -255,34 +255,3 @@ export const deleteUnusedFiles = async (req, res) => {
     }  
 
 }
-
-
-
-
-
-export const getSingleFileStream = async (req, res) => {
-
-    const fileID = req.query?.fileID;
-    const userID = req.query?.userID;
-
-
-
-
-
-    try {
-
-        res.status(200).send(await getFileStream(fileID, userID).result)
-
-    }
-    catch (error) {
-
-        res.status(500).json({
-
-            error: true,
-            message: "Error getting resume stream."
-
-        })
-
-    }
-
-}
