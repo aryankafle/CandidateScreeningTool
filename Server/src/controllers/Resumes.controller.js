@@ -249,7 +249,7 @@ export const deleteUnusedFiles = async (req, res) => {
 
         res.status(500).send({
             error: true,
-            message: `Error deleting file with fileID: BRUH moment.`
+            message: `Error deleting file with file.`
         })
 
     }  
@@ -279,7 +279,7 @@ export const getSingleFileStream = async (req, res) => {
         res.status(500).json({
 
             error: true,
-            message: "Error downloading resume result."
+            message: "Error getting resume stream."
 
         })
 

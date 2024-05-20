@@ -125,3 +125,9 @@ export async function deleteSingleFileMetaData(fileID) {
     await fileMetadata.deleteOne({_id: fileID})
 
 }
+
+export async function getFileStream(fileID, userID) {
+
+    return await fileBuckets.find({_id: fileID})
+
+}
