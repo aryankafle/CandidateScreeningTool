@@ -21,7 +21,7 @@ export const uploadList = async (
 
         _id,
         file_ids,
-        list_link: "link",
+        list_link: new ObjectId(),
         owner_of_list,
         shared_with: [],
         name: name,

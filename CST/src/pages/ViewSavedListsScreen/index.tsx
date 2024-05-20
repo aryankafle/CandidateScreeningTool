@@ -124,7 +124,7 @@ const ViewSavedListsScreen = () => {
 
     const copyListLink = useCallback(async (savedList : SavedList) => {
 
-        await copyTextToClipboard(savedList.list_link, true)
+        await copyTextToClipboard("/results/" + savedList.list_link, true)
 
     }, [copyTextToClipboard])
 
