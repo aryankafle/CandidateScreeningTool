@@ -3,8 +3,8 @@ import {
     deleteFile,
     downloadFileMetadata,
     downloadFileReadStream,
+    downloadFileFilters,
     deleteUnusedFileIDs,
-    getFileStream,
 
 } from "../models/services/DatabaseFiles.service.js";
 
@@ -200,6 +200,33 @@ export const deleteResumeResult = async (req, res) => {
 
 
 
+export const getResumeFilters = async (req, res) => {
+
+    const fileID = req.query?.fileID;
+
+
+
+
+
+    try {
+
+        const resumeFillters = await downloadFileFilters(fileID)
+
+        res.status(200).send(resumeFillters)
+
+    }
+    catch (error) {
+
+        res.status(500).json({
+
+            error: true,
+            message: `Error retrieving resume filters for fileID: ${fileID}.`
+
+        })
+
+    }
+
+}
 
 export const modifyResumeResult = async (req, res) => {
 

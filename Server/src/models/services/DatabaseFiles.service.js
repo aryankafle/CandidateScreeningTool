@@ -60,6 +60,18 @@ export async function downloadFileReadStream(fileID) {
 
 }
 
+export async function downloadFileFilters(fileID) {
+
+    const _id = new ObjectId(fileID)
+
+    const file = await fileMetadata.findOne( { _id } )
+    
+    if(!file) return undefined
+
+    return file.metadata.results.filters
+
+}
+
 
 export async function deleteUnusedFileIDs(){
 

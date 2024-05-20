@@ -259,3 +259,16 @@ export const getFileStream = async (fileID : string) => {
     return response.data
 
 }
+
+export async function rescoreResume(fileID : string, userID: string){
+
+    const filters: Filter[] = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-filters`, {
+        params:{
+            fileID,
+        }
+    })
+
+    await createResumeResult(filters, fileID, userID)
+
+
+}

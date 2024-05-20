@@ -83,7 +83,9 @@ export const createResultsForResume = async (req, res) => {
         summaries: summaries.value,
         summary:summary.value,
         
-        applicant: applicant.value
+        applicant: applicant.value,
+
+        filters
 
     }
 
