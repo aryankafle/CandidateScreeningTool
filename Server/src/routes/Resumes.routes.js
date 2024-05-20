@@ -8,11 +8,11 @@ import {
     removeOldSavedList,
 
     getResumeResult,
+    getResumeFile,
     deleteResumeResult,
     modifyResumeResult,
 
     deleteUnusedFiles,
-    getSingleFileStream,
 
 } from "../controllers/Resumes.controller.js";
 
@@ -40,7 +40,7 @@ router.delete("/delete-result", deleteResumeResult)
 router.put("/modify-result", modifyResumeResult)
 
 router.delete("/delete-unused", deleteUnusedFiles)
-router.get("/get-single-file-stream", getSingleFileStream)
+router.get("/get-file", getResumeFile)
 
 
 

@@ -248,12 +248,11 @@ export const postUserCurrentSavedList = async (userID : string, currentSavedList
 
 
 
-export const getSingleFileStream = async (fileID : string, userID : string) => {
+export const getFileStream = async (fileID : string) => {
 
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-single-file-stream`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-file`, {
         params:{
             fileID,
-            userID
         }
     })
 
