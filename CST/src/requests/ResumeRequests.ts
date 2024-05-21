@@ -10,7 +10,9 @@ import { Filter } from '../utils/Filter';
 export const uploadResumeToDatabase = (
 
     file: File,
-    userID : string
+    userID : string,
+    onUploadProgress? : ( percent: number ) => void,
+    onDownloadProgress? : ( percent: number ) => void
 
 ) => new Promise<string>( async ( resolve, reject ) => {
 
@@ -25,6 +27,32 @@ export const uploadResumeToDatabase = (
 
         headers: {
             "Content-Type": "multipart/form-data"
+        },
+
+        onUploadProgress: (progressEvent) => {
+
+            const loaded = progressEvent.loaded
+            const total = progressEvent.total
+
+            if(!total) throw Error("Progres Event has no total.")
+
+            const percentProgress = 100 * loaded / total
+
+            if(onUploadProgress) onUploadProgress(percentProgress)
+
+        },
+
+        onDownloadProgress: (progressEvent) => {
+
+            const loaded = progressEvent.loaded
+            const total = progressEvent.total
+
+            if(!total) throw Error("Progres Event has no total.")
+
+            const percentProgress = 100 * loaded / total
+
+            if(onDownloadProgress) onDownloadProgress(percentProgress)
+
         }
 
     })
