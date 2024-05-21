@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
 import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
 import UserContext from "../../context/UserContext";
-import BatchContext from "../../context/BatchContext";
 
 
 
@@ -97,7 +96,7 @@ const ViewSavedListsScreen = () => {
 
     const copyListLink = useCallback(async (savedList : SavedList) => {
 
-        await copyTextToClipboard("/results/" + savedList.list_link, true)
+        await copyTextToClipboard(`${process.env.REACT_APP_CLIENT_NAME}/results/${savedList.list_link}`, true)
 
     }, [copyTextToClipboard])
 

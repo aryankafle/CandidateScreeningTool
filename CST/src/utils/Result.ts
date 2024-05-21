@@ -58,8 +58,6 @@ export type SectionSummary = {
 
 export function resultFromJSON(jsonresult : any) {
 
-    console.log(jsonresult)
-
     const result : Result = {
 
         filterScores: jsonresult.filterScores,
