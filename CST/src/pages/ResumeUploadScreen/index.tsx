@@ -187,7 +187,7 @@ const ResumeUploadScreen = () => {
 
         }
 
-    }, [setFileIDs, uploadedFiles, userData.id])
+    }, [setFileIDs, setFileProgresses, uploadedFiles, userData.id])
 
 
 
