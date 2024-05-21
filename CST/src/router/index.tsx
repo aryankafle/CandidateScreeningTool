@@ -73,16 +73,6 @@ function Router() {
 
             setSavedLists(savedLists)
 
-            const selection = await getUserSelection(userData.id)
-
-            if(selection.currentSavedList) {
-
-                const savedList = savedLists.find((list) => list._id === selection.currentSavedList)
-
-                setCurrentSavedList(savedList)
-
-            }
-
             if (route.pathname.includes("results")) return
 
             navigate("/home")

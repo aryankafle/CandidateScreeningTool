@@ -134,11 +134,12 @@ export async function deleteResumeFromDatabase(fileID : string, userID : string)
 
 
 
-export async function getResumeResult(fileID : string, userID : string) : Promise<Result> {
+export async function getResumeResult(fileID : string, listID : string, userID : string) : Promise<Result> {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-result`, { params: {
 
         userID,
+        listID,
         fileID
 
     }})
@@ -154,7 +155,7 @@ export const saveList = (
     name : string,
     description : string,
     color : string,
-    fileIDs : string[],
+    results : Result[],
     userID : string,
 
 ) => new Promise<string>( async ( resolve, reject ) => {
@@ -164,7 +165,7 @@ export const saveList = (
         name,
         description,
         color,
-        fileIDs,
+        results,
         userID
 
     })

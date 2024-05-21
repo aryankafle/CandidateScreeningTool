@@ -44,7 +44,6 @@ const ResultsScreen = () => {
     const {
 
         batchResults,
-        fileIDs,
         clearBatchContext,
         setBatchResults
 
@@ -234,7 +233,7 @@ const ResultsScreen = () => {
 
         }
 
-        await saveList(title, description, color, fileIDs, userData.id)
+        await saveList(title, description, color, batchResults, userData.id)
 
 
 

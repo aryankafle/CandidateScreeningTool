@@ -60,7 +60,7 @@ export function resultFromJSON(jsonresult : any) {
 
     const result : Result = {
 
-        filterScores: jsonresult.scores,
+        filterScores: jsonresult.filterScores,
         _id: jsonresult._id,
         applicant: jsonresult.applicant,
         summaries: jsonresult.summaries,
@@ -76,7 +76,9 @@ export function resultFromJSON(jsonresult : any) {
 
 export const getResults = async (list : SavedList, userID : string) => {
 
-    const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, userID ) ) )
+    console.log(list.file_ids)
+
+    const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, list._id, userID ) ) )
 
     const successfulResults : Result[] = []
 

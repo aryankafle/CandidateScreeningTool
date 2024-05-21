@@ -1,6 +1,6 @@
 import {
 
-    changeResultOfFile,
+    addResultToFile,
     downloadFileMetadata,
 
 } from "../models/services/DatabaseFiles.service.js"
@@ -88,8 +88,6 @@ export const createResultsForResume = async (req, res) => {
         filters
 
     }
-
-    await changeResultOfFile(result._id, result)
 
 
 

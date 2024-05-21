@@ -26,7 +26,7 @@ export const uploadFile = async (file, textScan, userID) => {
             metadata: {
                 file_name,
                 text_scan,
-                result: null,
+                results: [],
                 user_id: userID
             }
         }
@@ -112,11 +112,11 @@ export async function deleteUnusedFileIDs(){
 }
 
 
-export const changeResultOfFile = async (fileID, result) => {
+export const addResultToFile = async (fileID, from_saved_list, result) => {
 
     const _id = new ObjectId(fileID)
 
-    await fileMetadata.updateOne({ _id }, { $set : { "metadata.result": result } } )
+    await fileMetadata.updateOne({ _id }, { $push : { "metadata.results": {result, from_saved_list} } } )
 
 }
 

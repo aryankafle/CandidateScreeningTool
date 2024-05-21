@@ -5,6 +5,7 @@ import {
     downloadFileReadStream,
     downloadFileFilters,
     deleteUnusedFileIDs,
+    addResultToFile,
 
 } from "../models/services/DatabaseFiles.service.js";
 
@@ -15,6 +16,8 @@ import {
 
 } from "../models/services/SavedLists.service.js";
 
+import { ObjectId } from "mongodb";
+
 
 
 
@@ -24,7 +27,7 @@ export const addNewSavedList = async (req, res) => {
     const {
         
         userID,
-        fileIDs,
+        results,
         name,
         description,
         color
@@ -39,7 +42,7 @@ export const addNewSavedList = async (req, res) => {
 
         const outputID = await uploadList(
 
-            fileIDs,
+            results,
             name,
             description,
             color,
@@ -102,7 +105,8 @@ export const removeOldSavedList = async (req, res) => {
 
 export const getResumeResult = async (req, res) => {
 
-    const fileID = req.query?.fileID;
+    const fileID = req.query?.fileID
+    const listID = req.query?.listID
 
 
 
@@ -112,10 +116,29 @@ export const getResumeResult = async (req, res) => {
 
         const resumeMetadata = await downloadFileMetadata(fileID)
 
-        res.status(200).send(resumeMetadata.result)
+        const _id = new ObjectId(listID)
+
+        const result = resumeMetadata.results.find(result => result.from_saved_list.toString() === _id.toString()).result
+
+        if(!result) {
+
+            res.status(500).send({
+
+                error: true,
+                message: "No list with such an ID."
+
+            })
+
+        }
+
+        console.log(result)
+
+        res.status(200).send(result)
 
     }
     catch (error) {
+
+        console.log(error)
 
         res.status(500).json({
 
@@ -230,8 +253,8 @@ export const getResumeFilters = async (req, res) => {
 
 export const modifyResumeResult = async (req, res) => {
 
-    const fileID = res.body?.fileID
-    const result = res.body?.result
+    const fileID = req.body?.fileID
+    const result = req.body?.result
 
 
 
@@ -239,7 +262,7 @@ export const modifyResumeResult = async (req, res) => {
 
     try {
 
-        await changeResultOfFile(fileID, result)
+        await addResultToFile(fileID, result)
 
     }
     catch (error) {

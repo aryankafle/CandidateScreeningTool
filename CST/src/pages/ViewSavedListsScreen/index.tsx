@@ -8,7 +8,7 @@ import { copyOutline } from 'ionicons/icons';
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import { SavedList } from "../../utils/SavedList";
-import { getUserSavedLists, deleteSavedList, getResumeResult } from "../../requests/ResumeRequests";
+import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
 import UserContext from "../../context/UserContext";
 import BatchContext from "../../context/BatchContext";
 
@@ -21,8 +21,6 @@ const ViewSavedListsScreen = () => {
     const navigate = useNavigate()
 
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
-
-    const { setFileIDs, setBatchResults } = useContext(BatchContext)
 
     const { userData } = useContext(UserContext)
 

@@ -1,4 +1,5 @@
-import { savedLists, users } from "../../database/MongoDB.database.js"
+import { fileMetadata, savedLists, users } from "../../database/MongoDB.database.js"
+import { addResultToFile } from "./DatabaseFiles.service.js"
 import { ObjectId } from "mongodb"
 
 
@@ -7,7 +8,7 @@ import { ObjectId } from "mongodb"
 
 export const uploadList = async (
 
-    file_ids,
+    results,
     name,
     description,
     color,
@@ -17,10 +18,12 @@ export const uploadList = async (
 
     const _id = new ObjectId()
 
+    await Promise.all( results.map( result => addResultToFile(result._id, _id, result) ) )
+
     await savedLists.insertOne({
 
         _id,
-        file_ids,
+        file_ids: results.map(result => result._id),
         list_link: _id,
         owner_of_list,
         shared_with: [],
