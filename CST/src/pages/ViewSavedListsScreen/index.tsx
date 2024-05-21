@@ -97,31 +97,6 @@ const ViewSavedListsScreen = () => {
         
     }, [getAllSelectedItems, removeCurrentSelectionFromList, setSavedLists, userData.id])
 
-
-
-    const createCombinedList = useCallback(() => {
-        
-        // const selected = getAllSelectedItems()
-
-        // if(getAllSelectedItems().length !== 2) return;
-
-        // const firstList = selected[0]
-        // const secondList = selected[1]
-
-        // const combined = SavedList.combine(firstList, secondList)
-
-        // setSavedLists((savedLists) => {
-
-        //     if(savedLists.some(savedList => savedList.name === combined.name)) {
-        //         return savedLists
-        //     }
-
-        //     return [...savedLists, combined]
-
-        // })
-
-    }, [setSavedLists, getAllSelectedItems])
-
     const copyListLink = useCallback(async (savedList : SavedList) => {
 
         await copyTextToClipboard("/results/" + savedList.list_link, true)
@@ -131,24 +106,10 @@ const ViewSavedListsScreen = () => {
     const sendToList = useCallback(async (list : SavedList) => {
 
         setCurrentSavedList(list)
-        setFileIDs(list.file_ids)
-
-        const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, userData.id ) ) )
-
-        for(const settleResult of settleResults) {
-
-            if(settleResult.status === "fulfilled") {
-
-                setBatchResults( previousBatchResults => [...previousBatchResults, settleResult.value] )
-                
-            }
-
-        }
-
-
+        
         navigate("/results")
 
-    }, [navigate, setBatchResults, setCurrentSavedList, setFileIDs, userData.id])
+    }, [navigate, setCurrentSavedList])
 
     const addExternalListToSavedLists = useCallback(() => {  
 
@@ -255,19 +216,11 @@ const ViewSavedListsScreen = () => {
                             text-xl">
                 {
                     anySelected() ?
-                        <div className="flex flex-col gap-[0.5rem]">
-                            <div
-                                className="select-none cursor-pointer"
-                                onClick={() => { handleRemoveSelection() }}
-                            >
-                                Delete Current Selection
-                            </div>
-                            <div
-                                className="select-none cursor-pointer"
-                                onClick={() => { createCombinedList() }}
-                            >
-                                Create Combined List from Selection
-                            </div>
+                        <div
+                            className="select-none cursor-pointer"
+                            onClick={() => { handleRemoveSelection() }}
+                        >
+                            Delete Current Selection
                         </div>
                     :
                         savedLists.length > 0 &&

@@ -6,13 +6,13 @@ import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline }
 import { IonIcon } from "@ionic/react";
 import { closeCircleOutline } from "ionicons/icons";
 import { SavedListsContext } from '../../context/SavedListsContext';
-import Result, { LetterGrade } from "../../utils/Result";
+import Result, { LetterGrade, getResults } from "../../utils/Result";
 import Button from "../../components/buttons/ImprovedButtonComponent";
 import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import { saveList, deleteSavedList, getExternalList, createResumeResult, getResumeResult } from "../../requests/ResumeRequests";
+import { saveList, deleteSavedList, getExternalList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
@@ -20,6 +20,12 @@ import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
 import { WeighedScores } from '../../utils/Result';
 import SelectionContext from "../../context/SelectionContext";
 import { useParams } from "react-router-dom";
+
+import AGrade from "../../assets/a-rating.png"
+import BGrade from "../../assets/b-rating.png"
+import CGrade from "../../assets/c-rating.png"
+import DGrade from "../../assets/d-rating.png"
+import FGrade from "../../assets/f-rating.png"
 
 
 
@@ -124,55 +130,39 @@ const ResultsScreen = () => {
 
         setPreviouslySelectedFilters([...selectedFilters])
         
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        
+        if(!userData || !currentSavedList || batchResults.length > 0 ) return;
 
+        getResults(currentSavedList, userData.id)
+        .then(results => setBatchResults(results))
+
+    }, [batchResults.length, currentSavedList, setBatchResults, userData])
+    
     useEffect(() => {
 
-        if (!userData || !listID) {
+        if (!listID) {
             return
         }
 
-        getExternalList(listID).then(async (savedList) => {
+        getExternalList(listID)
+        .then(async (savedList) => {
+
             setCurrentSavedList(savedList)
-            console.log(savedList)
-            await createBatchResults(savedList.file_ids, userData.id)
-        }).catch((error) => {
-            console.log(error)
+
         })
         
-    }, [userData])
+        
+    }, [listID, setCurrentSavedList])
 
 
 
 
 
-    const createBatchResults = async (ids : string[], userid : string) => {
 
-        const scoredResumePromises = ids.map( id => getResumeResult(id, userid ) )
-
-        const scoredResumeSettleResults = await Promise.allSettled( scoredResumePromises )
-
-        const results = []
-
-        for(const settleResult of scoredResumeSettleResults) {
-
-            if(settleResult.status === "fulfilled") {
-
-                const result : Result = settleResult.value
-                
-                results.push(result)
-                setBatchResults( results )
-
-                continue;
-
-            }
-
-            // Do thing with error files here
-
-        }
-
-    }
 
 
 
@@ -277,23 +267,23 @@ const ResultsScreen = () => {
     const getRatingImage = (grade : LetterGrade) => {
         switch(grade) {
             case LetterGrade.A:
-                return <img alt="'A' Rating" src="assets/a-rating.png"
+                return <img alt="'A' Rating" src={AGrade}
                             className="self-center w-[4rem] h-[4rem]"
                 />;
             case LetterGrade.B:
-                return <img alt="'B' Rating" src="assets/b-rating.png"
+                return <img alt="'B' Rating" src={BGrade}
                             className="self-center w-[4rem] h-[4rem]"
                 />;
             case LetterGrade.C:
-                return <img alt="'C' Rating" src="assets/c-rating.png"
+                return <img alt="'C' Rating" src={CGrade}
                             className="self-center w-[4rem] h-[4rem]"
                 />;
             case LetterGrade.D:
-                return <img alt="'D' Rating" src="assets/d-rating.png"
+                return <img alt="'D' Rating" src={DGrade}
                             className="self-center w-[4rem] h-[4rem]"
                 />;
             case LetterGrade.F:
-                return <img alt="'F' Rating" src="assets/f-rating.png"
+                return <img alt="'F' Rating" src={FGrade}
                             className="self-center w-[4rem] h-[4rem]"
                 />;
             default:

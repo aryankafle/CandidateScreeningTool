@@ -2,6 +2,8 @@ import { mean } from "simple-statistics"
 
 import { Filter } from "./Filter"
 import { clamp } from "lodash"
+import { SavedList } from "./SavedList"
+import { getResumeResult } from "../requests/ResumeRequests"
 
 
 
@@ -67,6 +69,28 @@ export function resultFromJSON(jsonresult : any) {
     }
 
     return result
+
+}
+
+
+
+export const getResults = async (list : SavedList, userID : string) => {
+
+    const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, userID ) ) )
+
+    const successfulResults : Result[] = []
+
+    for(const settleResult of settleResults) {
+
+        if(settleResult.status === "fulfilled") {
+
+            successfulResults.push(settleResult.value)
+            
+        }
+
+    }
+
+    return successfulResults
 
 }
 

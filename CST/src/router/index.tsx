@@ -27,7 +27,6 @@ import { SavedListsContext } from "../context/SavedListsContext";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
 import FlagContext from "../context/FlagContext";
-import { SavedList } from '../utils/SavedList';
 import BatchContext from '../context/BatchContext';
 
 
@@ -56,7 +55,6 @@ function Router() {
     useEffect(() => {
 
         setLoadingState(false)
-        console.log(route.pathname)
 
     }, [route, setLoadingState])
 
