@@ -257,5 +257,31 @@ export const getExternalList = async (listID : string) => {
     })
 
     return savedListFromJSON(response.data)
+}
+
+
+
+export const getFileStream = async (fileID : string) => {
+
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-file`, {
+        params:{
+            fileID,
+        }
+    })
+
+    return response.data
+
+}
+
+export async function rescoreResume(fileID : string, userID: string){
+
+    const filters: Filter[] = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/resumes/get-filters`, {
+        params:{
+            fileID,
+        }
+    })
+
+    await createResumeResult(filters, fileID, userID)
+
 
 }
