@@ -19,6 +19,7 @@ import BatchContext from '../../context/BatchContext';
 import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
 import { WeighedScores } from '../../utils/Result';
 import SelectionContext from "../../context/SelectionContext";
+import { useParams } from "react-router-dom";
 
 
 
