@@ -28,7 +28,7 @@ const ResumeUploadScreen = () => {
 
     } = useContext(SelectionContext)
 
-    const { setFileIDs } = useContext(BatchContext)
+    const { setFileIDs, fileProgresses, setFileProgresses } = useContext(BatchContext)
     const { flags, updateFlag } = useContext(FlagContext)
 
     const { userData } = useContext(UserContext)
@@ -142,8 +142,32 @@ const ResumeUploadScreen = () => {
 
         const fileIDPromises = Promise.allSettled(
             uploadedFiles
-            .map(async file => uploadResumeToDatabase(file, userData.id))
-        )
+            .map(async (file, index) => uploadResumeToDatabase(file, userData.id,
+                (uploadPercent : number) => {
+
+                    setFileProgresses(prevProgresses => {
+                        
+                        const temp = [...prevProgresses]
+                        temp[index].uploadProgress = uploadPercent
+
+                        return temp
+
+                    })
+
+                },
+                (downloadPercent : number) => {
+
+                    setFileProgresses(prevProgresses => {
+                        
+                        const temp = [...prevProgresses]
+                        temp[index].downloadProgress = downloadPercent
+
+                        return temp
+
+                    })
+                    
+                }
+        )))
 
         const fileIDSettleResults = await fileIDPromises
 

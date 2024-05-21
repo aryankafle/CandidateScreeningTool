@@ -28,6 +28,7 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
 import FlagContext from "../context/FlagContext";
 import { SavedList } from '../utils/SavedList';
+import BatchContext from '../context/BatchContext';
 
 
 
@@ -38,6 +39,13 @@ function Router() {
     const { setUserData, isLoggedIn } = useContext(UserContext)
     const { setSavedLists, setCurrentSavedList } = useContext(SavedListsContext)
     const { setLoadingState } = useContext(FlagContext)
+    const { fileProgresses } = useContext(BatchContext)
+
+    useEffect(() => {
+
+        console.log(fileProgresses)
+
+    }, [fileProgresses])
 
     const route = useLocation()
 
