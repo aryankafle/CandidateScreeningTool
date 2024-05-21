@@ -87,3 +87,13 @@ export const getUserSavedLists = async (owner) => {
     return await savedLists.find({ owner_of_list: { $eq: owner } }).toArray();
     
 }
+
+
+
+
+
+export const getExternalList = async (extListID) => {
+
+    return await savedLists.findOne({ _id: { $eq: extListID }})
+
+}

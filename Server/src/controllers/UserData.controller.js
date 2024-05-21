@@ -1,5 +1,6 @@
 import { 
 
+    getExternalList,
     getUserSavedLists,
     getUserSelection,
     setUserSelection,
@@ -94,4 +95,26 @@ export const setUserSavedSelection = async (req, res) => {
 
     }
         
+}
+
+
+
+export const getUserExternalList = async (req, res) => {
+
+    try {
+
+        const externalList = await getExternalList(req.body?.listID)
+
+        res.status(200).send(externalList)
+
+    }
+    catch (error) {
+
+        res.status(500).json({
+            error: error,
+            message: "Error getting external list."
+        })
+
+    }
+
 }
