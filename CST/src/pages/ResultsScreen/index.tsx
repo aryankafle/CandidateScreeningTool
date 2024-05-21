@@ -12,7 +12,7 @@ import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import { saveList, deleteSavedList } from "../../requests/ResumeRequests";
+import { saveList, deleteSavedList, getExternalList } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
@@ -20,6 +20,7 @@ import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
 import { WeighedScores } from '../../utils/Result';
 import SelectionContext from "../../context/SelectionContext";
 import { useParams } from "react-router-dom";
+import { string } from "mathjs";
 
 
 
@@ -47,6 +48,8 @@ const ResultsScreen = () => {
     const { setPreviouslySelectedFilters, selectedFilters } = useContext(SelectionContext)
 
     const { userData } = useContext(UserContext)
+
+    const listID = useParams();
 
 
 
@@ -120,6 +123,16 @@ const ResultsScreen = () => {
     useEffect(() => {
 
         setPreviouslySelectedFilters([...selectedFilters])
+
+    }, [])
+
+
+
+
+
+    useEffect(() => {
+
+        getExternalList(JSON.stringify(listID))
 
     }, [])
 

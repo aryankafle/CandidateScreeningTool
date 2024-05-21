@@ -119,7 +119,7 @@ function Router() {
                     }
                 />
                 <Route 
-                    path="/results"
+                    path="/results/:listID"
                     element={ isLoggedIn ?
                         <>
                             <div className="flex flex-col flex-shrink">
