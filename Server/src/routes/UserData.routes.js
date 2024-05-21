@@ -9,6 +9,8 @@ import {
 
     getAllUserSavedLists,
 
+    getUserExternalList
+
 } from "../controllers/UserData.controller.js";
 
 
@@ -23,6 +25,8 @@ router.get("/get-user-selection", getUserSavedSelection)
 router.put("/set-user-selection", setUserSavedSelection)
 
 router.get("/get-user-lists", getAllUserSavedLists)
+
+router.get("/get-external-list", getUserExternalList)
 
 
 
