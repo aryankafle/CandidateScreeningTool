@@ -248,9 +248,9 @@ export const postUserCurrentSavedList = async (userID : string, currentSavedList
 
 
 
-export const getExternalList = async (listID : Readonly<string>) => {
+export const getExternalList = async (listID : string) => {
 
-    const response = await axios.put(`${process.env.REACT_APP_SERVER_NAME}/users/get-external-list`, {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-external-list`, {
         params:{
             listID
         }

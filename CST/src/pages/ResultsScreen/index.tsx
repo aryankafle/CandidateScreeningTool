@@ -20,7 +20,6 @@ import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
 import { WeighedScores } from '../../utils/Result';
 import SelectionContext from "../../context/SelectionContext";
 import { useParams } from "react-router-dom";
-import { string } from "mathjs";
 
 
 
@@ -49,7 +48,7 @@ const ResultsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const listID = useParams();
+    const { listID } = useParams();
 
 
 
@@ -124,17 +123,18 @@ const ResultsScreen = () => {
 
         setPreviouslySelectedFilters([...selectedFilters])
 
+        if (!listID) {
+            navigate("/home")
+            return
+        }
+
+        getExternalList(listID).then((savedList) => {
+            setCurrentSavedList(savedList)
+            
+        })
+        
     }, [])
 
-
-
-
-
-    useEffect(() => {
-
-        getExternalList(JSON.stringify(listID))
-
-    }, [])
 
 
 

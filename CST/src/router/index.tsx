@@ -48,12 +48,16 @@ function Router() {
     useEffect(() => {
 
         setLoadingState(false)
+        console.log(route.pathname)
 
     }, [route, setLoadingState])
 
 
 
     useEffect(() => {
+
+        if (route.pathname.includes("results")) return
+
         deleteUnusedFiles()
         
         getUser()
@@ -119,8 +123,18 @@ function Router() {
                     }
                 />
                 <Route 
-                    path="/results/:listID"
-                    element={ isLoggedIn ?
+                    path="/results"
+                >
+                    <Route path=":listID" element={
+                        <>
+                            <div className="flex flex-col flex-shrink">
+                                <BackButton></BackButton>
+                            </div>
+                            <div className="flex w-full h-full overflow-auto">
+                                <ResultsScreen />
+                            </div>
+                        </>} />
+                    <Route path="" element={isLoggedIn ?
                         <>
                             <div className="flex flex-col flex-shrink">
                                 <BackButton></BackButton>
@@ -130,9 +144,8 @@ function Router() {
                             </div>
                         </>
                         :
-                        <Navigate to="/"/>
-                    }
-                />
+                        <Navigate to="/"/>} />
+                </Route>
             </Route>
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
