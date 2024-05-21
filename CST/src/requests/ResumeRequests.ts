@@ -284,6 +284,7 @@ export const getExternalList = async (listID : string) => {
         }
     })
 
+    console.log("response data: ", response.data)
     return savedListFromJSON(response.data)
 }
 

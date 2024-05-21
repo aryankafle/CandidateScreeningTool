@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { users, savedLists } from "../../database/MongoDB.database.js";
 
 
@@ -94,6 +95,10 @@ export const getUserSavedLists = async (owner) => {
 
 export const getExternalList = async (extListID) => {
 
-    return await savedLists.findOne({ _id: { $eq: extListID }})
+    const _id = new ObjectId(extListID)
+
+    const savedList = await savedLists.findOne({ _id })
+    
+    return savedList
 
 }

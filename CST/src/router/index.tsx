@@ -64,8 +64,6 @@ function Router() {
 
     useEffect(() => {
 
-        if (route.pathname.includes("results")) return
-
         deleteUnusedFiles()
         
         getUser()
@@ -86,6 +84,8 @@ function Router() {
                 setCurrentSavedList(savedList)
 
             }
+
+            if (route.pathname.includes("results")) return
 
             navigate("/home")
 

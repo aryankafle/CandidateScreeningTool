@@ -12,7 +12,7 @@ import MultilineInput from "../../components/forms/MultilineInput"
 import InputBox from "../../components/forms/InputBox";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import { saveList, deleteSavedList, getExternalList } from "../../requests/ResumeRequests";
+import { saveList, deleteSavedList, getExternalList, createResumeResult, getResumeResult } from "../../requests/ResumeRequests";
 import { useSelectableList } from "../../hooks/SelectableList";
 import uFuzzy from "@leeoniya/ufuzzy"
 import BatchContext from '../../context/BatchContext';
@@ -40,7 +40,8 @@ const ResultsScreen = () => {
 
         batchResults,
         fileIDs,
-        clearBatchContext
+        clearBatchContext,
+        setBatchResults
 
     } = useContext(BatchContext)
 
@@ -122,18 +123,56 @@ const ResultsScreen = () => {
     useEffect(() => {
 
         setPreviouslySelectedFilters([...selectedFilters])
+        
+    }, [])
 
-        if (!listID) {
-            navigate("/home")
+
+    useEffect(() => {
+
+        if (!userData || !listID) {
             return
         }
 
-        getExternalList(listID).then((savedList) => {
+        getExternalList(listID).then(async (savedList) => {
             setCurrentSavedList(savedList)
-            
+            console.log(savedList)
+            await createBatchResults(savedList.file_ids, userData.id)
+        }).catch((error) => {
+            console.log(error)
         })
         
-    }, [])
+    }, [userData])
+
+
+
+
+
+    const createBatchResults = async (ids : string[], userid : string) => {
+
+        const scoredResumePromises = ids.map( id => getResumeResult(id, userid ) )
+
+        const scoredResumeSettleResults = await Promise.allSettled( scoredResumePromises )
+
+        const results = []
+
+        for(const settleResult of scoredResumeSettleResults) {
+
+            if(settleResult.status === "fulfilled") {
+
+                const result : Result = settleResult.value
+                
+                results.push(result)
+                setBatchResults( results )
+
+                continue;
+
+            }
+
+            // Do thing with error files here
+
+        }
+
+    }
 
 
 

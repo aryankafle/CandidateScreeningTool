@@ -103,7 +103,7 @@ export const getUserExternalList = async (req, res) => {
 
     try {
 
-        const externalList = await getExternalList(req.body?.listID)
+        const externalList = await getExternalList(req.query?.listID)
 
         res.status(200).send(externalList)
 
