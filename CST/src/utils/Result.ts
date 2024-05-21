@@ -76,8 +76,6 @@ export function resultFromJSON(jsonresult : any) {
 
 export const getResults = async (list : SavedList, userID : string) => {
 
-    console.log(list.file_ids)
-
     const settleResults = await Promise.allSettled( list.file_ids.map( fileID => getResumeResult( fileID, list._id, userID ) ) )
 
     const successfulResults : Result[] = []
