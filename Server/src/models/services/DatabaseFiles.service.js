@@ -6,15 +6,17 @@ import streamifier from "streamifier"
 
 
 
-export const uploadFile = async (file, textScan, userID) => {
+export const uploadFile = async (file, userID) => {
 
     const file_name = file.originalname
+    const file_type = file.mimetype
     const file_id = new ObjectId()
-    const text_scan = textScan
 
 
 
-    const CHUNK_SIZE = 65536 // 2^16
+
+
+    const CHUNK_SIZE = 16384 // 2^16
 
     streamifier
     .createReadStream(file.buffer)
@@ -25,7 +27,8 @@ export const uploadFile = async (file, textScan, userID) => {
             chunkSizeBytes: CHUNK_SIZE,
             metadata: {
                 file_name,
-                text_scan,
+                file_type,
+                text_scan: "",
                 results: [],
                 user_id: userID
             }

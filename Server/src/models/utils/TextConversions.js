@@ -1,44 +1,24 @@
-import { pdfToPng } from 'pdf-to-png-converter'
 import { createWorker } from 'tesseract.js';
 import WordExtractor from "word-extractor"
+import { convertPdfStreamToPngBuffers, streamToBuffer } from "./FileConversions.js"
 
 
 
 
 
-export async function changePdfToText(pdfFile) {
+export async function changePdfStreamToText(pdfStream) {
 
-    const pngPages = await pdfToPng(pdfFile.buffer, {
-        viewportScale: 2.0,
-    });
-
-    const textScannedFromPages = await Promise.all(
-        pngPages.map(
-            (page) => {
-                return changePngToText(page.content)
-            }
-    ))
-
-    
+    const pngs = await convertPdfStreamToPngBuffers(pdfStream)
 
     let totalText = ""
 
-    textScannedFromPages.forEach(textFromPage => {
-        totalText += textFromPage.text
-    });
-
-
-
-
-
-    const fileText = {
-        text: totalText,
-        fileName: pdfFile.originalname
-    }
+    await Promise.all(
+        
+        pngs.forEach( (png) => totalText.push( changePngBufferToText(png) )
     
+    ))
 
-
-    return fileText
+    return totalText
 
 }
 
@@ -46,26 +26,17 @@ export async function changePdfToText(pdfFile) {
 
 
 
-export async function changeWordToText(wordFile) {
+export async function changeWordStreamToText(wordStream) {
+
+    const buffer = streamToBuffer(wordStream)
 
     const extractor = new WordExtractor()
 
-    const extractionResult = await extractor.extract(wordFile.buffer)
+    const extractionResult = await extractor.extract(buffer)
 
-    const extractedText = extractionResult.getBody()
-    
+    const extractedText = extractionResult.getBody()    
 
-
-
-    
-    const fileText = {
-        text: extractedText,
-        fileName: wordFile.originalname
-    }
-    
-
-
-    return fileText
+    return extractedText
 
 }
 
@@ -73,24 +44,32 @@ export async function changeWordToText(wordFile) {
 
 
 
-export async function changePngToText(pngFile) {
+export async function changePngStreamToText(pngStream) {
+
+    const buffer = streamToBuffer(pngStream)
 
     const worker = await createWorker('eng');
     
-    const dataFromWorker = ( await worker.recognize(pngFile.buffer) ).data
+    const dataFromWorker = ( await worker.recognize(buffer) ).data
+
+    await worker.terminate();
+
+    return dataFromWorker.text
+
+}
 
 
 
 
 
-    const fileText = {
-        text: dataFromWorker.text,
-        fileName: pngFile.originalname
-    }
+export async function changePngBufferToText(pngBuffer) {
 
-    worker.terminate();
+    const worker = await createWorker('eng');
     
+    const dataFromWorker = ( await worker.recognize(pngBuffer) ).data
 
+    await worker.terminate();
 
-    return fileText
+    return dataFromWorker.text
+
 }

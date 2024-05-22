@@ -83,7 +83,24 @@ app.use("/auth", authRoutes)
 
 
 
-const storage = multer.memoryStorage()
+const storage = multer.diskStorage({
+
+    destination: (req, file, cb) => {
+    
+        cb(null, '/tmp/uploads')
+
+    },
+
+    filename: (req, file, cb) => {
+
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        
+        cb(null, file.fieldname + "-" + uniqueSuffix)
+
+    }
+    
+})
+
 const upload = multer({
     storage: storage
 });
