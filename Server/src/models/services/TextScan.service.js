@@ -2,7 +2,7 @@ import {
 
     changePdfStreamToText,
     changeWordStreamToText,
-    changePngToText,
+    changePngStreamToText,
 
 } from "../utils/TextConversions.js"
 
@@ -15,20 +15,20 @@ export async function convertFileToText(readstream, mimetype) {
     switch(mimetype){
 
         case "application/pdf":
-            
-            const pdfText = await changePdfToText(readstream)
+
+            const pdfText = await changePdfStreamToText(readstream)
 
             return pdfText
         
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 
-            const wordText = await changeWordToText(readstream)
+            const wordText = await changeWordStreamToText(readstream)
 
             return wordText
         
         case "image/png":
 
-            const pngText = await changePngToText(readstream)
+            const pngText = await changePngStreamToText(readstream)
 
             return pngText
 

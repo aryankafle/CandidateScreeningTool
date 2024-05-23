@@ -47,12 +47,7 @@ export async function getQueryAboutResume(scannedText, query, scores) {
     messages.push({
         role: "system",
         content: 
-        `
-        Be sure to ONLY respond in the following JSON format:
-        {
-            response: <YOUR_RESPONSE>
-        }
-        `
+        `Respond in the following JSON format: {response: <YOUR_RESPONSE>}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content
@@ -108,10 +103,7 @@ export async function resummarizeResumeOverall(scannedText, previousSummary, sum
         content: 
         `
         Please provide an updated overall summary of the resume. Do not include any specific contact information in your response.
-        Be sure to ONLY respond in the following JSON format:
-        {
-            summary: <NEW_SUMMARY>
-        }
+        Respond in the following JSON format: {summary: <NEW_SUMMARY>}
         `
     })
 
@@ -157,12 +149,7 @@ export async function renameResumeApplicant(scannedText, previousName) {
     messages.push({
         role: "system",
         content: 
-        `
-        Be sure to ONLY respond in the following JSON format:
-        {
-            name: <NEW_NAME>
-        }
-        `
+        `Respond in the following JSON format: {name: <NEW_NAME>}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content
@@ -228,10 +215,7 @@ export async function rescoreOneResumeOneFilter(scannedText, filter, previousSco
         content: 
         `
         Please responsd with an updated score for this resume based on the previous criteria.
-        Be sure to ONLY respond in the following JSON format:
-        {
-            score: <NEW_SCORE>
-        }
+        Respond in the following JSON format: {score: <NEW_SCORE>}
         `
     })
 
@@ -245,7 +229,7 @@ export async function rescoreOneResumeOneFilter(scannedText, filter, previousSco
 
 
 
-export async function getFilterScoresForResume(resumeFile, filters) {
+export async function getFilterScoresForResume(scannedText, filters) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -254,8 +238,6 @@ export async function getFilterScoresForResume(resumeFile, filters) {
     
 
     const messages = []
-
-    const scannedText = resumeFile.text;
 
     messages.push({
         role: "system",
@@ -276,16 +258,7 @@ export async function getFilterScoresForResume(resumeFile, filters) {
 
     messages.push({
         role: "system",
-        content: `Respond in the following JSON format:
-        {
-            scores: [
-                {filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>},
-                {filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>},
-                ...
-                {filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>}
-            ]
-        }`
-
+        content: `Respond in the following JSON format: {scores: [{filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>}, {filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>}, ... {filter: <CRITERIA_NAME>, value: <SCORE>, rationale: <BRIEF_RATIONALE>}]}`
     })
 
 
@@ -313,7 +286,7 @@ export async function getFilterScoresForResume(resumeFile, filters) {
 
 
 
-export async function getSectionSummariesForResume(resumeFile) {
+export async function getSectionSummariesForResume(scannedText) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -322,8 +295,6 @@ export async function getSectionSummariesForResume(resumeFile) {
     
 
     const messages = []
-
-    const scannedText = resumeFile.text;
 
     messages.push({
         role: "system",
@@ -339,11 +310,7 @@ export async function getSectionSummariesForResume(resumeFile) {
 
     messages.push({
         role: "system",
-        content: `Always include section summaries for "Skills" and "Experience".
-        If you cannot find information that pertains to one of these default sections, use the string "NULL" as a placeholder.
-        In addition to the two sections mentioned, create various section summaries based on other relevant/sectioned information in this resume.
-        Do not include a section for contact information.
-        Do not create more than 8 additional section summaries in total.`
+        content: `Do not include a section for contact information. Section names may not exceed one word. Summaries may not exceed 1 paragraph.`
     })
 
 
@@ -351,17 +318,7 @@ export async function getSectionSummariesForResume(resumeFile) {
     messages.push({
         role: "system",
         content: 
-        `Respond in the following JSON format:
-        {
-            summaries: {
-                <SECTION_NAME>: <BRIEF_SUMMARY>,
-                <SECTION_NAME>: <BRIEF_SUMMARY>,
-                <SECTION_NAME>: <BRIEF_SUMMARY>,
-                <SECTION_NAME>: <BRIEF_SUMMARY>,
-                ...
-                <SECTION_NAME>: <BRIEF_SUMMARY>,
-            }
-        }`
+        `Respond in the following JSON format: {summaries: {<SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, ... <SECTION_NAME>: <BRIEF_SUMMARY>}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content
@@ -374,7 +331,7 @@ export async function getSectionSummariesForResume(resumeFile) {
 
 
 
-export async function getOverallSummaryForResume(resumeFile) {
+export async function getOverallSummaryForResume(scannedText) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -383,8 +340,6 @@ export async function getOverallSummaryForResume(resumeFile) {
 
 
     const messages = []
-
-    const scannedText = resumeFile.text;
 
     messages.push({
         role: "system",
@@ -408,8 +363,7 @@ export async function getOverallSummaryForResume(resumeFile) {
     messages.push({
         role: "system",
         content: 
-        `Respond in the following JSON format:
-        { summary: <BRIEF_SUMMARY> }`
+        `Respond in the following JSON format: {summary: <BRIEF_SUMMARY>}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content
@@ -422,7 +376,7 @@ export async function getOverallSummaryForResume(resumeFile) {
 
 
 
-export async function getApplicantFromResume (resumeFile) {
+export async function getApplicantFromResume (scannedText) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -431,8 +385,6 @@ export async function getApplicantFromResume (resumeFile) {
 
     
     const messages = []
-
-    const scannedText = resumeFile.text;
 
     messages.push({
         role: "system",
@@ -449,12 +401,7 @@ export async function getApplicantFromResume (resumeFile) {
     messages.push({
         role: "system",
         content: 
-        `Be sure to ONLY respond in the following JSON format:
-        { 
-            applicant: {
-                name: <CANDIDATE_NAME>
-            }
-        }`
+        `If you cannot find a name, simply populate the neccesary field with "null". Be sure to ONLY respond in the following JSON format: {applicant: {name: <CANDIDATE_NAME>}}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content

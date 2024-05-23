@@ -9,6 +9,9 @@ import { sessionConfig } from "./config/session.config.js"
 
 import cors from "cors";
 import multer from "multer"
+import { GridFsStorage } from "multer-gridfs-storage"
+import { resumeDB } from "./database/MongoDB.database.js"
+import { getFileMetadata } from "./middlewares/authorization/CreateFileMetadata.js"
 
 
 
@@ -83,22 +86,11 @@ app.use("/auth", authRoutes)
 
 
 
-const storage = multer.diskStorage({
+const storage = new GridFsStorage({
 
-    destination: (req, file, cb) => {
-    
-        cb(null, '/tmp/uploads')
+    db: resumeDB,
+    file: getFileMetadata
 
-    },
-
-    filename: (req, file, cb) => {
-
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        
-        cb(null, file.fieldname + "-" + uniqueSuffix)
-
-    }
-    
 })
 
 const upload = multer({

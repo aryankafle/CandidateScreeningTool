@@ -2,7 +2,7 @@ import express from "express";
 
 import {
 
-    uploadResumeToDatabase
+    getUploadId,
     
 } from "../controllers/Uploads.controller.js"
 
@@ -14,7 +14,7 @@ const router = express.Router();
 
 
 
-router.post("/upload-resume", uploadResumeToDatabase)
+router.post("/upload-resume", getUploadId)
 
 
 

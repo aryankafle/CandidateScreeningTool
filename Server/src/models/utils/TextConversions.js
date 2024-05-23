@@ -14,9 +14,9 @@ export async function changePdfStreamToText(pdfStream) {
 
     await Promise.all(
         
-        pngs.forEach( (png) => totalText.push( changePngBufferToText(png) )
+        pngs.map( async (png) => totalText += await changePngBufferToText(png) ) 
     
-    ))
+    )
 
     return totalText
 

@@ -1,5 +1,4 @@
-import { pdf2picConfig } from '../../config/pdf2pic.config.js'
-import { fromBuffer } from "pdf2pic"
+import { pdfToPng } from "pdf-to-png-converter"
 
 
 
@@ -25,10 +24,10 @@ export const convertPdfStreamToPngBuffers = async (pdfReadStream) => {
 
     const pdfBuffer = await streamToBuffer(pdfReadStream);
 
-    const convert = fromBuffer(pdfBuffer, pdf2picConfig)
+    const pngPages = await pdfToPng(pdfBuffer, {
+        viewportScale: 2.0,
+    });
 
-    const bulk = await convert.bulk(-1, { responseType: "buffer" } )
-
-    return bulk.map(bufferResponse => bufferResponse.buffer)
+    return pngPages.map(page => page.content)
 
 };

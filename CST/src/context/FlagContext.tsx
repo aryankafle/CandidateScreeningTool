@@ -7,7 +7,8 @@ import { ReactNode, SetStateAction, createContext, useReducer, useState } from "
 type FlagTypes = 'enough resumes' |
                  'batch name set' |
                  'filters have changed' |
-                 'user is logged in'
+                 'user is logged in' |
+                 'text scans have been created'
 
 type ActionTypes = {
 
