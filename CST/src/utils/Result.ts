@@ -60,7 +60,7 @@ export function resultFromJSON(jsonresult : any) {
 
     const result : Result = {
 
-        filterScores: jsonresult.filterScores,
+        filterScores: jsonresult.filterScores.sort((scoreA : any, scoreB : any) => scoreA.value - scoreB.value),
         _id: jsonresult._id,
         applicant: jsonresult.applicant,
         summaries: jsonresult.summaries,
