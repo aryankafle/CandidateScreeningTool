@@ -11,20 +11,19 @@ import {
 
 export async function censorContactInfo(textScan) {
     
-    const censoredPhoneText = await censorPhone(textScan.text)
-    const censoredEmailText = await censorEmail(censoredPhoneText.text)
+    const censoredPhoneInfo = censorPhone(textScan)
+    const censoredEmailInfo = censorEmail(censoredPhoneInfo.text)
     
     const contactInfo = {
 
-        phoneNumber: censoredPhoneText.phoneNumber, 
-        emailAddress: censoredEmailText.emailAddress,
+        phoneNumber: censoredPhoneInfo.phoneNumber, 
+        emailAddress: censoredEmailInfo.emailAddress,
 
     }
 
-
     return {
 
-        text: censoredEmailText.text,
+        text: censoredEmailInfo.text,
         contactInfo: contactInfo
         
     }

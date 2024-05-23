@@ -1,40 +1,7 @@
 import { fileBuckets, fileMetadata, savedLists } from "../../database/MongoDB.database.js"
 import { ObjectId } from "mongodb"
-import streamifier from "streamifier"
 
 
-
-
-
-export const uploadFile = async (file, textScan, userID) => {
-
-    const file_name = file.originalname
-    const file_id = new ObjectId()
-    const text_scan = textScan
-
-
-
-    const CHUNK_SIZE = 65536 // 2^16
-
-    streamifier
-    .createReadStream(file.buffer)
-    .pipe(fileBuckets.openUploadStream(
-        file_name,
-        {
-            id: file_id,
-            chunkSizeBytes: CHUNK_SIZE,
-            metadata: {
-                file_name,
-                text_scan,
-                results: [],
-                user_id: userID
-            }
-        }
-    ))
-
-    return file_id
-
-}
 
 
 
@@ -50,12 +17,30 @@ export async function downloadFileMetadata(fileID) {
 
 }
 
+export async function changeFileTextscan(fileID, text_scan) {
+
+    const _id = new ObjectId(fileID)
+
+    await fileMetadata.updateOne( { _id }, { $set: { "metadata.text_scan": text_scan } } )
+
+}
+
+export async function changeFileContactInfo(fileID, contact_info) {
+
+    const _id = new ObjectId(fileID)
+
+    await fileMetadata.updateOne( { _id }, { $set: { "metadata.contact_info": contact_info } } )
+
+}
+
 export async function downloadFileReadStream(fileID) {
 
-    const stream = fileBuckets.openDownloadStream( fileID )
+    const _id = new ObjectId(fileID)
+
+    const stream = fileBuckets.openDownloadStream( _id )
 
     if(!stream) return undefined
-
+    
     return stream
 
 }

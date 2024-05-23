@@ -83,6 +83,28 @@ export const uploadResumeToDatabase = (
 
 
 
+
+
+export const runTextScanOnFile = async (
+
+    fileID : string,
+    userID : string
+
+) => {
+
+    await axios.put( `${process.env.REACT_APP_SERVER_NAME}/resumes/create-text-scan`, {
+
+        fileID,
+        userID
+
+    })
+
+}
+
+
+
+
+
 export const createResumeResult = (
 
     filters : Filter[],

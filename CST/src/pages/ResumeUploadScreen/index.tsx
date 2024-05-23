@@ -6,7 +6,7 @@ import Button from '../../components/buttons/ImprovedButtonComponent'
 import Modal from '../../components/modals/Modal';
 import ViewFilePopup from "../../components/modals/ViewFilePopup";
 import { useSelectableList } from "../../hooks/SelectableList";
-import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
+import { runTextScanOnFile, uploadResumeToDatabase } from "../../requests/ResumeRequests";
 import UserContext from "../../context/UserContext";
 import FlagContext from "../../context/FlagContext"
 import SelectionContext from "../../context/SelectionContext";

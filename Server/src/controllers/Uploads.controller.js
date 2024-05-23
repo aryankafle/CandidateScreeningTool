@@ -1,88 +1,24 @@
-import { censorContactInfo } from "../models/services/InfoCensor.service.js";
-import { uploadFile } from "../models/services/DatabaseFiles.service.js";
-import { convertFileToText } from "../models/services/TextScan.service.js";
-
-import { tokenLimits } from "../config/openai.config.js";
-import { getNumTokensFromString } from "../models/utils/OpenAIQueryHelpers.js";
-
-
-
-
-
-export const uploadResumeToDatabase = async (req, res) => {
-
-    const userID = req.body?.userID
-    const file = req.file
-
-
-
-
-
-    const textScan = await convertFileToText(file)
-
-    if(!textScan) {
-
-        return res.status(500).json({
-
-            error: true,
-            fileName: file.originalname,
-            fileType: file.mimetype,
-            message: `Error getting text scan for file ${file.originalname} of type ${file.mimetype}.`
-        
-        })
-
-    }
-
-    const censoredScan = await censorContactInfo(textScan)
-
-
-
-    const censoredScanTokenNum = getNumTokensFromString(censoredScan.text)
-    
-    if(censoredScanTokenNum  > tokenLimits.SCAN_TOKEN_LIMIT) {
-
-        return res.status(500).json({
-
-            error: true,
-            fileName: file.originalname,
-            fileType: file.mimetype,
-            tokenLength: censoredScanTokenNum,
-            maxTokens: tokenLimits.SCAN_TOKEN_LIMIT,
-            message: `Text scan for file ${file.originalname} of type ${file.mimetype}, which uses ${censoredScanTokenNum} is over the token limit of ${tokenLimits.SCAN_TOKEN_LIMIT}!`
-        
-        })
-
-    }
-
-
+export const getUploadId = async (req, res) => {
 
     try {
 
-        const fileID = await uploadFile(file, censoredScan, userID)
+        const fileID = req.file.id
 
-        return res.status(200).json({
-            
+        res.status(200).json({
+        
             fileID,
-            censoredScan,
-            error: false,
-            fileName: file.originalname,
-            fileType: file.mimetype,
-            message: `Successfully uploaded file ${file.originalname} of type ${file.mimetype} with id ${fileID} to DB!`
+            message: "Succesful Upload"
     
-        })    
-    
+        })
+
     }
     catch (error) {
 
-        console.log(`Error uploading file ${file.originalname} of type ${file.mimetype}: `, error)
+        res.status(500).json({
 
-        return res.status(500).json({
-            
             error: true,
-            fileName: file.originalname,
-            fileType: file.mimetype,
-            message: `Error uploading file ${file.originalname} of type ${file.mimetype}.`
-        
+            message: "Could not get fileID."
+
         })
 
     }

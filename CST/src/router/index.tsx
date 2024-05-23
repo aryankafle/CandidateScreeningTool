@@ -61,9 +61,7 @@ function Router() {
 
 
     useEffect(() => {
-
-        deleteUnusedFiles()
-        
+    
         getUser()
         .then(async (userData) => {
 

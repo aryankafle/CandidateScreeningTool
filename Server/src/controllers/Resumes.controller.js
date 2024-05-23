@@ -6,6 +6,8 @@ import {
     downloadFileFilters,
     deleteUnusedFileIDs,
     addResultToFile,
+    changeFileTextscan,
+    changeFileContactInfo
 
 } from "../models/services/DatabaseFiles.service.js";
 
@@ -16,7 +18,67 @@ import {
 
 } from "../models/services/SavedLists.service.js";
 
+import { censorContactInfo } from "../models/services/InfoCensor.service.js";
+import { convertFileToText } from "../models/services/TextScan.service.js";
+
+import { tokenLimits } from "../config/openai.config.js";
+import { getNumTokensFromString } from "../models/utils/OpenAIQueryHelpers.js";
+
 import { ObjectId } from "mongodb";
+
+
+
+
+
+export const runTextScanOnResume = async (req, res) => {
+
+    const fileID = req.body?.fileID
+
+    if(!fileID) return res.status(400).send("No fileID in request!")
+
+
+
+
+
+    try {
+
+        const readstream = await downloadFileReadStream(fileID)
+
+        const metadata = await downloadFileMetadata(fileID)
+        const { file_type } = metadata
+    
+    
+
+        const textScan = await convertFileToText(readstream, file_type)
+    
+        const censoredScan = await censorContactInfo(textScan)
+    
+    
+    
+        const censoredScanTokenNum = getNumTokensFromString(censoredScan.text)
+        
+        if(censoredScanTokenNum  > tokenLimits.SCAN_TOKEN_LIMIT) {
+    
+            return res.status(500).send(`Text scan for this file, which uses ${censoredScanTokenNum} is over the token limit of ${tokenLimits.SCAN_TOKEN_LIMIT}!`)
+        
+        }
+
+        await changeFileTextscan(fileID, censoredScan.text)
+
+        await changeFileContactInfo(fileID, censoredScan.contactInfo)
+
+        return res.status(200).send("Successfully created text-scan.")
+        
+    }
+    catch (error) {
+
+        console.log(error)
+
+        return res.status(500).send("Error uploading file.")
+
+    }
+
+}
 
 
 

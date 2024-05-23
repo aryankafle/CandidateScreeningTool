@@ -3,6 +3,8 @@ import express from "express";
 
 
 import {
+    
+    runTextScanOnResume,
 
     addNewSavedList,
     removeOldSavedList,
@@ -32,6 +34,8 @@ import {
 const router = express.Router();
 
 
+
+router.put("/create-text-scan", runTextScanOnResume)
 
 router.post("/create-list", addNewSavedList)
 router.delete("/remove-list", removeOldSavedList)
