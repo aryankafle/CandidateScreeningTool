@@ -101,7 +101,7 @@ export const addResultToFile = async (fileID, from_saved_list, result) => {
 
     const _id = new ObjectId(fileID)
 
-    await fileMetadata.updateOne({ _id }, { $push : { "metadata.results": {result} }, $set : {"metadata.from_saved_list": from_saved_list } } )
+    await fileMetadata.updateOne({ _id }, { $push : { "metadata.results": {result} }, $push : { "metadata.from_saved_list": {from_saved_list} } } )
 
 }
 
