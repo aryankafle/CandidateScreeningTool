@@ -6,12 +6,12 @@ import BatchContext from '../../context/BatchContext';
 import FlagContext from '../../context/FlagContext';
 import SelectionContext from '../../context/SelectionContext';
 
-import type { Filter } from '../../utils/Filter';
-import { generateHasDegreeLevelFilter, generateCompanyNameFilter, generateHasWorkExperienceFilter, generateKeywordBiasFilter, generateYearsOfWorkExperienceFIlter } from "../../utils/Filter"
+import type { Filter, Degree } from '../../utils/Filter';
+import { generateHasDegreeLevelFilter, generateCompanyNameFilter, generateHasWorkExperienceFilter, generateKeywordBiasFilter, generateYearsOfWorkExperienceFIlter } from '../../utils/Filter';
 
 
 
-import { IconButton, useTheme } from "@mui/material"; 
+import { IconButton, ToggleButtonGroup, useTheme } from "@mui/material"; 
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -23,6 +23,7 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StartIcon from '@mui/icons-material/Start';
+import ToggleButton from '@mui/material/ToggleButton';
 
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 import DraggableList from '../../components/views/DraggableList/';
@@ -35,6 +36,8 @@ import { BackButton } from '../../components/buttons/BackButton';
 const FilterScreen = () => {
 
     const { palette } = useTheme()
+
+    const [ currentDegreeLevel, setCurrentDegreeLevel ] = useState<Degree | null>(null)
 
     const { selectedFilters, setSelectedFilters } = useContext(SelectionContext)
     const { previouslySelectedFilters } = useContext(SelectionContext)
@@ -92,6 +95,27 @@ const FilterScreen = () => {
 
 
 
+    function handleDegreeChange(_ : any, value: Degree | undefined) {
+
+        if(!value) {
+
+            setCurrentDegreeLevel(null)
+            return;
+
+        }
+
+        setCurrentDegreeLevel(value)
+        
+    }
+
+    useEffect(() => {
+
+
+
+    }, [currentDegreeLevel, setSelectedFilters])
+
+
+
 
     return (
         <Stack
@@ -108,7 +132,7 @@ const FilterScreen = () => {
                 px={"1rem"}
             >
 
-                <BackButton />
+                <BackButton navto={"/home/resume-upload"} />
 
                 <Button
                     variant='contained'
@@ -198,12 +222,32 @@ const FilterScreen = () => {
                         Add Filters
                     </Typography>
 
-                    <Button
-                        variant="contained"
-                        onMouseDown={() => {setSelectedFilters(prevFilters => [...prevFilters, generateHasWorkExperienceFilter()])}}
+                    <Stack
+                        direction={"row"}
                     >
-                        add test
-                    </Button>
+                        <ToggleButtonGroup
+                            size='large'
+                            value={currentDegreeLevel}
+                            onChange={handleDegreeChange}
+                            exclusive={true}
+                        >
+                            <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
+                                Associates
+                            </ToggleButton>,
+                            <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
+                                Bachelors
+                            </ToggleButton>,
+                            <ToggleButton aria-label={"master's"} value="master's" key="masters">
+                                Masters
+                            </ToggleButton>,
+                            <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
+                                Doctorate
+                            </ToggleButton>
+                            <ToggleButton aria-label={"any"} value="any" key="any">
+                                Any
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Stack>
 
                 </Stack>
 

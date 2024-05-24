@@ -99,6 +99,15 @@ const ResumeUploadScreen = () => {
 
 
 
+    useEffect(() => {
+
+        updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
+
 
 
     const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
@@ -195,9 +204,11 @@ const ResumeUploadScreen = () => {
 
         setShowConfirmFilesModal(false);
 
+        updateFlag({flag: 'uploads have been processed', action: 'activate'})
+
         navigate("/filter")
 
-    }, [getFileIds, navigate, setLoadingState])
+    }, [getFileIds, navigate, setLoadingState, updateFlag])
 
 
 

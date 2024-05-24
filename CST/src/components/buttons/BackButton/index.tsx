@@ -6,10 +6,16 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useTheme } from "@mui/material"; 
 
 
+type BackButtonProps = {
+
+    navto: string
+
+}
 
 
 
-export const BackButton = () => {
+
+export const BackButton = ({ navto } : BackButtonProps) => {
 
     const navigate = useNavigate()
 
@@ -19,7 +25,7 @@ export const BackButton = () => {
     return (
         <IconButton
             color={"default"}
-            onMouseDown={() => navigate(-1)}
+            onMouseDown={() => navigate(navto)}
         >
             <ArrowBackIcon 
                 sx={{

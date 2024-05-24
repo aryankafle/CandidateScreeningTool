@@ -19,6 +19,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { SignInButton } from "../../buttons/SignInButton"
 import { SignOutButton } from "../../buttons/SignOutButton"
+import FlagContext from "../../../context/FlagContext"
 
 
 
@@ -47,6 +48,10 @@ const HeaderComponent = () => {
 
     const { userData, isLoggedIn } = useContext(UserContext)
 
+    const { flags } = useContext(FlagContext)
+
+    
+
 
 
 
@@ -67,7 +72,18 @@ const HeaderComponent = () => {
             }
             
             <Button
-                onMouseDown={() => navigate("/home/resume-upload")}
+                onMouseDown={() => {
+
+                    if(flags.active.includes('uploads have been processed')) {
+
+                        navigate("/filter")
+                        return;
+
+                    }
+
+                    navigate("/home/resume-upload")
+                    
+                }}
                 fullWidth
                 sx={{
                 }}

@@ -7,7 +7,7 @@ export type Filter = {
 
 }
 
-export type Degree = `associates` | `bachelor's` | `master's` | `doctoral` | `any`
+export type Degree = `associate's` | `bachelor's` | `master's` | `doctoral` | `any`
 
 
 

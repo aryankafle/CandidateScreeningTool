@@ -8,7 +8,8 @@ type FlagTypes = 'enough resumes' |
                  'batch name set' |
                  'filters have changed' |
                  'user is logged in' |
-                 'text scans have been created'
+                 'text scans have been created' |
+                 'uploads have been processed'
 
 type ActionTypes = {
 
