@@ -1,81 +1,97 @@
-import { UniquelyIdentified } from "./UniquelyIdentified";
-import { MAX_SCORE } from "./Result";
+export type Filter = {
 
-export abstract class Filter implements UniquelyIdentified {
+    id: string
+    query: string,
+    description: string,
+    name: string
 
-    readonly id : string = crypto.randomUUID()
+}
 
-    public readonly filterQuery;
-    public readonly description;
-    public readonly quantity?
-
-
-
-    constructor(description : string, filterQuery : string, quantity? : number) {
-        
-        this.filterQuery = filterQuery
-        this.filterQuery = `
-            ${filterQuery}
-
-            The score must be between 0 and ${MAX_SCORE}
-        `
-
-        this.description = description
-        this.quantity = quantity
-    }
+export type Degree = `associates` | `bachelor's` | `master's` | `doctoral` | `any`
 
 
 
-    public toString() {
 
-        return `${this.id}: ${this.quantity} ${this.description}`
+
+export function generateHasDegreeLevelFilter(degree : Degree) {
+
+    const degreeFilter : Filter = {
+
+        id: crypto.randomUUID(),
+        name: `Degree Level: ${degree.toLocaleUpperCase()}`,
+        description: `Degree Level: ${degree.toLocaleUpperCase()}`,
+        query: `The resume should display that the applicant has a collegiate ${degree} degree, or higher.`
 
     }
 
+    return degreeFilter
 
-
-    public toJSON() {
-        return {
-
-            id: this.id,
-
-            filterName: this.description,
-            filterQuantity: this.quantity,
-
-            query: this.filterQuery,
-
-        }
-    }
+}
 
 
 
-    /* For content-level deep comparisons of Filters */
-    public equals(obj: Object) {
-        
-        const filter = obj as Filter
+export function generateKeywordBiasFilter(keywordToBias : string) : Filter {
 
-        if(filter) {
-            
-            return filter.description === this.description && filter.quantity === this.quantity
-        }
+    const keywordBias : Filter = {
 
-        return false
+        id: crypto.randomUUID(),
+        name: `Keyword Bias: ${keywordToBias}`,
+        description: `Keyword: ${keywordToBias}`,
+        query: `The resume should bias the keyword ${keywordToBias} or words near it.`
 
     }
 
+    return keywordBias
+
+}
 
 
-    /* For id-level deep comparisons of Filters */
-    public is(obj: Object) {
-        
-        const filter = obj as Filter
 
-        if(filter) {
-            return filter.id === this.id && filter.description === this.description && filter.quantity === this.quantity
-        }
+export function generateYearsOfWorkExperienceFIlter(yearsOfWork : number) : Filter {
 
-        return false
+    const yearsOfWorkExperience : Filter = {
+
+        id: crypto.randomUUID(),
+        name: `Work Experience (yrs): ${yearsOfWork}`,
+        description: `Years of Work Experience: ${yearsOfWork}`,
+        query: `The resume should directly state or strongly imply that the applicant has ${yearsOfWork} or more years of professional experience in their field.`
 
     }
+
+    return yearsOfWorkExperience
+    
+}
+
+
+
+export function generateCompanyNameFilter(nameOfCompany : string) : Filter {
+
+    const companyName : Filter = {
+
+        id: crypto.randomUUID(),
+        name: `Company: ${nameOfCompany}`,
+        description: `Company: ${{nameOfCompany}}`,
+        query: `The resume should directly state or strongly imply that the applicant works at or previusly worked at ${nameOfCompany}.`
+
+    }
+
+    return companyName
+
+}
+
+
+
+export function generateHasWorkExperienceFilter() {
+
+    const experiencefilter : Filter = {
+
+        id: crypto.randomUUID(),
+        name: `Work Experience?`,
+        description: `Work Experience?`,
+        query: `The resume should display that the applicant has prevoius proffesional work experience.`
+
+    }
+
+    return experiencefilter
 
 }
