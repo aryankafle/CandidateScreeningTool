@@ -13,13 +13,14 @@ type ConfirmFilesModalProps = {
     
     open : boolean
     onClose: () => void
+    onConfirm: () => void
     numUploads: number
 
 }
 
 
 
-export const ConfirmFilesModal = ({ onClose, open, numUploads } : ConfirmFilesModalProps) => {
+export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : ConfirmFilesModalProps) => {
 
     const { palette } = useTheme()
 
@@ -69,18 +70,41 @@ export const ConfirmFilesModal = ({ onClose, open, numUploads } : ConfirmFilesMo
 
                 </Stack>
 
-                <Button
-                    variant="contained"
-                    sx={{
-                        fontSize: "1.5em",
-                        alignSelf: "center",
-                        px: "2vw",
-                        my: "2vh"
-                    }}
-                    onMouseDown={onClose}
+                <Stack
+                    direction={"row"}
+                    justifyContent={"center"}
+                    alignContent={"center"}
+                    gap={"4vw"}
                 >
-                    Confirm
-                </Button>
+                    
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontSize: "1.5em",
+                            alignSelf: "center",
+                            px: "2vw",
+                            my: "2vh"
+                        }}
+                        onMouseDown={onConfirm}
+                    >
+                        Confirm
+                    </Button>
+
+                    <Button
+                        variant="text"
+                        sx={{
+                            fontSize: "1.5em",
+                            alignSelf: "center",
+                            px: "2vw",
+                            my: "2vh"
+                        }}
+                        onMouseDown={onClose}
+                    >
+                        Cancel
+                    </Button>
+
+                </Stack>
+
 
             </Stack>
         </Modal>

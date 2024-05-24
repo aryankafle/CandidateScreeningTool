@@ -10,7 +10,6 @@ import { SxProps, Theme, useTheme } from "@mui/material";
 
 
 type FileUploadButtonProps = {
-    sx?: SxProps<Theme>,
     onUpload : React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
 }
 
@@ -18,16 +17,13 @@ type FileUploadButtonProps = {
 
 
 
-export const FileUploadButton = ({ sx, onUpload } : FileUploadButtonProps) => {
+export const FileUploadButton = ({ onUpload } : FileUploadButtonProps) => {
 
     const { palette } = useTheme()
 
     return (
         <>
             <Input
-                sx={{
-                    ...sx, 
-                }}
                 name="custom-file-input"
                 id="custom-file-input"
                 type="file"

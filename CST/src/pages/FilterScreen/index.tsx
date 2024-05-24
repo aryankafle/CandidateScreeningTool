@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import BatchContext from '../../context/BatchContext';
 import FlagContext from '../../context/FlagContext';
@@ -9,7 +10,8 @@ import type { Filter } from '../../utils/Filter';
 import { generateHasDegreeLevelFilter, generateCompanyNameFilter, generateHasWorkExperienceFilter, generateKeywordBiasFilter, generateYearsOfWorkExperienceFIlter } from "../../utils/Filter"
 
 
-import { useTheme } from "@mui/material"; 
+
+import { IconButton, useTheme } from "@mui/material"; 
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -20,10 +22,11 @@ import List from "@mui/material/List";
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
+import StartIcon from '@mui/icons-material/Start';
 
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 import DraggableList from '../../components/views/DraggableList/';
+import { BackButton } from '../../components/buttons/BackButton';
 
 
 
@@ -34,12 +37,10 @@ const FilterScreen = () => {
     const { palette } = useTheme()
 
     const { selectedFilters, setSelectedFilters } = useContext(SelectionContext)
-
     const { previouslySelectedFilters } = useContext(SelectionContext)
-
     const { flags, updateFlag } = useContext(FlagContext)
-
     const { loadingState, setLoadingState } = useContext(FlagContext)
+
 
 
 
@@ -81,18 +82,60 @@ const FilterScreen = () => {
 
 
 
+    async function handleRunSelectedFilters() {
+
+        setLoadingState(true)
+
+        
+
+    }
+
+
+
 
     return (
         <Stack
             width={"100%"}
             height={"100%"}
             flexGrow={1}
+            direction={"column"}
         >
+
+            <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                py={"0.7em"}
+                px={"1rem"}
+            >
+
+                <BackButton />
+
+                <Button
+                    variant='contained'
+                    endIcon={
+                    <StartIcon
+                        sx={{
+                            color: palette.primary.contrastText
+                        }}
+                    />
+                    }
+                    onMouseDown={handleRunSelectedFilters}
+                >
+                    <Typography
+                        sx={{
+                            color: palette.primary.contrastText
+                        }}
+                    >
+                        Run Selected Filters
+                    </Typography>
+                </Button>
+                
+            </Stack>
+
             <Stack
                 direction={"row"}
                 justifyContent={"space-between"}
                 height={"100%"}
-                mt={"2rem"}
                 width={"100%"}
             >
                 <Stack
@@ -165,6 +208,7 @@ const FilterScreen = () => {
                 </Stack>
 
             </Stack>
+
         </Stack>
     )
 

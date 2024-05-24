@@ -278,12 +278,8 @@ const ResumeUploadScreen = () => {
 
             <ConfirmFilesModal
                 open={(showConfirmFilesModal && hasEnoughResumes)}
-                onClose={async () => {
-
-                    await handleConfirmModal()
-                    toggleConfirmFilesModal()
-
-                }}
+                onClose={toggleConfirmFilesModal}
+                onConfirm={handleConfirmModal}
                 numUploads={uploadedFiles.length}
             />
 
