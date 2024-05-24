@@ -45,6 +45,9 @@ export const UploadCard = ({ sx, file, index, isSelected, onSelect, onDelete } :
                     onMouseDown={() => onDelete(index)}
                 >
                     <DeleteIcon
+                        sx={{
+                            color: palette.text.disabled
+                        }}
                         fontSize='medium'
                     />
                 </IconButton>
@@ -53,7 +56,7 @@ export const UploadCard = ({ sx, file, index, isSelected, onSelect, onDelete } :
                 ...sx,
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.333em",
+                padding: "0.222em",
                 backgroundColor: palette.background.paper,
             }}
         >

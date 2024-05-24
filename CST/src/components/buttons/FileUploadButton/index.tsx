@@ -41,14 +41,14 @@ export const FileUploadButton = ({ onUpload } : FileUploadButtonProps) => {
                 }}
             >
                 <Button
-                    size="large"
                     fullWidth
                     variant="contained"
                     component="span"
                 >
                     <Typography
                         sx={{
-                            fontSize: "2vw"
+                            fontSize: "2em",
+                            textAlign: "center"
                         }}
                     >
                         Upload Resumes

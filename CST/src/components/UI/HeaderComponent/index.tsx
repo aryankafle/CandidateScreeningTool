@@ -9,7 +9,7 @@ import Container from "@mui/material/Container"
 import Toolbar from "@mui/material/Toolbar"
 import IconButton from "@mui/material/IconButton"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Button, useTheme } from "@mui/material"
+import { Button, Menu, useTheme } from "@mui/material"
 
 
 
@@ -37,8 +37,6 @@ const HeaderComponent = () => {
 
     const { userData, isLoggedIn } = useContext(UserContext)
 
-    const [anchorTextUserMenu, setAnchorTextUserMenu] = useState<null | HTMLElement>(null);
-
     const [ showUserMenu, setShowUserMenu ] = useState(false)
     const toggleShowUserMenu = () => setShowUserMenu(prevOpen => !prevOpen)
 
@@ -47,89 +45,94 @@ const HeaderComponent = () => {
 
 
     return (
-        <AppBar 
-            position="sticky"
+        <Stack
+            position="relative"
+            direction={"row"}
+            justifyContent={"space-between"}
+            px={"4em"}
         >
-            <Container
-                maxWidth="xl"
+            <Menu
+                open={showUserMenu}
+                onClose={toggleShowUserMenu}
+            >
+                asdfsdf
+            </Menu>
+            { isLoggedIn ?
+            <Button
+                onMouseDown={toggleShowUserMenu}
                 sx={{
-                    padding: "0.5em"
                 }}
             >
-                <Toolbar>
-                    { isLoggedIn ?
-                    <Typography
-                        variant="subtitle1"
-                        sx={{
-                            mr: "5em"
-                        }}
-                        color={palette.text.primary}
-                    >
-                        Welcome, {userData.displayName}
-                    </Typography>
-                    :
-                    <IconButton
-                        onMouseDown={handleLogin}
-                        size="large"
-                        sx={{
-                            mr: "3em"
-                        }}
-                    >
-                        <AccountCircleIcon 
-                            sx={{
-                                fontSize: "1.3em"
-                            }}
-                        />
-                    </IconButton>
-                    }
-                    
-                    <Button
-                        variant="text"
-                        onMouseDown={() => navigate("/home/resume-upload")}
-                    >
-                        <Typography
-                            variant="subtitle1"
-                            mr={"3em"}
-                            color={palette.text.primary}
-                        >
-                            Resume Upload
-                        </Typography>
-                    </Button>
+                <AccountCircleIcon 
+                    sx={{
+                        fontSize: "1.3em",
+                        mr: "0.5rem",
+                    }}
+                />
+                <Typography
+                    sx={{
 
-                    <Button
-                        variant="text"
-                        onMouseDown={() => navigate("/home/saved-lists")}
-                    >
-                        <Typography
-                            variant="subtitle1"
-                            color={palette.text.primary}
-                            mr={"3em"}
-                        >
-                            Saved Lists
-                        </Typography>
-                    </Button>
+                    }}
+                >
+                    {userData.displayName}
+                </Typography>
+            </Button>
+            :
+            <Button
+                onMouseDown={handleLogin}
+                sx={{
+                }}
+            >
+                <AccountCircleIcon 
+                    sx={{
+                        fontSize: "1.3em",
+                        mr: "0.5rem",
+                    }}
+                />
+                <Typography
+                >
+                    Sign In
+                </Typography>
+            </Button>
+            }
+            
+            <Button
+                onMouseDown={() => navigate("/home/resume-upload")}
+                sx={{
+                }}
+            >
+                <Typography
+                    color={palette.text.primary}
+                >
+                    Resume Upload
+                </Typography>
+            </Button>
 
-                    <Button
-                        onMouseDown={handleLogout}
-                    >
-                        <Typography
-                            variant="subtitle1"
-                            justifySelf={"flex-end"}
-                            sx={{
-                                mr: "5em"
-                            }}
-                            color={palette.text.primary}
-                        >
-                            Sign Out
-                        </Typography>
-                    </Button>
+            <Button
+                onMouseDown={() => navigate("/home/saved-lists")}
+                sx={{
+                }}
+            >
+                <Typography
+                    color={palette.text.primary}
+                >
+                    Saved Lists
+                </Typography>
+            </Button>
 
+            { isLoggedIn && 
+            <Button
+                onMouseDown={handleLogout}
+            >
+                <Typography
+                    color={palette.text.primary}
+                >
+                    Sign Out
+                </Typography>
+            </Button>
+            }
 
-                </Toolbar>
-                
-            </Container>
-
-        </AppBar>
+        </Stack>
     )
 }
 

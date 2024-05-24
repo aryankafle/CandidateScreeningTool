@@ -268,7 +268,8 @@ const ResumeUploadScreen = () => {
     return (
         <Box
             width={"100%"}
-            height={"100%"}  
+            height={"100%"}
+            overflow={"auto"}
         >
 
             <NotEnoughFilesModal
@@ -315,6 +316,7 @@ const ResumeUploadScreen = () => {
 
                 <Stack
                     width={"30%"}
+                    minWidth={"20em"}
                     height={"100%"}
                     gap={"1.5em"}
                     justifyContent={"center"}
@@ -333,7 +335,7 @@ const ResumeUploadScreen = () => {
                     >
                         <Typography
                             sx={{
-                                fontSize: "2vw"
+                                fontSize: "2em"
                             }}
                         >
                             Filter Resumes
