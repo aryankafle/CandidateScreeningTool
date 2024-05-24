@@ -218,6 +218,7 @@ const FilterScreen = () => {
                             fontSize: "3vw",
                             textAlign: "center"
                         }}
+                        p={"1rem"}
                     >
                         Add Filters
                     </Typography>
@@ -225,28 +226,49 @@ const FilterScreen = () => {
                     <Stack
                         direction={"row"}
                     >
-                        <ToggleButtonGroup
-                            size='large'
-                            value={currentDegreeLevel}
-                            onChange={handleDegreeChange}
-                            exclusive={true}
+                        <Stack
+                            direction={"column"}
                         >
-                            <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
-                                Associates
-                            </ToggleButton>,
-                            <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
-                                Bachelors
-                            </ToggleButton>,
-                            <ToggleButton aria-label={"master's"} value="master's" key="masters">
-                                Masters
-                            </ToggleButton>,
-                            <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
-                                Doctorate
-                            </ToggleButton>
-                            <ToggleButton aria-label={"any"} value="any" key="any">
-                                Any
-                            </ToggleButton>
-                        </ToggleButtonGroup>
+                            <Typography
+                                sx={{
+                                    fontSize: "1vw"
+                                }}>
+                                    Candidate Has Degree:
+                            </Typography>
+
+                            <ToggleButtonGroup
+                                size='large'
+                                value={currentDegreeLevel}
+                                onChange={handleDegreeChange}
+                                exclusive={true}
+                            >
+                                <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
+                                    Associates
+                                </ToggleButton>,
+                                <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
+                                    Bachelors
+                                </ToggleButton>,
+                                <ToggleButton aria-label={"master's"} value="master's" key="masters">
+                                    Masters
+                                </ToggleButton>,
+                                <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
+                                    Doctorate
+                                </ToggleButton>
+                                <ToggleButton aria-label={"any"} value="any" key="any">
+                                    Any
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+
+                        </Stack>
+                            
+                    </Stack>
+
+                    <Stack
+                        direction={"row"}
+                    >
+
+
+
                     </Stack>
 
                 </Stack>
