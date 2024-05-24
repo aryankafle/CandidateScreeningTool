@@ -1,17 +1,29 @@
-import { IonIcon } from "@ionic/react"
-import { cloudUploadOutline, helpCircleOutline } from 'ionicons/icons';
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
+
+
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from '../../components/buttons/ImprovedButtonComponent'
-import Modal from '../../components/modals/Modal';
-import ViewFilePopup from "../../components/modals/ViewFilePopup";
-import { useSelectableList } from "../../hooks/SelectableList";
-import { runTextScanOnFile, uploadResumeToDatabase } from "../../requests/ResumeRequests";
+
 import UserContext from "../../context/UserContext";
 import FlagContext from "../../context/FlagContext"
 import SelectionContext from "../../context/SelectionContext";
-import SavedListsContext from "../../context/SavedListsContext";
 import BatchContext from "../../context/BatchContext";
+
+
+
+import { useTheme } from "@mui/material"; 
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography"
+import List from "@mui/material/List";
+
+import { UploadCard } from "../../components/list-cards/UploadCard";
+import { FileUploadButton } from "../../components/buttons/FileUploadButton";
+import { ConfirmDeleteFilesModal, ConfirmFilesModal, NotEnoughFilesModal } from "../../components/modals/ConfirmModals";
+import { LoadingModal } from "../../components/modals/LoadingModal";
+import { mean } from "simple-statistics";
 
 
 
@@ -20,7 +32,22 @@ import BatchContext from "../../context/BatchContext";
 const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
-    
+    const { palette } = useTheme()
+
+
+
+    const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
+    const toggleConfirmFilesModal = () => setShowConfirmFilesModal(prevOpen => !prevOpen)
+
+    const [showDeleteFilesConfirmModal, setShowDeleteFilesConfirmModal] = useState(false)
+    const toggleDeleteFilesConfirmModal = () => setShowDeleteFilesConfirmModal(prevOpen => !prevOpen)
+
+
+
+    const [selectedIndices, setSelectedIndices] = useState<number[]>([])
+
+
+
     const {
 
         uploadedFiles,
@@ -28,48 +55,29 @@ const ResumeUploadScreen = () => {
 
     } = useContext(SelectionContext)
 
-    const { setFileIDs, fileProgresses, setFileProgresses } = useContext(BatchContext)
+    const {
+        setFileIDs,
+        fileProgresses,
+        setFileProgresses
+    } = useContext(BatchContext)
+
+
+
+    const loadingPercent = useMemo(() => {
+
+        const avgs = fileProgresses.map(progress => (progress.uploadProgress + progress.downloadProgress)/2)
+
+        const loadingPercent = avgs.length > 0 ? mean(avgs) : 0
+
+        return loadingPercent
+
+    }, [fileProgresses])
+    
     const { flags, updateFlag } = useContext(FlagContext)
-
     const { userData } = useContext(UserContext)
-
-    const hiddenFileInput = useRef<HTMLInputElement>(null)
-
-    const [showFileModal, setShowFileModal] = useState(false)
-    const [showConfirmFilesModal, setShowConfirmFilesModal] = useState(false)
-
-    const [currentlyOpenedIndex, setCurrentlyOpenedIndex] = useState(0)
-
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
-    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
-
-    const {
-
-        selectableItems,
-
-        // getAllItems,
-        // getAllSelectedItems,
-        // getAllNotSelectedItems,
-        // amountSelected,
-        anySelected,
-
-        // previouslySelectedIndex,
-
-        // handleClickSelect,
-        // handleCtrlKeySelect,
-        // handleShiftClickSelect,
-
-        // toggleItemFromSelection,
-
-        clearSelection,
-        selectAll,
-        removeCurrentSelectionFromList,
-
-        handleSelectionOnKeyDown,
-        handleSelectionOnClick
-
-    } = useSelectableList<File>(uploadedFiles, setUploadedFiles)
+    const hasEnoughResumes = flags.active.includes('enough resumes')
 
 
 
@@ -92,7 +100,7 @@ const ResumeUploadScreen = () => {
 
 
 
-    
+
     const handleFileUpload = (event : React.ChangeEvent<HTMLInputElement>) => {
 
         event.preventDefault()
@@ -120,20 +128,6 @@ const ResumeUploadScreen = () => {
 
         setUploadedFiles(uniqueFiles)
 
-    }
-
-
-
-    const handleUploadClick = () => {
-        if(hiddenFileInput.current){
-            hiddenFileInput.current.click()
-        }
-    }
-
-
-
-    function handleAddFiltersClick() {
-        setShowConfirmFilesModal(true)
     }
 
 
@@ -191,6 +185,8 @@ const ResumeUploadScreen = () => {
 
 
 
+
+
     const handleConfirmModal = useCallback(async () => {
 
         setLoadingState(true)
@@ -205,25 +201,58 @@ const ResumeUploadScreen = () => {
 
 
 
-    const handleDeleteFiles = useCallback(() => {
-        if(window.confirm("Are you sure you want to delete the currently selected files from the batch?")) {
-            removeCurrentSelectionFromList()
-        }
-    }, [removeCurrentSelectionFromList])
+    const handleDeleteSelection = useCallback(() => {
+
+        setUploadedFiles(prevUploaded => prevUploaded.filter((someFile, someIndex) => !selectedIndices.includes(someIndex)))
+        setSelectedIndices([])
+
+    }, [selectedIndices, setUploadedFiles])
+
+    const handleToggleSelect = (index : number) => {
+
+        setSelectedIndices(prevIndices => {
+            
+            if(prevIndices.includes(index)) {
+
+                return prevIndices.filter(someIndex => someIndex !== index)
+
+            }
+
+            return [...prevIndices, index]
+            
+        })
+
+    }
+
+    const handleDeleteFile = (index : number) => {
+
+        setUploadedFiles(prevUploaded => prevUploaded.filter((someUpload, someIndex) => someIndex !== index))
+        setSelectedIndices([])
+
+    }
+
+
 
 
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
-        if(event.key === "Delete") {
-            handleDeleteFiles()
+        
+        if(event.key === "Delete" && selectedIndices.length > 0) {
+            toggleDeleteFilesConfirmModal()
+        }
 
+        if(event.key === "Escape") {
+            setSelectedIndices([])
         }
-        else {
-            handleSelectionOnKeyDown(event)
+
+        if(event.ctrlKey && event.key === "a") {
+            setSelectedIndices(new Array(uploadedFiles.length))
         }
-    }, [handleSelectionOnKeyDown, handleDeleteFiles])
+
+    }, [selectedIndices.length, uploadedFiles.length])
 
     useEffect(() => {
+        
         window.addEventListener("keydown", handleKeyDown)
 
         return () => {
@@ -236,275 +265,134 @@ const ResumeUploadScreen = () => {
 
 
 
-    const ConfirmFilesPanel = () => {
+    return (
+        <Box
+            width={"100%"}
+            height={"100%"}  
+        >
 
-        if(!flags.active.includes('enough resumes')) {
+            <NotEnoughFilesModal
+                open={(showConfirmFilesModal && !hasEnoughResumes)}
+                onClose={toggleConfirmFilesModal}
+            />
 
-            return (
+            <ConfirmFilesModal
+                open={(showConfirmFilesModal && hasEnoughResumes)}
+                onClose={async () => {
 
-                <div className="bg-white dark:bg-grayDark
-                                    flex flex-col self-center text-3xl text-white">
+                    await handleConfirmModal()
+                    toggleConfirmFilesModal()
 
-                    <div className="flex flex-col h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem]">
-                        {`Please upload at least 2 resumes!`}
-                    </div>
+                }}
+                numUploads={uploadedFiles.length}
+            />
 
-                    <div className="flex flex-row w-[100%] h-[20%] justify-center px-[13rem] pb-[0.5rem]">
-                        <Button
-                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                            onClick={() => {
-                                setShowConfirmFilesModal(false)
+            <ConfirmDeleteFilesModal
+                open={showDeleteFilesConfirmModal}
+                onClose={() => {
+                    toggleDeleteFilesConfirmModal()
+                    handleDeleteSelection()
+                }}
+                numSelected={selectedIndices.length}
+            />
+
+            <LoadingModal
+                isLoading={loadingState}
+                loadingPercent={loadingPercent}
+            />
+
+            <Stack
+                direction={"row"}
+                alignItems={"flex-start"}
+                width={"100%"}
+                height={"100%"}
+                justifyContent={"space-around"}
+                gap={"5%"}
+                paddingY={"5%"}
+                paddingX={"5%"}
+                sx={{
+                    flexGrow: 1,
+                }}
+            >
+
+
+
+                <Stack
+                    width={"30%"}
+                    height={"100%"}
+                    gap={"1.5em"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    direction={"column"}
+                >
+
+                    <FileUploadButton
+                        onUpload={handleFileUpload}
+                    />
+            
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onMouseDown={toggleConfirmFilesModal}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: "2vw"
                             }}
                         >
-                            Ok
-                        </Button>
-                    </div>
-
-                </div>
-
-            );
-
-        }
-
-
-
-        return (
-            <div className="bg-white dark:bg-grayDark
-                                flex flex-col self-center text-3xl">
-
-                { !loadingState ? 
-                <>
-                    <div className="flex flex-row justify-center h-[15%] px-[2.3rem] pt-[1.3rem] pb-[1rem] text-grayMid">
-                        {`Are you sure you want to use this batch of resumes?`}
-                    </div>
-
-                    <div className="flex flex-col flex-grow mx-[4rem] mb-[0.6rem] overflow-y-auto text-black dark:text-grayLight">
-                        {uploadedFiles.map((file) => (
-                            <div key={file.name} className="flex flex-row justify-center mx-2 py-[1rem]">
-                                {file.name}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="flex flex-row w-[100%] h-[10%] justify-between px-[13rem] pb-[0.5rem]">
-                        <Button
-                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                            onClick={handleConfirmModal}
-                        >
-                            Yes
-                        </Button>
-                        <Button
-                            className="flex flex-col justify-center bg-white dark:bg-gray px-[2rem] py-[0.3rem]"
-                            onClick={() => {
-                                setShowConfirmFilesModal(false);
-                            } }
-                        >
-                            No
-                        </Button>
-                    </div>
-                </>
-                :
-                <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
-                    Loading...
-                </div>
-                }
-
-            </div>
-        )
-    }
-
-
-
-    const FileCard = (props: {index: number}) => {
-        return (
-
-            <div className="text-black hover:bg-black/25
-                            dark:text-white flex flex-col justify-center
-                            px-[3rem] text-[2rem] border-b-2 last:border-none h-1/5"
-                            
-                            onClick={(event) => {
-                                handleSelectionOnClick(event, props.index)
-                            }}>
-                <div className="flex flex-row justify-center">
-                    <div 
-                        className={
-                            selectableItems[props.index].isSelected ?
-                                `text-black border-black
-                                dark:text-white underline font-bold
-                                flex-grow select-none cursor-pointer`
-                            :
-                                `text-black border-black
-                                dark:text-white no-underline font-normal
-                                flex-grow select-none cursor-pointer`
-                        }
-                    >
-                        {selectableItems[props.index].item.name}
-                    </div>
-
-                    <div
-                        className="cursor-pointer select-none"
-                        onClick={() => { setShowFileModal(!showFileModal); setCurrentlyOpenedIndex(props.index)}}
-                    >
-                        Open File
-                    </div>
-                </div>
-
-            </div>
-
-        )
-        
-    }
-
-    const InstructionPanel = () => {
-        return(
-            <div className="bg-white dark:bg-grayDark
-                            flex flex-col self-center text-3xl
-                            max-w-5xl">
-                <div className="flex justify-center text-white p-10">
-                    Upload resumes on this page. Enter a batch name, or a name for the list of resumes you will be inputting. 
-                    The app will take resumes of types PDF, Word doc/x, PNG, and JPG. After inputting the resumes, you will
-                    be able to select resumes, clear the selection, and delete them from the list if you do not want them. 
-                    There is also an option to open the files for a simple document view to get a final look at the resumes 
-                    you want to input. Once you are happy with the uploaded resumes, click "Add Filters to Uploaded Files"
-                    at the bottom of the screen to proceed to the next step.
-                </div>
-
-                <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
-                    OK
-                </Button>
-            </div>
-        )
-    }
-
-
-
-    return (
-        <div className="dark:bg-grayDark bg-white justify-center
-                        flex flex-col flex-grow">  
-
-            <div className="flex justify-center">
-                <Button 
-                    className=" dark:border-white dark:text-white text-lg rounded-md
-                                border-black text-black hover:bg-grayMidDark
-                                border-[0.1rem] flex justify-between gap-[0.5rem] p-[0.7rem] mt-[1.5rem]"
-                    onClick={handleUploadClick}
-                >
-                    <IonIcon className = "pt-[0.3rem]" icon = {cloudUploadOutline} />
-                    { `Upload Files` }
-                    <form 
-                        method='POST'
-                        encType='multipart/form-data'
-                        action='upload'
-                    >
-                        <input
-                            accept=".doc,.docx,.pdf,.png,.jpg"
-                            type="file"
-                            name="file"
-                            multiple
-                            hidden
-                            ref={hiddenFileInput}
-                            onChange={handleFileUpload}
-                        />
-                    </form>
-                </Button>
-            </div>
-
-
-
-            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem]">
-
-                <ul className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
-                { selectableItems.map( (selectable, index : number) => (
-                    <FileCard
-                        index={index}
-                        key={selectable.id}
-                    />
-                ))}
-                </ul>
-
-                <div className="h-[5rem]
-                                text-black
-                                dark:text-white
-                                self-center
-                                text-[1.5rem]">
-                    { anySelected() ?
-                    <div className="flex flex-col my-[1rem]">
-                        <Button
-                            className=" text-black hover:text-grayLight
-                                        dark:text-white
-                                        flex-grow self-center"
-                            onClick={() => { handleDeleteFiles(); } }
-                        >
-                            Remove Selected Files
-                        </Button>
-                        <Button
-                            className=" text-black hover:text-grayLight
-                                        dark:text-white
-                                        flex-grow self-center"
-                            onClick={() => { clearSelection(); } }
-                        >
-                            Clear Selection
-                        </Button>
-                    </div>
-                    :
-                    <Button 
-                        onClick={() => selectAll()}
-                        className="my-[1.5rem] hover:text-grayLight"
-                    >
-                        { selectableItems.length > 0 ? "Select All" : "" }
+                            Filter Resumes
+                        </Typography>
                     </Button>
-                    }
-                </div>
 
-            </div>
+                </Stack>
 
-
-
-            <div className="flex justify-center">
-
-                <Button
-                    // className=" dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                    //             border-black text-black hover:bg-grayMidDark
-                    //             flex justify-center p-[1rem] mb-[4rem] border-[0.1rem] text-lg"
-                    className={
-                        uploadedFiles.length > 1 ?
-                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                            border-black text-black hover:bg-grayMidDark animate-pulse rounded-md
-                            flex justify-center p-[1rem] my-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
-                        :
-                            `dark:border-white dark:text-white dark:hover:bg-grayMidDark
-                            border-black text-black hover:bg-grayMidDark rounded-md
-                            flex justify-center p-[1rem] mb-[4rem] mt-[2rem] border-[0.1rem] text-[2rem]`
-                    }
-                    onClick={()=>handleAddFiltersClick()}
+                <List
+                    sx={{
+                        minWidth: "10em",
+                        width: "60%",
+                        height: "100%",
+                        border: 1,
+                        borderColor: palette.divider,
+                        borderRadius: 5,
+                        direction: "column",
+                        overflow: "auto"
+                    }}
                 >
-                    Add Filters to Uploaded Files
-                </Button>
-            </div>
 
+                    {uploadedFiles.map((file, index) => (
+                    <Box
+                        key={index + Math.random()*99999}
+                    >
+                        <UploadCard
 
-            <div className="absolute bottom-0 right-0 text-white pb-2 pr-2">
-                <IonIcon className="text-4xl text-white flex flex-col justify-center ml-2" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-            </div>
+                            file={file}
+                            index={index}
+                            
+                            onSelect={(index) => handleToggleSelect(index)}
+                            onDelete={(index) => handleDeleteFile(index)}
 
-            {instructionsPanelClicked && 
-                <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                    <InstructionPanel />
-                </Modal>
-            }
+                            isSelected={selectedIndices.includes(index)}
 
+                        />
+                        { index < uploadedFiles.length-1 && <Divider /> }
+                    </Box>
+                    ))}
 
+                    { uploadedFiles.length < 1 &&
+                    <Typography
+                        textAlign={"center"}
+                        p={"1em"}
+                        color={palette.text.disabled}
+                    >
+                        Please Upload your Files.
+                    </Typography>
+                    }
 
-            {
-                showConfirmFilesModal && <Modal 
-                    modalTrigger={showConfirmFilesModal}
-                    onClose={()=>{setShowConfirmFilesModal(false)}}
-                >
-                    <ConfirmFilesPanel />
-                </Modal>
-            }
+                </List>
 
-        </div>
+            </Stack>
+
+        </Box>
     )
 }
 

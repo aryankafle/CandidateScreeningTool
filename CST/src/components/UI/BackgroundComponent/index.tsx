@@ -1,10 +1,23 @@
+import { useTheme } from "@mui/material"
+import Box from "@mui/material/Box"
+
 const BackgroundComponent = () => {
 
+    const { palette } = useTheme()
+
     return (
-        <div className="bg-blue dark:bg-grayDark text-white dark:text-black
-                        absolute z-[-1] w-screen h-[9rem] "
+        <Box
+            sx={{
+                background: palette.primary.dark,
+                position: "absolute",
+                zIndex: "-1",
+                width: "100vw",
+                height: "33.3333vh",
+                minHeight: "10em"
+            }}
         />
     )
+
 }
 
 export default BackgroundComponent

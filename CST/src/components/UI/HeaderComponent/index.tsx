@@ -1,7 +1,15 @@
-import { useContext } from "react"
-import { Link } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import UserContext from "../../../context/UserContext"
 
+import AppBar from "@mui/material/AppBar"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import Container from "@mui/material/Container"
+import Toolbar from "@mui/material/Toolbar"
+import IconButton from "@mui/material/IconButton"
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Button, useTheme } from "@mui/material"
 
 
 
@@ -24,41 +32,104 @@ const handleLogout = () => {
 
 const HeaderComponent = () => {
 
+    const { palette } = useTheme()
+    const navigate = useNavigate()
+
     const { userData, isLoggedIn } = useContext(UserContext)
-    
+
+    const [anchorTextUserMenu, setAnchorTextUserMenu] = useState<null | HTMLElement>(null);
+
+    const [ showUserMenu, setShowUserMenu ] = useState(false)
+    const toggleShowUserMenu = () => setShowUserMenu(prevOpen => !prevOpen)
+
+
+
+
+
     return (
-        <header className="bg-white text-black
-                           dark:text-white dark:bg-black
-                           p-[0.7rem] select-none flex flex-shrink flex-row justify-between px-[2rem]" 
+        <AppBar 
+            position="sticky"
         >
-            { isLoggedIn ?
-            <div
-                className="flex flex-row min-w-[15rem] w-[20%] justify-between"
+            <Container
+                maxWidth="xl"
+                sx={{
+                    padding: "0.5em"
+                }}
             >
-                <span>
-                    Welcome, {userData.displayName}.
-                </span>
-                <div>
-                    <button onClick = {handleLogout} className="hover:text-grayMid">
-                        Sign Out
-                    </button>
-                </div>
-            </div>
-            :
-            <button onClick = {handleLogin} className="hover:text-grayMid">
-                Sign In
-            </button>
-            
-            }
-            { isLoggedIn ? 
-            <Link to="/home" className="hover:text-grayMid">
-                Home
-            </Link>
-            : 
-            <div> </div>
-            }
-            {/* nate needs to fix this lmao */}
-        </header>
+                <Toolbar>
+                    { isLoggedIn ?
+                    <Typography
+                        variant="subtitle1"
+                        sx={{
+                            mr: "5em"
+                        }}
+                        color={palette.text.primary}
+                    >
+                        Welcome, {userData.displayName}
+                    </Typography>
+                    :
+                    <IconButton
+                        onMouseDown={handleLogin}
+                        size="large"
+                        sx={{
+                            mr: "3em"
+                        }}
+                    >
+                        <AccountCircleIcon 
+                            sx={{
+                                fontSize: "1.3em"
+                            }}
+                        />
+                    </IconButton>
+                    }
+                    
+                    <Button
+                        variant="text"
+                        onMouseDown={() => navigate("/home/resume-upload")}
+                    >
+                        <Typography
+                            variant="subtitle1"
+                            mr={"3em"}
+                            color={palette.text.primary}
+                        >
+                            Resume Upload
+                        </Typography>
+                    </Button>
+
+                    <Button
+                        variant="text"
+                        onMouseDown={() => navigate("/home/saved-lists")}
+                    >
+                        <Typography
+                            variant="subtitle1"
+                            color={palette.text.primary}
+                            mr={"3em"}
+                        >
+                            Saved Lists
+                        </Typography>
+                    </Button>
+
+                    <Button
+                        onMouseDown={handleLogout}
+                    >
+                        <Typography
+                            variant="subtitle1"
+                            justifySelf={"flex-end"}
+                            sx={{
+                                mr: "5em"
+                            }}
+                            color={palette.text.primary}
+                        >
+                            Sign Out
+                        </Typography>
+                    </Button>
+
+
+                </Toolbar>
+                
+            </Container>
+
+        </AppBar>
     )
 }
 

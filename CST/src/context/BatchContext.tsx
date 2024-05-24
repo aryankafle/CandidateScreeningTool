@@ -61,7 +61,7 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
                 
                 file,
                 uploadProgress: 0,
-                downloadProgress: 9
+                downloadProgress: 0
 
             }
 

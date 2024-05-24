@@ -1,16 +1,25 @@
 import { useState, useContext, useEffect } from 'react';
-import InputBox from "../../components/forms/InputBox"
 import { Filter } from '../../utils/Filter';
 import { closeCircleOutline } from "ionicons/icons";
-import { IonIcon } from "@ionic/react";
-import Button from "../../components/buttons/ImprovedButtonComponent";
 import React from 'react';
 import DraggableList from '../../components/views/DraggableList/';
 import SelectionContext from '../../context/SelectionContext';
 import FlagContext from '../../context/FlagContext';
-import Modal from '../../components/modals/Modal';
 import { helpCircleOutline } from 'ionicons/icons';
 import BatchContext from '../../context/BatchContext';
+
+import { IconButton, useTheme } from "@mui/material"; 
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography"
+import List from "@mui/material/List";
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 
 
 
@@ -26,6 +35,8 @@ class KeywordBiasFilter extends Filter {
     }
 
 }
+
+
 
 
 
@@ -49,6 +60,10 @@ class YearsOfWorkExperienceFilter extends Filter {
 
 }
 
+
+
+
+
 class HasDegreeFilter extends Filter {
 
     constructor() {
@@ -58,6 +73,10 @@ class HasDegreeFilter extends Filter {
     }
 
 }
+
+
+
+
 
 class HasWorkExperienceFilter extends Filter {
 
@@ -74,6 +93,8 @@ class HasWorkExperienceFilter extends Filter {
 
 
 const FilterScreen = () => {
+
+    const { palette } = useTheme()
 
     const { selectedFilters, setSelectedFilters } = useContext(SelectionContext)
 
@@ -113,236 +134,104 @@ const FilterScreen = () => {
         updateFlag({flag: 'filters have changed', action: 'deactivate'})
     
     }, [selectedFilters, previouslySelectedFilters, updateFlag])
-
-
-
-
-
-    const FilterLayerOptions = () => {
-
-        const [keywordBias, setKeywordBias] = useState<string>("")
-
-
-
-        const isDuplicateFilter = (filter : Filter) => {
-            return selectedFilters.some((filterObj) => filterObj.equals(filter))
-        } 
-
-        const isValidKeyword = (str : string) => {
-
-            if(str) {
-                return true
-            }
-
-            return false
-
-        }
-
-
-
-        return (
-            <div className="flex flex-col flex-grow">
-                <div className="flex flex-row flex-grow pt-10">
-                    <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
-                        onClick={
-                            () => {
-
-                                const YearsOfWorkFilter : Filter = new YearsOfWorkExperienceFilter(5)
-
-                                if(!isDuplicateFilter(YearsOfWorkFilter)) {
-                                    setSelectedFilters((filters) => [...filters, YearsOfWorkFilter])    
-                                }
-
-                            }
-                        }
-                    >
-                        5+ years work experience
-                    </Button>
-
-
-                    <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
-                        onClick={
-                            () => {
-
-                                const DegreeFilter : Filter = new HasDegreeFilter()
-
-                                if(!isDuplicateFilter(DegreeFilter)) {
-                                    setSelectedFilters((filters) => [...filters, DegreeFilter])    
-                                }
-
-                            }
-                        }
-                    >
-                        Has college degree
-                    </Button>
-
-
-                    <Button
-                        className="flex flex-col w-[10rem] h-[10rem] border-[0.1rem] text-[1.5rem] m-5 rounded-lg p-1 pt-4"
-                        onClick={
-                            () => {
-
-                                const HasWorkExperience : Filter = new HasWorkExperienceFilter()
-
-                                if(!isDuplicateFilter(HasWorkExperience)) {
-                                    setSelectedFilters((filters) => [...filters, HasWorkExperience])    
-                                }
-
-                            }
-                        }
-                    >
-                        Has work experience
-                    </Button>
-                </div>
-                <div className="flex flex-col flex-shrink">
-                    <InputBox 
-                            title={"Keyword Bias"} placeholder={"Full-stack Development"}
-                            onSubmit={
-                                () => {
-                                    if(isValidKeyword(keywordBias)) {
-                                        const keywordFilter : Filter = new KeywordBiasFilter(keywordBias)
-
-                                        if(!isDuplicateFilter(keywordFilter)) {
-                                            setSelectedFilters((filters) => [...filters, keywordFilter])    
-                                        }
-                                    }
-                                }
-                            }
-                            onChange={
-                                (event) => {
-                                    setKeywordBias(event.target.value)
-                                }
-                            }
-                            value={keywordBias}
-                            errorFunction={(string) => {return ""}
-                        }
-                    />
-                </div>
-            </div>
-        )
-    }
-
     
+    function handleRemoveFilter(index : number) {
 
-    const FilterLayerCard = (props: {item : Filter, isDragging : boolean}) => {
-
-        function handleXClicked() {
-
-            const temp = [...selectedFilters].filter((filter) => {return filter !== props.item})
-            
-            setSelectedFilters(temp)
-            
-        }
-
-
-
-        return props.isDragging ? 
-                <div 
-                    className=" bg-red dark:bg-grayDark/40 flex flex-row rounded-md
-                                gap-[1rem] mb-[1rem] p-[2rem] text-3xl text-white justify-between">
-                    <div className="h-[3rem] pr-[0.1rem] overflow-y-auto">
-                        {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
-                        `${props.item.description}`}
-                    </div>
-                    <IonIcon
-                        className="cursor-pointer text-[2rem]" icon={closeCircleOutline}
-                        onClick={handleXClicked}
-                    />
-                </div>
-            :
-                <div 
-                    className=" bg-red dark:bg-grayDark flex flex-row rounded-md
-                                gap-[1rem] mb-[1rem] p-[2rem] text-3xl text-white justify-between">
-                    <div className="">
-                        {/* {`${props.item.quantity ? props.item.quantity : ""} ${props.item.description}`} */
-                         `${props.item.description}`}
-                    </div>
-                    <IonIcon
-                        className="flex flex-col cursor-pointer text-[2rem] hover:text-redS" icon={closeCircleOutline}
-                        onClick={handleXClicked}
-                    />
-                </div>
-    }
-
-
-    const FilterLoadingPanel = () => {
-        return(
-            <div className="bg-white dark:bg-grayDark
-                            flex flex-col self-center text-3xl">
-                <div className="flex justify-center text-8xl text-white bg-none dark:bg-none">
-                Loading...
-                </div>
-            </div>
-        )
-    }
-
-
-    const InstructionPanel = () => {
-        return(
-            <div className="bg-white dark:bg-grayDark
-                            flex flex-col self-center text-3xl
-                            max-w-5xl">
-                <div className="flex justify-center text-white p-10">
-                    This section contains the current layers of filters that are going to be applied to your resumes.
-                    Click on predetermined filters to add them to the list, or add your own by typing in a custom keyword bias.
-                    Arrange the importance of each filter by dragging them to different positions within the list.
-                    Once you are happy with your filters, click "Apply Filters" at the top right of the page.
-                </div>
-
-                <Button className="flex flex-col justify-center text-black dark:text-white pb-3" onClick={()=> setInstructionsPanelClicked(false)}>
-                    OK
-                </Button>
-            </div>
-        )
+        const temp = [...selectedFilters].filter((filter, someIndex) => someIndex !== index)
+        
+        setSelectedFilters(temp)
+        
     }
 
 
 
 
+   return (
+    <Stack
+        width={"100%"}
+        height={"100%"}
+        flexGrow={1}
+    >
+        <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            height={"100%"}
+            mt={"2rem"}
+            width={"100%"}
+        >
+            <Stack
+                direction={"column"}
+                sx={{
+                    backgroundColor: palette.background.paper,
+                    borderStartEndRadius: 40,
+                }}
+                p={"1rem"}
+                width={"40%"}
+                overflow={"hidden"}
+            >
 
-    return (
-        <div className="overflow-y-auto overflow-x-clip flex h-full w-full flex-row space-x-[2rem] bg-grayDark">
-            {loadingState && 
-                <Modal modalTrigger={loadingState} onClose={()=>{setLoadingState(false)}}>
-                    <FilterLoadingPanel/>
-                </Modal>
-            }
-            <div className="flex flex-col grow min-h-auto w-1/5 p-[1rem] m-[2rem] bg-grayMidDark rounded-lg">
-                <div className='sticky flex flex-row justify-center z-[1] top-0'>
-                    <div className="flex flex-col flex-shrink text-[3rem] text-white p-[1rem] mb-0.5">
-                        Current Filter Layers:
-                    </div>
-                    <IonIcon className="text-4xl text-white flex justify-center" icon={helpCircleOutline} onClick={() => setInstructionsPanelClicked(true)} />
-                </div>
-                {instructionsPanelClicked && 
-                    <Modal modalTrigger={instructionsPanelClicked} onClose={()=>{setInstructionsPanelClicked(false)}}>
-                        <InstructionPanel />
-                    </Modal>
-                }
-                <div className="flex flex-col select-none overflow-y-scroll">
-                    <div className="pb-[1.5rem]"/>
+                <Typography
+                    sx={{
+                        fontSize: "3vw",
+                        textAlign: "center"
+                    }}
+                >
+                    Current Filter Layers:
+                </Typography>
+
+                <List
+                    sx={{
+                        height: "100%",
+                        overflow: "auto",
+                        padding: "0.333em"
+                    }}
+                >
                     <DraggableList
                         uniqueIDItems={selectedFilters}
                         setUniqueIDItems={setSelectedFilters}
+                        onDelete={(index) => handleRemoveFilter(index)}
                         ItemCard={FilterLayerCard}
-                        className="flex flex-grow flex-col"
+                        className="h-[10em] overflow-x-clip"
                     />
-                    <div className="pb-[3rem]"/>
-                </div>
-            </div>
-            <div className='sticky top-0 flex flex-grow'>
-                <div className="bg-[gray] dark:bg-grayDark text-white
-                                flex flex-col flex-grow px-[3rem] pt-[1rem] pb-[3rem]">
-                    <div className="self-center text-[3rem] my-[1rem]">Filters</div>
-                    <FilterLayerOptions />
-                </div>
-            </div> 
-        </div>
-    )
+                </List>
+
+            </Stack>
+
+
+
+            <Stack
+                direction={"column"}
+                sx={{
+                    backgroundColor: palette.background.paper,
+                    borderStartStartRadius: 40,
+                    width: "50%"
+                }}
+                height={"100%"}
+                p={"1rem"}
+            >
+
+                <Typography
+                    sx={{
+                        fontSize: "3vw",
+                        textAlign: "center"
+                    }}
+                >
+                    Add Filters
+                </Typography>
+
+                <Button
+                    variant="contained"
+                    onMouseDown={() => {setSelectedFilters(prevFilters => [...prevFilters, new HasDegreeFilter()])}}
+                >
+                    add test
+                </Button>
+
+            </Stack>
+
+        </Stack>
+    </Stack>
+   )
 
 }
-
 
 export default FilterScreen

@@ -13,7 +13,8 @@ type DraggableListProps = {
     setUniqueIDItems : React.Dispatch<React.SetStateAction<any[]>>
     sensors? : SensorDescriptor<SensorOptions>[]
     autoScroll? : boolean
-    ItemCard : React.FC<{ item : any, isDragging : boolean}>
+    ItemCard : React.FC<{ index: number, item : any, isDragging : boolean, onDelete : (index: number) => void}>
+    onDelete : (index: number) => void
     className? : string
 
 }
@@ -56,7 +57,7 @@ const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps
 
 
 
-    const ItemCard = (props: {item : UniquelyIdentified, ItemCard : React.FC<{ item : UniquelyIdentified, isDragging : boolean}>}) => {
+    const ItemCard = (props: {index: number, item : UniquelyIdentified, ItemCard : React.FC<{ index: number, item : UniquelyIdentified, isDragging : boolean, onDelete : (index: number) => void}>, onDelete : (index: number) => void}) => {
 
         const ItemCard = props.ItemCard
 
@@ -71,7 +72,7 @@ const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps
 
         const style = {
             transition,
-            transform: CSS.Transform.toString(transform)
+            transform: CSS.Transform.toString(transform),
         }
 
 
@@ -85,7 +86,7 @@ const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps
                     ref={setNodeRef}
                     className="cursor-grabbing"
                 >
-                    <ItemCard item={props.item} isDragging/>
+                    <ItemCard index={props.index} item={props.item} isDragging onDelete={props.onDelete}/>
                 </div>
             )
         }
@@ -98,7 +99,7 @@ const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps
                     {...listeners}
                     className="cursor-grab"
                 >
-                    <ItemCard item={props.item} isDragging={false}/>
+                    <ItemCard index={props.index} item={props.item} isDragging={false} onDelete={props.onDelete}/>
                 </div>
     
             )
@@ -115,8 +116,8 @@ const DraggableList : React.FC<DraggableListProps> = (props : DraggableListProps
         >
             <SortableContext items={props.uniqueIDItems.map((uniquelyID) => {return {id: uniquelyID.id}})}>
                 <ol className={props.className}>
-                    {props.uniqueIDItems.map((item) => (
-                        <ItemCard key={item.id} item={item} ItemCard={props.ItemCard} />
+                    {props.uniqueIDItems.map((item, index) => (
+                        <ItemCard index={index} key={item.id} item={item} ItemCard={props.ItemCard} onDelete={props.onDelete} />
                     ))}
                 </ol>
             </SortableContext>

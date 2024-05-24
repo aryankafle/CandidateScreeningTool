@@ -5,20 +5,16 @@ import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 import HomeRoutes from "./HomeRouter";
 
-import { getUserSavedLists, getUser, getUserSelection, deleteUnusedFiles } from "../requests/ResumeRequests"
+import { getUserSavedLists, getUser } from "../requests/ResumeRequests"
 
 import FilterScreen from "../pages/FilterScreen"
 import SplashScreen from "../pages/SplashScreen"
-import TestScreen from "../test/App.api.test"
 import ResultsScreen from "../pages/ResultsScreen"
 
 
 
 import BaseLayout from "../layouts/BaseLayout"
 import DecoratedLayout from "../layouts/DecoratedLayout";
-import HomeLayout from "../layouts/HomeLayout";
-import HeaderButtons from "../components/UI/FilterScreenHeaderButtons";
-import BackButton from "../components/buttons/BackButton";
 
 
 
@@ -40,15 +36,11 @@ function Router() {
     const { setLoadingState } = useContext(FlagContext)
     const { fileProgresses } = useContext(BatchContext)
 
-    useEffect(() => {
-
-        console.log(fileProgresses)
-
-    }, [fileProgresses])
-
     const route = useLocation()
 
     const navigate = useNavigate()
+
+
 
 
 
@@ -104,14 +96,7 @@ function Router() {
                 <Route 
                     path="/filter"
                     element={ isLoggedIn ?
-                        <>
-                            <div className="flex flex-col flex-shrink">
-                                <HeaderButtons />
-                            </div>
-                            <div className="flex h-full w-full overflow-auto">
-                                <FilterScreen />
-                            </div>
-                        </>
+                        <FilterScreen />
                         :
                         <Navigate to="/"/>
                     }
@@ -119,34 +104,19 @@ function Router() {
                 <Route 
                     path="/results"
                 >
-                    <Route path=":listID" element={
-                        <>
-                            <div className="flex flex-col flex-shrink">
-                                <BackButton></BackButton>
-                            </div>
-                            <div className="flex w-full h-full overflow-auto">
-                                <ResultsScreen />
-                            </div>
-                        </>} />
+                    <Route path=":listID" element={<ResultsScreen />} />
                     <Route path="" element={isLoggedIn ?
-                        <>
-                            <div className="flex flex-col flex-shrink">
-                                <BackButton></BackButton>
-                            </div>
-                            <div className="flex w-full h-full overflow-auto">
-                                <ResultsScreen />
-                            </div>
-                        </>
+                        <ResultsScreen />
                         :
-                        <Navigate to="/"/>} />
+                        <Navigate to="/"/>
+                    } />
                 </Route>
             </Route>
             <Route element={<BaseLayout />}>
                 <Route index element={<SplashScreen />} />
-                <Route path="/test" element={<TestScreen />} />
                 <Route path="*" element={<PageNotFoundScreen />} />
             </Route>
-            <Route element={<HomeLayout />}>
+            <Route element={<BaseLayout />}>
                 <Route 
                     path="/home/*"
                     element={ isLoggedIn ? <HomeRoutes /> : <Navigate to="/"/> }

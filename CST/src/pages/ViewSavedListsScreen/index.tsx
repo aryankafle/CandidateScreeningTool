@@ -1,23 +1,34 @@
 import { useEffect, useCallback, useContext, useState } from "react";
-import Input from '../../components/forms/InputBox'
-import { useSelectableList } from "../../hooks/SelectableList";
-import { useClipboard } from "../../hooks/Clipboard"
+import { useNavigate } from "react-router-dom";
+
+import UserContext from "../../context/UserContext";
 import { SavedListsContext } from "../../context/SavedListsContext";
 
-import { copyOutline } from 'ionicons/icons';
-import { IonIcon } from "@ionic/react";
-import { useNavigate } from "react-router-dom";
+import { useClipboard } from "../../hooks/Clipboard"
+
 import { SavedList } from "../../utils/SavedList";
+
 import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
-import UserContext from "../../context/UserContext";
 
 
+
+import { useTheme } from "@mui/material"; 
+
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography"
+import List from "@mui/material/List";
+
+import { SavedListCard } from "../../components/list-cards/SavedListCard";
 
 
 
 const ViewSavedListsScreen = () => {
 
     const navigate = useNavigate()
+    const { palette } = useTheme()
+
+    const [ selectedIndices, setSelectedIndices ] = useState<number[]>([])
 
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
 
@@ -25,23 +36,8 @@ const ViewSavedListsScreen = () => {
 
     const { setCurrentSavedList } = useContext(SavedListsContext)
 
-    const [nameInput, setNameInput] = useState<string>("");
-
-    const {
-
-        selectableItems,
-
-        anySelected,
-
-        getAllSelectedItems,
-
-        selectAll,
-        removeCurrentSelectionFromList,
-        
-        handleSelectionOnKeyDown,
-        handleSelectionOnClick
-
-    } = useSelectableList<SavedList>(savedLists, setSavedLists)
+    const [ showDeleteSavedListModal, setShowDeleteSavedListModal ] = useState(false)
+    const toggleDeleteFilesConfirmModal = () => setShowDeleteSavedListModal(prevOpen => !prevOpen)
 
     const {
 
@@ -69,31 +65,6 @@ const ViewSavedListsScreen = () => {
 
     }, [setSavedLists, userData.id])
 
-
-
-
-
-    const handleRemoveSelection = useCallback(async () => {
-        let confirmation = window.confirm("Are you sure you want to delete the selected saved lists?")
-
-        if(confirmation) {
-            
-            const lists = getAllSelectedItems()
-
-            for(let i = 0; i < lists.length; i++) {
-                await deleteSavedList(lists[i]._id, userData.id)
-            }
-
-            removeCurrentSelectionFromList()
-
-            const savedLists = await getUserSavedLists(userData.id)
-
-            setSavedLists(savedLists)
-
-        }
-        
-    }, [getAllSelectedItems, removeCurrentSelectionFromList, setSavedLists, userData.id])
-
     const copyListLink = useCallback(async (savedList : SavedList) => {
 
         await copyTextToClipboard(`${process.env.REACT_APP_CLIENT_NAME}/results/${savedList.list_link}`, true)
@@ -108,22 +79,68 @@ const ViewSavedListsScreen = () => {
 
     }, [navigate, setCurrentSavedList])
 
-    const addExternalListToSavedLists = useCallback(() => {  
+    const handleDeleteList = useCallback(async (index : number) => {
 
-        if(!nameInput) return;
+        const list = savedLists[index]
 
-        //do somehting with external list here
-        
-    }, [nameInput])
+        await deleteSavedList(list._id, userData.id)
 
+        setSelectedIndices([])
+
+        const newSavedLists = await getUserSavedLists(userData.id)
+
+        setSavedLists(newSavedLists)
+
+    }, [savedLists, setSavedLists, userData.id])
+
+    const handleRemoveSelection = useCallback(async (index : number) => {
+
+        const lists = selectedIndices.map(index => savedLists[index])
+
+        for(let i = 0; i < lists.length; i++) {
+            await deleteSavedList(lists[i]._id, userData.id)
+        }
+
+        setSelectedIndices([])
+
+        const newSavedLists = await getUserSavedLists(userData.id)
+
+        setSavedLists(newSavedLists)
+
+    }, [savedLists, selectedIndices, setSavedLists, userData.id])
+
+    const handleToggleSelect = (index : number) => {
+
+        setSelectedIndices(prevIndices => {
+            
+            if(prevIndices.includes(index)) {
+
+                return prevIndices.filter(someIndex => someIndex !== index)
+
+            }
+
+            return [...prevIndices, index]
+            
+        })
+
+    }
 
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
-        if(event.key === "Delete") {
-            handleRemoveSelection()
+        
+        if(event.key === "Delete" && selectedIndices.length > 0) {
+            toggleDeleteFilesConfirmModal()
         }
-        handleSelectionOnKeyDown(event)
-    }, [handleRemoveSelection, handleSelectionOnKeyDown])
+
+        if(event.key === "Escape") {
+            setSelectedIndices([])
+        }
+
+        if(event.ctrlKey && event.key === "a") {
+            setSelectedIndices(new Array(savedLists.length))
+        }
+
+    }, [savedLists.length, selectedIndices.length])
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown)
@@ -138,99 +155,59 @@ const ViewSavedListsScreen = () => {
 
 
     
-    const SavedListCard =  (props: {savedList : SavedList, index: number}) => {
-        return (
-            <div className="text-black hover:bg-black/25
-                            dark:text-white flex flex-row 
-                            px-[3rem] py-[3rem] text-xl border-b-2 last:border-none"
-                            onClick={(event) => { handleSelectionOnClick(event, props.index) }}>
-                <div 
-                    className={
-                            selectableItems[props.index].isSelected ?
-                                `text-black
-                                dark:text-white underline font-bold
-                                flex-grow select-none cursor-pointer`
-                            :
-                                `text-black
-                                dark:text-white no-underline font-normal
-                                flex-grow select-none cursor-pointer`
-                        }
-                        // onClick={(event) => { handleSelectionOnClick(event, props.index) }}
+    return (
+        <Box
+            width={"100%"}
+            height={"100%"}  
+            p={"2rem"}
+        >
+
+            <List
+                sx={{
+                    minWidth: "10em",
+                    width: "60%",
+                    height: "100%",
+                    border: 1,
+                    borderColor: palette.divider,
+                    borderRadius: 5,
+                    direction: "column",
+                    overflow: "auto"
+                }}
+            >
+
+                {savedLists.map((list, index) => (
+                <Box
+                    key={index + Math.random()*99999}
                 >
-                    {props.savedList.name}
-                </div>
-                <div className="flex flex-row justify-between w-[10rem]">
-                    <div
-                        className="flex flex-grow w-[6rem] cursor-pointer select-none text-[1.2rem]"
-                        onClick={() => { sendToList(props.savedList) }}
-                    >
-                        <span className="text-center self-center">
-                            Open List
-                        </span>
-                    </div>
-                    <div
-                        className="flex flex-row flex-grow cursor-pointer"
-                        onClick={() => {copyListLink(props.savedList)}}
-                    >
-                        <IonIcon className="h-full w-full" icon={copyOutline}></IonIcon>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-      
+                    <SavedListCard
 
+                        list={list}
 
-    return(
-       <div className=" dark:bg-grayDark bg-white justify-center
-                        flex flex-grow flex-col pb-[10rem]">
-            <div className="text-black dark:text-white flex flex-row pt-[3rem] justify-center p-10">
-                <Input
-                    title={"Enter External List"} placeholder={"Enter Link"}
-                    value={nameInput}
-                    onSubmit={(event) => { addExternalListToSavedLists(); setNameInput("")}}
-                    onChange={(event) => { setNameInput(event.target.value) }}
-                    errorFunction={(string) => {return ""}}
-                />
-            </div>
-            <div className="flex flex-grow flex-col min-h-[20rem] h-[0] mt-[1.5rem] overflow-auto">
-                <ol className=" self-center flex-grow overflow-y-auto min-w-[35rem] w-[60vw]">
-                        {selectableItems.map(
-                            (selectable, index : number) => (
-                                <SavedListCard
-                                    key = {selectable.id}
-                                    index = {index}
-                                    savedList = {selectable.item}
-                                />
-                            ))}
-                </ol>
-            </div>
-            <div className="pt-[2rem] h-[5rem]
-                            text-black
-                            dark:text-white
-                            self-center
-                            text-center
-                            text-xl">
-                {
-                    anySelected() ?
-                        <div
-                            className="select-none cursor-pointer"
-                            onClick={() => { handleRemoveSelection() }}
-                        >
-                            Delete Current Selection
-                        </div>
-                    :
-                        savedLists.length > 0 &&
-                        <div
-                            className="select-none cursor-pointer"
-                            onClick={() => { selectAll() }}
-                        >
-                            Select All
-                        </div>
+                        index={index}
+                        
+                        onSelect={(index) => handleToggleSelect(index)}
+                        onDelete={(index) => handleDeleteList(index)}
+
+                        isSelected={selectedIndices.includes(index)}
+
+                    />
+                    { index < savedLists.length-1 && <Divider /> }
+                </Box>
+                ))}
+
+                { savedLists.length < 1 &&
+                <Typography
+                    textAlign={"center"}
+                    p={"1em"}
+                    color={palette.text.disabled}
+                >
+                    You currently have no saved lists.
+                </Typography>
                 }
-            </div>
-        </div>
 
+            </List>
+
+        </Box>
     )
 }
 export default ViewSavedListsScreen
