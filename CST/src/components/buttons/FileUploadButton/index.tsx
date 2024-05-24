@@ -1,7 +1,9 @@
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import FormLabel from "@mui/material/FormLabel";
-import { SxProps, Theme, Typography, useTheme } from "@mui/material"; 
+import Typography from "@mui/material/Typography";
+
+import { SxProps, Theme, useTheme } from "@mui/material"; 
 
 
 

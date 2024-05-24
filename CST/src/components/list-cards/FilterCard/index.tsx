@@ -28,6 +28,8 @@ type FilterCardProps = {
 
 export const FilterLayerCard = (props: FilterCardProps) => {
 
+    const { palette } = useTheme()
+
     const { isDragging, item, onDelete, index } = props
 
     if(isDragging) {
