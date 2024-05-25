@@ -267,7 +267,7 @@ const FilterScreen = () => {
                             pb={"1rem"}
                             direction={"row"}
                         >
-                            
+
                             <Typography
                                 sx={{
                                     fontSize: "1vw"
@@ -280,6 +280,28 @@ const FilterScreen = () => {
                                 type='number'
                                 sx={{
                                     width: "6rem",
+                                    pl: "1rem"
+                                }}>
+                            </TextField>
+                            
+                        </Stack>
+
+                        <Stack
+                            pb={"1rem"}
+                            direction={"row"}
+                        >
+                            
+                            <Typography
+                                sx={{
+                                    fontSize: "1vw"
+                                }}>
+                                    Candidate Has Worked At:
+                            </Typography>
+
+                            <TextField
+                                size='small'
+                                sx={{
+                                    width: "50%",
                                     pl: "1rem"
                                 }}>
                             </TextField>
