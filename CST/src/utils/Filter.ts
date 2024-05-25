@@ -88,7 +88,7 @@ export function generateHasWorkExperienceFilter() {
         id: crypto.randomUUID(),
         name: `Work Experience?`,
         description: `Work Experience?`,
-        query: `The resume should display that the applicant has prevoius proffesional work experience.`
+        query: `The resume should display that the applicant has previous professional work experience.`
 
     }
 
