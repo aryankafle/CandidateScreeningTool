@@ -308,16 +308,29 @@ const FilterScreen = () => {
                             
                         </Stack>
 
+                        <Stack
+                            pb={"1rem"}
+                            direction={"column"}
+                        >
+                            
+                            <Typography
+                                sx={{
+                                    fontSize: "1vw"
+                                }}>
+                                    Keyword Bias:
+                            </Typography>
+
+                            <TextField
+                                size='small'
+                                sx={{
+                                    width: "50%"
+                                }}>
+                            </TextField>
+                            
+                        </Stack>
+
                     </Stack>
                         
-                </Stack>
-
-                <Stack
-                    direction={"row"}
-                >
-
-
-
                 </Stack>
 
             </Stack>
