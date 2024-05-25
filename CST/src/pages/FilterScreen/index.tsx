@@ -28,6 +28,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 import DraggableList from '../../components/views/DraggableList/';
 import { BackButton } from '../../components/buttons/BackButton';
+import { NumbersOutlined } from '@mui/icons-material';
 
 
 
@@ -224,11 +225,12 @@ const FilterScreen = () => {
                     </Typography>
 
                     <Stack
-                        direction={"row"}
+                        direction={"column"}
                     >
+
                         <Stack
-                            direction={"column"}
-                        >
+                            pb={"1rem"}>
+
                             <Typography
                                 sx={{
                                     fontSize: "1vw"
@@ -260,22 +262,46 @@ const FilterScreen = () => {
                             </ToggleButtonGroup>
 
                         </Stack>
+
+                        <Stack
+                            pb={"1rem"}
+                            direction={"row"}
+                        >
                             
+                            <Typography
+                                sx={{
+                                    fontSize: "1vw"
+                                }}>
+                                    Candidate Has Years of Work Experience:
+                            </Typography>
+
+                            <TextField
+                                size='small'
+                                type='number'
+                                sx={{
+                                    width: "6rem",
+                                    pl: "1rem"
+                                }}>
+                            </TextField>
+                            
+                        </Stack>
+
                     </Stack>
+                        
+                </Stack>
 
-                    <Stack
-                        direction={"row"}
-                    >
+                <Stack
+                    direction={"row"}
+                >
 
 
-
-                    </Stack>
 
                 </Stack>
 
             </Stack>
 
         </Stack>
+
     )
 
 }
