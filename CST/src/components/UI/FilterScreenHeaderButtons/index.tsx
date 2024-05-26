@@ -45,8 +45,6 @@ export const FilterScreenHeaderButtons = () => {
 
     useEffect(() => {
 
-        console.log("yeahfasedf")
-
         filterCache.current = [...selectedFilters]
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
