@@ -30,6 +30,7 @@ import {
 
 } from "../../requests/ResumeRequests";
 import FlagContext from "../../context/FlagContext";
+import { useTheme } from "@mui/material";
 
 
 
@@ -38,6 +39,8 @@ import FlagContext from "../../context/FlagContext";
 const ResultsScreen = () => {
 
     const navigate = useNavigate()
+
+    const { palette } = useTheme()
 
     const didRunResultsEffect = useRef(false)
 
@@ -72,7 +75,7 @@ const ResultsScreen = () => {
 
     const [ title, setTitle ] = useState(currentSavedList?.name || "")
     const [ description, setDescription ] = useState(currentSavedList?.description || "")
-    const [ color, setColor ] = useState(currentSavedList?.color || "")
+    const [ color, setColor ] = useState(currentSavedList?.color || palette.primary.light)
     
 
 

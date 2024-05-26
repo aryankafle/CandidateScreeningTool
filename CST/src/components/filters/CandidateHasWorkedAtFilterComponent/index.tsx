@@ -40,5 +40,3 @@ export const CandidateHasWorkedAtFilter = ({ selectedFilters, setSelectedFilters
     )
 
 }
-
-export default CandidateHasWorkedAtFilter

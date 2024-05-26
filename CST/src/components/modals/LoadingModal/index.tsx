@@ -26,6 +26,9 @@ export const LoadingModal = ({ isLoading, loadingPercent } : LoadingModalProps) 
             open={isLoading}
             aria-labelledby="modal-loading"
             aria-describedby="modal-shows-loading"
+            sx={{
+                userSelect: "none"
+            }}
             onClose={(event, reason) => {
 
             }}

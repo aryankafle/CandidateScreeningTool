@@ -116,5 +116,3 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
     )
 
 }
-
-export default KeywordBiasFilter

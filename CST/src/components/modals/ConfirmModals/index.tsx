@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"; 
 
 import { useTheme } from "@mui/material"; 
+import { useEffect } from "react";
 
 
 
@@ -27,9 +28,13 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
     return (
         <Modal
             open={open}
+            disableAutoFocus
             aria-labelledby="modal-confirm-files"
             aria-describedby="modal-confirms-file-selection"
             onClose={onClose}
+            sx={{
+                userSelect: "none"
+            }}
         >
             <Stack
                 width={"60vw"}
@@ -73,8 +78,7 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
                 <Stack
                     direction={"row"}
                     justifyContent={"center"}
-                    alignContent={"center"}
-                    gap={"4vw"}
+                    gap={"3vw"}
                 >
                     
                     <Button
@@ -85,7 +89,10 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
                             px: "2vw",
                             my: "2vh"
                         }}
-                        onMouseDown={onConfirm}
+                        onMouseDown={() => {
+                            onConfirm()
+                            onClose()
+                        }}
                     >
                         Confirm
                     </Button>
@@ -131,9 +138,13 @@ export const NotEnoughFilesModal = ({ onClose, open } : NotEnoughFilesModalProps
     return (
         <Modal
             open={open}
-            aria-labelledby="modal-confirm-files"
-            aria-describedby="modal-confirms-file-selection"
+            aria-labelledby="modal-not-enough-files"
+            aria-describedby="modal-alerts-not-enough-files-selection"
             onClose={onClose}
+            disableAutoFocus
+            sx={{
+                userSelect: "none"
+            }}
         >
             <Stack
                 width={"60vw"}
@@ -199,22 +210,31 @@ type ConfirmDeleteFilesModalType = {
     
     open : boolean
     onClose: () => void
+    onDelete: () => void
     numSelected: number
 
 }
 
 
 
-export const ConfirmDeleteFilesModal = ({ onClose, open, numSelected } : ConfirmDeleteFilesModalType) => {
+export const ConfirmDeleteFilesModal = ({ onClose, onDelete, open, numSelected } : ConfirmDeleteFilesModalType) => {
 
     const { palette } = useTheme()
+
+
+
+
 
     return (
         <Modal
             open={open}
-            aria-labelledby="modal-confirm-files"
-            aria-describedby="modal-confirms-file-selection"
+            disableAutoFocus
+            aria-labelledby="modal-confirm-delete"
+            aria-describedby="modal-confirms-delete-selection"
             onClose={onClose}
+            sx={{
+                userSelect: "none"
+            }}
         >
             <Stack
                 width={"60vw"}
@@ -255,18 +275,43 @@ export const ConfirmDeleteFilesModal = ({ onClose, open, numSelected } : Confirm
 
                 </Stack>
 
-                <Button
-                    variant="contained"
-                    sx={{
-                        fontSize: "1.5em",
-                        alignSelf: "center",
-                        px: "2vw",
-                        my: "2vh"
-                    }}
-                    onMouseDown={onClose}
+                <Stack
+                    direction={"row"}
+                    justifyContent={"center"}
+                    gap={"3vw"}
                 >
-                    Confirm
-                </Button>
+
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontSize: "1.5em",
+                            alignSelf: "center",
+                            px: "2vw",
+                            my: "2vh"
+                        }}
+                        onMouseDown={() => {
+                            onDelete()
+                            onClose()
+                        }}
+                    >
+                        Confirm
+                    </Button>
+
+                    <Button
+                        variant="text"
+                        sx={{
+                            fontSize: "1.5em",
+                            alignSelf: "center",
+                            px: "2vw",
+                            my: "2vh"
+                        }}
+                        onMouseDown={onClose}
+                    >
+                        Cancel
+                    </Button>
+
+                </Stack>
+
 
             </Stack>
         </Modal>

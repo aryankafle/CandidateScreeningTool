@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
 import { FilterSlider } from "../FilterSlider";
-import FilterSwitch from "../FilterSwitch";
+import { FilterSwitch } from "../FilterSwitch";
 
 
 

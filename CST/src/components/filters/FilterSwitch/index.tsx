@@ -53,5 +53,3 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
     )
 
 }
-
-export default FilterSwitch

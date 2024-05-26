@@ -36,6 +36,7 @@ export const LoadingSnackbar = ({ isLoading, loadingPercent } : LoadingSnackbarP
             }
             sx={{
                 m: "1em",
+                userSelect: "none"
             }}
         />
     );

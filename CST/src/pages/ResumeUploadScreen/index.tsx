@@ -1,6 +1,8 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useMouse } from "@uidotdev/usehooks";
+
 import { mean } from "simple-statistics";
 
 import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
@@ -35,6 +37,8 @@ const ResumeUploadScreen = () => {
 
     const navigate = useNavigate()
     const { palette } = useTheme()
+
+    const [mouse, ref] = useMouse()
 
 
 
@@ -261,15 +265,22 @@ const ResumeUploadScreen = () => {
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         
         if(event.key === "Delete" && selectedIndices.length > 0) {
+            setShowConfirmFilesModal(false)
             toggleDeleteFilesConfirmModal()
         }
 
         if(event.key === "Escape") {
+            setShowConfirmFilesModal(false)
+            setShowDeleteFilesConfirmModal(false)
             setSelectedIndices([])
         }
 
-        if(event.ctrlKey && event.key === "a") {
-            setSelectedIndices(new Array(uploadedFiles.length))
+        if(event.ctrlKey && ( event.key === "a" || event.key === "A" ) ) {
+
+            const newarr = new Array(uploadedFiles.length).fill(0)
+            const indexarr = newarr.map((elm, index) => index)
+            setSelectedIndices(indexarr)
+
         }
 
     }, [selectedIndices.length, uploadedFiles.length])
@@ -293,6 +304,9 @@ const ResumeUploadScreen = () => {
             width={"100%"}
             height={"100%"}
             overflow={"auto"}
+            sx={{
+                userSelect: "none",
+            }}
         >
 
             <NotEnoughFilesModal
@@ -309,10 +323,8 @@ const ResumeUploadScreen = () => {
 
             <ConfirmDeleteFilesModal
                 open={showDeleteFilesConfirmModal}
-                onClose={() => {
-                    toggleDeleteFilesConfirmModal()
-                    handleDeleteSelection()
-                }}
+                onClose={toggleDeleteFilesConfirmModal}
+                onDelete={handleDeleteSelection}
                 numSelected={selectedIndices.length}
             />
 
@@ -346,6 +358,41 @@ const ResumeUploadScreen = () => {
                     alignItems={"center"}
                     direction={"column"}
                 >
+
+                    <Box
+                        ref={ref}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: "1.2em",
+                                alignSelf: "center",
+                                textAlign: "center",
+                            }}
+                        >
+                            Upload resumes to run through our
+                        </Typography>
+                        
+                        <Typography
+                            variant="h1"
+                            align="left"
+                            color="grey.700"
+                            sx={{
+                                cursor: "default",
+                                userSelect: "none",
+                                backgroundcolor: "primary",
+                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.primary.dark}, ${palette.primary.light})`,
+                                backgroundSize: "100%",
+                                backgroundRepeat: "repeat",
+                                backgroundClip: "text",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent"
+                            }}
+                        >
+                            AI Filters
+                        </Typography>
+
+                    </Box>
+
 
                     <FileUploadButton
                         onUpload={handleFileUpload}
