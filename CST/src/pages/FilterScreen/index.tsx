@@ -1,15 +1,10 @@
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 
 
 import BatchContext from '../../context/BatchContext';
-import FlagContext from '../../context/FlagContext';
 import SelectionContext from '../../context/SelectionContext';
-import UserContext from '../../context/UserContext';
-
-import { createResumeResult, runTextScanOnFile } from '../../requests/ResumeRequests';
 
 import { 
     
@@ -25,8 +20,6 @@ import {
 
 } from '../../utils/Filter';
 
-import { runPromisesInParallel } from "../../utils/ParallelPromises"
-
 
 
 import { useTheme } from "@mui/material"; 
@@ -38,9 +31,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
-import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress';
-import CircularProgress from '@mui/material/CircularProgress';
 
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 import { FilterSlider } from '../../components/filters/FilterSlider';
@@ -48,15 +39,14 @@ import DraggableList from '../../components/views/DraggableList/';
 import FilterSwitch from '../../components/filters/FilterSwitch';
 import { FilterTextInput } from '../../components/filters/FilterTextInput';
 import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
-import Result from '../../utils/Result';
+import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
+import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
 
 
 
 
 
 const FilterScreen = () => {
-
-    const navigate = useNavigate()
 
     const { palette } = useTheme()
 
@@ -75,11 +65,8 @@ const FilterScreen = () => {
         fileIDs,
         amountTextScanned,
         areAllTextScansReady,
-        setBatchResults
 
     } = useContext(BatchContext)
-
-    const { userData } = useContext(UserContext)
 
     const [ isKeywordBiasStrict, setIsKeywordBiasStrict ] = useState(false)
 
@@ -107,24 +94,63 @@ const FilterScreen = () => {
 
 
 
-    async function handleRunSelectedFilters() {
+    function handleChangeCountryFilter(newCountry : string) {
 
-        let accumulatedResults : Result[] = [] 
 
-        const promises = fileIDs.map(async fileID => { 
-
-            const result = await createResumeResult(selectedFilters, fileID, userData.id)
-
-            accumulatedResults.push(result)
-            setBatchResults(accumulatedResults)
-
-        })
-
-        await runPromisesInParallel(promises)
-
-        navigate("/results")
 
     }
+
+
+
+    function handleChangeKeywordBiasFilter(newBias : string, isStrict : boolean) {
+
+
+        
+    }
+
+
+
+    function handleChangedHasWorkedAtFilter(newHasWorked : string) {
+
+
+        
+    }
+
+
+
+    function handleChangeYearsOfExperienceFilter(newNumYears : number, isCurrentlyWorking : boolean) {
+
+
+        
+    }
+
+
+
+    function handleChangeDegreeLevel(newDegreeLevel : Degree, ) {
+
+        const index = selectedFilters.findIndex(filter => filter.type === 'degree')
+
+        const filter = generateHasDegreeLevelFilter(newDegreeLevel)
+
+        if(index > -1) {
+
+
+            setSelectedFilters(prevFilters => {
+
+                const temp = [...prevFilters]
+                temp[index] = filter
+                return temp
+
+            })
+
+            return;
+
+        }
+
+        setSelectedFilters(prevFilters => [...prevFilters, filter])
+        
+    }
+
 
 
 
@@ -137,24 +163,10 @@ const FilterScreen = () => {
             overflow={"auto"}
         >
 
-            { !areAllTextScansReady &&
-            <Snackbar
-                open={(!areAllTextScansReady)}
-                message={`Creating Text Scans... ${amountTextScanned} / ${fileIDs.length}`}
-                action={
-                    <CircularProgress
-                        size={"1.6em"}
-                        sx={{
-                            alignSelf: "center",
-                            mx: "1.3em"
-                        }}
-                    />
-                }
-                sx={{
-                    m: "1em",
-                }}
+            <LoadingSnackbar
+                isLoading={!areAllTextScansReady}
+                loadingPercent={100 * amountTextScanned / fileIDs.length}
             />
-            }
 
             <FilterScreenHeaderButtons />
             
@@ -176,6 +188,7 @@ const FilterScreen = () => {
                 justifyContent={"space-between"}
                 width={"100%"}
             >
+
                 <Stack
                     direction={"column"}
                     sx={{
@@ -227,8 +240,6 @@ const FilterScreen = () => {
 
                     </Stack>
 
-
-
                 </Stack>
 
 
@@ -263,76 +274,10 @@ const FilterScreen = () => {
                         minHeight={"75%"}
                     >
 
-                        <Stack
-                            pb={"1rem"}
-                        >
-
-                            <Typography
-                                sx={{
-                                    fontSize: "1.3em",
-                                    pb: "0.5em"
-                                }}
-                            >
-                                    Degree Level
-                            </Typography>
-
-                            <ToggleButtonGroup
-                                size='large'
-                                value={currentDegreeLevel}
-                                onChange={(event) => {
-
-                                    const chosen = event.currentTarget.ariaLabel as Degree
-
-                                    setCurrentDegreeLevel(chosen)
-
-                                    const index = selectedFilters.findIndex(filter => filter.type === 'degree')
-
-                                    const filter = generateHasDegreeLevelFilter(event.currentTarget.ariaLabel as Degree)
-
-                                    if(index > -1) {
-
-
-                                        setSelectedFilters(prevFilters => {
-
-                                            const temp = [...prevFilters]
-                                            temp[index] = filter
-                                            return temp
-
-                                        })
-
-                                        return;
-
-                                    }
-
-                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
-
-                                }}
-                                exclusive={true}
-                            >
-                                
-                                <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
-                                    Associates
-                                </ToggleButton>
-
-                                <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
-                                    Bachelors
-                                </ToggleButton>
-
-                                <ToggleButton aria-label={"master's"} value="master's" key="masters">
-                                    Masters
-                                </ToggleButton>
-
-                                <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
-                                    Doctorate
-                                </ToggleButton>
-
-                                <ToggleButton aria-label={"any"} value="any" key="any">
-                                    Any
-                                </ToggleButton>
-
-                            </ToggleButtonGroup>
-
-                        </Stack>
+                        <DegreeFilter 
+                            onChange={handleChangeDegreeLevel}
+                            isSelected={selectedFilters.some(filter => filter.type === "degree")}
+                        />
                             
                         <Stack
                             direction={"column"}
