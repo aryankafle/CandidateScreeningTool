@@ -92,14 +92,32 @@ export const downloadResume = async (
 
 ) => {
 
-    const { data } = await axios.put( `${process.env.REACT_APP_SERVER_NAME}/resumes/download-resume`, {
+    const { data } = await axios.get( `${process.env.REACT_APP_SERVER_NAME}/resumes/get-file`, {
 
-        fileID,
-        userID
+        params: {
+
+            fileID,
+            userID
+
+        },
+        responseType: 'blob'
 
     })
-    
-    return data as File
+
+    try {
+
+        const blob = new Blob([data])
+
+        const file = new File([blob], fileID)
+        
+        return file
+
+    }
+    catch(error) {
+
+        return undefined
+
+    }
 
 }
 

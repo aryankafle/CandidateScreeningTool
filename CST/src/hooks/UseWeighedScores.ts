@@ -9,8 +9,6 @@ function useWeighedScores(results : Result[]) : WeighedResult[] {
 
     const weighedScores = useMemo(() => {
 
-        console.log(results)
-
         return results.map( ( result : Result ) => {
 
             const weighedScoresAndOverall : WeighedScores = weighScoresForOneResult(result.filterScores)

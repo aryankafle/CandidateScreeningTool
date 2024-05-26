@@ -93,7 +93,7 @@ const ResultsScreen = () => {
     const [results, setResults] = useState<Result[]>([])
     const weighedResults = useWeighedScores(results)
 
-    const [resumes, setResumes] = useState<File[]>([])
+    const [resumes, setResumes] = useState<(File | undefined)[]>([])
 
 
     const { paramListID } = useParams();
@@ -160,8 +160,6 @@ const ResultsScreen = () => {
 
         if(currentSavedList) {
 
-            console.log(currentSavedList)
-
             getResultsFromPreviousSavedList(currentSavedList)
             return;
 
@@ -169,8 +167,6 @@ const ResultsScreen = () => {
 
         if(paramListID) {
             
-            console.log("pasdrr", paramListID)
-
             getResultsFromListID(paramListID)
             return
 
