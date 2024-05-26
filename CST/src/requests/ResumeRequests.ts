@@ -85,6 +85,28 @@ export const uploadResumeToDatabase = (
 
 
 
+export const downloadResume = async (
+
+    fileID : string,
+    userID : string
+
+) => {
+
+    const { data } = await axios.put( `${process.env.REACT_APP_SERVER_NAME}/resumes/download-resume`, {
+
+        fileID,
+        userID
+
+    })
+    
+    return data as File
+
+}
+
+
+
+
+
 export const runTextScanOnFile = async (
 
     fileID : string,

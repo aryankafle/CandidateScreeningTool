@@ -1,27 +1,36 @@
-import type { SavedList } from "../../utils/SavedList";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { caretBackOutline, caretForwardOutline, helpCircleOutline, saveOutline } from 'ionicons/icons';
-import { IonIcon } from "@ionic/react";
-import { closeCircleOutline } from "ionicons/icons";
-import { SavedListsContext } from '../../context/SavedListsContext';
-import Result, { LetterGrade, getResults } from "../../utils/Result";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { useNavigate } from "react-router-dom";
-import UserContext from "../../context/UserContext";
-import { saveList, deleteSavedList, getExternalList } from "../../requests/ResumeRequests";
 import uFuzzy from "@leeoniya/ufuzzy"
-import BatchContext from '../../context/BatchContext';
-import useWeighedScores, { WeighedResult } from "../../hooks/UseWeighedScores";
-import SelectionContext from "../../context/SelectionContext";
-import { useParams } from "react-router-dom";
 
-import AGrade from "../../assets/a-rating.png"
-import BGrade from "../../assets/b-rating.png"
-import CGrade from "../../assets/c-rating.png"
-import DGrade from "../../assets/d-rating.png"
-import FGrade from "../../assets/f-rating.png"
+import { getRatingImage } from "../../utils/GetRatingImage";
+
+import { Filter } from "../../utils/Filter";
+import { SavedList } from "../../utils/SavedList";
+import Result, { LetterGrade } from "../../utils/Result";
+
+import { runPromisesInParallel } from "../../utils/ParallelPromises";
+
+import useWeighedScores from "../../hooks/UseWeighedScores";
+
+import { SavedListsContext } from '../../context/SavedListsContext';
+import UserContext from "../../context/UserContext";
+import SelectionContext from "../../context/SelectionContext";
+import BatchContext from '../../context/BatchContext';
+
+
+import {
+    
+    saveList,
+    deleteSavedList,
+    getExternalList,
+    createResumeResult,
+    getResumeResult,
+    downloadResume
+
+} from "../../requests/ResumeRequests";
+
+
 
 
 
@@ -31,26 +40,27 @@ const ResultsScreen = () => {
 
     
 
+    const { userData } = useContext(UserContext)
+
     const { 
         
-        currentSavedList, setCurrentSavedList,
-        savedLists, setSavedLists
+        currentSavedList,
+        savedLists,
     
     } = useContext(SavedListsContext)
 
     const {
 
-        batchResults,
-        clearBatchContext,
-        setBatchResults
+        selectedFilters,
+        setPreviouslySelectedFilters
+
+    } = useContext(SelectionContext)
+
+    const {
+
+        fileIDs,
 
     } = useContext(BatchContext)
-
-    const { setPreviouslySelectedFilters, selectedFilters } = useContext(SelectionContext)
-
-    const { userData } = useContext(UserContext)
-
-    const { listID } = useParams();
 
 
 
@@ -62,62 +72,105 @@ const ResultsScreen = () => {
 
 
 
-    const weighedResults = useWeighedScores(batchResults)
+    const saveCurrentList = () => saveList( title, description, color, results, userData.id )
 
 
 
-    const hasChangedFromPreviousSavedList = useMemo(() => {
+    const getListWithSameName = useCallback(() => savedLists.find(savedList => savedList.name === title), [savedLists, title])
 
-        const oldList = currentSavedList
+    const replaceResumeWithSameName = useCallback(async (listWithSameName : SavedList) => {
 
+        await deleteSavedList(listWithSameName._id, userData.id)
 
-
-        if(!oldList) return true;
-
-        if(oldList.name !== title) return true
-
-        // if(oldList.color !== color) return 
+        await saveCurrentList()
         
-        if(oldList.description !== description) return true
+    }, [saveCurrentList, userData])
 
-        if(oldList.file_ids.some((fileID) => batchResults.some(result => result._id !== fileID))) return true
 
-        return false
+
+    const [results, setResults] = useState<Result[]>([])
+    const weighedResults = useWeighedScores(results)
+
+    const [resumes, setResumes] = useState<File[]>([])
+
+
+    const { paramListID } = useParams();
+
+
+
+
+
+    const getResultsFromFilters = useCallback(async (filters : Filter[]) => {
+
+        const promises = fileIDs
+        .map(async fileID => {
+
+            const result = await createResumeResult(filters, fileID, userData.id)
+
+            setResults(prevResults => [...prevResults, result])
+
+            const resume = await downloadResume(fileID, userData.id)
+            
+            setResumes(prevResumes => [...prevResumes, resume])
         
-    }, [description, batchResults, currentSavedList, title])
+        })
+
+        await runPromisesInParallel(promises)
+
+    }, [fileIDs, userData.id, setResults])
 
 
 
-    const [ selectedResults, setSelectedResults] = useState([] as Result[]);
+    const getResultsFromPreviousSavedList = useCallback(async (previousList : SavedList) => {
 
-    const [previouslySelectedIndex, setPreviouslySelectedIndex] = useState(0)
+        const promises = previousList.file_ids
+        .map(async fileID => {
 
+            const result = await getResumeResult(fileID, previousList._id, userData.id)
 
+            setResults(prevResults => [...prevResults, result])
 
-    const [ instructionsPanelClicked, setInstructionsPanelClicked ] = useState(false)
+            const resume = await downloadResume(fileID, userData.id)
+            
+            setResumes(prevResumes => [...prevResumes, resume])
+        
+        })
 
-    const [ showModal, setShowModal ] = useState(false);
-    const [ showSidePanel, setShowSidePanel ] = useState(false);
+        await runPromisesInParallel(promises)
 
-    const [ currentlyViewedResult, setCurrentlyViewedResult ] = useState<WeighedResult>({} as WeighedResult)
+    }, [userData.id, setResults])
 
+    const getResultsFromListID = useCallback(async (listID : string) => {
 
+        const savedList = await getExternalList(listID)
 
-    const [ listWithSameName, setListWithSameName ] = useState<SavedList | undefined>(undefined)
+        await getResultsFromPreviousSavedList(savedList)
 
-
-
-    const [ searchQuery, setSearchQuery ] = useState("")
-
-    const [ fuzzySearchResumes, setFuzzySearchResumes ] = useState([] as Result[])
-
-
-
-
-
-
+    }, [getResultsFromPreviousSavedList])
 
 
+
+
+ 
+    useEffect(() => {
+
+        if(currentSavedList) {
+
+            getResultsFromPreviousSavedList(currentSavedList)
+            return;
+
+        }
+
+        if(paramListID) {
+
+            getResultsFromListID(paramListID)
+            return
+
+        }
+
+        getResultsFromFilters(selectedFilters)
+
+    }, [paramListID, getResultsFromListID, getResultsFromFilters, selectedFilters, currentSavedList, getResultsFromPreviousSavedList])
 
 
 
@@ -125,111 +178,14 @@ const ResultsScreen = () => {
 
         setPreviouslySelectedFilters([...selectedFilters])
 
-        
-        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => {
-        
-        if(!userData || !currentSavedList || batchResults.length > 0 ) return;
 
-        getResults(currentSavedList, userData.id)
-        .then(results => setBatchResults(results))
 
-    }, [batchResults.length, currentSavedList, setBatchResults, userData])
-    
-    useEffect(() => {
 
-        if (!listID) {
-            return
-        }
-
-        getExternalList(listID)
-        .then(async (savedList) => {
-
-            setCurrentSavedList(savedList)
-
-        })
-        
-        
-    }, [listID, setCurrentSavedList])
 
     
-
-    
-
-
-    const handleSaveList = async () => {
-        
-        let listWithSameName;
-
-        for(let i = 0; i < savedLists.length; i++) {
-
-            if(savedLists[i].name.trim() === title.trim() && title !== "") {
-                
-                setListWithSameName(listWithSameName)
-                return;
-
-            }
-
-        }
-
-        await saveList(title, description, color, batchResults, userData.id)
-
-
-
-        clearBatchContext()
-        setCurrentSavedList(undefined)
-
-        navigate("/home/saved-lists")
-
-    }
-
-    const handleReplaceListWithSameName = async () => {
-
-        if(!listWithSameName) return;
-
-        await deleteSavedList(listWithSameName._id, userData._id)
-
-        setSavedLists(
-            (savedLists) => [...savedLists].filter(list => list._id !== listWithSameName._id)
-        )
-
-        handleSaveList()
-
-    }
-
-
-
-
-
-    const getRatingImage = (grade : LetterGrade) => {
-        switch(grade) {
-            case LetterGrade.A:
-                return <img alt="'A' Rating" src={AGrade}
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
-            case LetterGrade.B:
-                return <img alt="'B' Rating" src={BGrade}
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
-            case LetterGrade.C:
-                return <img alt="'C' Rating" src={CGrade}
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
-            case LetterGrade.D:
-                return <img alt="'D' Rating" src={DGrade}
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
-            case LetterGrade.F:
-                return <img alt="'F' Rating" src={FGrade}
-                            className="self-center w-[4rem] h-[4rem]"
-                />;
-            default:
-                throw new Error(`Grade: ${grade} is out of range!`)
-        }
-    }
 
     return <div></div>
 }
