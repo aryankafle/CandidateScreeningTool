@@ -3,9 +3,6 @@ import ViewSavedLists from "../pages/ViewSavedListsScreen"
 import ResumeUpload from "../pages/ResumeUploadScreen"
 import PageNotFoundScreen from "../pages/PageNotFoundScreen"
 import ResultsScreen from "../pages/ResultsScreen"
-import { useContext, useEffect } from "react"
-import BatchContext from "../context/BatchContext"
-import SelectionContext from "../context/SelectionContext"
 
 
 
@@ -13,21 +10,6 @@ import SelectionContext from "../context/SelectionContext"
 
 
 const HomeRoutes = () => {
-    
-    const { clearBatchContext } = useContext(BatchContext)
-
-    const { clearSelectionContext } = useContext(SelectionContext)
-
-    useEffect(() => {
-
-        clearBatchContext()
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-
-
 
     return (
         <Routes>

@@ -124,6 +124,8 @@ const ResultsScreen = () => {
     useEffect(() => {
 
         setPreviouslySelectedFilters([...selectedFilters])
+
+        
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

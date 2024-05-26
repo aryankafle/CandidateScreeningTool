@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import BatchContext from '../../../context/BatchContext';
+import SelectionContext from "../../../context/SelectionContext";
 
 
 
@@ -28,6 +29,7 @@ export const FilterScreenHeaderButtons = () => {
 
 
     const { areAllTextScansReady } = useContext(BatchContext)
+    const { selectedFilters } = useContext(SelectionContext)
 
 
 
@@ -54,7 +56,7 @@ export const FilterScreenHeaderButtons = () => {
 
                 <Button
                     variant="contained"
-                    disabled={!areAllTextScansReady}
+                    disabled={ !areAllTextScansReady || (selectedFilters.length < 1) }
                     endIcon={
                     <StartIcon
                         sx={{

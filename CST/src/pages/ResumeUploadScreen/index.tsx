@@ -61,11 +61,20 @@ const ResumeUploadScreen = () => {
 
     const {
 
+        clearBatchContext,
+
         setFileIDs,
+
         fileProgresses,
         setFileProgresses
 
     } = useContext(BatchContext)
+    
+    const { flags, updateFlag } = useContext(FlagContext)
+    const { userData } = useContext(UserContext)
+    const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const hasEnoughResumes = flags.active.includes('enough resumes')
 
 
 
@@ -78,12 +87,6 @@ const ResumeUploadScreen = () => {
         return loadingPercent
 
     }, [fileProgresses])
-    
-    const { flags, updateFlag } = useContext(FlagContext)
-    const { userData } = useContext(UserContext)
-    const { loadingState, setLoadingState } = useContext(FlagContext)
-
-    const hasEnoughResumes = flags.active.includes('enough resumes')
 
 
 
@@ -108,11 +111,12 @@ const ResumeUploadScreen = () => {
     useEffect(() => {
 
         clearSelectionContext()
+        clearBatchContext()
 
         updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
         updateFlag({action: "deactivate", flag: `text scans have been created`})
 
-    }, [updateFlag, clearSelectionContext])
+    }, [updateFlag, clearSelectionContext, clearBatchContext])
 
 
 
