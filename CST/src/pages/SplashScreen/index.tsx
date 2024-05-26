@@ -12,6 +12,7 @@ const SplashScreen = () => {
             height={"100vh"}
             direction={"column"}
             justifyContent={"center"}
+            color={palette.background.default}
         >
 
             <Stack
