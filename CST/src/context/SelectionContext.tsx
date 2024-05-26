@@ -14,9 +14,6 @@ const SelectionContextInitial = {
     selectedFilters: [] as Filter[],
     setSelectedFilters: {} as React.Dispatch<React.SetStateAction<Filter[]>>,
 
-    previouslySelectedFilters: [] as Filter[],
-    setPreviouslySelectedFilters: {} as React.Dispatch<React.SetStateAction<Filter[]>>,
-
     clearSelectionContext : {} as () => void
 
 }
@@ -40,15 +37,12 @@ export const SelectionContextProvider = (props: { children : ReactNode }) => {
 
     const [selectedFilters, setSelectedFilters] = useState([] as Filter[])
     
-    const [previouslySelectedFilters, setPreviouslySelectedFilters] = useState<Filter[]>([])
-
     const clearSelectionContext = useCallback(() => {
 
         setUploadedFiles([])
         setSelectedFilters([])
-        setPreviouslySelectedFilters([])
 
-    }, [setUploadedFiles, setSelectedFilters, setPreviouslySelectedFilters])
+    }, [setUploadedFiles, setSelectedFilters])
 
 
 
@@ -62,8 +56,6 @@ export const SelectionContextProvider = (props: { children : ReactNode }) => {
                 uploadedFiles, setUploadedFiles,
 
                 selectedFilters, setSelectedFilters,
-
-                previouslySelectedFilters, setPreviouslySelectedFilters,
 
                 clearSelectionContext
                 

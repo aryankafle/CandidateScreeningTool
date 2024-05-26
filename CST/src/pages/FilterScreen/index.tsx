@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import React from 'react';
 
 import BatchContext from '../../context/BatchContext';
@@ -20,6 +20,7 @@ import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHa
 import { CandidateCountryFilter } from '../../components/filters/CandidateCountryFilterComponent';
 import { KeywordBiasFilter } from '../../components/filters/KeywordBiasFilterComponent';
 import { DraggableFiltersView } from '../../components/views/DraggableFiltersView';
+import { Filter } from '../../utils/Filter';
 
 
 
@@ -27,13 +28,14 @@ import { DraggableFiltersView } from '../../components/views/DraggableFiltersVie
 
 const FilterScreen = () => {
 
+    const filterCache = useRef<Filter[]>()
+
     const { palette } = useTheme()
 
     const {
 
         selectedFilters,
         setSelectedFilters,
-        previouslySelectedFilters
 
     } = useContext(SelectionContext)
     
@@ -44,20 +46,6 @@ const FilterScreen = () => {
         areAllTextScansReady,
 
     } = useContext(BatchContext)
-
-
-
-
-
-    useEffect(() => {
-
-        setSelectedFilters(previouslySelectedFilters)
-
-    }, [previouslySelectedFilters, setSelectedFilters])
-    
-
-
-
 
 
 

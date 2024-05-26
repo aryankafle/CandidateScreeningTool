@@ -1,5 +1,7 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { Filter } from "../../../utils/Filter";
 
 import BatchContext from '../../../context/BatchContext';
 import SelectionContext from "../../../context/SelectionContext";
@@ -15,21 +17,75 @@ import StartIcon from '@mui/icons-material/Start';
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { BackButton } from "../../buttons/BackButton";
-
-
+import FlagContext from "../../../context/FlagContext";
 
 
 
 export const FilterScreenHeaderButtons = () => {
 
+    const filterCache = useRef<Filter[]>()
+
     const navigate = useNavigate()
 
     const { palette } = useTheme()
-    
+
 
 
     const { areAllTextScansReady } = useContext(BatchContext)
-    const { selectedFilters } = useContext(SelectionContext)
+
+    const { flags, updateFlag } = useContext(FlagContext)
+    
+    const { 
+
+        selectedFilters,
+
+    } = useContext(SelectionContext)
+
+    
+
+    useEffect(() => {
+
+        console.log("yeahfasedf")
+
+        filterCache.current = [...selectedFilters]
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
+
+    useEffect(() => {
+
+        if(!filterCache.current) {
+
+            updateFlag({flag: 'filters have changed', action: "activate"})
+            return;
+
+        };
+
+        if(selectedFilters.length !== filterCache.current.length) {
+
+            updateFlag({flag: 'filters have changed', action: "activate"})
+            return;
+
+        }
+
+        for(const filter of filterCache.current) {
+
+            if(!selectedFilters.some(otherFilter => otherFilter.name === filter.name)) {
+
+                console.log("yeaaa")
+
+                updateFlag({flag: 'filters have changed', action: "activate"})
+                return;
+
+            }
+            
+        }
+
+        updateFlag({flag: 'filters have changed', action: "deactivate"})
+
+    }, [selectedFilters, updateFlag])
 
 
 

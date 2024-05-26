@@ -29,6 +29,7 @@ import {
     downloadResume
 
 } from "../../requests/ResumeRequests";
+import FlagContext from "../../context/FlagContext";
 
 
 
@@ -54,9 +55,10 @@ const ResultsScreen = () => {
     const {
 
         selectedFilters,
-        setPreviouslySelectedFilters
 
     } = useContext(SelectionContext)
+
+    const { flags } = useContext(FlagContext)
 
     const {
 
@@ -71,10 +73,17 @@ const ResultsScreen = () => {
     const [ title, setTitle ] = useState(currentSavedList?.name || "")
     const [ description, setDescription ] = useState(currentSavedList?.description || "")
     const [ color, setColor ] = useState(currentSavedList?.color || "")
+    
+
+
+    const [results, setResults] = useState<Result[]>([])
+    const weighedResults = useWeighedScores(results)
+
+    const [resumes, setResumes] = useState<(File | undefined)[]>([])
 
 
 
-    const saveCurrentList = () => saveList( title, description, color, results, userData.id )
+    const saveCurrentList = useCallback(() => saveList( title, description, color, results, userData.id ), [color, description, results, title, userData.id] )
 
 
 
@@ -88,12 +97,6 @@ const ResultsScreen = () => {
         
     }, [saveCurrentList, userData])
 
-
-
-    const [results, setResults] = useState<Result[]>([])
-    const weighedResults = useWeighedScores(results)
-
-    const [resumes, setResumes] = useState<(File | undefined)[]>([])
 
 
     const { paramListID } = useParams();
@@ -156,6 +159,12 @@ const ResultsScreen = () => {
  
     useEffect(() => {
 
+        if(!flags.active.includes('filters have changed')) {
+
+            return;
+
+        }
+
         if(didRunResultsEffect.current) return;
 
         if(currentSavedList) {
@@ -178,22 +187,11 @@ const ResultsScreen = () => {
             didRunResultsEffect.current = true
         }
 
-    }, [paramListID, getResultsFromListID, getResultsFromFilters, selectedFilters, currentSavedList, getResultsFromPreviousSavedList])
-
-
-
-    useEffect(() => {
-
-        setPreviouslySelectedFilters([...selectedFilters])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [paramListID, getResultsFromListID, getResultsFromFilters, selectedFilters, currentSavedList, getResultsFromPreviousSavedList, flags.active])
 
 
 
 
-
-    
 
     return <div></div>
 }
