@@ -54,7 +54,6 @@ export const UploadCard = ({ sx, file, index, isSelected, onSelect, onDelete } :
                 </IconButton>
             }
             sx={{
-                ...sx,
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: "0.222em",

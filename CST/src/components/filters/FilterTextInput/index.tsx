@@ -56,7 +56,6 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
             <Stack
                 direction={"row"}
                 sx={{
-                    ...sx,
                     width: "40em",
                 }}
             >
