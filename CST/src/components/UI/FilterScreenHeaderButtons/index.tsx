@@ -33,7 +33,7 @@ export const FilterScreenHeaderButtons = () => {
 
     const { areAllTextScansReady } = useContext(BatchContext)
 
-    const { flags, updateFlag } = useContext(FlagContext)
+    const { updateFlag } = useContext(FlagContext)
     
     const { 
 
