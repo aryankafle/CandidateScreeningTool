@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import uFuzzy from "@leeoniya/ufuzzy"
@@ -37,6 +37,8 @@ import {
 const ResultsScreen = () => {
 
     const navigate = useNavigate()
+
+    const didRunResultsEffect = useRef(false)
 
     
 
@@ -154,7 +156,11 @@ const ResultsScreen = () => {
  
     useEffect(() => {
 
+        if(didRunResultsEffect.current) return;
+
         if(currentSavedList) {
+
+            console.log(currentSavedList)
 
             getResultsFromPreviousSavedList(currentSavedList)
             return;
@@ -162,6 +168,8 @@ const ResultsScreen = () => {
         }
 
         if(paramListID) {
+            
+            console.log("pasdrr", paramListID)
 
             getResultsFromListID(paramListID)
             return
@@ -169,6 +177,10 @@ const ResultsScreen = () => {
         }
 
         getResultsFromFilters(selectedFilters)
+
+        return () => {
+            didRunResultsEffect.current = true
+        }
 
     }, [paramListID, getResultsFromListID, getResultsFromFilters, selectedFilters, currentSavedList, getResultsFromPreviousSavedList])
 

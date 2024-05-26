@@ -16,7 +16,7 @@ const SavedListsContextInitial = {
     savedLists: [] as SavedList[],
     setSavedLists: {} as React.Dispatch<React.SetStateAction<SavedList[]>>,
 
-    currentSavedList : {} as SavedList | undefined,
+    currentSavedList : undefined as SavedList | undefined,
     setCurrentSavedList : {} as React.Dispatch<SetStateAction<SavedList | undefined>>,
 
 }
