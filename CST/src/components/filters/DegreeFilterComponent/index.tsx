@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 
-import { Degree } from "../../../utils/Filter";
+import { Degree, Filter, generateHasDegreeLevelFilter } from "../../../utils/Filter";
 
 
 
@@ -8,21 +8,17 @@ import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
-import List from "@mui/material/List";
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import LinearProgress from '@mui/material/LinearProgress';
 
 
 
 
 
-type FilterSliderType = {
+type DegreeFilterProps = {
 
-    onChange: (newDegree: Degree) => void,
-    isSelected: boolean
+    selectedFilters: Filter[],
+    setSelectedFilters: React.Dispatch<SetStateAction<Filter[]>>
 
 }
 
@@ -30,26 +26,70 @@ type FilterSliderType = {
 
 
 
-export const DegreeFilter = ({ onChange, isSelected } : FilterSliderType) => {
+export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFilterProps) => {
     
     const { palette } = useTheme()
 
-
-
     const [currentDegreeLevel, setCurrentDegreeLevel] = useState<Degree | null>(null)
+    
+
 
     useEffect(() => {
 
-        if(!isSelected) {
+        if(!selectedFilters.some(filter => filter.type === 'degree')) {
 
             setCurrentDegreeLevel(null)
+            return;
 
         }
 
-    }, [isSelected])
-
+    }, [selectedFilters])
 
     
+
+    function handleChangeDegreeLevel(newDegreeLevel : Degree, ) {
+
+        if(currentDegreeLevel === newDegreeLevel) {
+
+            setCurrentDegreeLevel(null)
+            setSelectedFilters(prevFilters => {
+
+                const filtered = prevFilters.filter(filter => filter.type !== 'degree')
+
+                return filtered
+
+            })
+            return;
+
+        }
+
+        const index = selectedFilters.findIndex(filter => filter.type === 'degree')
+
+        const filter = generateHasDegreeLevelFilter(newDegreeLevel)
+
+        if(index > -1) {
+
+            setSelectedFilters(prevFilters => {
+
+                const temp = [...prevFilters]
+                temp[index] = filter
+                return temp
+
+            })
+
+            return;
+
+        }
+
+        setSelectedFilters(prevFilters => [...prevFilters, filter])
+        
+    }
+
+
+
+
+
+
 
 
     return (
@@ -75,7 +115,7 @@ export const DegreeFilter = ({ onChange, isSelected } : FilterSliderType) => {
 
                     setCurrentDegreeLevel(chosen)
 
-                    onChange(chosen)
+                    handleChangeDegreeLevel(chosen)
 
                 }}
                 exclusive={true}

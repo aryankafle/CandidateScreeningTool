@@ -41,6 +41,10 @@ import { FilterTextInput } from '../../components/filters/FilterTextInput';
 import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
 import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
 import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
+import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
+import CandidateHasWorkedAtFilter from '../../components/filters/CandidateHasWorkedAtFilterComponent';
+import CandidateCountryFilter from '../../components/filters/CandidateCountryFilterComponent';
+import KeywordBiasFilter from '../../components/filters/KeywordBiasFilterComponent';
 
 
 
@@ -126,30 +130,7 @@ const FilterScreen = () => {
 
 
 
-    function handleChangeDegreeLevel(newDegreeLevel : Degree, ) {
 
-        const index = selectedFilters.findIndex(filter => filter.type === 'degree')
-
-        const filter = generateHasDegreeLevelFilter(newDegreeLevel)
-
-        if(index > -1) {
-
-
-            setSelectedFilters(prevFilters => {
-
-                const temp = [...prevFilters]
-                temp[index] = filter
-                return temp
-
-            })
-
-            return;
-
-        }
-
-        setSelectedFilters(prevFilters => [...prevFilters, filter])
-        
-    }
 
 
 
@@ -275,76 +256,14 @@ const FilterScreen = () => {
                     >
 
                         <DegreeFilter 
-                            onChange={handleChangeDegreeLevel}
-                            isSelected={selectedFilters.some(filter => filter.type === "degree")}
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
                         />
                             
-                        <Stack
-                            direction={"column"}
-                        >
-
-                            <FilterSlider
-                                stepSize={1}
-                                onChange={(value) => {
-
-                                    const index = selectedFilters.findIndex(filter => filter.type === 'years-of-work-experience')
-
-                                    const filter = generateYearsOfWorkExperienceFIlter(value)
-
-                                    if(index > -1) {
-
-
-                                        setSelectedFilters(prevFilters => {
-
-                                            const temp = [...prevFilters]
-                                            temp[index] = filter
-                                            return temp
-
-                                        })
-
-                                        return;
-
-                                    }
-
-                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
-
-                                }}
-                                min={0}
-                                max={40}
-                            >
-                                Years of Work Experience
-                            </FilterSlider>
-
-                            <FilterSwitch
-                                onChange={(checked) => {
-
-                                    const index = selectedFilters.findIndex(filter => filter.type === 'currently-employed')
-
-                                    const filter = generateCandidateCurrentlyEmployedFilter(checked)
-
-                                    if(index > -1) {
-
-
-                                        setSelectedFilters(prevFilters => {
-
-                                            const temp = [...prevFilters]
-                                            temp[index] = filter
-                                            return temp
-
-                                        })
-
-                                        return;
-
-                                    }
-
-                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
-
-                                }}
-                            >
-                                Currently Working?
-                            </FilterSwitch>
-
-                        </Stack>
+                        <YearsOfWorkExperienceFilter
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
                         <Stack
                             direction={"row"}
@@ -352,108 +271,20 @@ const FilterScreen = () => {
                             gap={"5em"}
                         >
                                 
-                            <FilterTextInput
-                                onSubmit={(value) => {
+                            <CandidateHasWorkedAtFilter
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                            />
 
-                                    if(selectedFilters.some(filter => filter.type === `company-name-${value}`) ) return;
+                            <CandidateCountryFilter 
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                            />
 
-                                    const companyNameFilter = generateCompanyNameFilter(value)
-
-                                    setSelectedFilters(prevFilters => [...prevFilters, companyNameFilter])
-                                
-                                }}
-                                placeholder='Samsung' 
-                            >
-                                Candidate Has Worked At:
-                            </FilterTextInput>
-
-                            <FilterTextInput
-                                onSubmit={(value) => {
-
-                                    if(selectedFilters.some(filter => filter.type === `country-${value}`) ) return;
-
-                                    const countryFilter = generateCandidateCountryFilter(value)
-
-                                    setSelectedFilters(prevFilters => [...prevFilters, countryFilter])
-                                
-                                }}
-                                placeholder='Korea'
-                            >
-                                Based in Country:
-                            </FilterTextInput>
-
-                            <Stack
-                                direction={"column"}
-                            >
-
-                                <Typography
-                                    sx={{
-                                        fontSize: "1.1em"
-                                    }}
-                                    color={palette.grey[900]}
-                                    mb={"0.2em"}
-                                >
-                                    Below, input another keyword to bias.
-                                </Typography>
-
-                                <Typography
-                                    sx={{
-                                        fontSize: "0.8em",
-                                        whiteSpace: "wrap"
-                                    }}
-                                    color={palette.grey[800]}
-                                >
-                                    Our AI will look for this word, and any words similar in contextual meaning.
-                                </Typography>
-
-                                <Typography
-                                    sx={{
-                                        fontSize: "0.8em",
-                                        whiteSpace: "wrap"
-                                    }}
-                                    color={palette.grey[800]}
-                                    mb={"1em"}
-                                >
-                                    If you wish for this to be a strict search instead, check "strict".
-                                </Typography>
-
-                                <FilterTextInput
-                                    onSubmit={(value) => {
-
-                                        if(selectedFilters.some(filter => [ `keyword-bias-${value}` as FilterType, `strict-keyword-bias-${value}` as FilterType ].includes(filter.type) ) ) return;
-
-                                        setSelectedFilters(prevFilters => [...prevFilters, generateKeywordBiasFilter(value, isKeywordBiasStrict)])
-                                    
-                                    }}
-                                >
-                                    Insert Keyword Bias:
-                                </FilterTextInput>
-
-                                <Stack
-                                    direction={"row"}
-                                >
-
-                                    <Switch
-                                        sx={{
-                                            alignSelf: "center"
-                                        }}
-                                        checked={isKeywordBiasStrict}
-                                        onChange={(event, checked) => setIsKeywordBiasStrict(checked)}
-                                        color='secondary'
-                                    />
-                                    
-                                    <Typography
-                                        sx={{
-                                            alignSelf: "center"
-                                        }}
-                                    >
-                                        Strict?
-                                    </Typography>
-
-                                </Stack>
-
-
-                            </Stack>
+                            <KeywordBiasFilter 
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                            />
 
                         </Stack>
 
