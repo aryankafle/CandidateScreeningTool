@@ -24,6 +24,7 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom"
 import FlagContext from "../context/FlagContext";
 import BatchContext from '../context/BatchContext';
+import SelectionContext from '../context/SelectionContext';
 
 
 
@@ -35,6 +36,7 @@ function Router() {
     const { setSavedLists, setCurrentSavedList } = useContext(SavedListsContext)
     const { setLoadingState } = useContext(FlagContext)
     const { fileProgresses } = useContext(BatchContext)
+    const { selectedFilters, setPreviouslySelectedFilters } = useContext(SelectionContext)
 
     const route = useLocation()
 
@@ -49,6 +51,14 @@ function Router() {
         setLoadingState(false)
 
     }, [route, setLoadingState])
+
+
+
+    useEffect(() => {
+
+        setPreviouslySelectedFilters(selectedFilters)
+
+    }, [route, selectedFilters, setPreviouslySelectedFilters])
 
 
 

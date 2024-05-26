@@ -1,8 +1,11 @@
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { mean } from "simple-statistics";
+
 import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
 
 
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import UserContext from "../../context/UserContext";
 import FlagContext from "../../context/FlagContext"
@@ -23,7 +26,6 @@ import { UploadCard } from "../../components/list-cards/UploadCard";
 import { FileUploadButton } from "../../components/buttons/FileUploadButton";
 import { ConfirmDeleteFilesModal, ConfirmFilesModal, NotEnoughFilesModal } from "../../components/modals/ConfirmModals";
 import { LoadingModal } from "../../components/modals/LoadingModal";
-import { mean } from "simple-statistics";
 
 
 
@@ -50,15 +52,19 @@ const ResumeUploadScreen = () => {
 
     const {
 
+        clearSelectionContext,
+
         uploadedFiles,
         setUploadedFiles,
 
     } = useContext(SelectionContext)
 
     const {
+
         setFileIDs,
         fileProgresses,
         setFileProgresses
+
     } = useContext(BatchContext)
 
 
@@ -101,10 +107,12 @@ const ResumeUploadScreen = () => {
 
     useEffect(() => {
 
-        updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
+        clearSelectionContext()
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
+        updateFlag({action: "deactivate", flag: `text scans have been created`})
+
+    }, [updateFlag, clearSelectionContext])
 
 
 

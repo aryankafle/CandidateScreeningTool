@@ -1,34 +1,52 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
+
 
 import BatchContext from '../../context/BatchContext';
 import FlagContext from '../../context/FlagContext';
 import SelectionContext from '../../context/SelectionContext';
+import UserContext from '../../context/UserContext';
 
-import type { Filter, Degree } from '../../utils/Filter';
-import { generateHasDegreeLevelFilter, generateCompanyNameFilter, generateHasWorkExperienceFilter, generateKeywordBiasFilter, generateYearsOfWorkExperienceFIlter } from '../../utils/Filter';
+import { createResumeResult, runTextScanOnFile } from '../../requests/ResumeRequests';
+
+import { 
+    
+    Degree,
+    FilterType,
+    
+    generateHasDegreeLevelFilter,
+    generateCompanyNameFilter,
+    generateKeywordBiasFilter,
+    generateYearsOfWorkExperienceFIlter,
+    generateCandidateCurrentlyEmployedFilter,
+    generateCandidateCountryFilter
+
+} from '../../utils/Filter';
+
+import { runPromisesInParallel } from "../../utils/ParallelPromises"
 
 
 
-import { IconButton, ToggleButtonGroup, useTheme } from "@mui/material"; 
+import { CircularProgress, useTheme } from "@mui/material"; 
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
-import StartIcon from '@mui/icons-material/Start';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import Box from '@mui/material/Box';
+import Switch from '@mui/material/Switch';
+import Snackbar from '@mui/material/Snackbar';
 
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
+import { FilterSlider } from '../../components/filters/FilterSlider';
 import DraggableList from '../../components/views/DraggableList/';
-import { BackButton } from '../../components/buttons/BackButton';
-import { NumbersOutlined } from '@mui/icons-material';
+import FilterSwitch from '../../components/filters/FilterSwitch';
+import { FilterTextInput } from '../../components/filters/FilterTextInput';
+import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
+import Result from '../../utils/Result';
 
 
 
@@ -36,49 +54,52 @@ import { NumbersOutlined } from '@mui/icons-material';
 
 const FilterScreen = () => {
 
+    const navigate = useNavigate()
+
     const { palette } = useTheme()
 
     const [ currentDegreeLevel, setCurrentDegreeLevel ] = useState<Degree | null>(null)
 
-    const { selectedFilters, setSelectedFilters } = useContext(SelectionContext)
-    const { previouslySelectedFilters } = useContext(SelectionContext)
+    const {
+
+        selectedFilters,
+        setSelectedFilters,
+        previouslySelectedFilters
+
+    } = useContext(SelectionContext)
+    
+    const {
+
+        fileIDs,
+        amountTextScanned,
+        areAllTextScansReady,
+        setBatchResults
+
+    } = useContext(BatchContext)
+
+    const { userData } = useContext(UserContext)
     const { flags, updateFlag } = useContext(FlagContext)
     const { loadingState, setLoadingState } = useContext(FlagContext)
+
+    const [ isKeywordBiasStrict, setIsKeywordBiasStrict ] = useState(false)
 
 
 
 
 
     useEffect(() => {
-        
-        if (selectedFilters.length !== previouslySelectedFilters.length) {
 
-            updateFlag({flag: 'filters have changed', action: 'activate'})
-            return;
+        setSelectedFilters(previouslySelectedFilters)
 
-        }
-
-        for(let i = 0; i < selectedFilters.length; i++) {
-
-            if(selectedFilters[i].id !== previouslySelectedFilters[i].id) {
-
-                updateFlag({flag: 'filters have changed', action: 'activate'})
-                return;
-            }
-
-        }
-
-
-
-        updateFlag({flag: 'filters have changed', action: 'deactivate'})
-    
-    }, [selectedFilters, previouslySelectedFilters, updateFlag])
+    }, [previouslySelectedFilters, setSelectedFilters])
     
 
 
     function handleRemoveFilter(index : number) {
 
         const temp = [...selectedFilters].filter((filter, someIndex) => someIndex !== index)
+
+        setCurrentDegreeLevel(null)
         
         setSelectedFilters(temp)
         
@@ -88,79 +109,84 @@ const FilterScreen = () => {
 
     async function handleRunSelectedFilters() {
 
+        let accumulatedResults : Result[] = [] 
+
+        const promises = fileIDs.map(async fileID => { 
+
+            const result = await createResumeResult(selectedFilters, fileID, userData.id)
+
+            accumulatedResults.push(result)
+            setBatchResults(accumulatedResults)
+
+        })
+
+        await runPromisesInParallel(promises)
+
         setLoadingState(true)
 
-        
+        navigate("/results")
 
     }
-
-
-
-    function handleDegreeChange(_ : any, value: Degree | undefined) {
-
-        if(!value) {
-
-            setCurrentDegreeLevel(null)
-            return;
-
-        }
-
-        setCurrentDegreeLevel(value)
-        
-    }
-
-    useEffect(() => {
-
-
-
-    }, [currentDegreeLevel, setSelectedFilters])
 
 
 
 
     return (
         <Stack
-            width={"100%"}
-            height={"100%"}
-            flexGrow={1}
+            width={"100vw"}
+            height={"100vh"}
             direction={"column"}
+            overflow={"auto"}
         >
 
-            <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
-                py={"0.7em"}
-                px={"1rem"}
-            >
-
-                <BackButton navto={"/home/resume-upload"} />
-
-                <Button
-                    variant='contained'
-                    endIcon={
-                    <StartIcon
-                        sx={{
-                            color: palette.primary.contrastText
-                        }}
-                    />
-                    }
-                    onMouseDown={handleRunSelectedFilters}
-                >
-                    <Typography
-                        sx={{
-                            color: palette.primary.contrastText
-                        }}
-                    >
-                        Run Selected Filters
-                    </Typography>
-                </Button>
+            <Snackbar
+                open={(!areAllTextScansReady || loadingState)}
                 
-            </Stack>
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left"
+                }}
+                sx={{
+                    p: "1em",
+                    backgroundColor: palette.divider
+                }}
+            >
+                
+                <Stack
+                    direction={"column"}
+                >
+
+                    { !areAllTextScansReady &&
+                        <Stack
+                            direction={"row"}
+                            gap={"1.4em"}
+                        >
+                            <CircularProgress
+                                sx={{
+                                    alignSelf: "center"
+                                }}
+                            />
+                            <Typography
+                                sx={{
+                                    alignSelf: "center",
+                                    fontSize: "1.4em",
+                                    color: palette.text.primary
+                                }}
+                            >
+                                Creating Text Scans... {amountTextScanned} / {fileIDs.length}
+                            </Typography> 
+                        </Stack>
+                    }
+
+                </Stack>
+
+            </Snackbar>
+
+            <FilterScreenHeaderButtons />
 
             <Stack
                 direction={"row"}
                 justifyContent={"space-between"}
-                height={"100%"}
                 width={"100%"}
             >
                 <Stack
@@ -171,33 +197,50 @@ const FilterScreen = () => {
                     }}
                     p={"1rem"}
                     width={"40%"}
-                    overflow={"hidden"}
+                    height={"100%"}
                 >
-
-                    <Typography
+                    <Stack
                         sx={{
-                            fontSize: "3vw",
-                            textAlign: "center"
+                            flexDirection: "column",
+                            height: "90vh",
+                            position: "sticky",
+                            top: 20,
                         }}
                     >
-                        Current Filter Layers:
-                    </Typography>
 
-                    <List
-                        sx={{
-                            height: "100%",
-                            overflow: "auto",
-                            padding: "0.333em"
-                        }}
-                    >
-                        <DraggableList
-                            uniqueIDItems={selectedFilters}
-                            setUniqueIDItems={setSelectedFilters}
-                            onDelete={(index) => handleRemoveFilter(index)}
-                            ItemCard={FilterLayerCard}
-                            className="h-[10em] overflow-x-clip"
-                        />
-                    </List>
+                        <Typography
+                            sx={{
+                                minHeight: "2.3em",
+                                fontSize: "2.3em",
+                                textAlign: "center",
+                            }}
+                        >
+                            Current Filter Layers:
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                padding: "0.333em",
+                                flexGrow: 1,
+                                overflow: "auto"
+                            }}
+                        >
+
+                            <List>
+                                <DraggableList
+                                    uniqueIDItems={selectedFilters}
+                                    setUniqueIDItems={setSelectedFilters}
+                                    onDelete={(index) => handleRemoveFilter(index)}
+                                    ItemCard={FilterLayerCard}
+                                    className="h-[10em] overflow-x-clip"
+                                />
+                            </List>
+
+                        </Box>
+
+                    </Stack>
+
+
 
                 </Stack>
 
@@ -208,125 +251,278 @@ const FilterScreen = () => {
                     sx={{
                         backgroundColor: palette.background.paper,
                         borderStartStartRadius: 40,
-                        width: "50%"
+                        px: "2.3vw",
+                        py: "2.3vh",
+                        pb: "5em"
                     }}
+                    overflow={"clip"}
                     height={"100%"}
-                    p={"1rem"}
+                    width={"50%"}
+
                 >
 
                     <Typography
                         sx={{
-                            fontSize: "3vw",
+                            fontSize: "2.3em",
                             textAlign: "center"
                         }}
-                        p={"1rem"}
                     >
                         Add Filters
                     </Typography>
 
                     <Stack
                         direction={"column"}
+                        gap={"5rem"}
+                        minHeight={"75%"}
                     >
 
                         <Stack
-                            pb={"1rem"}>
+                            pb={"1rem"}
+                        >
 
                             <Typography
                                 sx={{
-                                    fontSize: "1vw"
-                                }}>
-                                    Candidate Has Degree:
+                                    fontSize: "1.3em",
+                                    pb: "0.5em"
+                                }}
+                            >
+                                    Degree Level
                             </Typography>
 
                             <ToggleButtonGroup
                                 size='large'
                                 value={currentDegreeLevel}
-                                onChange={handleDegreeChange}
+                                onChange={(event) => {
+
+                                    const chosen = event.currentTarget.ariaLabel as Degree
+
+                                    setCurrentDegreeLevel(chosen)
+
+                                    const index = selectedFilters.findIndex(filter => filter.type === 'degree')
+
+                                    const filter = generateHasDegreeLevelFilter(event.currentTarget.ariaLabel as Degree)
+
+                                    if(index > -1) {
+
+
+                                        setSelectedFilters(prevFilters => {
+
+                                            const temp = [...prevFilters]
+                                            temp[index] = filter
+                                            return temp
+
+                                        })
+
+                                        return;
+
+                                    }
+
+                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
+
+                                }}
                                 exclusive={true}
                             >
+                                
                                 <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
                                     Associates
-                                </ToggleButton>,
+                                </ToggleButton>
+
                                 <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
                                     Bachelors
-                                </ToggleButton>,
+                                </ToggleButton>
+
                                 <ToggleButton aria-label={"master's"} value="master's" key="masters">
                                     Masters
-                                </ToggleButton>,
+                                </ToggleButton>
+
                                 <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
                                     Doctorate
                                 </ToggleButton>
+
                                 <ToggleButton aria-label={"any"} value="any" key="any">
                                     Any
                                 </ToggleButton>
+
                             </ToggleButtonGroup>
 
                         </Stack>
-
-                        <Stack
-                            pb={"1rem"}
-                            direction={"row"}
-                        >
-
-                            <Typography
-                                sx={{
-                                    fontSize: "1vw"
-                                }}>
-                                    Candidate Has Years of Work Experience:
-                            </Typography>
-
-                            <TextField
-                                size='small'
-                                type='number'
-                                sx={{
-                                    width: "6rem",
-                                    pl: "1rem"
-                                }}>
-                            </TextField>
                             
-                        </Stack>
-
                         <Stack
-                            pb={"1rem"}
-                            direction={"row"}
-                        >
-                            
-                            <Typography
-                                sx={{
-                                    fontSize: "1vw"
-                                }}>
-                                    Candidate Has Worked At:
-                            </Typography>
-
-                            <TextField
-                                size='small'
-                                sx={{
-                                    width: "50%",
-                                    pl: "1rem"
-                                }}>
-                            </TextField>
-                            
-                        </Stack>
-
-                        <Stack
-                            pb={"1rem"}
                             direction={"column"}
                         >
-                            
-                            <Typography
-                                sx={{
-                                    fontSize: "1vw"
-                                }}>
-                                    Keyword Bias:
-                            </Typography>
 
-                            <TextField
-                                size='small'
-                                sx={{
-                                    width: "50%"
-                                }}>
-                            </TextField>
-                            
+                            <FilterSlider
+                                stepSize={1}
+                                onChange={(value) => {
+
+                                    const index = selectedFilters.findIndex(filter => filter.type === 'years-of-work-experience')
+
+                                    const filter = generateYearsOfWorkExperienceFIlter(value)
+
+                                    if(index > -1) {
+
+
+                                        setSelectedFilters(prevFilters => {
+
+                                            const temp = [...prevFilters]
+                                            temp[index] = filter
+                                            return temp
+
+                                        })
+
+                                        return;
+
+                                    }
+
+                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
+
+                                }}
+                                min={0}
+                                max={40}
+                            >
+                                Years of Work Experience
+                            </FilterSlider>
+
+                            <FilterSwitch
+                                onChange={(checked) => {
+
+                                    const index = selectedFilters.findIndex(filter => filter.type === 'currently-employed')
+
+                                    const filter = generateCandidateCurrentlyEmployedFilter(checked)
+
+                                    if(index > -1) {
+
+
+                                        setSelectedFilters(prevFilters => {
+
+                                            const temp = [...prevFilters]
+                                            temp[index] = filter
+                                            return temp
+
+                                        })
+
+                                        return;
+
+                                    }
+
+                                    setSelectedFilters(prevFilters => [...prevFilters, filter])
+
+                                }}
+                            >
+                                Currently Working?
+                            </FilterSwitch>
+
+                        </Stack>
+
+                        <Stack
+                            direction={"row"}
+                            flexWrap={"wrap"}
+                            gap={"5em"}
+                        >
+                                
+                            <FilterTextInput
+                                onSubmit={(value) => {
+
+                                    if(selectedFilters.some(filter => filter.type === `company-name-${value}`) ) return;
+
+                                    const companyNameFilter = generateCompanyNameFilter(value)
+
+                                    setSelectedFilters(prevFilters => [...prevFilters, companyNameFilter])
+                                
+                                }}
+                                placeholder='Samsung' 
+                            >
+                                Candidate Has Worked At:
+                            </FilterTextInput>
+
+                            <FilterTextInput
+                                onSubmit={(value) => {
+
+                                    if(selectedFilters.some(filter => filter.type === `country-${value}`) ) return;
+
+                                    const countryFilter = generateCandidateCountryFilter(value)
+
+                                    setSelectedFilters(prevFilters => [...prevFilters, countryFilter])
+                                
+                                }}
+                                placeholder='Korea'
+                            >
+                                Based in Country:
+                            </FilterTextInput>
+
+                            <Stack
+                                direction={"column"}
+                            >
+
+                                <Typography
+                                    sx={{
+                                        fontSize: "1.1em"
+                                    }}
+                                    color={palette.grey[900]}
+                                    mb={"0.2em"}
+                                >
+                                    Below, input another keyword to bias.
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        fontSize: "0.8em",
+                                        whiteSpace: "wrap"
+                                    }}
+                                    color={palette.grey[800]}
+                                >
+                                    Our AI will look for this word, and any words similar in contextual meaning.
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        fontSize: "0.8em",
+                                        whiteSpace: "wrap"
+                                    }}
+                                    color={palette.grey[800]}
+                                    mb={"1em"}
+                                >
+                                    If you wish for this to be a strict search instead, check "strict".
+                                </Typography>
+
+                                <FilterTextInput
+                                    onSubmit={(value) => {
+
+                                        if(selectedFilters.some(filter => [ `keyword-bias-${value}` as FilterType, `strict-keyword-bias-${value}` as FilterType ].includes(filter.type) ) ) return;
+
+                                        setSelectedFilters(prevFilters => [...prevFilters, generateKeywordBiasFilter(value, isKeywordBiasStrict)])
+                                    
+                                    }}
+                                >
+                                    Insert Keyword Bias:
+                                </FilterTextInput>
+
+                                <Stack
+                                    direction={"row"}
+                                >
+
+                                    <Switch
+                                        sx={{
+                                            alignSelf: "center"
+                                        }}
+                                        checked={isKeywordBiasStrict}
+                                        onChange={(event, checked) => setIsKeywordBiasStrict(checked)}
+                                        color='secondary'
+                                    />
+                                    
+                                    <Typography
+                                        sx={{
+                                            alignSelf: "center"
+                                        }}
+                                    >
+                                        Strict?
+                                    </Typography>
+
+                                </Stack>
+
+
+                            </Stack>
+
                         </Stack>
 
                     </Stack>

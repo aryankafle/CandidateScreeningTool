@@ -9,6 +9,7 @@ type FlagTypes = 'enough resumes' |
                  'filters have changed' |
                  'user is logged in' |
                  'text scans have been created' |
+                 'text scans have been requested' |
                  'uploads have been processed'
 
 type ActionTypes = {

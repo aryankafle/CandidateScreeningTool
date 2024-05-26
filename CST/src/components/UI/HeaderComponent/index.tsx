@@ -1,25 +1,19 @@
-import { useContext, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import { useNavigate } from "react-router-dom"
+
 import UserContext from "../../../context/UserContext"
+import FlagContext from "../../../context/FlagContext"
+
+
 
 import { useTheme } from "@mui/material"
 
-
-
-import AppBar from "@mui/material/AppBar"
 import Typography from "@mui/material/Typography"
 import Stack from "@mui/material/Stack"
-import Container from "@mui/material/Container"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import Popover from "@mui/material/Popover"
 import Button from "@mui/material/Button"
-import Menu from "@mui/material/Menu"
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { SignInButton } from "../../buttons/SignInButton"
 import { SignOutButton } from "../../buttons/SignOutButton"
-import FlagContext from "../../../context/FlagContext"
 
 
 

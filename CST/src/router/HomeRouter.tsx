@@ -21,7 +21,6 @@ const HomeRoutes = () => {
     useEffect(() => {
 
         clearBatchContext()
-        clearSelectionContext()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

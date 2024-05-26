@@ -93,6 +93,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
                 <DeleteIcon
                     onMouseDown={() => onDelete(index)}
                     sx={{
+                        color: palette.text.disabled,
                         fontSize: "2.1vw"
                     }}
                 />
