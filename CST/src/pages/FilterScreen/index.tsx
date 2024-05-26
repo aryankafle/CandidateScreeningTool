@@ -1,24 +1,8 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import React from 'react';
-
-
 
 import BatchContext from '../../context/BatchContext';
 import SelectionContext from '../../context/SelectionContext';
-
-import { 
-    
-    Degree,
-    FilterType,
-    
-    generateHasDegreeLevelFilter,
-    generateCompanyNameFilter,
-    generateKeywordBiasFilter,
-    generateYearsOfWorkExperienceFIlter,
-    generateCandidateCurrentlyEmployedFilter,
-    generateCandidateCountryFilter
-
-} from '../../utils/Filter';
 
 
 
@@ -26,25 +10,16 @@ import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
-import List from "@mui/material/List";
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
 import LinearProgress from '@mui/material/LinearProgress';
 
-import { FilterLayerCard } from '../../components/list-cards/FilterCard';
-import { FilterSlider } from '../../components/filters/FilterSlider';
-import DraggableList from '../../components/views/DraggableList/';
-import FilterSwitch from '../../components/filters/FilterSwitch';
-import { FilterTextInput } from '../../components/filters/FilterTextInput';
 import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
 import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
 import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
 import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
-import CandidateHasWorkedAtFilter from '../../components/filters/CandidateHasWorkedAtFilterComponent';
-import CandidateCountryFilter from '../../components/filters/CandidateCountryFilterComponent';
-import KeywordBiasFilter from '../../components/filters/KeywordBiasFilterComponent';
+import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHasWorkedAtFilterComponent';
+import { CandidateCountryFilter } from '../../components/filters/CandidateCountryFilterComponent';
+import { KeywordBiasFilter } from '../../components/filters/KeywordBiasFilterComponent';
+import { DraggableFiltersView } from '../../components/views/DraggableFiltersView';
 
 
 
@@ -53,8 +28,6 @@ import KeywordBiasFilter from '../../components/filters/KeywordBiasFilterCompone
 const FilterScreen = () => {
 
     const { palette } = useTheme()
-
-    const [ currentDegreeLevel, setCurrentDegreeLevel ] = useState<Degree | null>(null)
 
     const {
 
@@ -72,8 +45,6 @@ const FilterScreen = () => {
 
     } = useContext(BatchContext)
 
-    const [ isKeywordBiasStrict, setIsKeywordBiasStrict ] = useState(false)
-
 
 
 
@@ -84,50 +55,6 @@ const FilterScreen = () => {
 
     }, [previouslySelectedFilters, setSelectedFilters])
     
-
-
-    function handleRemoveFilter(index : number) {
-
-        const temp = [...selectedFilters].filter((filter, someIndex) => someIndex !== index)
-
-        setCurrentDegreeLevel(null)
-        
-        setSelectedFilters(temp)
-        
-    }
-
-
-
-    function handleChangeCountryFilter(newCountry : string) {
-
-
-
-    }
-
-
-
-    function handleChangeKeywordBiasFilter(newBias : string, isStrict : boolean) {
-
-
-        
-    }
-
-
-
-    function handleChangedHasWorkedAtFilter(newHasWorked : string) {
-
-
-        
-    }
-
-
-
-    function handleChangeYearsOfExperienceFilter(newNumYears : number, isCurrentlyWorking : boolean) {
-
-
-        
-    }
-
 
 
 
@@ -183,7 +110,7 @@ const FilterScreen = () => {
                     <Stack
                         sx={{
                             flexDirection: "column",
-                            height: "90vh",
+                            minHeight: "90vh",
                             position: "sticky",
                             top: 20,
                         }}
@@ -199,25 +126,10 @@ const FilterScreen = () => {
                             Current Filter Layers:
                         </Typography>
 
-                        <Box
-                            sx={{
-                                padding: "0.333em",
-                                flexGrow: 1,
-                                overflow: "auto"
-                            }}
-                        >
-
-                            <List>
-                                <DraggableList
-                                    uniqueIDItems={selectedFilters}
-                                    setUniqueIDItems={setSelectedFilters}
-                                    onDelete={(index) => handleRemoveFilter(index)}
-                                    ItemCard={FilterLayerCard}
-                                    className="h-[10em] overflow-x-clip"
-                                />
-                            </List>
-
-                        </Box>
+                        <DraggableFiltersView
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
                     </Stack>
 

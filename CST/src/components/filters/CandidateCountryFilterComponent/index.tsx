@@ -40,5 +40,3 @@ export const CandidateCountryFilter = ({ selectedFilters, setSelectedFilters } :
     )
 
 }
-
-export default CandidateCountryFilter
