@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"
 import UserContext from "../../../context/UserContext"
 import FlagContext from "../../../context/FlagContext"
 
+import { handleLogin, handleLogout } from "../../../utils/HandleSignInOut"
+
 
 
 import { useTheme } from "@mui/material"
@@ -16,22 +18,6 @@ import { SignInButton } from "../../buttons/SignInButton"
 import { SignOutButton } from "../../buttons/SignOutButton"
 
 
-
-
-
-const handleLogin = () => {
-    window.open(
-        `${process.env.REACT_APP_SERVER_NAME}/auth/google/callback`,
-        "_self"
-    )
-}
-
-const handleLogout = () => {
-    window.open(
-        `${process.env.REACT_APP_SERVER_NAME}/auth/logout`,
-        "_self"
-    )
-}
 
 
 
