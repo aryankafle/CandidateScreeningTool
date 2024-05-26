@@ -1,13 +1,29 @@
+import { Stack, Typography } from "@mui/material"
+
 const SplashScreen = () => {
     return (
-        <div className="bg-gradient-to-t from-blueDark to-black justify-center
-                        flex flex-col flex-grow">
-            <div className="m-auto">
-                <h3 className = "h-[20rem] sm:h-[10rem] font-semibold text-6xl bg-gradient-to-r from-white to-grayMid text-transparent bg-clip-text animate-text">
+
+        <Stack
+            width={"100vw"}
+            height={"100vh"}
+            direction={"column"}
+            justifyContent={"center"}
+        >
+
+            <Stack
+                direction={"row"}
+                justifyContent={"center"}
+            >
+
+                <Typography
+                    fontSize={"5rem"}
+                >
                     Candidate Screening Tool
-                </h3>
-            </div>
-        </div>
+                </Typography>
+
+            </Stack>
+
+        </Stack>
              
     )
 }
