@@ -29,7 +29,6 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
         <Stack
             direction={"row"}
             sx={{
-                ...sx,
                 width: "30em",
             }}
         >

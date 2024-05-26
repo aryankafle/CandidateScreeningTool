@@ -29,7 +29,7 @@ import { runPromisesInParallel } from "../../utils/ParallelPromises"
 
 
 
-import { CircularProgress, useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material"; 
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
@@ -39,6 +39,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import Snackbar from '@mui/material/Snackbar';
+import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { FilterLayerCard } from '../../components/list-cards/FilterCard';
 import { FilterSlider } from '../../components/filters/FilterSlider';
@@ -78,8 +80,6 @@ const FilterScreen = () => {
     } = useContext(BatchContext)
 
     const { userData } = useContext(UserContext)
-    const { flags, updateFlag } = useContext(FlagContext)
-    const { loadingState, setLoadingState } = useContext(FlagContext)
 
     const [ isKeywordBiasStrict, setIsKeywordBiasStrict ] = useState(false)
 
@@ -122,8 +122,6 @@ const FilterScreen = () => {
 
         await runPromisesInParallel(promises)
 
-        setLoadingState(true)
-
         navigate("/results")
 
     }
@@ -139,50 +137,39 @@ const FilterScreen = () => {
             overflow={"auto"}
         >
 
+            { !areAllTextScansReady &&
             <Snackbar
-                open={(!areAllTextScansReady || loadingState)}
-                
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left"
-                }}
+                open={(!areAllTextScansReady)}
+                message={`Creating Text Scans... ${amountTextScanned} / ${fileIDs.length}`}
+                action={
+                    <CircularProgress
+                        size={"1.6em"}
+                        sx={{
+                            alignSelf: "center",
+                            mx: "1.3em"
+                        }}
+                    />
+                }
                 sx={{
-                    p: "1em",
-                    backgroundColor: palette.divider
+                    m: "1em",
                 }}
-            >
-                
-                <Stack
-                    direction={"column"}
-                >
-
-                    { !areAllTextScansReady &&
-                        <Stack
-                            direction={"row"}
-                            gap={"1.4em"}
-                        >
-                            <CircularProgress
-                                sx={{
-                                    alignSelf: "center"
-                                }}
-                            />
-                            <Typography
-                                sx={{
-                                    alignSelf: "center",
-                                    fontSize: "1.4em",
-                                    color: palette.text.primary
-                                }}
-                            >
-                                Creating Text Scans... {amountTextScanned} / {fileIDs.length}
-                            </Typography> 
-                        </Stack>
-                    }
-
-                </Stack>
-
-            </Snackbar>
+            />
+            }
 
             <FilterScreenHeaderButtons />
+            
+            { !areAllTextScansReady &&
+            <LinearProgress
+                sx={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }}
+                variant='determinate'
+                value={100 * amountTextScanned / fileIDs.length}
+            />
+            }
 
             <Stack
                 direction={"row"}
