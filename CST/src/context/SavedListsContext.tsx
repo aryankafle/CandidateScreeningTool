@@ -1,11 +1,6 @@
-import { ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react"
+import { ReactNode, SetStateAction, createContext, useState } from "react"
 
 import { SavedList } from "../utils/SavedList"
-
-import { postUserCurrentSavedList } from "../requests/ResumeRequests"
-
-import UserContext from "./UserContext"
-import FlagContext from "./FlagContext"
 
 
 

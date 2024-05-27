@@ -16,6 +16,7 @@ import Button from "@mui/material/Button"
 
 import { SignInButton } from "../../buttons/SignInButton"
 import { SignOutButton } from "../../buttons/SignOutButton"
+import SavedListsContext from "../../../context/SavedListsContext"
 
 
 
@@ -55,6 +56,8 @@ const HeaderComponent = () => {
                 onMouseDown={() => {
 
                     if(flags.active.includes('batch results created')) {
+
+                        console.log(flags.active)
 
                         navigate("/results")
                         return;

@@ -314,31 +314,6 @@ export const getUser = async () => {
 
 
 
-export const getUserSelection = async (userID : string) => {
-
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-user-selection`, {
-        params:{
-            userID
-        }
-    })
-
-    return response.data
-
-}
-
-
-
-export const postUserCurrentSavedList = async (userID : string, currentSavedList : SavedList) => {
-
-    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/users/set-user-selection`, {
-        userID,
-        currentSavedList
-    })
-
-}
-
-
-
 export const getExternalList = async (listID : string) => {
 
     const response = await axios.get(`${process.env.REACT_APP_SERVER_NAME}/users/get-external-list`, {

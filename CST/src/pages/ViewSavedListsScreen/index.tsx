@@ -39,7 +39,7 @@ const ViewSavedListsScreen = () => {
 
     const { userData } = useContext(UserContext)
 
-    const { updateFlag } = useContext(FlagContext)
+    const { updateFlag, clearFlags } = useContext(FlagContext)
 
     const { setCurrentSavedList } = useContext(SavedListsContext)
 
@@ -68,6 +68,12 @@ const ViewSavedListsScreen = () => {
         })
 
     }, [setSavedLists, userData.id])
+
+    useEffect(() => {
+
+        setCurrentSavedList(undefined)
+
+    }, [])
 
     const copyListLink = useCallback(async (savedList : SavedList) => {
 

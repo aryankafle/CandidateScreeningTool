@@ -223,6 +223,8 @@ const ResultsScreen = () => {
             return () => {
 
                 getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
+
+                    console.log("yea")
     
                     updateFlag({flag: 'batch results created', action: "activate"})
                     updateFlag({flag: 'filters have changed', action: "deactivate"})
