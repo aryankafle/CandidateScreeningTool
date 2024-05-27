@@ -10,7 +10,7 @@ import { getResumeResult } from "../requests/ResumeRequests"
 
 
 export const MINIMUM_CURVE_FACTOR = 0.5
-export const MAX_SCORE = 1000
+export const MAX_SCORE = 100
 
 
 
@@ -31,7 +31,7 @@ export type Applicant = {
 
 export type Score  = {
 
-    filter : Filter,
+    filter : string,
     value : number,
     rationale : string,
 

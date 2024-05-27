@@ -1,5 +1,6 @@
 import { QueryClient,  QueryClientProvider } from "react-query"
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from "./theme"
 import { BrowserRouter } from "react-router-dom";
 import '@fontsource/raleway'
 import AppContextProvider from "./context"
@@ -15,25 +16,7 @@ const queryClient = new QueryClient();
 
 
 
-const theme = createTheme({
-  
-  palette: {
-
-    background: {
-
-
-
-    }
-
-  },
-
-  typography: {
-
-    fontFamily: "Raleway"
-
-  }
-
-});  
+ 
 
 
 

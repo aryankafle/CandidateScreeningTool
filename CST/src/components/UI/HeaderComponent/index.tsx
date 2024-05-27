@@ -54,6 +54,13 @@ const HeaderComponent = () => {
             <Button
                 onMouseDown={() => {
 
+                    if(flags.active.includes('batch results created')) {
+
+                        navigate("/results")
+                        return;
+
+                    }
+
                     if(flags.active.includes('uploads have been processed')) {
 
                         navigate("/filter")

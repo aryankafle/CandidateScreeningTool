@@ -35,30 +35,9 @@ export default SavedListsContext
 
 export const SavedListsContextProvider = (props: { children : ReactNode }) => {
 
-    const { userData } = useContext(UserContext)
-
-    const { flags } = useContext(FlagContext)
-
-
-
     const [savedLists, setSavedLists] = useState(SavedListsContextInitial.savedLists)
 
     const [currentSavedList, setCurrentSavedList] = useState(SavedListsContextInitial.currentSavedList)
-
-
-
-
-
-    useEffect(() => {
-
-        if(!userData) return;
-
-        if(!currentSavedList) return;
-
-        postUserCurrentSavedList(userData.id, currentSavedList)
-    
-    }, [currentSavedList, flags.active, userData])
-
 
     
 

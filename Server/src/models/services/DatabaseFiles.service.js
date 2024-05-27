@@ -17,19 +17,15 @@ export async function downloadFileMetadata(fileID) {
 
 }
 
-export async function changeFileTextscan(fileID, text_scan) {
+export async function downloadFileFilters(fileID) {
 
     const _id = new ObjectId(fileID)
 
-    await fileMetadata.updateOne( { _id }, { $set: { "metadata.text_scan": text_scan } } )
+    const file = await fileMetadata.findOne( { _id } )
+    
+    if(!file) return undefined
 
-}
-
-export async function changeFileContactInfo(fileID, contact_info) {
-
-    const _id = new ObjectId(fileID)
-
-    await fileMetadata.updateOne( { _id }, { $set: { "metadata.contact_info": contact_info } } )
+    return file.metadata.results.filters
 
 }
 
@@ -45,17 +41,40 @@ export async function downloadFileReadStream(fileID) {
 
 }
 
-export async function downloadFileFilters(fileID) {
+
+
+
+
+export async function changeFileTextscan(fileID, text_scan) {
 
     const _id = new ObjectId(fileID)
 
-    const file = await fileMetadata.findOne( { _id } )
-    
-    if(!file) return undefined
-
-    return file.metadata.results.filters
+    await fileMetadata.updateOne( { _id }, { $set: { "metadata.text_scan": text_scan } } )
 
 }
+
+
+
+export async function changeFileContactInfo(fileID, contact_info) {
+
+    const _id = new ObjectId(fileID)
+
+    await fileMetadata.updateOne( { _id }, { $set: { "metadata.contact_info": contact_info } } )
+
+}
+
+
+
+
+
+export const addResultToFile = async (fileID, from_saved_list, result) => {
+
+    const _id = new ObjectId(fileID)
+
+    await fileMetadata.updateOne({ _id }, { $push : { "metadata.results": {result, from_saved_list} } } )
+
+}
+
 
 
 export async function deleteUnusedFileIDs(){
@@ -95,19 +114,6 @@ export async function deleteUnusedFileIDs(){
 
     
 }
-
-
-export const addResultToFile = async (fileID, from_saved_list, result) => {
-
-    const _id = new ObjectId(fileID)
-
-    await fileMetadata.updateOne({ _id }, { $push : { "metadata.results": {result, from_saved_list} } } )
-
-}
-
-
-
-
 
 export async function deleteFile(fileID) {
 

@@ -5,11 +5,14 @@ export type WeighedResult = Result & WeighedScores
 
 
 
-function useWeighedScores(results : Result[]) : WeighedResult[] {
+function useWeighedScores(results : (Result | undefined)[]) : (WeighedResult | undefined)[] {
 
     const weighedScores = useMemo(() => {
 
-        return results.map( ( result : Result ) => {
+        return results
+        .map( ( result : (Result | undefined) ) => {
+
+            if(!result) return undefined
 
             const weighedScoresAndOverall : WeighedScores = weighScoresForOneResult(result.filterScores)
 
@@ -20,7 +23,14 @@ function useWeighedScores(results : Result[]) : WeighedResult[] {
 
             }
 
-            return weighedResult
+            return weighedResult as WeighedResult
+
+        })
+        .sort( (resA, resB) => {
+
+            if(!resA || !resB) return 1E9
+
+            return resB.overall - resA.overall
 
         })
 

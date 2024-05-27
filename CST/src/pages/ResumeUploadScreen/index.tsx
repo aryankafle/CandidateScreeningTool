@@ -16,7 +16,8 @@ import BatchContext from "../../context/BatchContext";
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -28,6 +29,7 @@ import { UploadCard } from "../../components/list-cards/UploadCard";
 import { FileUploadButton } from "../../components/buttons/FileUploadButton";
 import { ConfirmDeleteFilesModal, ConfirmFilesModal, NotEnoughFilesModal } from "../../components/modals/ConfirmModals";
 import { LoadingModal } from "../../components/modals/LoadingModal";
+import { DocumentViewerModal } from "../../components/modals/FileViewModal";
 
 
 
@@ -84,13 +86,20 @@ const ResumeUploadScreen = () => {
 
     const loadingPercent = useMemo(() => {
 
-        const avgs = fileProgresses.map(progress => (progress.uploadProgress + progress.downloadProgress)/2)
+        const progresses = fileProgresses.map(progress => ( progress?.uploadProgress || 100 ) )
 
-        const loadingPercent = avgs.length > 0 ? mean(avgs) : 0
+        const loadingPercent = progresses.length > 0 ? mean(progresses) : 0
 
         return loadingPercent
 
     }, [fileProgresses])
+
+
+
+    const [openFileIndex, setOpenFileIndex] = useState(-1)
+
+    const handleOpenFile = useCallback((index : number) => setOpenFileIndex(index), [setOpenFileIndex])
+    const handleCloseFileModal = useCallback(() => setOpenFileIndex(-1), [setOpenFileIndex])
 
 
 
@@ -137,11 +146,11 @@ const ResumeUploadScreen = () => {
 
 
         const eventFiles : File[] = [...event.target.files]
-        const uniqueFiles : File[] = [...uploadedFiles]
+        const uniqueFiles = [...uploadedFiles]
 
         for(let i = 0; i < eventFiles.length; i++) {
             
-            if(uniqueFiles.some((file) => file.name === eventFiles[i].name)) {
+            if(uniqueFiles.some((file) => file?.name === eventFiles[i].name)) {
                 continue;    
             }
 
@@ -161,38 +170,38 @@ const ResumeUploadScreen = () => {
 
         const fileIDPromises = Promise.allSettled(
             uploadedFiles
-            .map(async (file, index) => uploadResumeToDatabase(file, userData.id,
-                (uploadPercent : number) => {
+            .map(async (file, index) => {
 
-                    setFileProgresses(prevProgresses => {
-                        
-                        const temp = [...prevProgresses]
-                        temp[index].uploadProgress = uploadPercent
+                if(!file) return undefined
+                
+                return await uploadResumeToDatabase(file, userData.id,
+                    (uploadPercent : number) => {
 
-                        return temp
+                        setFileProgresses(prevProgresses => {
+                            
+                            const temp = [...prevProgresses]
+                            temp[index]!.uploadProgress = uploadPercent
 
-                    })
+                            return temp
 
-                },
-                (downloadPercent : number) => {
-
-                    setFileProgresses(prevProgresses => {
-                        
-                        const temp = [...prevProgresses]
-                        temp[index].downloadProgress = downloadPercent
-
-                        return temp
-
-                    })
-                    
-                }
-        )))
+                        })
+                    }
+                )
+            }
+        ))
 
         const fileIDSettleResults = await fileIDPromises
 
         for(const settleResult of fileIDSettleResults) {
 
             if(settleResult.status === "fulfilled") {
+
+                if(!settleResult.value) {
+                    
+                    setFileIDs(previousIDs => [...previousIDs, undefined])
+                    return;
+
+                }
 
                 const fileID : string = settleResult.value
 
@@ -309,6 +318,12 @@ const ResumeUploadScreen = () => {
             }}
         >
 
+            <DocumentViewerModal
+                file={uploadedFiles[openFileIndex]}
+                open={openFileIndex > -1}
+                onClose={handleCloseFileModal}
+            />
+
             <NotEnoughFilesModal
                 open={(showConfirmFilesModal && !hasEnoughResumes)}
                 onClose={toggleConfirmFilesModal}
@@ -366,7 +381,6 @@ const ResumeUploadScreen = () => {
                             sx={{
                                 fontSize: "1.2em",
                                 alignSelf: "center",
-                                textAlign: "center",
                             }}
                         >
                             Upload resumes to run through our
@@ -436,8 +450,9 @@ const ResumeUploadScreen = () => {
                             file={file}
                             index={index}
                             
-                            onSelect={(index) => handleToggleSelect(index)}
-                            onDelete={(index) => handleDeleteFile(index)}
+                            onSelect={handleToggleSelect}
+                            onFileOpened={handleOpenFile}
+                            onDelete={handleDeleteFile}
 
                             isSelected={selectedIndices.includes(index)}
 

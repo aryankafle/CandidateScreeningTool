@@ -1,4 +1,5 @@
 import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
+import { scoring } from "../../config/openai.config.js";
 import OpenAI from "openai"
 import openaiConfig from "../../config/openai.config.js";
 
@@ -253,7 +254,12 @@ export async function getFilterScoresForResume(scannedText, filters) {
 
     messages.push({
         role: "system",
-        content: `Be very strict and extremely accurate in your scoring.`
+        content: `Here are the scoring guidelines: ${JSON.stringify(scoring.scoringGuidlinesObject)}`
+    })
+
+    messages.push({
+        role: "system",
+        content: `Be extremely accurate in your scoring. Score ALL filter criteria!`
     })
 
     messages.push({
@@ -310,7 +316,7 @@ export async function getSectionSummariesForResume(scannedText) {
 
     messages.push({
         role: "system",
-        content: `Do not include a section for contact information. Section names may not exceed one word. Summaries may not exceed 1 paragraph.`
+        content: `Do not include a section for contact information. Section names may not exceed two words. Section names should be in all-caps. Summaries may not exceed 1 paragraph.`
     })
 
 
@@ -318,7 +324,7 @@ export async function getSectionSummariesForResume(scannedText) {
     messages.push({
         role: "system",
         content: 
-        `Respond in the following JSON format: {summaries: {<SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, <SECTION_NAME>: <BRIEF_SUMMARY>, ... <SECTION_NAME>: <BRIEF_SUMMARY>}`
+        `Respond in the following JSON format: {summaries: [{section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, ... {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}]}`
     })
 
     const response = (await makeAIRequest(messages, chatInstance)).content

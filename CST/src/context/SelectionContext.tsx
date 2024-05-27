@@ -8,8 +8,8 @@ import { Filter } from "../utils/Filter"
 
 const SelectionContextInitial = {
 
-    uploadedFiles: [] as File[],
-    setUploadedFiles: {} as React.Dispatch<React.SetStateAction<File[]>>,
+    uploadedFiles: [] as (File | undefined)[],
+    setUploadedFiles: {} as React.Dispatch<React.SetStateAction<(File | undefined)[]>>,
 
     selectedFilters: [] as Filter[],
     setSelectedFilters: {} as React.Dispatch<React.SetStateAction<Filter[]>>,
@@ -33,9 +33,9 @@ export default SelectionContext
 
 export const SelectionContextProvider = (props: { children : ReactNode }) => {
 
-    const [uploadedFiles, setUploadedFiles] = useState([] as File[])
+    const [uploadedFiles, setUploadedFiles] = useState(SelectionContextInitial.uploadedFiles)
 
-    const [selectedFilters, setSelectedFilters] = useState([] as Filter[])
+    const [selectedFilters, setSelectedFilters] = useState(SelectionContextInitial.selectedFilters)
     
     const clearSelectionContext = useCallback(() => {
 

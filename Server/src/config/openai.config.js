@@ -24,3 +24,24 @@ export const tokenLimits = {
     }
 
 }
+
+export const scoring = {
+
+    MAX_SCORE: 1000,
+
+    scoringGuidlinesObject: {
+
+        "lowest posible score": 0,
+        "highest possible score": 100,
+
+        "0-20": "A score between 0 and 200 indicates almost no adherence to the filter criteria.",
+        "20-40": "A score between 200 and 400 indicates slight adherence to the filter criteria.",
+        "40-60": "A score between 400 and 600 indicates some adherence to the filter criteria.",
+        "60-80": "A score between 600 and 800 indicates sufficient adherence to the filter criteria",
+        "80-100": "A score between 800 and 1000 indicates perfect adherence to the filter criteria."
+
+
+    }
+    
+
+}

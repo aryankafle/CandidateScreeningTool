@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton"
 import TopicIcon from '@mui/icons-material/Topic';
@@ -16,13 +18,13 @@ import { SxProps, Theme, useTheme } from "@mui/material";
 
 type FileUploadButtonProps = {
     
-    file : File
-    sx?: SxProps<Theme>
+    file : File | undefined
 
     index: number
     isSelected: boolean
     onSelect: (index : number) => void
     onDelete: (index : number) => void
+    onFileOpened: (index : number) => void
 
 }
 
@@ -30,28 +32,70 @@ type FileUploadButtonProps = {
 
 
 
-export const UploadCard = ({ sx, file, index, isSelected, onSelect, onDelete } : FileUploadButtonProps) => {
+export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFileOpened } : FileUploadButtonProps) => {
 
     const { palette } = useTheme()
 
+
     const labelId = `checkbox-list-label-${index}`
+
+
+
+
+
+    if(!file) {
+
+        return (
+
+        <ListItem
+            key={index}
+            sx={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0.222em",
+                backgroundColor: palette.background.paper,
+            }}
+        >
+            <Typography>
+                Error!
+            </Typography>
+        </ListItem>
+
+        )
+
+    }
 
     return (
         <ListItem
             key={index}
             secondaryAction={
-                <IconButton
-                    aria-label="delete"
-                    color={"error"}
-                    onMouseDown={() => onDelete(index)}
+                <Stack
+                    direction={"row"}
+                    gap={"1rem"}
                 >
-                    <DeleteIcon
-                        sx={{
-                            color: palette.text.disabled
-                        }}
-                        fontSize='medium'
-                    />
-                </IconButton>
+                    <IconButton
+                        onMouseDown={() => onFileOpened(index)}
+                    >
+                        <TopicIcon
+                            fontSize='medium'
+                            sx={{
+                                color: palette.text.disabled
+                            }}
+                        />
+                    </IconButton>
+                    <IconButton
+                        aria-label="delete"
+                        color={"error"}
+                        onMouseDown={() => onDelete(index)}
+                    >
+                        <DeleteIcon
+                            sx={{
+                                color: palette.text.disabled
+                            }}
+                            fontSize='medium'
+                        />
+                    </IconButton>
+                </Stack>
             }
             sx={{
                 justifyContent: "space-between",
@@ -81,12 +125,8 @@ export const UploadCard = ({ sx, file, index, isSelected, onSelect, onDelete } :
                     gap={"1em"}
                 >
 
-                    <TopicIcon
-                        fontSize='medium'
-                        sx={{
-                            color: palette.text.disabled
-                        }}
-                    />
+
+
 
                     <Typography
                         variant='subtitle1'

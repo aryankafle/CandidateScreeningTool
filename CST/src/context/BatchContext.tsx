@@ -15,16 +15,15 @@ import FlagContext from "./FlagContext"
 type UploadProgress = {
 
     file : File,
-    uploadProgress : number,
-    downloadProgress : number
+    uploadProgress : number
 
 }
 
 
 const BatchContextInitial = {
 
-    batchResults : [] as Result[],
-    setBatchResults : {} as React.Dispatch<React.SetStateAction<Result[]>>,
+    batchResults : [] as (Result | undefined)[],
+    setBatchResults : {} as React.Dispatch<React.SetStateAction<(Result | undefined)[]>>,
 
     amountTextScanned : 0,
     setAmountTextScanned : {} as React.Dispatch<React.SetStateAction<number>>,
@@ -34,11 +33,11 @@ const BatchContextInitial = {
     setAmountResultsCreated : {} as React.Dispatch<React.SetStateAction<number>>,
     areAllResultsReady : false,
 
-    fileProgresses : [] as UploadProgress[],
-    setFileProgresses : {} as React.Dispatch<React.SetStateAction<UploadProgress[]>>,
+    fileProgresses : [] as (UploadProgress | undefined)[],
+    setFileProgresses : {} as React.Dispatch<React.SetStateAction<(UploadProgress | undefined)[]>>,
 
-    fileIDs : [] as string[],
-    setFileIDs : {} as React.Dispatch<React.SetStateAction<string[]>>,
+    fileIDs : [] as (string | undefined)[],
+    setFileIDs : {} as React.Dispatch<React.SetStateAction<(string | undefined)[]>>,
 
     clearBatchContext : {} as () => void
 
@@ -89,11 +88,16 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
 
         setFileProgresses(uploadedFiles.map(file => {
             
+            if(!file) {
+
+                return undefined
+                
+            }
+
             return {
                 
                 file,
                 uploadProgress: 0,
-                downloadProgress: 0,
 
             }
 
@@ -107,6 +111,13 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
 
         const promises = fileIDs.map(async (fileID) => {
 
+            if(!fileID) {
+
+                setAmountResultsCreated(prevAmountTextScanned => prevAmountTextScanned + 1)
+                return;
+
+            }
+
             await runTextScanOnFile(fileID, userData.id)
 
             setAmountTextScanned(prevAmountScanned => prevAmountScanned +  1)
@@ -116,6 +127,17 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
         runPromisesInParallel(promises)
 
     }, [fileIDs, flags.active, updateFlag, userData])
+
+    
+    useEffect(() => {
+
+        if(batchResults.length > 0) {
+
+            updateFlag({flag: "batch results created", action: "activate"})
+
+        }
+
+    }, [updateFlag, batchResults])
 
     const areAllTextScansReady = useMemo(() => amountTextScanned === fileIDs.length, [amountTextScanned, fileIDs])
     const areAllResultsReady = useMemo(() => amountResultsCreated === fileIDs.length, [amountResultsCreated, fileIDs])

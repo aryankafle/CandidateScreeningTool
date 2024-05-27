@@ -228,12 +228,12 @@ export const getResumeFile = async (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename="file-${fileID}"`);
 
         result.pipe(res)
-        return; res.status(200)
+        return res.status(200)
 
     }
     catch (error) {
 
-        return; res.status(500).json({
+        return res.status(500).json({
 
             error: true,
             message: "Error downloading resume file."

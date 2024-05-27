@@ -1,13 +1,13 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import uFuzzy from "@leeoniya/ufuzzy"
 
-import { getRatingImage } from "../../utils/GetRatingImage";
+import { useMouse } from "@uidotdev/usehooks";
 
 import { Filter } from "../../utils/Filter";
 import { SavedList } from "../../utils/SavedList";
-import Result, { LetterGrade } from "../../utils/Result";
+import Result from "../../utils/Result";
 
 import { runPromisesInParallel } from "../../utils/ParallelPromises";
 
@@ -17,7 +17,7 @@ import { SavedListsContext } from '../../context/SavedListsContext';
 import UserContext from "../../context/UserContext";
 import SelectionContext from "../../context/SelectionContext";
 import BatchContext from '../../context/BatchContext';
-
+import FlagContext from "../../context/FlagContext";
 
 import {
     
@@ -26,11 +26,29 @@ import {
     getExternalList,
     createResumeResult,
     getResumeResult,
-    downloadResume
+    downloadResume,
+    getUserSavedLists,
 
 } from "../../requests/ResumeRequests";
-import FlagContext from "../../context/FlagContext";
-import { useTheme } from "@mui/material";
+
+
+
+import { Divider, Modal, useTheme } from "@mui/material";
+
+import ButtonGroup from "@mui/material/ButtonGroup";
+import FormLabel from "@mui/material/FormLabel";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography"
+import List from "@mui/material/List";
+import { MuiColorInput } from 'mui-color-input'
+
+import { CandidateCard } from "../../components/list-cards/CandidateCard";
+import { DocumentViewerModal } from "../../components/modals/FileViewModal";
+import { ResultSummary } from "../../components/UI/ResultSummaryComponent";
+import { ListAlreadyExistsModal } from "../../components/modals/ListAleadyExistsModal";
 
 
 
@@ -44,6 +62,8 @@ const ResultsScreen = () => {
 
     const didRunResultsEffect = useRef(false)
 
+    const [mouse, ref] = useMouse()
+
     
 
     const { userData } = useContext(UserContext)
@@ -51,21 +71,27 @@ const ResultsScreen = () => {
     const { 
         
         currentSavedList,
-        savedLists,
-    
+
     } = useContext(SavedListsContext)
 
     const {
 
         selectedFilters,
 
+        uploadedFiles,
+        setUploadedFiles,
+        clearSelectionContext
+
     } = useContext(SelectionContext)
 
-    const { flags } = useContext(FlagContext)
+    const { flags, updateFlag, clearFlags } = useContext(FlagContext)
 
     const {
 
         fileIDs,
+        batchResults,
+        setBatchResults,
+        clearBatchContext
 
     } = useContext(BatchContext)
 
@@ -79,26 +105,46 @@ const ResultsScreen = () => {
     
 
 
-    const [results, setResults] = useState<Result[]>([])
-    const weighedResults = useWeighedScores(results)
+    const weighedResults = useWeighedScores(batchResults)
+    const onlySuccessfulResults : Result[] = batchResults.filter(result => result !== undefined).map(result => result as Result)
 
-    const [resumes, setResumes] = useState<(File | undefined)[]>([])
-
-
-
-    const saveCurrentList = useCallback(() => saveList( title, description, color, results, userData.id ), [color, description, results, title, userData.id] )
-
+    const [ currentlySelectedResultIndex, setCurrentlySelectedResultIndex ]= useState(-1)
+    const [ viewingFile, setViewingFile ] = useState(false)
+    
+    const currentlySelectedResult = useMemo(() => weighedResults[currentlySelectedResultIndex], [currentlySelectedResultIndex, weighedResults])
 
 
-    const getListWithSameName = useCallback(() => savedLists.find(savedList => savedList.name === title), [savedLists, title])
 
-    const replaceResumeWithSameName = useCallback(async (listWithSameName : SavedList) => {
+    const changeCurrentlySelectedResult = useCallback((newIndex : number) => {
 
-        await deleteSavedList(listWithSameName._id, userData.id)
+        setCurrentlySelectedResultIndex(prevIndex => {
 
-        await saveCurrentList()
+            if(newIndex > weighedResults.length) return -1;
+
+            if(newIndex < 0) return -1;
+
+            if(prevIndex === newIndex) return -1
+
+            return newIndex
+
+        })
+
+    }, [weighedResults.length])
+
+
+
+    const saveCurrentList = useCallback(async () => {
         
-    }, [saveCurrentList, userData])
+        await saveList( title, description, color, onlySuccessfulResults, userData.id )
+
+        clearBatchContext()
+        clearSelectionContext()
+
+        clearFlags()
+
+        navigate("/home/saved-lists")
+
+    }, [title, description, color, onlySuccessfulResults, userData.id, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
 
 
 
@@ -108,95 +154,339 @@ const ResultsScreen = () => {
 
 
 
-    const getResultsFromFilters = useCallback(async (filters : Filter[]) => {
+    const getResultsFromFilters = useCallback(async (fileIDs : (string | undefined)[], filters : Filter[]) => {
 
-        const promises = fileIDs
+        const resultPromises = fileIDs
         .map(async fileID => {
+            
+            if(!fileID) return undefined
 
             const result = await createResumeResult(filters, fileID, userData.id)
 
-            setResults(prevResults => [...prevResults, result])
-
-            const resume = await downloadResume(fileID, userData.id)
-            
-            setResumes(prevResumes => [...prevResumes, resume])
+            return result
         
         })
+    
 
-        await runPromisesInParallel(promises)
+        const { successfulValues: results } = await runPromisesInParallel(resultPromises)
 
-    }, [fileIDs, userData.id, setResults])
+        return {results}
+
+    }, [userData.id])
 
 
 
     const getResultsFromPreviousSavedList = useCallback(async (previousList : SavedList) => {
-
-        const promises = previousList.file_ids
+        
+        const resultPromises = previousList.file_ids
         .map(async fileID => {
 
             const result = await getResumeResult(fileID, previousList._id, userData.id)
 
-            setResults(prevResults => [...prevResults, result])
-
-            const resume = await downloadResume(fileID, userData.id)
-            
-            setResumes(prevResumes => [...prevResumes, resume])
+            return result
         
         })
+        
+        const filePromises = previousList.file_ids
+        .map(async fileID => {
 
-        await runPromisesInParallel(promises)
+            const result = await downloadResume(fileID, userData.id)
 
-    }, [userData.id, setResults])
+            return result
+        })
+
+        const { successfulValues: results } = await runPromisesInParallel(resultPromises)
+        const { successfulValues: resumes } = await runPromisesInParallel(filePromises)
+
+        return {results, resumes}
+
+    }, [userData.id])
 
     const getResultsFromListID = useCallback(async (listID : string) => {
 
         const savedList = await getExternalList(listID)
 
-        await getResultsFromPreviousSavedList(savedList)
+        return await getResultsFromPreviousSavedList(savedList)
 
     }, [getResultsFromPreviousSavedList])
 
 
 
-
- 
     useEffect(() => {
 
-        if(!flags.active.includes('filters have changed')) {
+        if(!flags.active.includes('filters have changed')) return () => {};
 
-            return;
-
-        }
-
-        if(didRunResultsEffect.current) return;
+        if(flags.active.includes('batch results created')) return () => {};
 
         if(currentSavedList) {
 
-            getResultsFromPreviousSavedList(currentSavedList)
-            return;
+            return () => {
+
+                getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
+    
+                    updateFlag({flag: 'batch results created', action: "activate"})
+                    updateFlag({flag: 'filters have changed', action: "deactivate"})
+    
+                    setBatchResults(results)
+                    setUploadedFiles(resumes)
+
+                })
+                
+            }
 
         }
 
         if(paramListID) {
             
-            getResultsFromListID(paramListID)
-            return
+            return () => {
+
+                getResultsFromListID(paramListID).then(({results, resumes}) => {
+    
+                    updateFlag({flag: 'batch results created', action: "activate"})
+                    updateFlag({flag: 'filters have changed', action: "deactivate"})
+
+                    setBatchResults(results)
+                    setUploadedFiles(resumes)
+    
+                })
+                
+            }
 
         }
-
-        getResultsFromFilters(selectedFilters)
 
         return () => {
-            didRunResultsEffect.current = true
+
+            getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
+
+                updateFlag({flag: 'batch results created', action: "activate"})
+                updateFlag({flag: 'filters have changed', action: "deactivate"})
+
+                setBatchResults(results)
+
+            })
+            
         }
 
-    }, [paramListID, getResultsFromListID, getResultsFromFilters, selectedFilters, currentSavedList, getResultsFromPreviousSavedList, flags.active])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
 
 
 
-    return <div></div>
+    return (
+
+        <Box
+            p={"1em"}
+            sx={{
+                overflowY: "auto",
+                overflowX: "hidden"
+            }}
+            height={"100%"}
+            width={"100%"}
+        >
+
+            <DocumentViewerModal
+                file={uploadedFiles[currentlySelectedResultIndex]}
+                open={viewingFile}
+                onClose={() => setViewingFile(false)}
+            />
+
+            <Stack
+                direction={"row"}
+                height={"100%"}
+            >
+
+                <Stack
+                    direction={"column"}
+                    width={"55%"}
+                >
+                    <Box
+                        ref={ref}
+                        px={"1rem"}
+                    >
+
+                        <Typography
+                            variant="h1"
+                            sx={{
+                                cursor: "default",
+                                userSelect: "none",
+                                backgroundcolor: "primary",
+                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.light}, ${palette.secondary.dark})`,
+                                backgroundSize: "100%",
+                                backgroundRepeat: "repeat",
+                                backgroundClip: "text",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                            }}
+                        >
+                            Candidates
+                        </Typography>
+
+                    </Box>
+
+                    <List>
+                        <Stack
+                            gap={"0.5rem"}
+                        >
+                        {weighedResults.map((weighedResult, index) => {
+
+                            return (
+                            <CandidateCard
+                                key={index + ( weighedResult ? weighedResult.applicant.name : Math.random().toString() ) }
+                                candidate={weighedResult}
+                                isSelected={currentlySelectedResultIndex === index}
+                                onSelectCandidate={changeCurrentlySelectedResult}
+                                index={index}
+                            />     
+                            )
+                        })}
+                        
+                        </Stack>
+                        
+
+                    </List>
+
+                </Stack>
+
+                <Stack
+                    direction={"column"}
+                    position={"fixed"}
+                    width={"40%"}
+                    right={"1rem"}
+                >
+
+                {
+                currentlySelectedResult ? 
+                <ResultSummary
+                    result={currentlySelectedResult}
+                    index={currentlySelectedResultIndex}
+                    onShowOriginal={(index) => setViewingFile(true)}
+                    onRerun={(index) => {}}
+                />
+
+                :
+                <form
+                    onSubmit={(event) => {
+
+                        event.preventDefault()
+
+                    }}
+                >
+                    <Stack
+                        height={"100%"}
+                        gap={"2rem"}
+                        p={"2rem"}
+                        sx={{
+                            backgroundColor: palette.background.paper
+                        }}
+                    >
+
+                        <Stack
+                            direction={"column"}
+                        >
+                            <FormLabel aria-label="input-name">
+                                List Name
+                            </FormLabel>
+                            <TextField
+                                type="text"
+                                value={title}
+                                onChange={ (event) => setTitle(event.target.value) }
+                            />
+                        </Stack>
+
+                        <Stack
+                            direction={"column"}
+                        >
+                            <FormLabel
+                                aria-label="input-description"
+                            >
+                                List Description
+                            </FormLabel>
+                            <TextField
+                                type="text"
+                                value={description}
+                                onChange={ (event) => setDescription(event.target.value) }
+                            />
+                        </Stack>
+
+                        <Stack
+                            direction={"column"}
+                        >
+                            <FormLabel 
+                                aria-label="input-color"
+                            >
+                                List Color
+                            </FormLabel>
+                            <MuiColorInput
+                                format="hex8"
+                                value={color}
+                                onChange={(value) => setColor(value)}
+                            />
+                        </Stack>
+
+                        <Stack>
+
+                            <ButtonGroup
+                                variant="text"
+                                aria-label="save-list-button-group"
+                                sx={{
+                                    alignSelf: "center",
+                                    height: "3.4rem",
+                                    mb: "2rem"
+                                }}
+                            >
+
+                                <Button
+                                    variant="text"
+                                    sx={{
+                                        px: "2.5em"
+                                    }}
+                                    onMouseDown={() => navigate("/filter")}
+                                >
+                                    Run New Filters
+                                </Button>
+
+                                <Button
+                                    variant="text"
+                                    sx={{
+                                        px: "2.5em"
+                                    }}
+                                    onMouseDown={() => navigate("/home/resume-upload")}
+                                >
+                                    Upload New Batch
+                                </Button>
+
+                            </ButtonGroup>
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                sx={{
+                                    width: "13rem",
+                                    alignSelf: "center",
+                                    height: "3.4rem"
+                                }}
+                                onMouseDown={() => saveCurrentList()}
+                            >
+                                Save List
+                            </Button>
+
+                        </Stack>
+                        
+                    </Stack>
+                </form>
+                }
+
+
+
+                </Stack>
+
+            </Stack>
+
+        </Box>
+
+    )
 }
 
 export default ResultsScreen

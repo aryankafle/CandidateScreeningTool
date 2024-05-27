@@ -1,4 +1,4 @@
-import { ReactNode, SetStateAction, createContext, useReducer, useState } from "react"
+import { ReactNode, SetStateAction, createContext, useCallback, useReducer, useState } from "react"
 
 
 
@@ -10,7 +10,8 @@ type FlagTypes = 'enough resumes' |
                  'user is logged in' |
                  'text scans have been created' |
                  'text scans have been requested' |
-                 'uploads have been processed'
+                 'uploads have been processed' | 
+                 'batch results created'
 
 type ActionTypes = {
 
@@ -34,6 +35,7 @@ const FlagContextInitial = {
 
     loadingState : false,
     setLoadingState : {} as React.Dispatch<SetStateAction<boolean>>,
+    clearFlags : {} as () => void,
     flags : { active: [] } as FlagState,
     updateFlag : (value : ActionTypes) => {}
 
@@ -110,6 +112,18 @@ export const FlagContextProvider = (props: { children : ReactNode }) => {
 
 
 
+    const clearFlags = useCallback(() => {
+
+        flags.active.forEach(flag => {
+           
+            updateFlag({flag, action: "deactivate"})
+
+        });
+
+    }, [flags.active, updateFlag])
+
+
+
 
 
     return (
@@ -117,6 +131,8 @@ export const FlagContextProvider = (props: { children : ReactNode }) => {
 
             value={{
 
+                clearFlags,
+                
                 loadingState, setLoadingState,
                 flags, updateFlag,
 

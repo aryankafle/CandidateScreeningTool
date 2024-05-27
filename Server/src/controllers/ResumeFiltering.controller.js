@@ -81,7 +81,7 @@ export const createResultsForResume = async (req, res) => {
         filterScores: filterScores.value,
         
         summaries: summaries.value,
-        summary:summary.value,
+        summary: summary.value,
         
         applicant: applicant.value,
 
@@ -95,7 +95,7 @@ export const createResultsForResume = async (req, res) => {
 
     for(const key in result) {
 
-        if(result[key].status === "rejected") {
+        if(result[key]?.status === "rejected") {
 
             return res.status(300).send({
 

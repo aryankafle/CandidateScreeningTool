@@ -33,7 +33,7 @@ export function generateHasDegreeLevelFilter(degree : Degree) {
         type: "degree",
         name: `Degree Level: ${degree.toLocaleUpperCase()}`,
         description: `Degree Level: ${degree.toLocaleUpperCase()}`,
-        query: `The resume should display that the applicant has a collegiate ${degree} degree, or higher.`
+        query: `The resume directly shows that the applicant has a collegiate ${degree} degree, or higher.`
 
     }
 
@@ -67,7 +67,7 @@ export function generateKeywordBiasFilter(keywordToBias : string, strict : boole
         type: `keyword-bias-${keywordToBias}`,
         name: `Keyword Bias: ${keywordToBias}`,
         description: `Keyword: ${keywordToBias}`,
-        query: `The resume should bias the keyword ${keywordToBias} or words near it.`
+        query: `The resume should contain instances of the keyword ${keywordToBias} or words near in meaning.`
 
     }
 
@@ -85,7 +85,7 @@ export function generateYearsOfWorkExperienceFIlter(yearsOfWork : number) : Filt
         type: "years-of-work-experience",
         name: `Work Experience (yrs): ${yearsOfWork}`,
         description: `Years of Work Experience: ${yearsOfWork}`,
-        query: `The resume should directly state or strongly imply that the applicant has ${yearsOfWork} or more years of professional experience in their field.`
+        query: `The resume should demonstrate that the applicant has ${yearsOfWork} or more years of professional experience in their field.`
 
     }
 
@@ -103,7 +103,7 @@ export function generateCompanyNameFilter(nameOfCompany : string) : Filter {
         type: `company-name-${nameOfCompany}`,
         name: `Company: ${nameOfCompany}`,
         description: `Company: ${nameOfCompany}`,
-        query: `The resume should state that the applicant works at or previusly worked at ${nameOfCompany}.`
+        query: `The resume should demonstrate the applicant works at or previusly worked at ${nameOfCompany}.`
 
     }
 
@@ -139,7 +139,7 @@ export function generateCandidateCurrentlyEmployedFilter(isCurrentlyEmployed : b
         type: "currently-employed",
         name: isCurrentlyEmployed ? "Candidate is currently unemployed" : "Candidate is currently unemployed",
         description: isCurrentlyEmployed ? "Candidate is currently employed." : "Candidate is currently unemployed.",
-        query: `The resume should state or strongly imply that the applicant is${isCurrentlyEmployed ? " " : " not "}currently employed.`
+        query: `The resume should demonstrate that the applicant is${isCurrentlyEmployed ? " " : " not "}currently employed.`
 
     }
 
@@ -157,7 +157,7 @@ export function generateHasWorkExperienceFilter() {
         type: "has-work-experience",
         name: `Work Experience?`,
         description: `Work Experience?`,
-        query: `The resume should display that the applicant has previous professional work experience.`
+        query: `The resume should demonstrate that the applicant has previous professional work experience.`
 
     }
 
