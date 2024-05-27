@@ -83,7 +83,7 @@ const ViewSavedListsScreen = () => {
         
         navigate("/results")
 
-    }, [navigate, setCurrentSavedList])
+    }, [navigate, setCurrentSavedList, updateFlag])
 
     const handleDeleteList = useCallback(async (index : number) => {
 
