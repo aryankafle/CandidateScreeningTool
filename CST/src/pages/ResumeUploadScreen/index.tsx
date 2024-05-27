@@ -389,7 +389,6 @@ const ResumeUploadScreen = () => {
                         <Typography
                             variant="h1"
                             align="left"
-                            color="grey.700"
                             sx={{
                                 cursor: "default",
                                 userSelect: "none",

@@ -12,7 +12,7 @@ import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequest
 
 
 
-import { useTheme } from "@mui/material"; 
+import { Button, Stack, useTheme } from "@mui/material"; 
 
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -20,24 +20,28 @@ import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
 
 import { SavedListCard } from "../../components/list-cards/SavedListCard";
+import { useMouse } from "@uidotdev/usehooks";
+import FlagContext from "../../context/FlagContext";
 
 
 
 const ViewSavedListsScreen = () => {
-
+    
     const navigate = useNavigate()
+
+    const [mouse, ref] = useMouse()
+
     const { palette } = useTheme()
 
-    const [ selectedIndices, setSelectedIndices ] = useState<number[]>([])
+    const [ selectedIndex, setSelectedIndex ] = useState<number>(-1)
 
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
 
     const { userData } = useContext(UserContext)
 
-    const { setCurrentSavedList } = useContext(SavedListsContext)
+    const { updateFlag } = useContext(FlagContext)
 
-    const [ showDeleteSavedListModal, setShowDeleteSavedListModal ] = useState(false)
-    const toggleDeleteFilesConfirmModal = () => setShowDeleteSavedListModal(prevOpen => !prevOpen)
+    const { setCurrentSavedList } = useContext(SavedListsContext)
 
     const {
 
@@ -73,6 +77,8 @@ const ViewSavedListsScreen = () => {
 
     const sendToList = useCallback(async (list : SavedList) => {
 
+        updateFlag({flag: "filters have changed", action: "activate"})
+
         setCurrentSavedList(list)
         
         navigate("/results")
@@ -85,7 +91,7 @@ const ViewSavedListsScreen = () => {
 
         await deleteSavedList(list._id, userData.id)
 
-        setSelectedIndices([])
+        setSelectedIndex(-1)
 
         const newSavedLists = await getUserSavedLists(userData.id)
 
@@ -93,33 +99,17 @@ const ViewSavedListsScreen = () => {
 
     }, [savedLists, setSavedLists, userData.id])
 
-    const handleRemoveSelection = useCallback(async (index : number) => {
-
-        const lists = selectedIndices.map(index => savedLists[index])
-
-        for(let i = 0; i < lists.length; i++) {
-            await deleteSavedList(lists[i]._id, userData.id)
-        }
-
-        setSelectedIndices([])
-
-        const newSavedLists = await getUserSavedLists(userData.id)
-
-        setSavedLists(newSavedLists)
-
-    }, [savedLists, selectedIndices, setSavedLists, userData.id])
-
     const handleToggleSelect = (index : number) => {
 
-        setSelectedIndices(prevIndices => {
+        setSelectedIndex(prevIndex => {
             
-            if(prevIndices.includes(index)) {
+            if(prevIndex === index) {
 
-                return prevIndices.filter(someIndex => someIndex !== index)
+                return -1
 
             }
 
-            return [...prevIndices, index]
+            return index
             
         })
 
@@ -128,21 +118,20 @@ const ViewSavedListsScreen = () => {
 
     const handleKeyDown = useCallback((event : KeyboardEvent) => {
         
-        if(event.key === "Delete" && selectedIndices.length > 0) {
-            toggleDeleteFilesConfirmModal()
+        if(event.key === "Delete" && selectedIndex > -1) {
+            
         }
 
         if(event.key === "Escape") {
-            setSelectedIndices([])
+
+            setSelectedIndex(-1)
+        
         }
 
-        if(event.ctrlKey && event.key === "a") {
-            setSelectedIndices(new Array(savedLists.length))
-        }
-
-    }, [savedLists.length, selectedIndices.length])
+    }, [selectedIndex])
 
     useEffect(() => {
+        
         window.addEventListener("keydown", handleKeyDown)
 
         return () => {
@@ -156,16 +145,20 @@ const ViewSavedListsScreen = () => {
 
     
     return (
-        <Box
+        <Stack
             width={"100%"}
             height={"100%"}  
             p={"2rem"}
+            sx={{
+                userSelect: "none"
+            }}
+            direction={"row"}
         >
-
+            
             <List
                 sx={{
                     minWidth: "10em",
-                    width: "60%",
+                    width: "55%",
                     height: "100%",
                     border: 1,
                     borderColor: palette.divider,
@@ -188,7 +181,7 @@ const ViewSavedListsScreen = () => {
                         onSelect={(index) => handleToggleSelect(index)}
                         onDelete={(index) => handleDeleteList(index)}
 
-                        isSelected={selectedIndices.includes(index)}
+                        isSelected={selectedIndex === index}
 
                     />
                     { index < savedLists.length-1 && <Divider /> }
@@ -206,8 +199,115 @@ const ViewSavedListsScreen = () => {
                 }
 
             </List>
+            
+            {   selectedIndex < 0 &&
 
-        </Box>
+            <Stack
+                flexGrow={1}
+                p={"2rem"}
+                whiteSpace={"nowrap"}
+                maxWidth={"45%"}
+                textOverflow={"ellipsis"}
+            >
+                <Typography
+                    fontSize={"1.6em"}
+                >
+                    Here are your
+                </Typography>
+                <Box
+                    ref={ref}
+                >
+                    <Typography
+                        whiteSpace={"wrap"}
+                        textOverflow={"ellipsis"}
+                        display={"block"}
+                        overflow={"hidden"}
+                        fontSize={"7em"}
+                        sx={{
+                            cursor: "default",
+                            userSelect: "none",
+                            backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.light}, ${palette.secondary.main})`,
+                            backgroundSize: "100%",
+                            backgroundRepeat: "repeat",
+                            backgroundClip: "text",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent"
+                        }}
+                    >
+                        Saved Lists.
+                    </Typography>
+                </Box>
+
+            </Stack>
+
+            }
+
+            {   selectedIndex > -1 &&
+                <Stack
+                    flexGrow={1}
+                    p={"2rem"}
+                    whiteSpace={"nowrap"}
+                    maxWidth={"45%"}
+                    textOverflow={"ellipsis"}
+                >
+
+                    <Box
+                        ref={ref}
+                    >
+                        <Typography
+                            textAlign={"center"}
+                            fontSize={"4em"}
+                            whiteSpace={"no-wrap"}
+                            textOverflow={"ellipsis"}
+                            display={"block"}
+                            overflow={"hidden"}
+                            sx={{
+                                cursor: "default",
+                                userSelect: "none",
+                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${savedLists[selectedIndex].color}, ${palette.getContrastText(savedLists[selectedIndex].color)})`,
+                                backgroundSize: "100%",
+                                backgroundRepeat: "repeat",
+                                backgroundClip: "text",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent"
+                            }}
+                        >
+                            {savedLists[selectedIndex].name}
+                        </Typography>
+                    </Box>
+
+                    <Typography
+                        whiteSpace={"wrap"}
+                        textOverflow={"ellipsis"}
+                        display={"block"}
+                        overflow={"hidden"}
+                        mb={"1em"}
+                    >
+                        {savedLists[selectedIndex].description}
+                    </Typography>
+
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        onMouseDown={() => {
+
+                            sendToList(savedLists[selectedIndex])
+
+                        }}
+                    >
+
+                        <Typography
+                            variant="h5"
+                        >
+                            Open List
+                        </Typography>
+                    </Button>
+                </Stack>
+
+            }
+
+
+        </Stack>
     )
 }
 export default ViewSavedListsScreen
