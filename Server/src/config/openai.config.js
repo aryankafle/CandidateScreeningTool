@@ -27,7 +27,7 @@ export const tokenLimits = {
 
 export const scoring = {
 
-    MAX_SCORE: 1000,
+    MAX_SCORE: 100,
 
     scoringGuidlinesObject: {
 

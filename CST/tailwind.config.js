@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('./colors')
 
 module.exports = {
   content: [
@@ -12,7 +11,6 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
       },
-      ...colors
     },
     extend: {
       animation: {
