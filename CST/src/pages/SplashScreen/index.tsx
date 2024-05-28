@@ -65,13 +65,13 @@ const SplashScreen = () => {
                         sx={{
                             "@keyframes fontColor": {
                                 "0%": {
-                                    color: palette.text.primary
+                                    color: palette.primary.dark
                                 },
                                 "50%": {
-                                    color: palette.text.secondary
+                                    color: palette.secondary.light
                                 },
                                 "100%": {
-                                    color: palette.text.primary
+                                    color: palette.primary.dark
                                 }
                             },
                             "@keyframes fontSize": {
@@ -82,8 +82,8 @@ const SplashScreen = () => {
                                     fontSize: "6rem"
                                 }
                             },
-                            animation: "fontColor 5s ease infinite",
-                            "&:hover": {animation: "fontSize 1s ease 1 forwards"}
+                            animation: "fontColor 10s ease infinite",
+                            "&:hover": {animation: "fontSize 1s ease 1 forwards"}, color: palette.primary.dark
                         }}
                     >
 
