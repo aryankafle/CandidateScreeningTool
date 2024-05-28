@@ -164,7 +164,7 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
 
 
 
-    if(file) {
+    if(!file) {
 
         return (
             <Modal
@@ -226,8 +226,8 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
         )
     }
 
-    if(!file) return <></>;
-    
+
+
     return (
         <Modal
             open={open}
@@ -246,12 +246,11 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                 alignItems={"center"}
             >
                 <Stack
-                    minWidth={"40%"}
-                    maxWidth={"55%"}
+                    width={"50%"}
                     height={"90%"}
                     direction={"column"}
                     alignSelf={"center"}
-                    p={"1rem"}
+                    p={"1.4vw"}
                     sx={{
                         borderRadius: 5,
                         backgroundColor: palette.background.paper
@@ -280,16 +279,21 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
 
                         <ButtonGroup
                             variant='text'
-                            size='large'
                             color='secondary'
                         >
                             <Button
+                                sx={{
+                                    fontSize: "1vw"
+                                }}
                                 disabled={!hasPrevPage}
                                 onMouseDown={goToPrevPage}
                             >
                                 Prev
                             </Button>
                             <Button
+                                sx={{
+                                    fontSize: "1vw"
+                                }}
                                 disabled={!hasNextPage}
                                 onMouseDown={goToNextPage}
                             >
@@ -299,6 +303,9 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                         </ButtonGroup>
 
                         <Typography
+                            sx={{
+                                fontSize: "1vw"
+                            }}
                             alignSelf={"center"}
                             textAlign={"center"}
                             width={"7rem"}
@@ -318,7 +325,9 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                             >
 
                                 <DownloadIcon 
-                                    fontSize='medium'
+                                    sx={{
+                                        fontSize: "1.5vw"
+                                    }}
                                 />
 
                             </IconButton>

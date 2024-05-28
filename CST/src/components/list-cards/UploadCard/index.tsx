@@ -112,10 +112,12 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
 
                 <ListItemIcon>
                     <Checkbox
+                        sx={{
+                            scale: "0.8"
+                        }}
                         checked={isSelected}
                         tabIndex={-1}
                         disableRipple
-                        size="medium"
                         inputProps={{ 'aria-labelledby': labelId }}
                     />
                 </ListItemIcon>
