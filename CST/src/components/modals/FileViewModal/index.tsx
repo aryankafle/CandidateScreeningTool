@@ -164,7 +164,7 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
 
 
 
-    if(!file) {
+    if(file) {
 
         return (
             <Modal
@@ -188,23 +188,45 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                         maxWidth={"55%"}
                         height={"90%"}
                         direction={"column"}
-                        alignSelf={"center"}
-                        p={"1rem"}
+                        p={"2vw"}
                         sx={{
                             borderRadius: 5,
                             backgroundColor: palette.background.paper
                         }}
                     >
-                        <Typography>
-                            Hm... this file is undefined!
-                        </Typography>  
+                        <IconButton
+                            sx={{
+                                width: "1vw",
+                                aspectRatio: 1
+                            }}
+                            onMouseDown={() => {
+                                onClose()
+                            }}
+                        >
+
+                            <CloseIcon fontSize='large' />
+
+                        </IconButton>
+                        <Stack
+                            alignSelf={"center"}
+                            flexGrow={1}
+                            px={"4vw"}
+                            justifyContent={"center"}
+                        >
+                            <Typography
+                                alignSelf={"center"}
+                                fontSize={"7vh"}
+                            >
+                                Hm... this file is undefined!
+                            </Typography>  
+                        </Stack>
                     </Stack>
                 </Stack>
             </Modal>
         )
     }
 
-
+    if(!file) return <></>;
     
     return (
         <Modal

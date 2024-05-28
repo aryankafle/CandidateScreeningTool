@@ -2,6 +2,8 @@ import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import FormLabel from "@mui/material/FormLabel";
 import Typography from "@mui/material/Typography";
+import Icon from "@mui/material/Icon";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { useTheme } from "@mui/material"; 
 
@@ -42,12 +44,21 @@ export const FileUploadButton = ({ onUpload } : FileUploadButtonProps) => {
             >
                 <Button
                     fullWidth
-                    variant="contained"
+                    variant="outlined"
                     component="span"
                 >
+
+                    <CloudUploadIcon
+                        sx={{
+                            alignSelf: "center",
+                            fontSize: "1.7vw",
+                            mr: "1vw"
+                        }}
+                    />
+
                     <Typography
                         sx={{
-                            fontSize: "2em",
+                            fontSize: "1.5vw",
                             textAlign: "center"
                         }}
                     >

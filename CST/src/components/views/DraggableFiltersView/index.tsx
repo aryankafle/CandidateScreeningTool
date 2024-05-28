@@ -48,7 +48,7 @@ export const DraggableFiltersView = ({ selectedFilters, setSelectedFilters } : D
     return (
         <Box
             sx={{
-                padding: "0.333em",
+                padding: "0.rem",
                 flexGrow: 1,
                 overflow: "auto"
             }}
@@ -60,7 +60,7 @@ export const DraggableFiltersView = ({ selectedFilters, setSelectedFilters } : D
                     setUniqueIDItems={setSelectedFilters}
                     onDelete={(index) => handleRemoveFilter(index)}
                     ItemCard={FilterLayerCard}
-                    className="h-[10em] overflow-x-clip"
+                    className="h-[rem] overflow-x-clip"
                 />
             </List>
 

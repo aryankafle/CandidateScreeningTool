@@ -55,7 +55,7 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
             <Stack
                 direction={"row"}
                 sx={{
-                    width: "40em",
+                    width: "rem",
                 }}
             >
 
@@ -63,11 +63,11 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
                     
                 <Typography
                     sx={{
-                        fontSize: "1.3em",
+                        fontSize: "1.rem",
                         alignSelf: "center",
                         whiteSpace: "nowrap"
                     }}
-                    mr={"1.3em"}
+                    mr={"1.rem"}
                 >
                     
                     {children}

@@ -7,10 +7,11 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"; 
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
+import Box from '@mui/material/Box';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
-import { SxProps, Theme, useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material"; 
 
 
 
@@ -52,7 +53,7 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
             sx={{
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.222em",
+                padding: "0.rem",
                 backgroundColor: palette.background.paper,
             }}
         >
@@ -77,9 +78,9 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
                         onMouseDown={() => onFileOpened(index)}
                     >
                         <TopicIcon
-                            fontSize='medium'
                             sx={{
-                                color: palette.text.disabled
+                                color: palette.text.disabled,
+                                fontSize: "1.4vw"
                             }}
                         />
                     </IconButton>
@@ -90,9 +91,9 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
                     >
                         <DeleteIcon
                             sx={{
-                                color: palette.text.disabled
+                                color: palette.text.disabled,
+                                fontSize: "1.4vw"
                             }}
-                            fontSize='medium'
                         />
                     </IconButton>
                 </Stack>
@@ -100,7 +101,7 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
             sx={{
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.222em",
+                padding: "1.3vh",
                 backgroundColor: palette.background.paper,
             }}
         >
@@ -114,22 +115,18 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
                         checked={isSelected}
                         tabIndex={-1}
                         disableRipple
+                        size="medium"
                         inputProps={{ 'aria-labelledby': labelId }}
                     />
                 </ListItemIcon>
 
-                <Stack
-                    direction={"row"}
+                <Box
                     width={"55%"}
                     alignItems={"center"}
-                    gap={"1em"}
                 >
 
-
-
-
                     <Typography
-                        variant='subtitle1'
+                        fontSize={"1vw"}
                         textOverflow={"ellipsis"}
                         sx={{
                             width: "100%",
@@ -144,7 +141,7 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
                         {file.name}
                     </Typography>
 
-                </Stack>
+                </Box>
                 
             </ListItemButton>
         </ListItem>

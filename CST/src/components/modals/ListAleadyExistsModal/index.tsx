@@ -92,8 +92,8 @@ export const ListAlreadyExistsModal = (props: {open : boolean, onClose : ((() =>
                     </Typography>
 
                     <Divider sx={{
-                        mt: "3em",
-                        mb: "3em"
+                        mt: "rem",
+                        mb: "rem"
                     }} />
 
                     <Stack
@@ -101,13 +101,13 @@ export const ListAlreadyExistsModal = (props: {open : boolean, onClose : ((() =>
                         alignSelf={"center"}
                         justifyContent={"flex-end"}
                         flexGrow={1}
-                        p={"1em"}
+                        p={"rem"}
                         direction={"column"}
                         sx={{
-                            height: "4em",
-                            width: "20em"
+                            height: "rem",
+                            width: "rem"
                         }}
-                        gap={"1em"}
+                        gap={"rem"}
                     >
 
                         <Button
@@ -122,7 +122,7 @@ export const ListAlreadyExistsModal = (props: {open : boolean, onClose : ((() =>
                         >
 
                             <Typography
-                                fontSize={"1.6em"}
+                                fontSize={"1.rem"}
                             >
                                 Replace
                             </Typography>
@@ -136,7 +136,7 @@ export const ListAlreadyExistsModal = (props: {open : boolean, onClose : ((() =>
                         >
 
                             <Typography
-                                fontSize={"1.6em"}
+                                fontSize={"1.rem"}
                             >
                                 Go Back
                             </Typography>

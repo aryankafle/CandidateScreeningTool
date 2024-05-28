@@ -106,8 +106,8 @@ const FilterScreen = () => {
 
                         <Typography
                             sx={{
-                                minHeight: "2.3em",
-                                fontSize: "2.3em",
+                                minHeight: "2.rem",
+                                fontSize: "2.rem",
                                 textAlign: "center",
                             }}
                         >
@@ -132,7 +132,7 @@ const FilterScreen = () => {
                         borderStartStartRadius: 40,
                         px: "2.3vw",
                         py: "2.3vh",
-                        pb: "5em"
+                        pb: "rem"
                     }}
                     overflow={"clip"}
                     height={"100%"}
@@ -142,7 +142,7 @@ const FilterScreen = () => {
 
                     <Typography
                         sx={{
-                            fontSize: "2.3em",
+                            fontSize: "2.rem",
                             textAlign: "center"
                         }}
                     >
@@ -168,7 +168,7 @@ const FilterScreen = () => {
                         <Stack
                             direction={"row"}
                             flexWrap={"wrap"}
-                            gap={"5em"}
+                            gap={"rem"}
                         >
                                 
                             <CandidateHasWorkedAtFilter

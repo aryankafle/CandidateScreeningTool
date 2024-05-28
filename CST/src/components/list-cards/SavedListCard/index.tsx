@@ -60,7 +60,7 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                 ...sx,
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.333em",
+                padding: "0.rem",
                 backgroundColor: palette.background.paper,
             }}
         >
@@ -82,7 +82,7 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                     direction={"row"}
                     width={"55%"}
                     alignItems={"center"}
-                    gap={"1em"}
+                    gap={"rem"}
                 >
 
                     <TopicIcon

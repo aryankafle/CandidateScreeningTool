@@ -53,26 +53,30 @@ export const SignOutButton = ({ onSignOut, username } : SignOutButtonProps) => {
                     variant="text"
                     fullWidth
                     sx={{
-                        px: "3rem"
+                        px: "2vw"
                     }}
                     onMouseDown={onSignOut}
                 >
-                    Sign Out
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Sign Out
+                    </Typography>
                 </Button>
             </Popover>
             <Button
                 aria-describedby={id}
                 fullWidth
                 onMouseDown={handleUserIconCLick}
-                sx={{}}
             >
                 <AccountCircleIcon
                     sx={{
-                        fontSize: "1.4em",
-                        mr: "0.5rem",
+                        fontSize: "1.7vw",
+                        mr: "0.7vw",
                     }} />
                 <Typography
                     sx={{}}
+                    fontSize={"1.2vw"}
                 >
                     {username}
                 </Typography>

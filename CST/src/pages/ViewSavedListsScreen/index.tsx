@@ -163,7 +163,7 @@ const ViewSavedListsScreen = () => {
             
             <List
                 sx={{
-                    minWidth: "10em",
+                    minWidth: "rem",
                     width: "55%",
                     height: "100%",
                     border: 1,
@@ -197,7 +197,7 @@ const ViewSavedListsScreen = () => {
                 { savedLists.length < 1 &&
                 <Typography
                     textAlign={"center"}
-                    p={"1em"}
+                    p={"rem"}
                     color={palette.text.disabled}
                 >
                     You currently have no saved lists.
@@ -216,7 +216,7 @@ const ViewSavedListsScreen = () => {
                 textOverflow={"ellipsis"}
             >
                 <Typography
-                    fontSize={"1.6em"}
+                    fontSize={"1.rem"}
                 >
                     Here are your
                 </Typography>
@@ -228,7 +228,7 @@ const ViewSavedListsScreen = () => {
                         textOverflow={"ellipsis"}
                         display={"block"}
                         overflow={"hidden"}
-                        fontSize={"7em"}
+                        fontSize={"rem"}
                         sx={{
                             cursor: "default",
                             userSelect: "none",
@@ -262,7 +262,7 @@ const ViewSavedListsScreen = () => {
                     >
                         <Typography
                             textAlign={"center"}
-                            fontSize={"4em"}
+                            fontSize={"rem"}
                             whiteSpace={"no-wrap"}
                             textOverflow={"ellipsis"}
                             display={"block"}
@@ -287,7 +287,7 @@ const ViewSavedListsScreen = () => {
                         textOverflow={"ellipsis"}
                         display={"block"}
                         overflow={"hidden"}
-                        mb={"1em"}
+                        mb={"rem"}
                     >
                         {savedLists[selectedIndex].description}
                     </Typography>

@@ -99,8 +99,8 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
 
             <Typography
                 sx={{
-                    fontSize: "1.3em",
-                    pb: "0.5em"
+                    fontSize: "1.rem",
+                    pb: "0.rem"
                 }}
             >
                     Degree Level

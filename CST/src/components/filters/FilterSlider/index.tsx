@@ -37,7 +37,7 @@ export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, childre
 
                 <Typography
                     sx={{
-                        fontSize: "1.3em",
+                        fontSize: "1.rem",
                         maxLines: 1,
                         whiteSpace: "nowrap",
                     }}

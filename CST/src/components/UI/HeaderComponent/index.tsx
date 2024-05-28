@@ -80,6 +80,7 @@ const HeaderComponent = () => {
             >
                 <Typography
                     color={palette.text.primary}
+                    fontSize={"1.2vw"}
                 >
                     Resume Upload
                 </Typography>
@@ -93,6 +94,7 @@ const HeaderComponent = () => {
             >
                 <Typography
                     color={palette.text.primary}
+                    fontSize={"1.2vw"}
                 >
                     Saved Lists
                 </Typography>

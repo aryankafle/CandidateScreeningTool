@@ -29,7 +29,7 @@ export const SignInButton = ({ onSignIn } : SignInButtonProps) => {
         >
             <AccountCircleIcon 
                 sx={{
-                    fontSize: "1.3em",
+                    fontSize: "1.rem",
                     mr: "0.5rem",
                 }}
             />

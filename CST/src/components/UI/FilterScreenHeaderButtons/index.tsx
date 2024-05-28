@@ -93,7 +93,7 @@ export const FilterScreenHeaderButtons = () => {
         <Stack
             direction={"row"}
             justifyContent={"space-between"}
-            py={"0.7em"}
+            py={"0.rem"}
             px={"1rem"}
         >
 

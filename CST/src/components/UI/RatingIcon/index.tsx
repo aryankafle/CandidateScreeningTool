@@ -36,7 +36,7 @@ export const RatingIcon = (props: {grade : LetterGrade, large? : boolean}) => {
                     color: ratingColors[5-grade],
                     backgroundColor: palette.background.default,
                     borderRadius: 20,
-                    width: "6em",
+                    width: "rem",
 
                 }}
             >
@@ -56,7 +56,7 @@ export const RatingIcon = (props: {grade : LetterGrade, large? : boolean}) => {
         <div
             style={{
                 borderRadius: 30,
-                height: "3em",
+                height: "rem",
                 overflow: "clip",
                 backgroundColor: palette.background.paper,
                 aspectRatio: 1,

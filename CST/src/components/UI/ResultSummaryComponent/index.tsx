@@ -122,7 +122,7 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                 color="secondary"
                 size="large"
                 sx={{
-                    mb: "1em"
+                    mb: "rem"
                 }}
                 onMouseDown={() => {
 

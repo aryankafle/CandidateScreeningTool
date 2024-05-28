@@ -54,7 +54,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                 direction={"row"}
                 width={"100%"}
                 justifyContent={"space-between"}
-                height={"5em"}
+                height={"rem"}
             >
 
                 <Button
@@ -92,7 +92,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                         <Typography
                             alignSelf={"center"}
                             textOverflow={"ellipsis"}
-                            fontSize={"1.7em"}
+                            fontSize={"1.rem"}
                             sx={{
                                 maxLines: 1,
                                 color: palette.text.primary,

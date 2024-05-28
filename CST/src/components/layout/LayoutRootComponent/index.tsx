@@ -6,7 +6,11 @@ import { ReactNode } from "react";
 
 const Root = (props: {children : ReactNode}) => {
   return (
-    <div className="w-screen h-screen flex flex-col overflow-clip">
+    <div style={{
+        height: "100vh",
+        width: "100vw",
+        overflow: "clip",
+    }}>
        {props.children}
     </div>
   )

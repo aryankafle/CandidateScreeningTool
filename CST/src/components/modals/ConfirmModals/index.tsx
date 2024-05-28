@@ -47,30 +47,47 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
                     width: "50%",
                     bgcolor: 'background.paper',
                     boxShadow: 24,
-                    p: 4,
+                    py: "4vh",
                     justifyContent: "space-between",
                     overflow: "auto"
                 }}
             >
 
-                <Stack>
+                <Stack
+                    px={"3vw"}
+                    alignSelf={"center"}
+                >
+                    <Stack
+                        direction={"row"}
+                    >
+
+                        <Typography
+                            fontSize={"2vw"}
+                        >
+                            Are you sure you want to
+                        </Typography>
+                        <Typography
+                            fontSize={"2vw"}
+                        >
+                            &nbsp;
+                        </Typography>
+                        <Typography
+                            color={palette.primary.main}
+                            fontWeight={"bold"}
+                            fontSize={"2vw"}
+                        >
+                            upload
+                        </Typography>
+
+                    </Stack>
 
                     <Typography
-                        fontSize={"1.5em"}
-                    >
-                        Are you sure you want to upload this batch of
-                    </Typography>
-                    <Typography
-                        fontSize={"6em"}
-                        fontWeight={"bold"}
+                        fontSize={"5vw"}
                         fontFamily={"monospace"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
-                        {numUploads} 
-                    </Typography>
-                    <Typography
-                        fontSize={"1.5em"}
-                    >
-                        files?
+                        {numUploads} files?
                     </Typography>
 
                 </Stack>
@@ -84,7 +101,7 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
                     <Button
                         variant="contained"
                         sx={{
-                            fontSize: "1.5em",
+                            fontSize: "1.7vw",
                             alignSelf: "center",
                             px: "2vw",
                             my: "2vh"
@@ -100,7 +117,7 @@ export const ConfirmFilesModal = ({ onClose, onConfirm, open, numUploads } : Con
                     <Button
                         variant="text"
                         sx={{
-                            fontSize: "1.5em",
+                            fontSize: "1.7vw",
                             alignSelf: "center",
                             px: "2vw",
                             my: "2vh"
@@ -149,6 +166,7 @@ export const NotEnoughFilesModal = ({ onClose, open } : NotEnoughFilesModalProps
             <Stack
                 width={"60vw"}
                 height={"70vh"}
+                direction={"column"}
                 sx={{
                     position: 'absolute' as 'absolute',
                     top: '50%',
@@ -157,45 +175,45 @@ export const NotEnoughFilesModal = ({ onClose, open } : NotEnoughFilesModalProps
                     width: "50%",
                     bgcolor: 'background.paper',
                     boxShadow: 24,
-                    p: 4,
-                    justifyContent: "space-between"
+                    py: "4vh",
+                    justifyContent: "center",
+                    gap: "8vh",
+                    overflow: "auto"
                 }}
             >
 
                 <Stack>
 
                     <Typography
-                        fontSize={"1.5em"}
+                        fontSize={"2vw"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
                         Please upload at least
                     </Typography>
                     <Typography
-                        fontSize={"6em"}
-                        fontWeight={"bold"}
+                        fontSize={"5vw"}
                         fontFamily={"monospace"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
-                        2
-                    </Typography>
-                    <Typography
-                        fontSize={"1.5em"}
-                    >
-                        files.
+                        2 files
                     </Typography>
 
                 </Stack>
 
-                <Button
-                    variant="contained"
-                    sx={{
-                        fontSize: "1.5em",
-                        alignSelf: "center",
-                        px: "2vw",
-                        my: "2vh"
-                    }}
-                    onMouseDown={onClose}
-                >
-                    Okay
-                </Button>
+                    <Button
+                        variant="text"
+                        sx={{
+                            fontSize: "3vw",
+                            alignSelf: "center",
+                            px: "2vw",
+                            my: "2vh"
+                        }}
+                        onMouseDown={onClose}
+                    >
+                        Okay
+                    </Button>
 
             </Stack>
         </Modal>
@@ -247,30 +265,47 @@ export const ConfirmDeleteFilesModal = ({ onClose, onDelete, open, numSelected }
                     width: "50%",
                     bgcolor: 'background.paper',
                     boxShadow: 24,
-                    p: 4,
+                    py: "4vh",
                     justifyContent: "space-between",
                     overflow: "auto"
                 }}
             >
 
-                <Stack>
+                <Stack
+                    px={"3vw"}
+                    alignSelf={"center"}
+                >
+                    <Stack
+                        direction={"row"}
+                    >
+
+                        <Typography
+                            fontSize={"2vw"}
+                        >
+                            Are you sure you want to
+                        </Typography>
+                        <Typography
+                            fontSize={"2vw"}
+                        >
+                            &nbsp;
+                        </Typography>
+                        <Typography
+                            color={"error"}
+                            fontWeight={"bold"}
+                            fontSize={"2vw"}
+                        >
+                            delete
+                        </Typography>
+
+                    </Stack>
 
                     <Typography
-                        fontSize={"1.5em"}
-                    >
-                        Are you sure you want to delete this selection of
-                    </Typography>
-                    <Typography
-                        fontSize={"6em"}
-                        fontWeight={"bold"}
+                        fontSize={"5vw"}
                         fontFamily={"monospace"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
-                        {numSelected} 
-                    </Typography>
-                    <Typography
-                        fontSize={"1.5em"}
-                    >
-                        files?
+                        {numSelected} files?
                     </Typography>
 
                 </Stack>
@@ -280,11 +315,12 @@ export const ConfirmDeleteFilesModal = ({ onClose, onDelete, open, numSelected }
                     justifyContent={"center"}
                     gap={"3vw"}
                 >
-
+                    
                     <Button
                         variant="contained"
+                        color="error"
                         sx={{
-                            fontSize: "1.5em",
+                            fontSize: "1.7vw",
                             alignSelf: "center",
                             px: "2vw",
                             my: "2vh"
@@ -294,13 +330,13 @@ export const ConfirmDeleteFilesModal = ({ onClose, onDelete, open, numSelected }
                             onClose()
                         }}
                     >
-                        Confirm
+                        Delete
                     </Button>
 
                     <Button
                         variant="text"
                         sx={{
-                            fontSize: "1.5em",
+                            fontSize: "1.7vw",
                             alignSelf: "center",
                             px: "2vw",
                             my: "2vh"

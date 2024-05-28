@@ -27,15 +27,15 @@ export const LoadingSnackbar = ({ isLoading, loadingPercent } : LoadingSnackbarP
             message={`Creating Text Scans... ${Math.round(loadingPercent*100)/100}%`}
             action={
                 <CircularProgress
-                    size={"1.6em"}
+                    size={"1.rem"}
                     sx={{
                         alignSelf: "center",
-                        mx: "1.3em"
+                        mx: "1.rem"
                     }}
                 />
             }
             sx={{
-                m: "1em",
+                m: "rem",
                 userSelect: "none"
             }}
         />

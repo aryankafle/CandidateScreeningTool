@@ -366,9 +366,9 @@ const ResumeUploadScreen = () => {
 
                 <Stack
                     width={"30%"}
-                    minWidth={"20em"}
+                    minWidth={"rem"}
                     height={"100%"}
-                    gap={"1.5em"}
+                    gap={"2vh"}
                     justifyContent={"center"}
                     alignItems={"center"}
                     direction={"column"}
@@ -379,7 +379,7 @@ const ResumeUploadScreen = () => {
                     >
                         <Typography
                             sx={{
-                                fontSize: "1.2em",
+                                fontSize: "1.5vw",
                                 alignSelf: "center",
                             }}
                         >
@@ -388,6 +388,7 @@ const ResumeUploadScreen = () => {
                         
                         <Typography
                             variant="h1"
+                            fontSize={"6vw"}
                             align="left"
                             sx={{
                                 cursor: "default",
@@ -413,12 +414,12 @@ const ResumeUploadScreen = () => {
             
                     <Button
                         fullWidth
-                        variant="outlined"
+                        variant="contained"
                         onMouseDown={toggleConfirmFilesModal}
                     >
                         <Typography
                             sx={{
-                                fontSize: "2em"
+                                fontSize: "1.5vw"
                             }}
                         >
                             Filter Resumes
@@ -429,7 +430,7 @@ const ResumeUploadScreen = () => {
 
                 <List
                     sx={{
-                        minWidth: "10em",
+                        minWidth: "rem",
                         width: "60%",
                         height: "100%",
                         border: 1,
@@ -463,7 +464,8 @@ const ResumeUploadScreen = () => {
                     { uploadedFiles.length < 1 &&
                     <Typography
                         textAlign={"center"}
-                        p={"1em"}
+                        p={"2vw"}
+                        fontSize={"1.5vw"}
                         color={palette.text.disabled}
                     >
                         Please Upload your Files.

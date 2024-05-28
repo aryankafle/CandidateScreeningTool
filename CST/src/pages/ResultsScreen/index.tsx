@@ -279,7 +279,7 @@ const ResultsScreen = () => {
     return (
 
         <Box
-            p={"1em"}
+            p={"rem"}
             sx={{
                 overflowY: "auto",
                 overflowX: "hidden"
@@ -442,7 +442,7 @@ const ResultsScreen = () => {
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.5em"
+                                        px: "2.rem"
                                     }}
                                     onMouseDown={() => navigate("/filter")}
                                 >
@@ -452,7 +452,7 @@ const ResultsScreen = () => {
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.5em"
+                                        px: "2.rem"
                                     }}
                                     onMouseDown={() => navigate("/home/resume-upload")}
                                 >
