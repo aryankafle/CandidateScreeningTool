@@ -76,7 +76,7 @@ const ResumeUploadScreen = () => {
 
     } = useContext(BatchContext)
     
-    const { flags, updateFlag } = useContext(FlagContext)
+    const { flags, updateFlag, clearFlags } = useContext(FlagContext)
     const { userData } = useContext(UserContext)
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
@@ -126,10 +126,9 @@ const ResumeUploadScreen = () => {
         clearSelectionContext()
         clearBatchContext()
 
-        updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
-        updateFlag({action: "deactivate", flag: `text scans have been created`})
+        clearFlags()
 
-    }, [updateFlag, clearSelectionContext, clearBatchContext])
+    }, [updateFlag, clearSelectionContext, clearBatchContext, clearFlags])
 
 
 
