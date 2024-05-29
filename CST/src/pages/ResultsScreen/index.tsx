@@ -540,7 +540,7 @@ const ResultsScreen = () => {
                                     sx={{
                                         px: "1vw"
                                     }}
-                                    disabled={( listMetadataSameAsBefore || badInput )}
+                                    disabled={( gettingResults.current )}
                                     onMouseDown={() => {
 
                                         if(currentSavedList) {
@@ -570,6 +570,7 @@ const ResultsScreen = () => {
                                     sx={{
                                         px: "1vw"
                                     }}
+                                    disabled={ ( gettingResults.current ) }
                                     onMouseDown={() => navigate("/home/resume-upload")}
                                 >   
                                     <Typography
