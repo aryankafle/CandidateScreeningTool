@@ -2,12 +2,10 @@ import { WeighedResult } from '../../../hooks/UseWeighedScores';
 
 
 
-import IconButton from "@mui/material/IconButton"
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
-import Typography from "@mui/material/Typography"; 
+import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Typography from "@mui/material/Typography";
 
 import { useTheme } from "@mui/material";
 

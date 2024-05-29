@@ -1,13 +1,13 @@
 import express from "express"
-import morgan from "morgan"
 import expressSession from "express-session"
+import morgan from "morgan"
 import passport from "./passport.js"
 
-import config from "./config/env.config.js"
 import { corsConfig } from "./config/cors.config.js"
+import config from "./config/env.config.js"
 import { sessionConfig } from "./config/session.config.js"
 
-import cors from "cors";
+import cors from "cors"
 import multer from "multer"
 import { GridFsStorage } from "multer-gridfs-storage"
 import { resumeDB } from "./database/MongoDB.database.js"
@@ -15,20 +15,14 @@ import { getFileMetadata } from "./middlewares/authorization/CreateFileMetadata.
 
 
 
-import { verifyUserRegistered } from "./middlewares/authorization/VerifyRegisteredUser.js";
-import { verifyMongoDbConnection } from "./middlewares/authorization/VerifyMongoConnection.js";
 
-import { 
-
-    authRoutes, 
-
-    uploadRoutes, 
-    
-    userDataRoutes,
-
-    resumeFilteringRoutes, 
+import {
+    authRoutes,
+    resumeFilteringRoutes,
     resumeRoutes,
+    uploadRoutes,
 
+    userDataRoutes,
 } from "./routes/index.js"
 
 

@@ -1,5 +1,5 @@
-import dotenv from "dotenv"
-import path from "path"
+import dotenv from "dotenv";
+import path from "path";
 
 const __dirname = import.meta.dirname;
 const stage = process.env.NODE_ENV

@@ -1,13 +1,13 @@
 import { ListItem, useTheme } from "@mui/material";
-import { RatingIcon } from "../RatingIcon";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 import { WeighedResult } from "../../../hooks/UseWeighedScores";
+import { RatingIcon } from "../RatingIcon";
 
 
 

@@ -1,30 +1,28 @@
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import PageNotFoundScreen from '../pages/PageNotFoundScreen';
 
 
 
 import HomeRoutes from "./HomeRouter";
 
-import { getUserSavedLists, getUser } from "../requests/ResumeRequests"
+import { getUser, getUserSavedLists } from "../requests/ResumeRequests";
 
-import FilterScreen from "../pages/FilterScreen"
-import SplashScreen from "../pages/SplashScreen"
-import ResultsScreen from "../pages/ResultsScreen"
+import FilterScreen from "../pages/FilterScreen";
+import ResultsScreen from "../pages/ResultsScreen";
+import SplashScreen from "../pages/SplashScreen";
 
 
 
-import BaseLayout from "../layouts/BaseLayout"
+import BaseLayout from "../layouts/BaseLayout";
 import DecoratedLayout from "../layouts/DecoratedLayout";
 
 
 
-import UserContext from "../context/UserContext";
-import { SavedListsContext } from "../context/SavedListsContext";
 import { useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom";
 import FlagContext from "../context/FlagContext";
-import BatchContext from '../context/BatchContext';
-import SelectionContext from '../context/SelectionContext';
+import { SavedListsContext } from "../context/SavedListsContext";
+import UserContext from "../context/UserContext";
 
 
 

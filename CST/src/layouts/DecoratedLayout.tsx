@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import Header from '../components/UI/HeaderComponent'
-import Background from '../components/layout/BackgroundComponent'
-import Root from '../components/layout/LayoutRootComponent'
+import Header from '../components/UI/HeaderComponent';
+import Background from '../components/layout/BackgroundComponent';
+import Root from '../components/layout/LayoutRootComponent';
 
 
 

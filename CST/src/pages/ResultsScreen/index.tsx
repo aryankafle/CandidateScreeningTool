@@ -1,53 +1,48 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import uFuzzy from "@leeoniya/ufuzzy"
-
-import { useClickAway, useMouse } from "@uidotdev/usehooks";
+import { useMouse } from "@uidotdev/usehooks";
 
 import { Filter } from "../../utils/Filter";
-import { SavedList } from "../../utils/SavedList";
 import Result from "../../utils/Result";
+import { SavedList } from "../../utils/SavedList";
 
 import { runPromisesInParallel } from "../../utils/ParallelPromises";
 
 import useWeighedScores from "../../hooks/UseWeighedScores";
 
-import { SavedListsContext } from '../../context/SavedListsContext';
-import UserContext from "../../context/UserContext";
-import SelectionContext from "../../context/SelectionContext";
 import BatchContext from '../../context/BatchContext';
 import FlagContext from "../../context/FlagContext";
+import { SavedListsContext } from '../../context/SavedListsContext';
+import SelectionContext from "../../context/SelectionContext";
+import UserContext from "../../context/UserContext";
 
 import {
-    
-    saveList,
-    getExternalList,
     createResumeResult,
-    getResumeResult,
     downloadResume,
+    getExternalList,
+    getResumeResult,
     modifySavedList,
-
+    saveList,
 } from "../../requests/ResumeRequests";
 
 
 
-import { CircularProgress, Divider, Modal, useTheme } from "@mui/material";
+import { CircularProgress, useTheme } from "@mui/material";
 
-import ButtonGroup from "@mui/material/ButtonGroup";
-import FormLabel from "@mui/material/FormLabel";
-import Input from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
+import ButtonGroup from "@mui/material/ButtonGroup";
+import FormLabel from "@mui/material/FormLabel";
 import List from "@mui/material/List";
-import { MuiColorInput } from 'mui-color-input'
+import Stack from "@mui/material/Stack";
+import Input from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { MuiColorInput } from 'mui-color-input';
 
 import { CandidateCard } from "../../components/list-cards/CandidateCard";
 import { DocumentViewerModal } from "../../components/modals/FileViewModal";
 import { ResultSummary } from "../../components/UI/ResultSummaryComponent";
-import { ListAlreadyExistsModal } from "../../components/modals/ListAleadyExistsModal";
 
 
 

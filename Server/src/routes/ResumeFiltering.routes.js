@@ -3,9 +3,7 @@ import express from "express";
 
 
 import {
-    
     createResultsForResume
-
 } from "../controllers/ResumeFiltering.controller.js";
 
 

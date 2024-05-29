@@ -1,16 +1,14 @@
 import { SetStateAction } from "react";
 
 import {
-
     Filter,
     generateCandidateCurrentlyEmployedFilter,
     generateYearsOfWorkExperienceFIlter
-
 } from "../../../utils/Filter";
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
 import { FilterSlider } from "../FilterSlider";

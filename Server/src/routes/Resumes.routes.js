@@ -3,28 +3,19 @@ import express from "express";
 
 
 import {
-    
-    runTextScanOnResume,
-
     addNewSavedList,
-    removeOldSavedList,
-    modifySavedList,
-
-    getResumeResult,
+    deleteResumeResult,
+    deleteUnusedFiles,
     getResumeFile,
     getResumeFilters,
-    deleteResumeResult,
+    getResumeResult,
     modifyResumeResult,
-
-    deleteUnusedFiles,
-
+    modifySavedList,
+    removeOldSavedList,
+    runTextScanOnResume,
 } from "../controllers/Resumes.controller.js";
 
-import {
-
-
-    
-} from "../controllers/Uploads.controller.js";
+import { } from "../controllers/Uploads.controller.js";
 
 
 

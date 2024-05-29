@@ -1,6 +1,6 @@
-import { tokenLimits } from "../../config/openai.config.js"
-import { getNumTokensFromRequest } from './OpenAIQueryHelpers.js';
+import { tokenLimits } from "../../config/openai.config.js";
 import { makeChatGPTRequest } from "./OpenAIQuery.service.js";
+import { getNumTokensFromRequest } from './OpenAIQueryHelpers.js';
 
 
 

@@ -1,17 +1,12 @@
 import {
-
-    addResultToFile,
-    downloadFileMetadata,
-
+    downloadFileMetadata
 } from "../models/services/DatabaseFiles.service.js"
 
 import {
-
+    getApplicantFromResume,
     getFilterScoresForResume,
-    getSectionSummariesForResume,
     getOverallSummaryForResume,
-    getApplicantFromResume
-
+    getSectionSummariesForResume
 } from "../models/services/ResumeScreening.service.js"
 
 

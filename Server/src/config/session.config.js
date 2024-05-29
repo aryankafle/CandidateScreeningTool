@@ -1,6 +1,6 @@
+import mongoStore from "connect-mongo";
 import config from "../config/env.config.js";
-import { client } from "../database/MongoDB.database.js"
-import mongoStore from "connect-mongo"
+import { client } from "../database/MongoDB.database.js";
 
 export const sessionConfig = {
     secret: config.SESSION_SECRET,

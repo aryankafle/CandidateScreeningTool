@@ -1,7 +1,6 @@
+import OpenAI from "openai";
+import openaiConfig, { scoring } from "../../config/openai.config.js";
 import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
-import { scoring } from "../../config/openai.config.js";
-import OpenAI from "openai"
-import openaiConfig from "../../config/openai.config.js";
 
 
 

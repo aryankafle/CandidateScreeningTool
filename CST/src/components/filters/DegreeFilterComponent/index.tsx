@@ -4,12 +4,12 @@ import { Degree, Filter, generateHasDegreeLevelFilter } from "../../../utils/Fil
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Typography from "@mui/material/Typography";
 
 
 

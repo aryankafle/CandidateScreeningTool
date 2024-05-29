@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import Switch from '@mui/material/Switch';
+import Typography from "@mui/material/Typography";
 
 import { SxProps, Theme, useTheme } from "@mui/material";
 

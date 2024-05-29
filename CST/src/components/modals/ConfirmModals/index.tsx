@@ -1,10 +1,9 @@
-import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"; 
+import Typography from "@mui/material/Typography";
 
-import { useTheme } from "@mui/material"; 
-import { useEffect } from "react";
+import { useTheme } from "@mui/material";
 
 
 

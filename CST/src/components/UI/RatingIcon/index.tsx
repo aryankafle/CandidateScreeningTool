@@ -1,7 +1,5 @@
 import { useTheme } from "@mui/material";
-import Icon from "@mui/material/Icon";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { LetterGrade } from "../../../utils/Result";
 

@@ -2,12 +2,12 @@ import { Filter } from '../../../utils/Filter';
 
 
 
-import { useTheme } from "@mui/material"; 
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { useTheme } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 
 

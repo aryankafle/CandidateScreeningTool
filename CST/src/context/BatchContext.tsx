@@ -4,9 +4,9 @@ import { runTextScanOnFile } from "../requests/ResumeRequests"
 import { runPromisesInParallel } from "../utils/ParallelPromises"
 
 import Result from "../utils/Result"
+import FlagContext from "./FlagContext"
 import SelectionContext from "./SelectionContext"
 import UserContext from "./UserContext"
-import FlagContext from "./FlagContext"
 
 
 

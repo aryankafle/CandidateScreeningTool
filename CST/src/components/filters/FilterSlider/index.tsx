@@ -1,8 +1,8 @@
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import Slider from '@mui/material/Slider';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { SxProps, Theme, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 
 
 

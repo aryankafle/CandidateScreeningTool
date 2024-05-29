@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { users, savedLists } from "../../database/MongoDB.database.js";
+import { savedLists, users } from "../../database/MongoDB.database.js";
 
 
 

@@ -1,22 +1,18 @@
 import {
-
-    deleteFile,
-    downloadFileMetadata,
-    downloadFileReadStream,
-    downloadFileFilters,
-    deleteUnusedFileIDs,
     addResultToFile,
+    changeFileContactInfo,
     changeFileTextscan,
-    changeFileContactInfo
-
+    deleteFile,
+    deleteUnusedFileIDs,
+    downloadFileFilters,
+    downloadFileMetadata,
+    downloadFileReadStream
 } from "../models/services/DatabaseFiles.service.js";
 
 import {
-
-    uploadList,
+    changeSavedListMetadata,
     deleteList,
-    changeSavedListMetadata
-
+    uploadList
 } from "../models/services/SavedLists.service.js";
 
 import { censorContactInfo } from "../models/services/InfoCensor.service.js";

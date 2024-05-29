@@ -3,19 +3,17 @@ import { SetStateAction, useState } from "react";
 import { useTheme } from "@mui/material";
 
 import {
-
     Filter,
     FilterType,
-    
-    generateKeywordBiasFilter
 
+    generateKeywordBiasFilter
 } from "../../../utils/Filter";
 
 
 
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
+import Typography from "@mui/material/Typography";
 
 import { FilterTextInput } from "../FilterTextInput";
 
