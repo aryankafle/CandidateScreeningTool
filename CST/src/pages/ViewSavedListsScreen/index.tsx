@@ -1,26 +1,25 @@
-import { useEffect, useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import UserContext from "../../context/UserContext";
 import { SavedListsContext } from "../../context/SavedListsContext";
+import UserContext from "../../context/UserContext";
 
-import { useClipboard } from "../../hooks/Clipboard"
 
 import { SavedList } from "../../utils/SavedList";
 
-import { getUserSavedLists, deleteSavedList } from "../../requests/ResumeRequests";
+import { deleteSavedList, getUserSavedLists } from "../../requests/ResumeRequests";
 
 
 
-import { Button, Stack, useTheme } from "@mui/material"; 
+import { Button, Stack, useTheme } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
 
-import { SavedListCard } from "../../components/list-cards/SavedListCard";
 import { useMouse } from "@uidotdev/usehooks";
+import { SavedListCard } from "../../components/list-cards/SavedListCard";
 import FlagContext from "../../context/FlagContext";
 
 

@@ -72,7 +72,6 @@ const ResultsScreen = () => {
     const {
 
         selectedFilters,
-        setSelectedFilters,
 
         uploadedFiles,
         setUploadedFiles,
@@ -541,12 +540,15 @@ const ResultsScreen = () => {
                                     sx={{
                                         px: "1vw"
                                     }}
+                                    disabled={( listMetadataSameAsBefore || badInput )}
                                     onMouseDown={() => {
 
                                         if(currentSavedList) {
 
                                             setFileIDs(currentSavedList?.file_ids)
                                             setCurrentSavedList(undefined)
+
+                                            updateFlag({flag: "text scans have been created", action: "activate"})
 
                                         }
 
@@ -605,6 +607,7 @@ const ResultsScreen = () => {
                             :
                             <Button
                                 type="submit"
+                                disabled={( listMetadataSameAsBefore || badInput )}
                                 variant="contained"
                                 sx={{
                                     alignSelf: "center",

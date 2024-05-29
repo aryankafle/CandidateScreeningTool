@@ -1,24 +1,23 @@
 import { useContext, useRef } from 'react';
-import React from 'react';
 
 import BatchContext from '../../context/BatchContext';
 import SelectionContext from '../../context/SelectionContext';
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import LinearProgress from '@mui/material/LinearProgress';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
-import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
-import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
-import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
-import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHasWorkedAtFilterComponent';
 import { CandidateCountryFilter } from '../../components/filters/CandidateCountryFilterComponent';
+import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHasWorkedAtFilterComponent';
+import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
 import { KeywordBiasFilter } from '../../components/filters/KeywordBiasFilterComponent';
+import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
+import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
 import { DraggableFiltersView } from '../../components/views/DraggableFiltersView';
 import { Filter } from '../../utils/Filter';
 
@@ -60,6 +59,7 @@ const FilterScreen = () => {
         >
 
             <LoadingSnackbar
+                message="Creating text scans"
                 isLoading={!areAllTextScansReady}
                 loadingPercent={100 * amountTextScanned / fileIDs.length}
             />

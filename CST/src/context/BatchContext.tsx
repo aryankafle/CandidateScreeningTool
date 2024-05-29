@@ -5,6 +5,7 @@ import { runPromisesInParallel } from "../utils/ParallelPromises"
 
 import Result from "../utils/Result"
 import FlagContext from "./FlagContext"
+import SavedListsContext from "./SavedListsContext"
 import SelectionContext from "./SelectionContext"
 import UserContext from "./UserContext"
 
@@ -59,6 +60,8 @@ export default BatchContext
 export const BatchContextProvider = (props: { children : ReactNode }) => {
 
     const { uploadedFiles } = useContext(SelectionContext)
+
+    const { currentSavedList } = useContext(SavedListsContext)
 
     const { flags, updateFlag } = useContext(FlagContext)
 
@@ -139,7 +142,12 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
 
     }, [updateFlag, batchResults])
 
-    const areAllTextScansReady = useMemo(() => amountTextScanned === fileIDs.length, [amountTextScanned, fileIDs])
+    const areAllTextScansReady = useMemo(() => (
+    
+        ( amountTextScanned === fileIDs.length ) ||
+        ( flags.active.includes("text scans have been created") )
+    
+    ), [amountTextScanned, fileIDs.length, flags.active])
     const areAllResultsReady = useMemo(() => amountResultsCreated === fileIDs.length, [amountResultsCreated, fileIDs])
 
 
