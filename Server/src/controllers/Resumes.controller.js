@@ -14,7 +14,8 @@ import {
 import {
 
     uploadList,
-    deleteList
+    deleteList,
+    changeSavedListMetadata
 
 } from "../models/services/SavedLists.service.js";
 
@@ -307,7 +308,7 @@ export const getResumeFilters = async (req, res) => {
 }
 
 export const modifyResumeResult = async (req, res) => {
-
+    
     const fileID = req.body?.fileID
     const result = req.body?.result
 
@@ -331,6 +332,36 @@ export const modifyResumeResult = async (req, res) => {
 
     }
 
+
+}
+
+export const modifySavedList = async (req, res) => {
+
+    const {
+
+        listID,
+        newName,
+        newDescription,
+        newColor
+
+    } = req.body
+
+
+
+
+
+    try {
+
+        await changeSavedListMetadata(listID, newName, newDescription, newColor)
+
+        return res.status(200).send("Successfully changed list metadata.")
+
+    }
+    catch(error) {
+
+        return res.status(500).send("Error changing list metadata.")
+        
+    }
 
 }
 

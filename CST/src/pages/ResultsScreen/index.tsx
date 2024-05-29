@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import uFuzzy from "@leeoniya/ufuzzy"
 
-import { useMouse } from "@uidotdev/usehooks";
+import { useClickAway, useMouse } from "@uidotdev/usehooks";
 
 import { Filter } from "../../utils/Filter";
 import { SavedList } from "../../utils/SavedList";
@@ -22,12 +22,11 @@ import FlagContext from "../../context/FlagContext";
 import {
     
     saveList,
-    deleteSavedList,
     getExternalList,
     createResumeResult,
     getResumeResult,
     downloadResume,
-    getUserSavedLists,
+    modifySavedList,
 
 } from "../../requests/ResumeRequests";
 
@@ -117,6 +116,14 @@ const ResultsScreen = () => {
 
     const gettingResults = useRef(false)
 
+    const listMetadataSameAsBefore = useMemo(() => (
+
+        ( currentSavedList?.name === title ) &&
+        ( currentSavedList?.description === description) &&
+        ( currentSavedList?.color === color)
+        
+    ), [color, currentSavedList?.color, currentSavedList?.description, currentSavedList?.name, description, title])
+
     const filtersChanged = useMemo(() => flags.active.includes("filters have changed"), [flags.active])
 
 
@@ -138,6 +145,21 @@ const ResultsScreen = () => {
     }, [weighedResults.length])
 
 
+
+    const savePreviousList = useCallback(async () => {
+
+        if(!currentSavedList) return;
+        
+        await modifySavedList(currentSavedList, userData.id, title, description, color)
+
+        clearBatchContext()
+        clearSelectionContext()
+
+        clearFlags()
+
+        navigate("/home/saved-lists")
+
+    }, [currentSavedList, userData.id, title, description, color, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
 
     const saveCurrentList = useCallback(async () => {
         
@@ -538,6 +560,28 @@ const ResultsScreen = () => {
 
                             </ButtonGroup>
 
+                            { currentSavedList ?
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={listMetadataSameAsBefore}
+                                sx={{
+                                    alignSelf: "center",
+                                    p: "0.6vw",
+                                    px: "2vw"
+                                }}
+                                onMouseDown={() => savePreviousList()}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontSize: "2rem"
+                                    }}
+                                >
+                                    Save
+                                </Typography>
+                            </Button>
+                            :
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -556,6 +600,8 @@ const ResultsScreen = () => {
                                     Save List
                                 </Typography>
                             </Button>
+                            
+                            }
 
                         </Stack>
                         

@@ -1,4 +1,4 @@
-import { fileMetadata, savedLists, users } from "../../database/MongoDB.database.js"
+import { savedLists, users } from "../../database/MongoDB.database.js"
 import { addResultToFile } from "./DatabaseFiles.service.js"
 import { ObjectId } from "mongodb"
 
@@ -64,5 +64,31 @@ export async function deleteList(listID) {
     await users.updateMany( {}, { $pull: { saved_list_ids : listID } } )
 
     await savedLists.deleteMany( { _id } )
+
+}
+
+
+
+export async function changeSavedListMetadata(listID, newName, newDescription, newColor) {
+
+    const _id = new ObjectId(listID)
+
+    console.log(_id)
+    
+    console.log(newName)
+
+    console.log(await savedLists.find({ _id }).toArray())
+
+    await savedLists.updateMany( { _id }, {
+        $set: {"name": newName}
+    } )
+
+    await savedLists.updateMany( { _id }, {
+        $set: {"description": newDescription}
+    } )
+
+    await savedLists.updateMany( { _id }, {
+        $set: {"color": newColor}
+    } )
 
 }

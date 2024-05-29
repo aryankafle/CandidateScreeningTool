@@ -78,13 +78,11 @@ export const SavedListCard = ({ list, index, isSelected, onSelect, onDelete } : 
 
                     <Typography
                         fontSize={"1.5rem"}
-                        variant='subtitle1'
+                        overflow={"clip"}
                         textOverflow={"ellipsis"}
                         sx={{
-                            width: "100%",
-                            maxWidth: "100%",
+                            maxWidth: "80%",
                             display: "block",
-                            "overflow": "clip",
                             maxLines: 1,
                             whiteSpace: "nowrap",
                             userSelect: "none",

@@ -8,6 +8,7 @@ import {
 
     addNewSavedList,
     removeOldSavedList,
+    modifySavedList,
 
     getResumeResult,
     getResumeFile,
@@ -39,6 +40,7 @@ router.put("/create-text-scan", runTextScanOnResume)
 
 router.post("/create-list", addNewSavedList)
 router.delete("/remove-list", removeOldSavedList)
+router.post("/modify-list", modifySavedList)
 
 router.get("/get-result", getResumeResult)
 router.delete("/delete-result", deleteResumeResult)
