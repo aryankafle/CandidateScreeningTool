@@ -73,12 +73,6 @@ export async function changeSavedListMetadata(listID, newName, newDescription, n
 
     const _id = new ObjectId(listID)
 
-    console.log(_id)
-    
-    console.log(newName)
-
-    console.log(await savedLists.find({ _id }).toArray())
-
     await savedLists.updateMany( { _id }, {
         $set: {"name": newName}
     } )
