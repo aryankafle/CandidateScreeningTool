@@ -33,7 +33,7 @@ import {
 
 
 
-import { Divider, Modal, useTheme } from "@mui/material";
+import { CircularProgress, Divider, Modal, useTheme } from "@mui/material";
 
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FormLabel from "@mui/material/FormLabel";
@@ -60,9 +60,9 @@ const ResultsScreen = () => {
 
     const { palette } = useTheme()
 
-    const didRunResultsEffect = useRef(false)
-
     const [mouse, ref] = useMouse()
+
+    const { paramListID } = useParams();
 
     
 
@@ -115,6 +115,12 @@ const ResultsScreen = () => {
 
 
 
+    const gettingResults = useRef(false)
+
+    const filtersChanged = useMemo(() => flags.active.includes("filters have changed"), [flags.active])
+
+
+
     const changeCurrentlySelectedResult = useCallback((newIndex : number) => {
 
         setCurrentlySelectedResultIndex(prevIndex => {
@@ -145,10 +151,6 @@ const ResultsScreen = () => {
         navigate("/home/saved-lists")
 
     }, [title, description, color, onlySuccessfulResults, userData.id, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
-
-
-
-    const { paramListID } = useParams();
 
 
 
@@ -214,60 +216,61 @@ const ResultsScreen = () => {
 
     useEffect(() => {
 
-        if(!flags.active.includes('filters have changed')) return () => {};
+        if(!filtersChanged) return;
 
-        if(flags.active.includes('batch results created')) return () => {};
+        if(gettingResults.current) return;
+
+        gettingResults.current = true
+
+
+
+
 
         if(currentSavedList) {
 
-            return () => {
+            getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
 
-                getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
+                gettingResults.current = false
 
-                    console.log("yea")
-    
-                    updateFlag({flag: 'batch results created', action: "activate"})
-                    updateFlag({flag: 'filters have changed', action: "deactivate"})
-    
-                    setBatchResults(results)
-                    setUploadedFiles(resumes)
+                updateFlag({flag: 'filters have changed', action: "deactivate"})
 
-                })
-                
-            }
+                setBatchResults(results)
+                setUploadedFiles(resumes)
+
+            })
+
+            return;
 
         }
 
         if(paramListID) {
             
-            return () => {
+            getResultsFromListID(paramListID).then(({results, resumes}) => {
 
-                getResultsFromListID(paramListID).then(({results, resumes}) => {
-    
-                    updateFlag({flag: 'batch results created', action: "activate"})
-                    updateFlag({flag: 'filters have changed', action: "deactivate"})
+                gettingResults.current = false
 
-                    setBatchResults(results)
-                    setUploadedFiles(resumes)
-    
-                })
-                
-            }
-
-        }
-
-        return () => {
-
-            getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
-
-                updateFlag({flag: 'batch results created', action: "activate"})
                 updateFlag({flag: 'filters have changed', action: "deactivate"})
 
                 setBatchResults(results)
+                setUploadedFiles(resumes)
 
             })
-            
+
+            return;
+
         }
+
+    
+
+        getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
+
+            gettingResults.current = false
+
+            updateFlag({flag: 'filters have changed', action: "deactivate"})
+
+            setBatchResults(results)
+
+        })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -314,7 +317,7 @@ const ResultsScreen = () => {
                                 cursor: "default",
                                 userSelect: "none",
                                 backgroundcolor: "primary",
-                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.light}, ${palette.secondary.dark})`,
+                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.dark}, ${palette.background.default})`,
                                 backgroundSize: "100%",
                                 backgroundRepeat: "repeat",
                                 backgroundClip: "text",
@@ -331,6 +334,54 @@ const ResultsScreen = () => {
                         <Stack
                             gap={"0.5rem"}
                         >
+
+                        {( ( batchResults.length < fileIDs.length ) || gettingResults.current ) &&
+                        
+                            <Stack
+                            
+                                mt={"4rem"}
+                                p={"2rem"}
+                                gap={"0.5rem"}
+
+                            >
+
+                                <Typography
+                                    alignSelf={"center"}
+                                    fontSize={"1.5rem"}
+                                    sx={{
+                                        p: "1rem",
+                                        borderRadius: 2,
+                                        backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.background.default}, ${palette.secondary.light})`,
+                                    }}
+                                >
+
+                                    { (filtersChanged && batchResults.length > 0) ? "Creating your new results..." : "Creating your results..."}
+
+                                </Typography>
+
+                                <CircularProgress
+                                    sx={{
+                                        borderRadius: 2,
+                                        alignSelf: "center",
+                                        m: "2rem",
+                                    }}
+                                    color="secondary"
+                                />
+
+                                <Typography
+                                    alignSelf={"center"}
+                                    fontSize={"1.2rem"}
+                                    color={"gray"}
+                                >
+
+                                    Note: Depending on the size of your batch, this may take a few minutes.
+
+                                </Typography>
+
+                            </Stack>
+                        
+                        }
+
                         {weighedResults.map((weighedResult, index) => {
 
                             return (
@@ -340,7 +391,7 @@ const ResultsScreen = () => {
                                 isSelected={currentlySelectedResultIndex === index}
                                 onSelectCandidate={changeCurrentlySelectedResult}
                                 index={index}
-                            />     
+                            />
                             )
                         })}
                         

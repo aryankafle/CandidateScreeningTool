@@ -73,8 +73,6 @@ export const FilterScreenHeaderButtons = () => {
 
             if(!selectedFilters.some(otherFilter => otherFilter.name === filter.name)) {
 
-                console.log("yeaaa")
-
                 updateFlag({flag: 'filters have changed', action: "activate"})
                 return;
 
@@ -105,7 +103,11 @@ export const FilterScreenHeaderButtons = () => {
             >
 
                 { !areAllTextScansReady &&
-                <CircularProgress />
+                <CircularProgress 
+                    sx={{
+                        mx: "1rem"
+                    }}
+                />
                 }
 
                 <Button
