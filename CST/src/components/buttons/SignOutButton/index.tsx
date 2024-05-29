@@ -73,7 +73,8 @@ export const SignOutButton = ({ onSignOut, username } : SignOutButtonProps) => {
                     sx={{
                         fontSize: "1.7vw",
                         mr: "0.7vw",
-                    }} />
+                    }}
+                />
                 <Typography
                     sx={{}}
                     fontSize={"1.2vw"}
