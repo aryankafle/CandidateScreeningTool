@@ -31,7 +31,7 @@ export const BackButton = ({ navto } : BackButtonProps) => {
         >
             <ArrowBackIcon 
                 sx={{
-                    fontSize: "1.6vw",
+                    fontSize: "1.6rem",
                     color: palette.primary.contrastText
                 }}
             />

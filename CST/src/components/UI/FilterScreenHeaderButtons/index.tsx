@@ -122,8 +122,9 @@ export const FilterScreenHeaderButtons = () => {
                         }}
                     >
                         <StartIcon
-                            fontSize="small"
+                            fontSize="medium"
                             sx={{
+                                alignSelf: "center",
                                 color: palette.primary.contrastText
                             }}
                         />
@@ -135,7 +136,7 @@ export const FilterScreenHeaderButtons = () => {
                         sx={{
                             color: palette.primary.contrastText
                         }}
-                        fontSize={"1rem"}
+                        fontSize={"1.6rem"}
                         mr={"0.2vw"}
                         alignSelf={"center"}
                         textAlign={"center"}
