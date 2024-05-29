@@ -1,3 +1,7 @@
+import { useCallback } from 'react';
+
+import { useClipboard } from '../../../hooks/Clipboard';
+
 import { SavedList } from '../../../utils/SavedList';
 
 
@@ -11,7 +15,9 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { SxProps, Theme, useTheme } from "@mui/material"; 
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
+import { useTheme } from "@mui/material"; 
 
 
 
@@ -36,7 +42,27 @@ export const SavedListCard = ({ list, index, isSelected, onSelect, onDelete } : 
 
     const { palette } = useTheme()
 
+    const {
+
+        copyTextToClipboard
+
+    } = useClipboard()
+
     const labelId = `checkbox-list-label-${index}`
+
+
+
+
+
+    const copyListLink = useCallback(async (savedList : SavedList) => {
+
+        await copyTextToClipboard(`${process.env.REACT_APP_CLIENT_NAME}/results/${savedList.list_link}`, true)
+
+    }, [copyTextToClipboard])
+
+
+
+
 
     return (
         <ListItem
@@ -94,6 +120,19 @@ export const SavedListCard = ({ list, index, isSelected, onSelect, onDelete } : 
                 </Stack>
                 
             </ListItemButton>
+
+            <IconButton
+                aria-label="delete"
+                color={"error"}
+                onMouseDown={() => copyListLink(list)}
+            >
+                <ContentCopyIcon
+                    sx={{
+                        fontSize: "1.7rem",
+                        color: palette.text.secondary
+                    }}
+                />
+            </IconButton>
 
             <IconButton
                 aria-label="delete"

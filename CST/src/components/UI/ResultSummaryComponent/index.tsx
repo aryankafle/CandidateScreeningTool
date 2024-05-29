@@ -36,15 +36,18 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
         return (
             <Stack
                 position={"fixed"}
-                top={"3.5rem"}
-                bottom={"1rem"}
-                right={"1rem"}
+                top={"6rem"}
+                mx={"2rem"}
                 p={"2rem"}
-                left={"60%"}
+                height={"80%"}
+                width={"40%"}
+                bottom={"2rem"}
+                boxShadow={6}
+                left={"57.5%"}
+                overflow={"auto"}
                 sx={{
                     backgroundColor: palette.background.paper
                 }}
-                gap={"3rem"}
             >
                 
                 <Typography

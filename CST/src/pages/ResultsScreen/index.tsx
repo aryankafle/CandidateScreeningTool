@@ -70,12 +70,14 @@ const ResultsScreen = () => {
     const { 
         
         currentSavedList,
+        setCurrentSavedList
 
     } = useContext(SavedListsContext)
 
     const {
 
         selectedFilters,
+        setSelectedFilters,
 
         uploadedFiles,
         setUploadedFiles,
@@ -88,8 +90,11 @@ const ResultsScreen = () => {
     const {
 
         fileIDs,
+        setFileIDs,
+
         batchResults,
         setBatchResults,
+
         clearBatchContext
 
     } = useContext(BatchContext)
@@ -101,6 +106,14 @@ const ResultsScreen = () => {
     const [ title, setTitle ] = useState(currentSavedList?.name || "")
     const [ description, setDescription ] = useState(currentSavedList?.description || "")
     const [ color, setColor ] = useState(currentSavedList?.color || palette.primary.light)
+
+    const badInput = useMemo(() => (
+
+        !title ||
+        !description ||
+        !color
+
+    ), [color, description, title])
     
 
 
@@ -159,7 +172,7 @@ const ResultsScreen = () => {
 
         navigate("/home/saved-lists")
 
-    }, [currentSavedList, userData.id, title, description, color, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
+    }, [currentSavedList, userData, title, description, color, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
 
     const saveCurrentList = useCallback(async () => {
         
@@ -196,7 +209,7 @@ const ResultsScreen = () => {
 
         return {results}
 
-    }, [userData.id])
+    }, [userData])
 
 
 
@@ -224,15 +237,15 @@ const ResultsScreen = () => {
 
         return {results, resumes}
 
-    }, [userData.id])
+    }, [userData])
 
-    const getResultsFromListID = useCallback(async (listID : string) => {
+    const setCurrentListFromListID = useCallback(async (listID : string) => {
 
         const savedList = await getExternalList(listID)
 
-        return await getResultsFromPreviousSavedList(savedList)
+        setCurrentSavedList(savedList)
 
-    }, [getResultsFromPreviousSavedList])
+    }, [setCurrentSavedList])
 
 
 
@@ -267,16 +280,7 @@ const ResultsScreen = () => {
 
         if(paramListID) {
             
-            getResultsFromListID(paramListID).then(({results, resumes}) => {
-
-                gettingResults.current = false
-
-                updateFlag({flag: 'filters have changed', action: "deactivate"})
-
-                setBatchResults(results)
-                setUploadedFiles(resumes)
-
-            })
+            setCurrentListFromListID(paramListID)
 
             return;
 
@@ -355,6 +359,7 @@ const ResultsScreen = () => {
                     <List>
                         <Stack
                             gap={"0.5rem"}
+                            pb={"8vh"}
                         >
 
                         {( ( batchResults.length < fileIDs.length ) || gettingResults.current ) &&
@@ -416,6 +421,7 @@ const ResultsScreen = () => {
                             />
                             )
                         })}
+
                         
                         </Stack>
                         
@@ -449,9 +455,16 @@ const ResultsScreen = () => {
                     }}
                 >
                     <Stack
-                        height={"100%"}
-                        gap={"5vh"}
+                        position={"fixed"}
+                        top={"6rem"}
+                        mx={"2rem"}
+                        width={"40%"}
                         p={"2rem"}
+                        minHeight={"80%"}
+                        bottom={"2rem"}
+                        boxShadow={6}
+                        left={"57.5%"}
+                        overflow={"auto"}
                         sx={{
                             backgroundColor: palette.background.paper
                         }}
@@ -515,14 +528,16 @@ const ResultsScreen = () => {
                             />
                         </Stack>
 
-                        <Stack>
+                        <Stack
+                            mt={"3rem"}
+                        >
 
-                            <ButtonGroup
+                            { !paramListID && <ButtonGroup
                                 variant="text"
                                 aria-label="save-list-button-group"
                                 sx={{
                                     alignSelf: "center",
-                                    mb: "2rem"
+                                    mb: "3rem"
                                 }}
                             >
 
@@ -531,7 +546,18 @@ const ResultsScreen = () => {
                                     sx={{
                                         px: "1vw"
                                     }}
-                                    onMouseDown={() => navigate("/filter")}
+                                    onMouseDown={() => {
+
+                                        if(currentSavedList) {
+
+                                            setFileIDs(currentSavedList?.file_ids)
+                                            setCurrentSavedList(undefined)
+
+                                        }
+
+                                        navigate("/filter")
+                                    
+                                    }}
                                 >
                                     <Typography
                                         sx={{
@@ -558,14 +584,14 @@ const ResultsScreen = () => {
                                     </Typography>
                                 </Button>
 
-                            </ButtonGroup>
+                            </ButtonGroup> }
 
                             { currentSavedList ?
 
                             <Button
                                 type="submit"
                                 variant="contained"
-                                disabled={listMetadataSameAsBefore}
+                                disabled={( listMetadataSameAsBefore || badInput )}
                                 sx={{
                                     alignSelf: "center",
                                     p: "0.6vw",

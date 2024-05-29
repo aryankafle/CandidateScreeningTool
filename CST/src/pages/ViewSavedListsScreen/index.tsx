@@ -43,12 +43,6 @@ const ViewSavedListsScreen = () => {
 
     const { setCurrentSavedList } = useContext(SavedListsContext)
 
-    const {
-
-        copyTextToClipboard
-
-    } = useClipboard()
-
 
 
 
@@ -74,12 +68,6 @@ const ViewSavedListsScreen = () => {
         setCurrentSavedList(undefined)
 
     }, [])
-
-    const copyListLink = useCallback(async (savedList : SavedList) => {
-
-        await copyTextToClipboard(`${process.env.REACT_APP_CLIENT_NAME}/results/${savedList.list_link}`, true)
-
-    }, [copyTextToClipboard])
 
     const sendToList = useCallback(async (list : SavedList) => {
 
