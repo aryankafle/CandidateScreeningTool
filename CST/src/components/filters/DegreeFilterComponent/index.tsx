@@ -99,11 +99,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
 
             <Typography
                 sx={{
-                    fontSize: "1.2vw",
+                    fontSize: "1.5rem",
                     pb: "1vh"
                 }}
             >
-                    Degree Level
+                    Preferred Degree Level
             </Typography>
 
             <ToggleButtonGroup
@@ -126,11 +126,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     value={"associate's"}
                     key="associates"
                     sx={{
-                        p: "1.4vw"
+                        p: "1vw"
                     }}
                 >
                     <Typography
-                        fontSize={"1vw"}
+                        fontSize={"1.4rem"}
                     >
                         Associates
                     </Typography>
@@ -141,11 +141,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     value="bachelor's"
                     key="bachelors"
                     sx={{
-                        p: "1.4vw"
+                        p: "1vw"
                     }}
                 >
                     <Typography
-                        fontSize={"1vw"}
+                        fontSize={"1.4rem"}
                     >
                         Bachelors
                     </Typography>
@@ -156,11 +156,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     value="master's"
                     key="masters"
                     sx={{
-                        p: "1.4vw"
+                        p: "1vw"
                     }}
                 >
                     <Typography
-                        fontSize={"1vw"}
+                        fontSize={"1.4rem"}
                     >
                         Masters
                     </Typography>
@@ -171,11 +171,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     value="doctoral"
                     key="doctorate"
                     sx={{
-                        p: "1.4vw"
+                        p: "1vw"
                     }}
                 >
                     <Typography
-                        fontSize={"1vw"}
+                        fontSize={"1.4rem"}
                     >
                         Doctorate
                     </Typography>
@@ -186,11 +186,11 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     value="any"
                     key="any"
                     sx={{
-                        p: "1.4vw"
+                        p: "1vw"
                     }}
                 >
                     <Typography
-                        fontSize={"1vw"}
+                        fontSize={"1.4rem"}
                     >
                         Any
                     </Typography>

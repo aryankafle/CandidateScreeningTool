@@ -94,7 +94,7 @@ export const FilterScreenHeaderButtons = () => {
         <Stack
             direction={"row"}
             justifyContent={"space-between"}
-            py={"0.8vh"}
+            py={"1.3vh"}
             px={"1vw"}
         >
 
@@ -102,7 +102,6 @@ export const FilterScreenHeaderButtons = () => {
 
             <Stack
                 direction={"row"}
-                gap={"1rem"}
             >
 
                 { !areAllTextScansReady &&
@@ -119,10 +118,11 @@ export const FilterScreenHeaderButtons = () => {
                             justifyContent: "center",
                             alignSelf: "center",
                             height: "100%",
-                            width: "100%"
+                            width: "100%",
                         }}
                     >
                         <StartIcon
+                            fontSize="small"
                             sx={{
                                 color: palette.primary.contrastText
                             }}
@@ -135,8 +135,10 @@ export const FilterScreenHeaderButtons = () => {
                         sx={{
                             color: palette.primary.contrastText
                         }}
-                        fontSize={"1vw"}
+                        fontSize={"1rem"}
                         mr={"0.2vw"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
                         Run Selected Filters
                     </Typography>

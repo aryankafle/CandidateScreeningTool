@@ -91,9 +91,10 @@ const FilterScreen = () => {
                         backgroundColor: palette.background.paper,
                         borderStartEndRadius: 40,
                     }}
-                    p={"2vh"}
+                    p={"1vh"}
                     width={"40%"}
                     height={"100%"}
+                    boxShadow={10}
                 >
                     <Stack
                         sx={{
@@ -101,12 +102,14 @@ const FilterScreen = () => {
                             height: "90vh",
                             position: "sticky",
                             top: "2vh",
+                            p: "1vw",
                         }}
                     >
 
                         <Typography
                             sx={{
-                                fontSize: "1.8vw",
+                                fontSize: "2.5rem",
+                                mb: "1vw",
                                 textAlign: "center",
                             }}
                         >
@@ -129,18 +132,18 @@ const FilterScreen = () => {
                     sx={{
                         backgroundColor: palette.background.paper,
                         borderStartStartRadius: 40,
-                        px: "2.3vw",
-                        py: "2.3vh",
                     }}
+                    boxShadow={10}
+                    p={"2vw"}
                     height={"100%"}
                     width={"50%"}
-
                 >
 
                     <Typography
                         sx={{
-                            fontSize: "1.8vw",
-                            textAlign: "center"
+                            fontSize: "3rem",
+                            textAlign: "center",
+                            mb: "2vh"
                         }}
                     >
                         Add Filters
@@ -148,8 +151,9 @@ const FilterScreen = () => {
 
                     <Stack
                         direction={"column"}
-                        gap={"10vh"}
-                        mb={"7vh"}
+                        gap={"7vh"}
+                        mb={"3vh"}
+                        height={"100%"}
                         overflow={"auto"}
                     >
 
@@ -163,28 +167,20 @@ const FilterScreen = () => {
                             setSelectedFilters={setSelectedFilters}
                         />
 
-                        <Stack
-                            direction={"row"}
-                            flexWrap={"wrap"}
-                            gap={"13vh"}
-                        >
-                                
-                            <CandidateHasWorkedAtFilter
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
+                        <CandidateHasWorkedAtFilter
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
-                            <CandidateCountryFilter 
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
+                        <CandidateCountryFilter 
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
-                            <KeywordBiasFilter 
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
-
-                        </Stack>
+                        <KeywordBiasFilter 
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
                     </Stack>
                         

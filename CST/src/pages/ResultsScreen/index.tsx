@@ -37,7 +37,7 @@ import { Divider, Modal, useTheme } from "@mui/material";
 
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FormLabel from "@mui/material/FormLabel";
-import TextField from "@mui/material/TextField";
+import Input from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -279,7 +279,7 @@ const ResultsScreen = () => {
     return (
 
         <Box
-            p={"rem"}
+            p={"1vw"}
             sx={{
                 overflowY: "auto",
                 overflowX: "hidden"
@@ -305,7 +305,7 @@ const ResultsScreen = () => {
                 >
                     <Box
                         ref={ref}
-                        px={"1rem"}
+                        px={"0.8vw"}
                     >
 
                         <Typography
@@ -355,7 +355,7 @@ const ResultsScreen = () => {
                     direction={"column"}
                     position={"fixed"}
                     width={"40%"}
-                    right={"1rem"}
+                    right={"1vw"}
                 >
 
                 {
@@ -377,8 +377,8 @@ const ResultsScreen = () => {
                 >
                     <Stack
                         height={"100%"}
-                        gap={"2rem"}
-                        p={"2rem"}
+                        gap={"5vh"}
+                        p={"1.5vw"}
                         sx={{
                             backgroundColor: palette.background.paper
                         }}
@@ -390,7 +390,7 @@ const ResultsScreen = () => {
                             <FormLabel aria-label="input-name">
                                 List Name
                             </FormLabel>
-                            <TextField
+                            <Input
                                 type="text"
                                 value={title}
                                 onChange={ (event) => setTitle(event.target.value) }
@@ -405,7 +405,7 @@ const ResultsScreen = () => {
                             >
                                 List Description
                             </FormLabel>
-                            <TextField
+                            <Input
                                 type="text"
                                 value={description}
                                 onChange={ (event) => setDescription(event.target.value) }
@@ -434,29 +434,41 @@ const ResultsScreen = () => {
                                 aria-label="save-list-button-group"
                                 sx={{
                                     alignSelf: "center",
-                                    height: "3.4rem",
-                                    mb: "2rem"
+                                    height: "2.3vw",
+                                    mb: "1.5vw"
                                 }}
                             >
 
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.rem"
+                                        px: "1vw"
                                     }}
                                     onMouseDown={() => navigate("/filter")}
                                 >
-                                    Run New Filters
+                                    <Typography
+                                        sx={{
+                                            fontSize: "1vw"
+                                        }}
+                                    >
+                                        Run New Filters
+                                    </Typography>
                                 </Button>
 
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.rem"
+                                        px: "1vw"
                                     }}
                                     onMouseDown={() => navigate("/home/resume-upload")}
-                                >
-                                    Upload New Batch
+                                >   
+                                    <Typography
+                                        sx={{
+                                            fontSize: "1vw"
+                                        }}
+                                    >
+                                        Upload New Batch
+                                    </Typography>
                                 </Button>
 
                             </ButtonGroup>
@@ -465,13 +477,19 @@ const ResultsScreen = () => {
                                 type="submit"
                                 variant="contained"
                                 sx={{
-                                    width: "13rem",
                                     alignSelf: "center",
-                                    height: "3.4rem"
+                                    p: "0.6vw",
+                                    px: "2vw"
                                 }}
                                 onMouseDown={() => saveCurrentList()}
                             >
-                                Save List
+                                <Typography
+                                    sx={{
+                                        fontSize: "1vw"
+                                    }}
+                                >
+                                    Save List
+                                </Typography>
                             </Button>
 
                         </Stack>

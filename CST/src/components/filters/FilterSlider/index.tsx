@@ -31,16 +31,17 @@ export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, childre
         <form>
             <Stack
                 direction={"row"}
-                alignItems={"center"}
+                justifyContent={"space-between"}
+                mr={"4vw"}
             >
 
                 <Typography
                     sx={{
-                        fontSize: "1.1vw",
+                        fontSize: "1.5rem",
                         maxLines: 1,
                         whiteSpace: "nowrap",
+                        mr: "2vw"
                     }}
-                    mr={"1vw"}
                 >
                     {children}
                 </Typography>
@@ -56,6 +57,9 @@ export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, childre
                     
                     }}
                     size="medium"
+                    sx={{
+                        alignSelf: "center"
+                    }}
                     getAriaValueText={(value) => {return `${value} years of work experience`}}
                     valueLabelDisplay='auto'
                     shiftStep={stepSize}

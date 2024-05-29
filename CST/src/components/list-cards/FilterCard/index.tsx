@@ -44,7 +44,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
             >
                 <Typography
                     sx={{
-                        fontSize: "1.4vw",
+                        fontSize: "1.4rem",
                         maxLines: 1,
                         overflow: "hidden"
                     }}
@@ -58,7 +58,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
                 <IconButton>
                     <DragHandleIcon
                         sx={{
-                            fontSize: "2.1vw"
+                            fontSize: "1.6rem",
                         }}
                     />
                 </IconButton>
@@ -76,7 +76,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
         >
             <Typography
                 sx={{
-                    fontSize: "1.4vw",
+                    fontSize: "1.6rem",
                     maxLines: 1,
                     overflow: "hidden"
                 }}
@@ -94,7 +94,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
                     onMouseDown={() => onDelete(index)}
                     sx={{
                         color: palette.text.disabled,
-                        fontSize: "2.1vw"
+                        fontSize: "2rem"
                     }}
                 />
             </IconButton>
