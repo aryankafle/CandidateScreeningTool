@@ -1,13 +1,14 @@
 import OpenAI from "openai";
 import openaiConfig, { scoring } from "../../config/openai.config.js";
 import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
-import pdfjs from 'pdfjs-dist'
+import { pdfToPng } from "pdf-to-png-converter";
+import WordExtractor from "word-extractor";
 
 
 
 
 
-export function queryAIAboutFile(imageBuffers, query) {
+export function queryMessageFromImages(imageBuffers, query) {
 
     const message = {
 
@@ -15,7 +16,6 @@ export function queryAIAboutFile(imageBuffers, query) {
         content: [
             { type: "text", text: query }
         ],
-        "max_tokens": 300
 
     }
 
@@ -42,51 +42,47 @@ export function queryAIAboutFile(imageBuffers, query) {
 
 }
 
-async function turnPdfToPngs(file) {
+async function turnPdfToPngs(pdfBuffer) {
 
-    const pdf = await pdfjs.getDocument( { data: await file.arrayBuffer()} ).promise
+    const pngPages = await pdfToPng(pdfBuffer, {
+        viewportScale: 2.0,
+    });
 
-    const pageCount = pdf.numPages
-
-    const pngBuffers = []
-
-    for(let i = 1; i <= pageCount; i++) {
-
-        const page = await pdf.getPage(i)
-
-        const scale = 2
-
-        const viewport = page.getViewport({ scale })
-
-        const canvas = document.createElement('canvas')
-
-        const context = canvas.getContext('2d')
-
-        if(!context) throw new Error("no context on page.");
-
-        canvas.width = viewport.width
-        canvas.height = viewport.height
-
-        const renderContext = {
-
-            canvasContext: context,
-            viewport: viewport
-
-        }
-
-        await page.render(renderContext).promise
-        const pngBuffer = canvas.toDataURL('image/png').split(',')[1]
-
-
-
-        pngBuffers.push(Buffer.from(pngBuffer, 'base64'))
-
-    }
-
-    return pngBuffers
+    return pngPages.map(page => page.content)
 
 }
 
+
+
+export async function queryMessageFromPdf(pdfBuffer, query) {
+
+    const buffers = await turnPdfToPngs(pdfBuffer)
+
+    return queryMessageFromImages(buffers)
+
+}
+
+
+
+export async function queryMessageFromDocx(docxBuffer, query) {
+
+    const extractor = new WordExtractor()
+
+    const extractionResult = await extractor.extract(docxBuffer)
+
+    const extractedText = extractionResult.getBody()    
+
+    const message = {
+
+        role: "user",
+        content: [
+            { type: "text", text: query },
+            { type: "text", text: extractedText }
+        ],
+
+    }
+
+}
 
 
 export async function getQueryAboutResume(scannedText, query, scores) {
