@@ -376,7 +376,7 @@ const ResultsScreen = () => {
                                     }}
                                 >
 
-                                    { (filtersChanged && batchResults.length > 0) ? "Creating your new results..." : "Creating your results..."}
+                                    { currentSavedList ? "Fetching results..." : (filtersChanged && batchResults.length > 0) ? "Creating your new results..." : "Creating your results..."}
 
                                 </Typography>
 

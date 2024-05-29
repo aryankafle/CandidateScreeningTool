@@ -109,6 +109,8 @@ export const downloadResume = async (
         const blob = new Blob([data])
 
         const file = new File([blob], fileID)
+
+        console.log(file)
         
         return file
 
