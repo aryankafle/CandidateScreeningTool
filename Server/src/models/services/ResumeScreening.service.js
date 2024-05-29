@@ -2,8 +2,91 @@ import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
 import { scoring } from "../../config/openai.config.js";
 import OpenAI from "openai"
 import openaiConfig from "../../config/openai.config.js";
+import pdfjs from 'pdfjs-dist'
 
 
+
+
+
+export function queryAIAboutFile(imageBuffers, query) {
+
+    const message = {
+
+        role: "user",
+        content: [
+            { type: "text", text: query }
+        ],
+        "max_tokens": 300
+
+    }
+
+    for(const buffer of imageBuffers) {
+
+        const imageObj = { 
+            type: "image_url",
+            image_url: {
+                url: `data:image/jpeg;base64,${buffer.toString('base64')}`
+            }
+        }
+
+
+
+        message.content.push(imageObj)
+
+    }
+
+
+
+
+
+    return message
+
+}
+
+async function turnPdfToPngs(file) {
+
+    const pdf = await pdfjs.getDocument( { data: await file.arrayBuffer()} ).promise
+
+    const pageCount = pdf.numPages
+
+    const pngBuffers = []
+
+    for(let i = 1; i <= pageCount; i++) {
+
+        const page = await pdf.getPage(i)
+
+        const scale = 2
+
+        const viewport = page.getViewport({ scale })
+
+        const canvas = document.createElement('canvas')
+
+        const context = canvas.getContext('2d')
+
+        if(!context) throw new Error("no context on page.");
+
+        canvas.width = viewport.width
+        canvas.height = viewport.height
+
+        const renderContext = {
+
+            canvasContext: context,
+            viewport: viewport
+
+        }
+
+        await page.render(renderContext).promise
+        const pngBuffer = canvas.toDataURL('image/png').split(',')[1]
+
+
+
+        pngBuffers.push(Buffer.from(pngBuffer, 'base64'))
+
+    }
+
+    return pngBuffers
+
+}
 
 
 
