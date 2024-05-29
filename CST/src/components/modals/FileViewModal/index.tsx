@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import CircularProgress from '@mui/material/CircularProgress';
+import Slider from '@mui/material/Slider';
 import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 
@@ -28,9 +28,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 
 
-export const CorrectDocumentViewer = (props: {file : File, setNumPages : (num : number) => void, currentPage : number}) => {
+export const CorrectDocumentViewer = (props: {file : File, zoom: number, setNumPages : (num : number) => void, currentPage : number}) => {
 
-    const { file, setNumPages, currentPage } = props
+    const { file, setNumPages, currentPage, zoom } = props
 
     const fileUrl = useMemo(() => {
 
@@ -45,6 +45,7 @@ export const CorrectDocumentViewer = (props: {file : File, setNumPages : (num : 
                 setNumPages={(num) => setNumPages(num)}
                 currentPageNum={currentPage}
                 file={file}
+                zoom={zoom}
             />
         )
 
@@ -119,6 +120,8 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
     const { palette } = useTheme()
 
     const {file, open, onClose} = props
+
+    const [zoomVal, setZoomVal] = useState(0)
 
 	const [numPages, setNumPages] = useState<number>(0);
     
@@ -246,7 +249,7 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                 alignItems={"center"}
             >
                 <Stack
-                    width={"50%"}
+                    width={"66.666%"}
                     height={"90%"}
                     direction={"column"}
                     alignSelf={"center"}
@@ -274,7 +277,7 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
 
                     <Stack
                         direction={"row"}
-                        mb={"1rem"}
+                        gap={"2vw"}
                     >
 
                         <ButtonGroup
@@ -308,7 +311,6 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
                             }}
                             alignSelf={"center"}
                             textAlign={"center"}
-                            width={"7rem"}
                         >
                             Page {pageNumber} of {numPages}
                         </Typography>
@@ -337,7 +339,53 @@ export const DocumentViewerModal = (props: { file: File | undefined, open : bool
 
                     </Stack>
 
-                    <CorrectDocumentViewer file={file} setNumPages={(num) => setNumPages(num)} currentPage={pageNumber} />
+                    <Stack
+                        direction={"column"}
+                        alignSelf={"center"}
+                        m={"1vh"}
+                    >
+
+                        <Typography
+                            sx={{
+                                alignSelf: "center",
+                                fontSize: "1vw"
+                            }}
+                        >
+                            Zoom
+                        </Typography>
+
+                        <Slider 
+                            value={zoomVal}
+                            onChange={(event, value) => setZoomVal(value as number)}
+                            min={-100}
+                            max={100}
+                            defaultValue={0}
+                            size="small"
+                            sx={{
+                                alignSelf: "center",
+                                width: "33.333vw"
+                            }}
+                        />
+
+                    </Stack>
+
+
+
+                    <Stack
+                        height={"85%"}
+                        boxShadow={5}
+                        alignSelf={"center"}
+                        width={"70%"}
+                        overflow={"auto"}
+                    >
+                        <CorrectDocumentViewer
+                            file={file}
+                            zoom={zoomVal}
+                            setNumPages={(num) => setNumPages(num)}
+                            currentPage={pageNumber}
+                        />
+                    </Stack>
+
 
                 </Stack>
 

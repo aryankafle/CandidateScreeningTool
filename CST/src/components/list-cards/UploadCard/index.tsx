@@ -37,7 +37,6 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
 
     const { palette } = useTheme()
 
-
     const labelId = `checkbox-list-label-${index}`
 
 
