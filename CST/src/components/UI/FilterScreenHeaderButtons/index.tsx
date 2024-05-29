@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
 import StartIcon from '@mui/icons-material/Start';
 import CircularProgress from "@mui/material/CircularProgress";
+import Icon from "@mui/material/Icon";
 
 import { BackButton } from "../../buttons/BackButton";
 import FlagContext from "../../../context/FlagContext";
@@ -93,8 +94,8 @@ export const FilterScreenHeaderButtons = () => {
         <Stack
             direction={"row"}
             justifyContent={"space-between"}
-            py={"0.rem"}
-            px={"1rem"}
+            py={"0.8vh"}
+            px={"1vw"}
         >
 
             <BackButton navto={"/home/resume-upload"} />
@@ -112,11 +113,21 @@ export const FilterScreenHeaderButtons = () => {
                     variant="contained"
                     disabled={ !areAllTextScansReady || (selectedFilters.length < 1) }
                     endIcon={
-                    <StartIcon
+                    <Icon
                         sx={{
-                            color: palette.primary.contrastText
+                            alignItems: "center",
+                            justifyContent: "center",
+                            alignSelf: "center",
+                            height: "100%",
+                            width: "100%"
                         }}
-                    />
+                    >
+                        <StartIcon
+                            sx={{
+                                color: palette.primary.contrastText
+                            }}
+                        />
+                    </Icon>
                     }
                     onMouseDown={ () => navigate("/results") }
                 >
@@ -124,6 +135,8 @@ export const FilterScreenHeaderButtons = () => {
                         sx={{
                             color: palette.primary.contrastText
                         }}
+                        fontSize={"1vw"}
+                        mr={"0.2vw"}
                     >
                         Run Selected Filters
                     </Typography>

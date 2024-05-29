@@ -91,23 +91,22 @@ const FilterScreen = () => {
                         backgroundColor: palette.background.paper,
                         borderStartEndRadius: 40,
                     }}
-                    p={"1rem"}
+                    p={"2vh"}
                     width={"40%"}
                     height={"100%"}
                 >
                     <Stack
                         sx={{
                             flexDirection: "column",
-                            minHeight: "90vh",
+                            height: "90vh",
                             position: "sticky",
-                            top: 20,
+                            top: "2vh",
                         }}
                     >
 
                         <Typography
                             sx={{
-                                minHeight: "2.rem",
-                                fontSize: "2.rem",
+                                fontSize: "1.8vw",
                                 textAlign: "center",
                             }}
                         >
@@ -132,9 +131,7 @@ const FilterScreen = () => {
                         borderStartStartRadius: 40,
                         px: "2.3vw",
                         py: "2.3vh",
-                        pb: "rem"
                     }}
-                    overflow={"clip"}
                     height={"100%"}
                     width={"50%"}
 
@@ -142,7 +139,7 @@ const FilterScreen = () => {
 
                     <Typography
                         sx={{
-                            fontSize: "2.rem",
+                            fontSize: "1.8vw",
                             textAlign: "center"
                         }}
                     >
@@ -151,8 +148,9 @@ const FilterScreen = () => {
 
                     <Stack
                         direction={"column"}
-                        gap={"5rem"}
-                        minHeight={"75%"}
+                        gap={"10vh"}
+                        mb={"7vh"}
+                        overflow={"auto"}
                     >
 
                         <DegreeFilter 
@@ -168,7 +166,7 @@ const FilterScreen = () => {
                         <Stack
                             direction={"row"}
                             flexWrap={"wrap"}
-                            gap={"rem"}
+                            gap={"13vh"}
                         >
                                 
                             <CandidateHasWorkedAtFilter

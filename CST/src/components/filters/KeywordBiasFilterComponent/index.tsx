@@ -47,17 +47,17 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "1.rem"
+                    fontSize: "0.93vw"
                 }}
                 color={palette.grey[900]}
-                mb={"0.rem"}
+                mb={"0.4vw"}
             >
                 Below, input another keyword to bias.
             </Typography>
 
             <Typography
                 sx={{
-                    fontSize: "0.rem",
+                    fontSize: "0.8vw",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}
@@ -67,11 +67,11 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "0.rem",
+                    fontSize: "0.8vw",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}
-                mb={"rem"}
+                mb={"1vw"}
             >
                 If you wish for this to be a strict search instead, check "strict".
             </Typography>
@@ -101,13 +101,14 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
                     color='secondary'
                 />
                 
-                <Typography
-                    sx={{
-                        alignSelf: "center"
-                    }}
-                >
-                    Strict?
-                </Typography>
+                    <Typography
+                        sx={{
+                            fontSize: "0.9vw",
+                            alignSelf: "center"
+                        }}
+                    >
+                        Strict?
+                    </Typography>
 
             </Stack>
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
-import TextField from '@mui/material/TextField';
+import Input from '@mui/material/Input';
 import FormLabel from "@mui/material/FormLabel";
 
 import { SxProps, Theme, useTheme } from "@mui/material";
@@ -54,31 +54,31 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
 
             <Stack
                 direction={"row"}
-                sx={{
-                    width: "rem",
-                }}
             >
 
                 <FormLabel/>
                     
                 <Typography
                     sx={{
-                        fontSize: "1.rem",
+                        fontSize: "1.1vw",
                         alignSelf: "center",
                         whiteSpace: "nowrap"
                     }}
-                    mr={"1.rem"}
+                    mr={"1.2vw"}
                 >
                     
                     {children}
                 </Typography>
 
-                <TextField
+                <Input
                     id="filter-text-input"
-                    label={placeholder}
                     value={text}
                     onChange={(event) => setText(event.target.value)}
                     type="text"
+                    placeholder={placeholder}
+                    sx={{
+                        fontSize: "1vw"
+                    }}
                     
                 />
 

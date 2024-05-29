@@ -27,9 +27,6 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
     return (
         <Stack
             direction={"row"}
-            sx={{
-                width: "rem",
-            }}
         >
 
             <Switch
@@ -41,7 +38,7 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
 
             <Typography
                 sx={{
-                    fontSize: "rem",
+                    fontSize: "0.9vw",
                     alignSelf: "center",
                     whiteSpace: "nowrap"
                 }}

@@ -99,8 +99,8 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
 
             <Typography
                 sx={{
-                    fontSize: "1.rem",
-                    pb: "0.rem"
+                    fontSize: "1.2vw",
+                    pb: "1vh"
                 }}
             >
                     Degree Level
@@ -121,24 +121,79 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                 exclusive={true}
             >
                 
-                <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
-                    Associates
+                <ToggleButton
+                    aria-label={"associate's"}
+                    value={"associate's"}
+                    key="associates"
+                    sx={{
+                        p: "1.4vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Associates
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
-                    Bachelors
+                <ToggleButton 
+                    aria-label={"bachelor's"}
+                    value="bachelor's"
+                    key="bachelors"
+                    sx={{
+                        p: "1.4vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Bachelors
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"master's"} value="master's" key="masters">
-                    Masters
+                <ToggleButton
+                    aria-label={"master's"}
+                    value="master's"
+                    key="masters"
+                    sx={{
+                        p: "1.4vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Masters
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
-                    Doctorate
+                <ToggleButton
+                    aria-label={"doctoral"}
+                    value="doctoral"
+                    key="doctorate"
+                    sx={{
+                        p: "1.4vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Doctorate
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"any"} value="any" key="any">
-                    Any
+                <ToggleButton
+                    aria-label={"any"}
+                    value="any"
+                    key="any"
+                    sx={{
+                        p: "1.4vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1vw"}
+                    >
+                        Any
+                    </Typography>
                 </ToggleButton>
 
             </ToggleButtonGroup>
