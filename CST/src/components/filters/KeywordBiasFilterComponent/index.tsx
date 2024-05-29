@@ -3,19 +3,17 @@ import { SetStateAction, useState } from "react";
 import { useTheme } from "@mui/material";
 
 import {
-
     Filter,
     FilterType,
-    
-    generateKeywordBiasFilter
 
+    generateKeywordBiasFilter
 } from "../../../utils/Filter";
 
 
 
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
+import Typography from "@mui/material/Typography";
 
 import { FilterTextInput } from "../FilterTextInput";
 
@@ -47,17 +45,17 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "1.rem"
+                    fontSize: "1.4rem"
                 }}
                 color={palette.grey[900]}
-                mb={"0.rem"}
+                mb={"0.4vw"}
             >
                 Below, input another keyword to bias.
             </Typography>
 
             <Typography
                 sx={{
-                    fontSize: "0.rem",
+                    fontSize: "1.2rem",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}
@@ -67,11 +65,11 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "0.rem",
+                    fontSize: "1.2rem",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}
-                mb={"rem"}
+                mb={"1vw"}
             >
                 If you wish for this to be a strict search instead, check "strict".
             </Typography>
@@ -101,13 +99,14 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
                     color='secondary'
                 />
                 
-                <Typography
-                    sx={{
-                        alignSelf: "center"
-                    }}
-                >
-                    Strict?
-                </Typography>
+                    <Typography
+                        sx={{
+                            fontSize: "1rem",
+                            alignSelf: "center"
+                        }}
+                    >
+                        Strict?
+                    </Typography>
 
             </Stack>
 

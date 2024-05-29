@@ -3,27 +3,19 @@ import express from "express";
 
 
 import {
-    
-    runTextScanOnResume,
-
     addNewSavedList,
-    removeOldSavedList,
-
-    getResumeResult,
+    deleteResumeResult,
+    deleteUnusedFiles,
     getResumeFile,
     getResumeFilters,
-    deleteResumeResult,
+    getResumeResult,
     modifyResumeResult,
-
-    deleteUnusedFiles,
-
+    modifySavedList,
+    removeOldSavedList,
+    runTextScanOnResume,
 } from "../controllers/Resumes.controller.js";
 
-import {
-
-
-    
-} from "../controllers/Uploads.controller.js";
+import { } from "../controllers/Uploads.controller.js";
 
 
 
@@ -39,6 +31,7 @@ router.put("/create-text-scan", runTextScanOnResume)
 
 router.post("/create-list", addNewSavedList)
 router.delete("/remove-list", removeOldSavedList)
+router.post("/modify-list", modifySavedList)
 
 router.get("/get-result", getResumeResult)
 router.delete("/delete-result", deleteResumeResult)

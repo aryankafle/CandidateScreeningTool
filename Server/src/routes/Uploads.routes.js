@@ -1,10 +1,8 @@
 import express from "express";
 
 import {
-
     getUploadId,
-    
-} from "../controllers/Uploads.controller.js"
+} from "../controllers/Uploads.controller.js";
 
 
 

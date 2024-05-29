@@ -1,8 +1,8 @@
 import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
-import UserContext from "../../../context/UserContext"
 import FlagContext from "../../../context/FlagContext"
+import UserContext from "../../../context/UserContext"
 
 import { handleLogin, handleLogout } from "../../../utils/HandleSignInOut"
 
@@ -10,13 +10,12 @@ import { handleLogin, handleLogout } from "../../../utils/HandleSignInOut"
 
 import { useTheme } from "@mui/material"
 
-import Typography from "@mui/material/Typography"
-import Stack from "@mui/material/Stack"
 import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
 
 import { SignInButton } from "../../buttons/SignInButton"
 import { SignOutButton } from "../../buttons/SignOutButton"
-import SavedListsContext from "../../../context/SavedListsContext"
 
 
 

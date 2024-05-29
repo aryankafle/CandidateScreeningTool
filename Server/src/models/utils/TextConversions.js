@@ -1,6 +1,6 @@
 import { createWorker } from 'tesseract.js';
-import WordExtractor from "word-extractor"
-import { convertPdfStreamToPngBuffers, streamToBuffer } from "./FileConversions.js"
+import WordExtractor from "word-extractor";
+import { convertPdfStreamToPngBuffers, streamToBuffer } from "./FileConversions.js";
 
 
 

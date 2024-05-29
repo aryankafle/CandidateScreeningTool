@@ -3,14 +3,11 @@ import express from "express";
 
 
 import {
-
-    getUserSavedSelection,
-    setUserSavedSelection,
-
     getAllUserSavedLists,
 
-    getUserExternalList
-
+    getUserExternalList,
+    getUserSavedSelection,
+    setUserSavedSelection
 } from "../controllers/UserData.controller.js";
 
 

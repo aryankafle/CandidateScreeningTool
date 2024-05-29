@@ -2,12 +2,10 @@ import { WeighedResult } from '../../../hooks/UseWeighedScores';
 
 
 
-import IconButton from "@mui/material/IconButton"
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
-import Typography from "@mui/material/Typography"; 
+import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Typography from "@mui/material/Typography";
 
 import { useTheme } from "@mui/material";
 
@@ -54,7 +52,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                 direction={"row"}
                 width={"100%"}
                 justifyContent={"space-between"}
-                height={"rem"}
+                height={"7rem"}
             >
 
                 <Button
@@ -84,7 +82,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                         flexGrow={1}
                         direction={"row"}
                         alignItems={"center"}
-                        gap={"1.5rem"}
+                        gap={"3rem"}
                     >
 
                         <RatingIcon grade={candidate.grade}/>
@@ -92,7 +90,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                         <Typography
                             alignSelf={"center"}
                             textOverflow={"ellipsis"}
-                            fontSize={"1.rem"}
+                            fontSize={"2rem"}
                             sx={{
                                 maxLines: 1,
                                 color: palette.text.primary,

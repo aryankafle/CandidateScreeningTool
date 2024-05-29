@@ -1,10 +1,10 @@
-import { QueryClient,  QueryClientProvider } from "react-query"
+import '@fontsource/raleway';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from "./theme"
+import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import '@fontsource/raleway'
-import AppContextProvider from "./context"
-import Router from "./router"
+import AppContextProvider from "./context";
+import Router from "./router";
+import { theme } from "./theme";
 
 
 

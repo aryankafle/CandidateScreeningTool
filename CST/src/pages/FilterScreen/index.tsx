@@ -1,24 +1,23 @@
-import { useContext, useEffect, useMemo, useRef } from 'react';
-import React from 'react';
+import { useContext, useRef } from 'react';
 
 import BatchContext from '../../context/BatchContext';
 import SelectionContext from '../../context/SelectionContext';
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import LinearProgress from '@mui/material/LinearProgress';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 import { FilterScreenHeaderButtons } from '../../components/UI/FilterScreenHeaderButtons';
-import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
-import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
-import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
-import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHasWorkedAtFilterComponent';
 import { CandidateCountryFilter } from '../../components/filters/CandidateCountryFilterComponent';
+import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHasWorkedAtFilterComponent';
+import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
 import { KeywordBiasFilter } from '../../components/filters/KeywordBiasFilterComponent';
+import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
+import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
 import { DraggableFiltersView } from '../../components/views/DraggableFiltersView';
 import { Filter } from '../../utils/Filter';
 
@@ -60,6 +59,7 @@ const FilterScreen = () => {
         >
 
             <LoadingSnackbar
+                message="Creating text scans"
                 isLoading={!areAllTextScansReady}
                 loadingPercent={100 * amountTextScanned / fileIDs.length}
             />
@@ -91,23 +91,25 @@ const FilterScreen = () => {
                         backgroundColor: palette.background.paper,
                         borderStartEndRadius: 40,
                     }}
-                    p={"1rem"}
+                    p={"1vh"}
                     width={"40%"}
                     height={"100%"}
+                    boxShadow={10}
                 >
                     <Stack
                         sx={{
                             flexDirection: "column",
-                            minHeight: "90vh",
+                            height: "90vh",
                             position: "sticky",
-                            top: 20,
+                            top: "2vh",
+                            p: "1vw",
                         }}
                     >
 
                         <Typography
                             sx={{
-                                minHeight: "2.rem",
-                                fontSize: "2.rem",
+                                fontSize: "2.5rem",
+                                mb: "1vw",
                                 textAlign: "center",
                             }}
                         >
@@ -130,20 +132,18 @@ const FilterScreen = () => {
                     sx={{
                         backgroundColor: palette.background.paper,
                         borderStartStartRadius: 40,
-                        px: "2.3vw",
-                        py: "2.3vh",
-                        pb: "rem"
                     }}
-                    overflow={"clip"}
+                    boxShadow={10}
+                    p={"2vw"}
                     height={"100%"}
                     width={"50%"}
-
                 >
 
                     <Typography
                         sx={{
-                            fontSize: "2.rem",
-                            textAlign: "center"
+                            fontSize: "3rem",
+                            textAlign: "center",
+                            mb: "2vh"
                         }}
                     >
                         Add Filters
@@ -151,8 +151,10 @@ const FilterScreen = () => {
 
                     <Stack
                         direction={"column"}
-                        gap={"5rem"}
-                        minHeight={"75%"}
+                        gap={"13vh"}
+                        pb={"10vh"}
+                        height={"100%"}
+                        overflow={"auto"}
                     >
 
                         <DegreeFilter 
@@ -165,28 +167,20 @@ const FilterScreen = () => {
                             setSelectedFilters={setSelectedFilters}
                         />
 
-                        <Stack
-                            direction={"row"}
-                            flexWrap={"wrap"}
-                            gap={"rem"}
-                        >
-                                
-                            <CandidateHasWorkedAtFilter
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
+                        <CandidateHasWorkedAtFilter
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
-                            <CandidateCountryFilter 
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
+                        <CandidateCountryFilter 
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
-                            <KeywordBiasFilter 
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
-
-                        </Stack>
+                        <KeywordBiasFilter 
+                            selectedFilters={selectedFilters}
+                            setSelectedFilters={setSelectedFilters}
+                        />
 
                     </Stack>
                         

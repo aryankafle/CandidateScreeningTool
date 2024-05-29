@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
-import { addUser } from "../models/services/UserAccounts.service.js";
 import config from "../config/env.config.js";
+import { addUser } from "../models/services/UserAccounts.service.js";
 
 
 

@@ -1,9 +1,7 @@
 import {
-
     changePdfStreamToText,
-    changeWordStreamToText,
     changePngStreamToText,
-
+    changeWordStreamToText,
 } from "../utils/TextConversions.js"
 
 

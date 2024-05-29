@@ -1,7 +1,7 @@
-import Result, { resultFromJSON } from '../utils/Result';
 import axios from "axios";
-import { SavedList, savedListFromJSON } from '../utils/SavedList';
 import { Filter } from '../utils/Filter';
+import Result, { resultFromJSON } from '../utils/Result';
+import { SavedList, savedListFromJSON } from '../utils/SavedList';
  
 
 
@@ -266,18 +266,20 @@ export async function deleteUnusedFiles() {
 
 
 
-export async function modifySavedList(listID : string, userID : string, newName? : string, newDescription? : string, newColor? : string) {
+export async function modifySavedList(listToModify : SavedList, userID : string, newName : string, newDescription : string, newColor : string) {
 
-    await axios.put(`${process.env.REACT_APP_SERVER_NAME}/resumes/modify-list`, { params: {
+    console.log(newName)
+
+    await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/modify-list`, {
         
-        listID,
+        listID: listToModify._id,
         userID,
         
         newName,
         newDescription,
         newColor,
 
-    }})
+    })
 
 }
 

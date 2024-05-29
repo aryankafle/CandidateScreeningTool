@@ -1,5 +1,5 @@
-import GooglePassport from "passport-google-oauth20"
 import passport from "passport"
+import GooglePassport from "passport-google-oauth20"
 import config from "./config/env.config.js"
 
 

@@ -1,5 +1,5 @@
-import mongoConfig from "../config/MongoDB.config.js"
-import { MongoClient, GridFSBucket } from 'mongodb';
+import { GridFSBucket, MongoClient } from 'mongodb';
+import mongoConfig from "../config/MongoDB.config.js";
 import config from "../config/env.config.js";
 
 

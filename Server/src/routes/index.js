@@ -10,13 +10,8 @@ import resumeRoutes from "./Resumes.routes.js"
 
 export {
 
-    authRoutes, 
+    authRoutes, resumeFilteringRoutes,
+    resumeRoutes, uploadRoutes,
 
-    uploadRoutes, 
-    
-    userDataRoutes,
-
-    resumeFilteringRoutes, 
-    resumeRoutes,
-
-} 
+    userDataRoutes
+}

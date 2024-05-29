@@ -1,8 +1,8 @@
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import Slider from '@mui/material/Slider';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { SxProps, Theme, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 
 
 
@@ -16,7 +16,6 @@ type FilterSliderType = {
     max: number,
     defaultVal?: number
     onChange: (val: number) => void,
-    sx? : SxProps<Theme>
 
 }
 
@@ -24,7 +23,7 @@ type FilterSliderType = {
 
 
 
-export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, children, sx } : FilterSliderType) => {
+export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, children } : FilterSliderType) => {
 
     const { palette } = useTheme()
 
@@ -32,16 +31,17 @@ export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, childre
         <form>
             <Stack
                 direction={"row"}
-                sx={{...sx}}
+                justifyContent={"space-between"}
+                mr={"4vw"}
             >
 
                 <Typography
                     sx={{
-                        fontSize: "1.rem",
+                        fontSize: "1.7rem",
                         maxLines: 1,
                         whiteSpace: "nowrap",
+                        mr: "2vw"
                     }}
-                    mr={"1.3rem"}
                 >
                     {children}
                 </Typography>
@@ -55,6 +55,10 @@ export const FilterSlider = ({ stepSize, min, max, onChange, defaultVal, childre
 
                         onChange(val as number)
                     
+                    }}
+                    size="medium"
+                    sx={{
+                        alignSelf: "center"
                     }}
                     getAriaValueText={(value) => {return `${value} years of work experience`}}
                     valueLabelDisplay='auto'

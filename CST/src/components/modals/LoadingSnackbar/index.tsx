@@ -1,8 +1,8 @@
 
-import Snackbar from "@mui/material/Snackbar";
 import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 
 
@@ -12,19 +12,20 @@ type LoadingSnackbarProps = {
     
     isLoading : boolean
     loadingPercent : number
+    message : string
 
 }
 
 
 
-export const LoadingSnackbar = ({ isLoading, loadingPercent } : LoadingSnackbarProps) => {
+export const LoadingSnackbar = ({ isLoading, loadingPercent, message } : LoadingSnackbarProps) => {
 
     const { palette } = useTheme()
 
     return (
         <Snackbar
             open={(isLoading)}
-            message={`Creating Text Scans... ${Math.round(loadingPercent*100)/100}%`}
+            message={`${message}... ${Math.round(loadingPercent*100)/100}%`}
             action={
                 <CircularProgress
                     size={"1.rem"}

@@ -4,12 +4,12 @@ import { Degree, Filter, generateHasDegreeLevelFilter } from "../../../utils/Fil
 
 
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Typography from "@mui/material/Typography";
 
 
 
@@ -95,15 +95,17 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
     return (
         <Stack
             direction={"column"}
+            overflow={"auto"}
+            py={"1rem"}
         >
 
             <Typography
                 sx={{
-                    fontSize: "1.rem",
-                    pb: "0.rem"
+                    fontSize: "1.7rem",
+                    pb: "1vh"
                 }}
             >
-                    Degree Level
+                    Preferred Degree Level
             </Typography>
 
             <ToggleButtonGroup
@@ -121,24 +123,79 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                 exclusive={true}
             >
                 
-                <ToggleButton aria-label={"associate's"} value={"associate's"} key="associates">
-                    Associates
+                <ToggleButton
+                    aria-label={"associate's"}
+                    value={"associate's"}
+                    key="associates"
+                    sx={{
+                        p: "1vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1.7rem"}
+                    >
+                        Associates
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"bachelor's"} value="bachelor's" key="bachelors">
-                    Bachelors
+                <ToggleButton 
+                    aria-label={"bachelor's"}
+                    value="bachelor's"
+                    key="bachelors"
+                    sx={{
+                        p: "1vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1.7rem"}
+                    >
+                        Bachelors
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"master's"} value="master's" key="masters">
-                    Masters
+                <ToggleButton
+                    aria-label={"master's"}
+                    value="master's"
+                    key="masters"
+                    sx={{
+                        p: "1vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1.7rem"}
+                    >
+                        Masters
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"doctoral"} value="doctoral" key="doctorate">
-                    Doctorate
+                <ToggleButton
+                    aria-label={"doctoral"}
+                    value="doctoral"
+                    key="doctorate"
+                    sx={{
+                        p: "1vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1.7rem"}
+                    >
+                        Doctorate
+                    </Typography>
                 </ToggleButton>
 
-                <ToggleButton aria-label={"any"} value="any" key="any">
-                    Any
+                <ToggleButton
+                    aria-label={"any"}
+                    value="any"
+                    key="any"
+                    sx={{
+                        p: "1vw"
+                    }}
+                >
+                    <Typography
+                        fontSize={"1.7rem"}
+                    >
+                        Any
+                    </Typography>
                 </ToggleButton>
 
             </ToggleButtonGroup>

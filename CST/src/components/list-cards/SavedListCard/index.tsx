@@ -1,17 +1,23 @@
+import { useCallback } from 'react';
+
+import { useClipboard } from '../../../hooks/Clipboard';
+
 import { SavedList } from '../../../utils/SavedList';
 
 
 
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from "@mui/material/IconButton"
 import TopicIcon from '@mui/icons-material/Topic';
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"; 
 import Checkbox from '@mui/material/Checkbox';
+import IconButton from "@mui/material/IconButton";
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { SxProps, Theme, useTheme } from "@mui/material"; 
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+import { useTheme } from "@mui/material";
 
 
 
@@ -20,7 +26,6 @@ import { SxProps, Theme, useTheme } from "@mui/material";
 type SavedListCardProps = {
     
     list : SavedList
-    sx?: SxProps<Theme>
 
     index: number
     isSelected: boolean
@@ -33,34 +38,40 @@ type SavedListCardProps = {
 
 
 
-export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete } : SavedListCardProps) => {
+export const SavedListCard = ({ list, index, isSelected, onSelect, onDelete } : SavedListCardProps) => {
 
     const { palette } = useTheme()
 
+    const {
+
+        copyTextToClipboard
+
+    } = useClipboard()
+
     const labelId = `checkbox-list-label-${index}`
+
+
+
+
+
+    const copyListLink = useCallback(async (savedList : SavedList) => {
+
+        await copyTextToClipboard(`${process.env.REACT_APP_CLIENT_NAME}/results/${savedList.list_link}`, true)
+
+    }, [copyTextToClipboard])
+
+
+
+
 
     return (
         <ListItem
             key={index}
-            secondaryAction={
-                <IconButton
-                    aria-label="delete"
-                    color={"error"}
-                    onMouseDown={() => onDelete(index)}
-                >
-                    <DeleteIcon
-                        fontSize='medium'
-                        sx={{
-                            color: palette.text.secondary
-                        }}
-                    />
-                </IconButton>
-            }
             sx={{
-                ...sx,
+                width: "100%",
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.rem",
+                padding: "1vw",
                 backgroundColor: palette.background.paper,
             }}
         >
@@ -80,26 +91,24 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
 
                 <Stack
                     direction={"row"}
-                    width={"55%"}
                     alignItems={"center"}
-                    gap={"rem"}
+                    gap={"0.3vw"}
                 >
 
                     <TopicIcon
-                        fontSize='medium'
                         sx={{
+                            fontSize: "1.7rem",
                             color: palette.text.disabled
                         }}
                     />
 
                     <Typography
-                        variant='subtitle1'
+                        fontSize={"1.5rem"}
+                        overflow={"clip"}
                         textOverflow={"ellipsis"}
                         sx={{
-                            width: "100%",
-                            maxWidth: "100%",
+                            maxWidth: "80%",
                             display: "block",
-                            "overflow": "clip",
                             maxLines: 1,
                             whiteSpace: "nowrap",
                             userSelect: "none",
@@ -111,6 +120,33 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                 </Stack>
                 
             </ListItemButton>
+
+            <IconButton
+                aria-label="delete"
+                color={"error"}
+                onMouseDown={() => copyListLink(list)}
+            >
+                <ContentCopyIcon
+                    sx={{
+                        fontSize: "1.7rem",
+                        color: palette.text.secondary
+                    }}
+                />
+            </IconButton>
+
+            <IconButton
+                aria-label="delete"
+                color={"error"}
+                onMouseDown={() => onDelete(index)}
+            >
+                <DeleteIcon
+                    sx={{
+                        fontSize: "1.7rem",
+                        color: palette.text.secondary
+                    }}
+                />
+            </IconButton>
+            
         </ListItem>
     );
 }

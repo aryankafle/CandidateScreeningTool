@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 
 
-import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 
 type BackButtonProps = {
@@ -31,6 +31,7 @@ export const BackButton = ({ navto } : BackButtonProps) => {
         >
             <ArrowBackIcon 
                 sx={{
+                    fontSize: "1.6rem",
                     color: palette.primary.contrastText
                 }}
             />

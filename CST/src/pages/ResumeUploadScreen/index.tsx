@@ -9,10 +9,10 @@ import { uploadResumeToDatabase } from "../../requests/ResumeRequests";
 
 
 
-import UserContext from "../../context/UserContext";
-import FlagContext from "../../context/FlagContext"
-import SelectionContext from "../../context/SelectionContext";
 import BatchContext from "../../context/BatchContext";
+import FlagContext from "../../context/FlagContext";
+import SelectionContext from "../../context/SelectionContext";
+import UserContext from "../../context/UserContext";
 
 
 
@@ -20,16 +20,16 @@ import { useTheme } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { UploadCard } from "../../components/list-cards/UploadCard";
 import { FileUploadButton } from "../../components/buttons/FileUploadButton";
+import { UploadCard } from "../../components/list-cards/UploadCard";
 import { ConfirmDeleteFilesModal, ConfirmFilesModal, NotEnoughFilesModal } from "../../components/modals/ConfirmModals";
-import { LoadingModal } from "../../components/modals/LoadingModal";
 import { DocumentViewerModal } from "../../components/modals/FileViewModal";
+import { LoadingModal } from "../../components/modals/LoadingModal";
 
 
 
@@ -76,7 +76,7 @@ const ResumeUploadScreen = () => {
 
     } = useContext(BatchContext)
     
-    const { flags, updateFlag } = useContext(FlagContext)
+    const { flags, updateFlag, clearFlags } = useContext(FlagContext)
     const { userData } = useContext(UserContext)
     const { loadingState, setLoadingState } = useContext(FlagContext)
 
@@ -126,10 +126,9 @@ const ResumeUploadScreen = () => {
         clearSelectionContext()
         clearBatchContext()
 
-        updateFlag({flag: 'uploads have been processed', action: 'deactivate'})
-        updateFlag({action: "deactivate", flag: `text scans have been created`})
+        clearFlags()
 
-    }, [updateFlag, clearSelectionContext, clearBatchContext])
+    }, [updateFlag, clearSelectionContext, clearBatchContext, clearFlags])
 
 
 

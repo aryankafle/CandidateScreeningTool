@@ -2,12 +2,12 @@ import { Filter } from '../../../utils/Filter';
 
 
 
-import { useTheme } from "@mui/material"; 
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { useTheme } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 
 
@@ -44,7 +44,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
             >
                 <Typography
                     sx={{
-                        fontSize: "1.4vw",
+                        fontSize: "2rem",
                         maxLines: 1,
                         overflow: "hidden"
                     }}
@@ -58,7 +58,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
                 <IconButton>
                     <DragHandleIcon
                         sx={{
-                            fontSize: "2.1vw"
+                            fontSize: "2.2rem"
                         }}
                     />
                 </IconButton>
@@ -76,7 +76,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
         >
             <Typography
                 sx={{
-                    fontSize: "1.4vw",
+                    fontSize: "2rem",
                     maxLines: 1,
                     overflow: "hidden"
                 }}
@@ -94,7 +94,7 @@ export const FilterLayerCard = (props: FilterCardProps) => {
                     onMouseDown={() => onDelete(index)}
                     sx={{
                         color: palette.text.disabled,
-                        fontSize: "2.1vw"
+                        fontSize: "2.2rem"
                     }}
                 />
             </IconButton>

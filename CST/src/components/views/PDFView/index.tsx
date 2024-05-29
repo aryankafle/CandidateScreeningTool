@@ -1,23 +1,29 @@
-import React from 'react';
+import { useMemo } from 'react';
 
-import { pdfjs, Document, Page } from 'react-pdf'
+import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
 
 
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
 
 
-export const PDFView = (props: {file: File | undefined, currentPageNum : number, setNumPages: (num : number) => void}) => {
+export const PDFView = (props: {file: File | undefined, zoom: number, currentPageNum : number, setNumPages: (num : number) => void}) => {
 
-    const { file, setNumPages, currentPageNum } = props
+    const { file, setNumPages, currentPageNum, zoom } = props
+
+    const zoomFactor = useMemo(() => {
+
+        return 1 + zoom / 100
+        
+    }, [zoom])
 
 
 
@@ -26,61 +32,62 @@ export const PDFView = (props: {file: File | undefined, currentPageNum : number,
         return (
         <Stack
             overflow={"auto"}
+            flexGrow={1}
+            direction={"column"}
+            alignItems={"center"}
         >
-            <Typography>
-                Hm... this file is undefined!
-            </Typography>  
+            <Stack
+                direction={"column"}
+                overflow={"auto"}
+                flexGrow={1}
+            >
+                <Typography
+                    p={"1vw"}
+                    alignItems={"center"}
+                    textAlign={"center"}
+                    fontSize={"2vw"}
+                >
+                    Sorry, this file can't be parsed.
+                </Typography>
+
+            </Stack>
+
         </Stack>
         )
 
-    }    
+    }
+
+
 
     return (
         <Stack
-            overflow={"auto"}
+            direction={"column"}
         >
-            
-            <Document
-                onPassword={() => {
-
-                    <Typography>
-                        Sorry, document is password protected.
-                    </Typography>
-                    
-                }}
-                onError={() => (
-
-                    <Typography>
-                        Could not load file.
-                    </Typography>
-
-                )}
-                loading={() => (
-
-                    <Stack
-                        direction={"column"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                        height={"100%"}
-                        width={"100%"}
-                    >
-
-                        <CircularProgress
-                            size={"large"}
-                            sx={{
-                                alignSelf: "center"
-                            }}
-                        />
-
-                    </Stack>
-
-                )}
-                file={file}
-                onLoadSuccess={(pdf) => setNumPages(pdf.numPages)}
+            <Stack
+                direction={"column"}
             >
+                <Document
+                    onPassword={() => {
 
-                <Page
-                    pageNumber={currentPageNum}
+                        <Typography>
+                            Sorry, document is password protected.
+                        </Typography>
+                        
+                    }}
+                    onError={() => (
+
+                        <Typography>
+                            Could not load file.
+                        </Typography>
+
+                    )}
+                    noData={() => (
+
+                        <Typography>
+                            No data.
+                        </Typography>
+
+                    )}
                     loading={() => (
 
                         <Stack
@@ -101,9 +108,47 @@ export const PDFView = (props: {file: File | undefined, currentPageNum : number,
                         </Stack>
 
                     )}
-                />
-            
-            </Document>
+                    file={file}
+                    onLoadSuccess={(pdf) => setNumPages(pdf.numPages)}
+                >
+
+                    <Page
+                        
+                        pageNumber={currentPageNum}
+                        noData={() => (
+
+                            <Typography>
+                                No data.
+                            </Typography>
+        
+                        )}
+                        height={1000 * zoomFactor}
+                        loading={() => (
+
+                            <Stack
+                                direction={"column"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                height={"100%"}
+                                width={"100%"}
+                            >
+
+                                <CircularProgress
+                                    size={"large"}
+                                    sx={{
+                                        alignSelf: "center"
+                                    }}
+                                />
+
+                            </Stack>
+
+                        )}
+                    />
+                
+                </Document>
+
+
+            </Stack>
 
         </Stack>
     )

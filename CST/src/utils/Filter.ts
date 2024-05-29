@@ -137,7 +137,7 @@ export function generateCandidateCurrentlyEmployedFilter(isCurrentlyEmployed : b
 
         id: crypto.randomUUID(),
         type: "currently-employed",
-        name: isCurrentlyEmployed ? "Candidate is currently unemployed" : "Candidate is currently unemployed",
+        name: isCurrentlyEmployed ? "Candidate is currently employed" : "Candidate is currently unemployed",
         description: isCurrentlyEmployed ? "Candidate is currently employed." : "Candidate is currently unemployed.",
         query: `The resume should demonstrate that the applicant is${isCurrentlyEmployed ? " " : " not "}currently employed.`
 

@@ -1,17 +1,16 @@
-import { useCallback } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from "@mui/material/IconButton"
 import TopicIcon from '@mui/icons-material/Topic';
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"; 
-import Checkbox from '@mui/material/Checkbox';
-import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from "@mui/material/IconButton";
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 
 
@@ -36,7 +35,6 @@ type FileUploadButtonProps = {
 export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFileOpened } : FileUploadButtonProps) => {
 
     const { palette } = useTheme()
-
 
     const labelId = `checkbox-list-label-${index}`
 
@@ -112,10 +110,12 @@ export const UploadCard = ({ file, index, isSelected, onSelect, onDelete, onFile
 
                 <ListItemIcon>
                     <Checkbox
+                        sx={{
+                            scale: "0.8"
+                        }}
                         checked={isSelected}
                         tabIndex={-1}
                         disableRipple
-                        size="medium"
                         inputProps={{ 'aria-labelledby': labelId }}
                     />
                 </ListItemIcon>

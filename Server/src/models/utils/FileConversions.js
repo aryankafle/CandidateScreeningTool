@@ -1,4 +1,4 @@
-import { pdfToPng } from "pdf-to-png-converter"
+import { pdfToPng } from "pdf-to-png-converter";
 
 
 

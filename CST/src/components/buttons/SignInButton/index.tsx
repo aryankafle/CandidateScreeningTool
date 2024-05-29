@@ -1,8 +1,8 @@
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 
 
 
@@ -27,13 +27,14 @@ export const SignInButton = ({ onSignIn } : SignInButtonProps) => {
             sx={{
             }}
         >
-            <AccountCircleIcon 
+            <AccountCircleIcon
                 sx={{
-                    fontSize: "1.rem",
-                    mr: "0.5rem",
+                    fontSize: "1.7vw",
+                    mr: "0.7vw",
                 }}
             />
             <Typography
+                fontSize={"1vw"}
             >
                 Sign In
             </Typography>

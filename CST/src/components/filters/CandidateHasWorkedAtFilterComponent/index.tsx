@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material";
-import { Filter, generateCompanyNameFilter } from "../../../utils/Filter";
 import { SetStateAction } from "react";
+import { Filter, generateCompanyNameFilter } from "../../../utils/Filter";
 import { FilterTextInput } from "../FilterTextInput";
 
 

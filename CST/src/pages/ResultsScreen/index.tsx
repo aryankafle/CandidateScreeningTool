@@ -1,54 +1,48 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-
-import uFuzzy from "@leeoniya/ufuzzy"
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useMouse } from "@uidotdev/usehooks";
 
 import { Filter } from "../../utils/Filter";
-import { SavedList } from "../../utils/SavedList";
 import Result from "../../utils/Result";
+import { SavedList } from "../../utils/SavedList";
 
 import { runPromisesInParallel } from "../../utils/ParallelPromises";
 
 import useWeighedScores from "../../hooks/UseWeighedScores";
 
-import { SavedListsContext } from '../../context/SavedListsContext';
-import UserContext from "../../context/UserContext";
-import SelectionContext from "../../context/SelectionContext";
 import BatchContext from '../../context/BatchContext';
 import FlagContext from "../../context/FlagContext";
+import { SavedListsContext } from '../../context/SavedListsContext';
+import SelectionContext from "../../context/SelectionContext";
+import UserContext from "../../context/UserContext";
 
 import {
-    
-    saveList,
-    deleteSavedList,
-    getExternalList,
     createResumeResult,
-    getResumeResult,
     downloadResume,
-    getUserSavedLists,
-
+    getExternalList,
+    getResumeResult,
+    modifySavedList,
+    saveList,
 } from "../../requests/ResumeRequests";
 
 
 
-import { Divider, Modal, useTheme } from "@mui/material";
+import { CircularProgress, useTheme } from "@mui/material";
 
-import ButtonGroup from "@mui/material/ButtonGroup";
-import FormLabel from "@mui/material/FormLabel";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
+import ButtonGroup from "@mui/material/ButtonGroup";
+import FormLabel from "@mui/material/FormLabel";
 import List from "@mui/material/List";
-import { MuiColorInput } from 'mui-color-input'
+import Stack from "@mui/material/Stack";
+import Input from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { MuiColorInput } from 'mui-color-input';
 
 import { CandidateCard } from "../../components/list-cards/CandidateCard";
 import { DocumentViewerModal } from "../../components/modals/FileViewModal";
 import { ResultSummary } from "../../components/UI/ResultSummaryComponent";
-import { ListAlreadyExistsModal } from "../../components/modals/ListAleadyExistsModal";
 
 
 
@@ -60,9 +54,9 @@ const ResultsScreen = () => {
 
     const { palette } = useTheme()
 
-    const didRunResultsEffect = useRef(false)
-
     const [mouse, ref] = useMouse()
+
+    const { paramListID } = useParams();
 
     
 
@@ -71,6 +65,7 @@ const ResultsScreen = () => {
     const { 
         
         currentSavedList,
+        setCurrentSavedList
 
     } = useContext(SavedListsContext)
 
@@ -89,8 +84,11 @@ const ResultsScreen = () => {
     const {
 
         fileIDs,
+        setFileIDs,
+
         batchResults,
         setBatchResults,
+
         clearBatchContext
 
     } = useContext(BatchContext)
@@ -102,6 +100,14 @@ const ResultsScreen = () => {
     const [ title, setTitle ] = useState(currentSavedList?.name || "")
     const [ description, setDescription ] = useState(currentSavedList?.description || "")
     const [ color, setColor ] = useState(currentSavedList?.color || palette.primary.light)
+
+    const badInput = useMemo(() => (
+
+        !title ||
+        !description ||
+        !color
+
+    ), [color, description, title])
     
 
 
@@ -112,6 +118,20 @@ const ResultsScreen = () => {
     const [ viewingFile, setViewingFile ] = useState(false)
     
     const currentlySelectedResult = useMemo(() => weighedResults[currentlySelectedResultIndex], [currentlySelectedResultIndex, weighedResults])
+
+
+
+    const gettingResults = useRef(false)
+
+    const listMetadataSameAsBefore = useMemo(() => (
+
+        ( currentSavedList?.name === title ) &&
+        ( currentSavedList?.description === description) &&
+        ( currentSavedList?.color === color)
+        
+    ), [color, currentSavedList?.color, currentSavedList?.description, currentSavedList?.name, description, title])
+
+    const filtersChanged = useMemo(() => flags.active.includes("filters have changed"), [flags.active])
 
 
 
@@ -133,6 +153,21 @@ const ResultsScreen = () => {
 
 
 
+    const savePreviousList = useCallback(async () => {
+
+        if(!currentSavedList) return;
+        
+        await modifySavedList(currentSavedList, userData.id, title, description, color)
+
+        clearBatchContext()
+        clearSelectionContext()
+
+        clearFlags()
+
+        navigate("/home/saved-lists")
+
+    }, [currentSavedList, userData, title, description, color, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
+
     const saveCurrentList = useCallback(async () => {
         
         await saveList( title, description, color, onlySuccessfulResults, userData.id )
@@ -145,10 +180,6 @@ const ResultsScreen = () => {
         navigate("/home/saved-lists")
 
     }, [title, description, color, onlySuccessfulResults, userData.id, clearBatchContext, clearSelectionContext, clearFlags, navigate] )
-
-
-
-    const { paramListID } = useParams();
 
 
 
@@ -172,7 +203,7 @@ const ResultsScreen = () => {
 
         return {results}
 
-    }, [userData.id])
+    }, [userData])
 
 
 
@@ -200,74 +231,66 @@ const ResultsScreen = () => {
 
         return {results, resumes}
 
-    }, [userData.id])
+    }, [userData])
 
-    const getResultsFromListID = useCallback(async (listID : string) => {
+    const setCurrentListFromListID = useCallback(async (listID : string) => {
 
         const savedList = await getExternalList(listID)
 
-        return await getResultsFromPreviousSavedList(savedList)
+        setCurrentSavedList(savedList)
 
-    }, [getResultsFromPreviousSavedList])
+    }, [setCurrentSavedList])
 
 
 
     useEffect(() => {
 
-        if(!flags.active.includes('filters have changed')) return () => {};
+        if(!filtersChanged) return;
 
-        if(flags.active.includes('batch results created')) return () => {};
+        if(gettingResults.current) return;
+
+        gettingResults.current = true
+
+
+
+
 
         if(currentSavedList) {
 
-            return () => {
+            getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
 
-                getResultsFromPreviousSavedList(currentSavedList).then(({results, resumes}) => {
+                gettingResults.current = false
 
-                    console.log("yea")
-    
-                    updateFlag({flag: 'batch results created', action: "activate"})
-                    updateFlag({flag: 'filters have changed', action: "deactivate"})
-    
-                    setBatchResults(results)
-                    setUploadedFiles(resumes)
+                updateFlag({flag: 'filters have changed', action: "deactivate"})
 
-                })
-                
-            }
+                setBatchResults(results)
+                setUploadedFiles(resumes)
+
+            })
+
+            return;
 
         }
 
         if(paramListID) {
             
-            return () => {
+            setCurrentListFromListID(paramListID)
 
-                getResultsFromListID(paramListID).then(({results, resumes}) => {
-    
-                    updateFlag({flag: 'batch results created', action: "activate"})
-                    updateFlag({flag: 'filters have changed', action: "deactivate"})
-
-                    setBatchResults(results)
-                    setUploadedFiles(resumes)
-    
-                })
-                
-            }
+            return;
 
         }
 
-        return () => {
+    
 
-            getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
+        getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
 
-                updateFlag({flag: 'batch results created', action: "activate"})
-                updateFlag({flag: 'filters have changed', action: "deactivate"})
+            gettingResults.current = false
 
-                setBatchResults(results)
+            updateFlag({flag: 'filters have changed', action: "deactivate"})
 
-            })
-            
-        }
+            setBatchResults(results)
+
+        })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -279,7 +302,7 @@ const ResultsScreen = () => {
     return (
 
         <Box
-            p={"rem"}
+            p={"1vw"}
             sx={{
                 overflowY: "auto",
                 overflowX: "hidden"
@@ -305,16 +328,16 @@ const ResultsScreen = () => {
                 >
                     <Box
                         ref={ref}
-                        px={"1rem"}
+                        px={"0.8vw"}
                     >
 
                         <Typography
-                            variant="h1"
+                            fontSize={"5vw"}
                             sx={{
                                 cursor: "default",
                                 userSelect: "none",
                                 backgroundcolor: "primary",
-                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.light}, ${palette.secondary.dark})`,
+                                backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.secondary.dark}, ${palette.background.default})`,
                                 backgroundSize: "100%",
                                 backgroundRepeat: "repeat",
                                 backgroundClip: "text",
@@ -330,7 +353,56 @@ const ResultsScreen = () => {
                     <List>
                         <Stack
                             gap={"0.5rem"}
+                            pb={"8vh"}
                         >
+
+                        {( ( batchResults.length < fileIDs.length ) || gettingResults.current ) &&
+                        
+                            <Stack
+                            
+                                mt={"4rem"}
+                                p={"2rem"}
+                                gap={"0.5rem"}
+
+                            >
+
+                                <Typography
+                                    alignSelf={"center"}
+                                    fontSize={"1.5rem"}
+                                    sx={{
+                                        p: "1rem",
+                                        borderRadius: 2,
+                                        backgroundImage: `radial-gradient(circle at ${mouse.elementX}px ${mouse.elementY}px, ${palette.background.default}, ${palette.secondary.light})`,
+                                    }}
+                                >
+
+                                    { (filtersChanged && batchResults.length > 0) ? "Creating your new results..." : "Creating your results..."}
+
+                                </Typography>
+
+                                <CircularProgress
+                                    sx={{
+                                        borderRadius: 2,
+                                        alignSelf: "center",
+                                        m: "2rem",
+                                    }}
+                                    color="secondary"
+                                />
+
+                                <Typography
+                                    alignSelf={"center"}
+                                    fontSize={"1.2rem"}
+                                    color={"gray"}
+                                >
+
+                                    Note: Depending on the size of your batch, this may take a few minutes.
+
+                                </Typography>
+
+                            </Stack>
+                        
+                        }
+
                         {weighedResults.map((weighedResult, index) => {
 
                             return (
@@ -340,9 +412,10 @@ const ResultsScreen = () => {
                                 isSelected={currentlySelectedResultIndex === index}
                                 onSelectCandidate={changeCurrentlySelectedResult}
                                 index={index}
-                            />     
+                            />
                             )
                         })}
+
                         
                         </Stack>
                         
@@ -355,7 +428,7 @@ const ResultsScreen = () => {
                     direction={"column"}
                     position={"fixed"}
                     width={"40%"}
-                    right={"1rem"}
+                    right={"1vw"}
                 >
 
                 {
@@ -376,9 +449,16 @@ const ResultsScreen = () => {
                     }}
                 >
                     <Stack
-                        height={"100%"}
-                        gap={"2rem"}
+                        position={"fixed"}
+                        top={"6rem"}
+                        mx={"2rem"}
+                        width={"40%"}
                         p={"2rem"}
+                        minHeight={"80%"}
+                        bottom={"2rem"}
+                        boxShadow={6}
+                        left={"57.5%"}
+                        overflow={"auto"}
                         sx={{
                             backgroundColor: palette.background.paper
                         }}
@@ -386,11 +466,16 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
                             <FormLabel aria-label="input-name">
-                                List Name
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Name
+                                </Typography>
                             </FormLabel>
-                            <TextField
+                            <Input
                                 type="text"
                                 value={title}
                                 onChange={ (event) => setTitle(event.target.value) }
@@ -399,13 +484,18 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
                             <FormLabel
                                 aria-label="input-description"
                             >
-                                List Description
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Description
+                                </Typography>
                             </FormLabel>
-                            <TextField
+                            <Input
                                 type="text"
                                 value={description}
                                 onChange={ (event) => setDescription(event.target.value) }
@@ -414,11 +504,16 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
-                            <FormLabel 
-                                aria-label="input-color"
+                            <FormLabel
+                                aria-label="input-description"
                             >
-                                List Color
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Color
+                                </Typography>
                             </FormLabel>
                             <MuiColorInput
                                 format="hex8"
@@ -427,52 +522,111 @@ const ResultsScreen = () => {
                             />
                         </Stack>
 
-                        <Stack>
+                        <Stack
+                            mt={"3rem"}
+                        >
 
-                            <ButtonGroup
+                            { !paramListID && <ButtonGroup
                                 variant="text"
                                 aria-label="save-list-button-group"
                                 sx={{
                                     alignSelf: "center",
-                                    height: "3.4rem",
-                                    mb: "2rem"
+                                    mb: "3rem"
                                 }}
                             >
 
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.rem"
+                                        px: "1vw"
                                     }}
-                                    onMouseDown={() => navigate("/filter")}
+                                    disabled={( gettingResults.current )}
+                                    onMouseDown={() => {
+
+                                        if(currentSavedList) {
+
+                                            setFileIDs(currentSavedList?.file_ids)
+                                            setCurrentSavedList(undefined)
+
+                                            updateFlag({flag: "text scans have been created", action: "activate"})
+
+                                        }
+
+                                        navigate("/filter")
+                                    
+                                    }}
                                 >
-                                    Run New Filters
+                                    <Typography
+                                        sx={{
+                                            fontSize: "2rem"
+                                        }}
+                                    >
+                                        Run New Filters
+                                    </Typography>
                                 </Button>
 
                                 <Button
                                     variant="text"
                                     sx={{
-                                        px: "2.rem"
+                                        px: "1vw"
                                     }}
+                                    disabled={ ( gettingResults.current ) }
                                     onMouseDown={() => navigate("/home/resume-upload")}
-                                >
-                                    Upload New Batch
+                                >   
+                                    <Typography
+                                        sx={{
+                                            fontSize: "2rem"
+                                        }}
+                                    >
+                                        Upload New Batch
+                                    </Typography>
                                 </Button>
 
-                            </ButtonGroup>
+                            </ButtonGroup> }
+
+                            { currentSavedList ?
 
                             <Button
                                 type="submit"
                                 variant="contained"
+                                disabled={( listMetadataSameAsBefore || badInput )}
                                 sx={{
-                                    width: "13rem",
                                     alignSelf: "center",
-                                    height: "3.4rem"
+                                    p: "0.6vw",
+                                    px: "2vw"
+                                }}
+                                onMouseDown={() => savePreviousList()}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontSize: "2rem"
+                                    }}
+                                >
+                                    Save
+                                </Typography>
+                            </Button>
+                            :
+                            <Button
+                                type="submit"
+                                disabled={( listMetadataSameAsBefore || badInput )}
+                                variant="contained"
+                                sx={{
+                                    alignSelf: "center",
+                                    p: "0.6vw",
+                                    px: "2vw"
                                 }}
                                 onMouseDown={() => saveCurrentList()}
                             >
-                                Save List
+                                <Typography
+                                    sx={{
+                                        fontSize: "2rem"
+                                    }}
+                                >
+                                    Save List
+                                </Typography>
                             </Button>
+                            
+                            }
 
                         </Stack>
                         

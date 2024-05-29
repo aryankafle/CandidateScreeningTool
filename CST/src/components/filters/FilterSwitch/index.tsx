@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import Switch from '@mui/material/Switch';
+import Typography from "@mui/material/Typography";
 
 import { SxProps, Theme, useTheme } from "@mui/material";
 
@@ -27,9 +27,6 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
     return (
         <Stack
             direction={"row"}
-            sx={{
-                width: "rem",
-            }}
         >
 
             <Switch
@@ -41,7 +38,7 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
 
             <Typography
                 sx={{
-                    fontSize: "rem",
+                    fontSize: "1.3rem",
                     alignSelf: "center",
                     whiteSpace: "nowrap"
                 }}

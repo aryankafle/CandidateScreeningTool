@@ -1,13 +1,13 @@
 import { ListItem, useTheme } from "@mui/material";
-import { RatingIcon } from "../RatingIcon";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography"
 import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 import { WeighedResult } from "../../../hooks/UseWeighedScores";
+import { RatingIcon } from "../RatingIcon";
 
 
 
@@ -36,15 +36,18 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
         return (
             <Stack
                 position={"fixed"}
-                top={"3.5rem"}
-                bottom={"1rem"}
-                right={"1rem"}
+                top={"6rem"}
+                mx={"2rem"}
                 p={"2rem"}
-                left={"60%"}
+                height={"80%"}
+                width={"40%"}
+                bottom={"2rem"}
+                boxShadow={6}
+                left={"57.5%"}
+                overflow={"auto"}
                 sx={{
                     backgroundColor: palette.background.paper
                 }}
-                gap={"3rem"}
             >
                 
                 <Typography
@@ -77,11 +80,13 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
 
         <Stack
             position={"fixed"}
-            top={"3.5rem"}
-            bottom={"1rem"}
-            right={"1rem"}
+            top={"6rem"}
+            mx={"2rem"}
             p={"2rem"}
-            left={"60%"}
+            minHeight={"80%"}
+            bottom={"2rem"}
+            boxShadow={6}
+            left={"57.5%"}
             overflow={"auto"}
             sx={{
                 backgroundColor: palette.background.paper
@@ -179,7 +184,9 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                         key={result._id + Math.random()}
                     >
 
-                        <Stack>
+                        <Stack
+                            width={"100%"}
+                        >
                             <Typography
                                 variant="h6"
                             >
@@ -230,7 +237,9 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                         key={result._id + Math.random()}
                     >
 
-                        <Stack>
+                        <Stack
+                            width={"100%"}
+                        >
 
                             <Stack
                                 direction={"column"}

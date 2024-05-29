@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Filter } from "../../../utils/Filter";
@@ -10,14 +10,15 @@ import SelectionContext from "../../../context/SelectionContext";
 
 import { useTheme } from '@mui/material';
 
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography"
 import StartIcon from '@mui/icons-material/Start';
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Icon from "@mui/material/Icon";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { BackButton } from "../../buttons/BackButton";
 import FlagContext from "../../../context/FlagContext";
+import { BackButton } from "../../buttons/BackButton";
 
 
 
@@ -72,8 +73,6 @@ export const FilterScreenHeaderButtons = () => {
 
             if(!selectedFilters.some(otherFilter => otherFilter.name === filter.name)) {
 
-                console.log("yeaaa")
-
                 updateFlag({flag: 'filters have changed', action: "activate"})
                 return;
 
@@ -93,30 +92,45 @@ export const FilterScreenHeaderButtons = () => {
         <Stack
             direction={"row"}
             justifyContent={"space-between"}
-            py={"0.rem"}
-            px={"1rem"}
+            py={"1.3vh"}
+            px={"1vw"}
         >
 
             <BackButton navto={"/home/resume-upload"} />
 
             <Stack
                 direction={"row"}
-                gap={"1rem"}
             >
 
                 { !areAllTextScansReady &&
-                <CircularProgress />
+                <CircularProgress 
+                    sx={{
+                        mx: "1rem"
+                    }}
+                />
                 }
 
                 <Button
                     variant="contained"
                     disabled={ !areAllTextScansReady || (selectedFilters.length < 1) }
                     endIcon={
-                    <StartIcon
+                    <Icon
                         sx={{
-                            color: palette.primary.contrastText
+                            alignItems: "center",
+                            justifyContent: "center",
+                            alignSelf: "center",
+                            height: "100%",
+                            width: "100%",
                         }}
-                    />
+                    >
+                        <StartIcon
+                            fontSize="medium"
+                            sx={{
+                                alignSelf: "center",
+                                color: palette.primary.contrastText
+                            }}
+                        />
+                    </Icon>
                     }
                     onMouseDown={ () => navigate("/results") }
                 >
@@ -124,6 +138,10 @@ export const FilterScreenHeaderButtons = () => {
                         sx={{
                             color: palette.primary.contrastText
                         }}
+                        fontSize={"1.6rem"}
+                        mr={"0.2vw"}
+                        alignSelf={"center"}
+                        textAlign={"center"}
                     >
                         Run Selected Filters
                     </Typography>
