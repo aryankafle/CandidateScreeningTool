@@ -20,7 +20,6 @@ import { SxProps, Theme, useTheme } from "@mui/material";
 type SavedListCardProps = {
     
     list : SavedList
-    sx?: SxProps<Theme>
 
     index: number
     isSelected: boolean
@@ -33,7 +32,7 @@ type SavedListCardProps = {
 
 
 
-export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete } : SavedListCardProps) => {
+export const SavedListCard = ({ list, index, isSelected, onSelect, onDelete } : SavedListCardProps) => {
 
     const { palette } = useTheme()
 
@@ -42,22 +41,8 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
     return (
         <ListItem
             key={index}
-            secondaryAction={
-                <IconButton
-                    aria-label="delete"
-                    color={"error"}
-                    onMouseDown={() => onDelete(index)}
-                >
-                    <DeleteIcon
-                        sx={{
-                            fontSize: "1.7rem",
-                            color: palette.text.secondary
-                        }}
-                    />
-                </IconButton>
-            }
             sx={{
-                ...sx,
+                width: "100%",
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: "1vw",
@@ -111,6 +96,20 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                 </Stack>
                 
             </ListItemButton>
+
+            <IconButton
+                aria-label="delete"
+                color={"error"}
+                onMouseDown={() => onDelete(index)}
+            >
+                <DeleteIcon
+                    sx={{
+                        fontSize: "1.7rem",
+                        color: palette.text.secondary
+                    }}
+                />
+            </IconButton>
+            
         </ListItem>
     );
 }
