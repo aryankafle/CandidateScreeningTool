@@ -12,7 +12,7 @@ const BackgroundComponent = () => {
                 position: "absolute",
                 zIndex: "-1",
                 width: "100vw",
-                height: "33.3333vh",
+                height: "20em",
                 minHeight: "rem"
             }}
         />

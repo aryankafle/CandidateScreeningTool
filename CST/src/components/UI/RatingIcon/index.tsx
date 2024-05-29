@@ -56,8 +56,7 @@ export const RatingIcon = (props: {grade : LetterGrade, large? : boolean}) => {
         <div
             style={{
                 borderRadius: 30,
-                height: "rem",
-                overflow: "clip",
+                height: "3.5rem",
                 backgroundColor: palette.background.paper,
                 aspectRatio: 1,
                 flexDirection: "column",
@@ -68,7 +67,7 @@ export const RatingIcon = (props: {grade : LetterGrade, large? : boolean}) => {
 
             <Typography
                 alignSelf={"center"}
-                fontSize={"1.8rem"}
+                fontSize={"2rem"}
                 textAlign={"center"}
                 color={ratingColors[5-grade]}
             >

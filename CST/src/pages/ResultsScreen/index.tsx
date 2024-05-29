@@ -309,7 +309,7 @@ const ResultsScreen = () => {
                     >
 
                         <Typography
-                            variant="h1"
+                            fontSize={"5vw"}
                             sx={{
                                 cursor: "default",
                                 userSelect: "none",
@@ -378,7 +378,7 @@ const ResultsScreen = () => {
                     <Stack
                         height={"100%"}
                         gap={"5vh"}
-                        p={"1.5vw"}
+                        p={"2rem"}
                         sx={{
                             backgroundColor: palette.background.paper
                         }}
@@ -386,9 +386,14 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
                             <FormLabel aria-label="input-name">
-                                List Name
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Name
+                                </Typography>
                             </FormLabel>
                             <Input
                                 type="text"
@@ -399,11 +404,16 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
                             <FormLabel
                                 aria-label="input-description"
                             >
-                                List Description
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Description
+                                </Typography>
                             </FormLabel>
                             <Input
                                 type="text"
@@ -414,11 +424,16 @@ const ResultsScreen = () => {
 
                         <Stack
                             direction={"column"}
+                            gap={"0.5rem"}
                         >
-                            <FormLabel 
-                                aria-label="input-color"
+                            <FormLabel
+                                aria-label="input-description"
                             >
-                                List Color
+                                <Typography
+                                    fontSize={"1.5rem"}
+                                >
+                                    List Color
+                                </Typography>
                             </FormLabel>
                             <MuiColorInput
                                 format="hex8"
@@ -434,8 +449,7 @@ const ResultsScreen = () => {
                                 aria-label="save-list-button-group"
                                 sx={{
                                     alignSelf: "center",
-                                    height: "2.3vw",
-                                    mb: "1.5vw"
+                                    mb: "2rem"
                                 }}
                             >
 
@@ -448,7 +462,7 @@ const ResultsScreen = () => {
                                 >
                                     <Typography
                                         sx={{
-                                            fontSize: "1vw"
+                                            fontSize: "2rem"
                                         }}
                                     >
                                         Run New Filters
@@ -464,7 +478,7 @@ const ResultsScreen = () => {
                                 >   
                                     <Typography
                                         sx={{
-                                            fontSize: "1vw"
+                                            fontSize: "2rem"
                                         }}
                                     >
                                         Upload New Batch
@@ -485,7 +499,7 @@ const ResultsScreen = () => {
                             >
                                 <Typography
                                     sx={{
-                                        fontSize: "1vw"
+                                        fontSize: "2rem"
                                     }}
                                 >
                                     Save List

@@ -54,7 +54,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                 direction={"row"}
                 width={"100%"}
                 justifyContent={"space-between"}
-                height={"rem"}
+                height={"7rem"}
             >
 
                 <Button
@@ -84,7 +84,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                         flexGrow={1}
                         direction={"row"}
                         alignItems={"center"}
-                        gap={"1.5rem"}
+                        gap={"3rem"}
                     >
 
                         <RatingIcon grade={candidate.grade}/>
@@ -92,7 +92,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
                         <Typography
                             alignSelf={"center"}
                             textOverflow={"ellipsis"}
-                            fontSize={"1.rem"}
+                            fontSize={"2rem"}
                             sx={{
                                 maxLines: 1,
                                 color: palette.text.primary,
