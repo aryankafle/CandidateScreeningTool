@@ -47,7 +47,7 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "1.2rem"
+                    fontSize: "1.4rem"
                 }}
                 color={palette.grey[900]}
                 mb={"0.4vw"}
@@ -57,7 +57,7 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "1REM",
+                    fontSize: "1.2rem",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}
@@ -67,7 +67,7 @@ export const KeywordBiasFilter = ({ selectedFilters, setSelectedFilters } : Keyw
 
             <Typography
                 sx={{
-                    fontSize: "1rem",
+                    fontSize: "1.2rem",
                     whiteSpace: "wrap"
                 }}
                 color={palette.grey[800]}

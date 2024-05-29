@@ -95,11 +95,13 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
     return (
         <Stack
             direction={"column"}
+            overflow={"auto"}
+            py={"1rem"}
         >
 
             <Typography
                 sx={{
-                    fontSize: "1.5rem",
+                    fontSize: "1.7rem",
                     pb: "1vh"
                 }}
             >
@@ -130,7 +132,7 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     }}
                 >
                     <Typography
-                        fontSize={"1.4rem"}
+                        fontSize={"1.7rem"}
                     >
                         Associates
                     </Typography>
@@ -145,7 +147,7 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     }}
                 >
                     <Typography
-                        fontSize={"1.4rem"}
+                        fontSize={"1.7rem"}
                     >
                         Bachelors
                     </Typography>
@@ -160,7 +162,7 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     }}
                 >
                     <Typography
-                        fontSize={"1.4rem"}
+                        fontSize={"1.7rem"}
                     >
                         Masters
                     </Typography>
@@ -175,7 +177,7 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     }}
                 >
                     <Typography
-                        fontSize={"1.4rem"}
+                        fontSize={"1.7rem"}
                     >
                         Doctorate
                     </Typography>
@@ -190,7 +192,7 @@ export const DegreeFilter = ({ selectedFilters, setSelectedFilters } : DegreeFil
                     }}
                 >
                     <Typography
-                        fontSize={"1.4rem"}
+                        fontSize={"1.7rem"}
                     >
                         Any
                     </Typography>

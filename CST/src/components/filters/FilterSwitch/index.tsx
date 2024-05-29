@@ -38,7 +38,7 @@ export const FilterSwitch = ({ onChange, children, sx } : FilterSwitchType) => {
 
             <Typography
                 sx={{
-                    fontSize: "1.2rem",
+                    fontSize: "1.3rem",
                     alignSelf: "center",
                     whiteSpace: "nowrap"
                 }}

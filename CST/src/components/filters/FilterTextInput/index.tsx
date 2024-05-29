@@ -60,11 +60,11 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
                     
                 <Typography
                     sx={{
-                        fontSize: "1.5rem",
+                        fontSize: "1.7rem",
                         alignSelf: "center",
                         whiteSpace: "nowrap"
                     }}
-                    mr={"1.3rem"}
+                    mr={"1.5rem"}
                 >
                     
                     {children}
@@ -77,7 +77,7 @@ export const FilterTextInput = ({ onSubmit, children, placeholder, sx } : Filter
                     type="text"
                     placeholder={placeholder}
                     sx={{
-                        fontSize: "1.3rem"
+                        fontSize: "1.5rem"
                     }}
                     
                 />

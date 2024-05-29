@@ -151,8 +151,8 @@ const FilterScreen = () => {
 
                     <Stack
                         direction={"column"}
-                        gap={"7vh"}
-                        mb={"3vh"}
+                        gap={"13vh"}
+                        pb={"10vh"}
                         height={"100%"}
                         overflow={"auto"}
                     >
