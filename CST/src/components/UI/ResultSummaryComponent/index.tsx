@@ -181,7 +181,9 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                         key={result._id + Math.random()}
                     >
 
-                        <Stack>
+                        <Stack
+                            width={"100%"}
+                        >
                             <Typography
                                 variant="h6"
                             >
@@ -232,7 +234,9 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                         key={result._id + Math.random()}
                     >
 
-                        <Stack>
+                        <Stack
+                            width={"100%"}
+                        >
 
                             <Stack
                                 direction={"column"}
