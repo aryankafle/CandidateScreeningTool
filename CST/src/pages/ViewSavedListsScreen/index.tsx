@@ -154,7 +154,7 @@ const ViewSavedListsScreen = () => {
         <Stack
             width={"100%"}
             height={"100%"}  
-            p={"2rem"}
+            p={"2vw"}
             sx={{
                 userSelect: "none"
             }}
@@ -197,7 +197,8 @@ const ViewSavedListsScreen = () => {
                 { savedLists.length < 1 &&
                 <Typography
                     textAlign={"center"}
-                    p={"rem"}
+                    p={"1vw"}
+                    fontSize={"1.5vw"}
                     color={palette.text.disabled}
                 >
                     You currently have no saved lists.
@@ -210,13 +211,13 @@ const ViewSavedListsScreen = () => {
 
             <Stack
                 flexGrow={1}
-                p={"2rem"}
+                p={"2vw"}
                 whiteSpace={"nowrap"}
                 maxWidth={"45%"}
                 textOverflow={"ellipsis"}
             >
                 <Typography
-                    fontSize={"1.rem"}
+                    fontSize={"2vw"}
                 >
                     Here are your
                 </Typography>
@@ -228,7 +229,7 @@ const ViewSavedListsScreen = () => {
                         textOverflow={"ellipsis"}
                         display={"block"}
                         overflow={"hidden"}
-                        fontSize={"rem"}
+                        fontSize={"7.5vw"}
                         sx={{
                             cursor: "default",
                             userSelect: "none",
@@ -251,7 +252,7 @@ const ViewSavedListsScreen = () => {
             {   selectedIndex > -1 &&
                 <Stack
                     flexGrow={1}
-                    p={"2rem"}
+                    p={"2vw"}
                     whiteSpace={"nowrap"}
                     maxWidth={"45%"}
                     textOverflow={"ellipsis"}
@@ -262,7 +263,7 @@ const ViewSavedListsScreen = () => {
                     >
                         <Typography
                             textAlign={"center"}
-                            fontSize={"rem"}
+                            fontSize={"5vw"}
                             whiteSpace={"no-wrap"}
                             textOverflow={"ellipsis"}
                             display={"block"}
@@ -283,11 +284,12 @@ const ViewSavedListsScreen = () => {
                     </Box>
 
                     <Typography
+                        fontSize={"1vw"}
                         whiteSpace={"wrap"}
                         textOverflow={"ellipsis"}
                         display={"block"}
                         overflow={"hidden"}
-                        mb={"rem"}
+                        mb={"1vw"}
                     >
                         {savedLists[selectedIndex].description}
                     </Typography>
@@ -303,7 +305,8 @@ const ViewSavedListsScreen = () => {
                     >
 
                         <Typography
-                            variant="h5"
+                            p={"0.3vw"}
+                            fontSize={"1vw"}
                         >
                             Open List
                         </Typography>

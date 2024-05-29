@@ -49,8 +49,8 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                     onMouseDown={() => onDelete(index)}
                 >
                     <DeleteIcon
-                        fontSize='medium'
                         sx={{
+                            fontSize: "1.7rem",
                             color: palette.text.secondary
                         }}
                     />
@@ -60,7 +60,7 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
                 ...sx,
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "0.rem",
+                padding: "1vw",
                 backgroundColor: palette.background.paper,
             }}
         >
@@ -80,19 +80,19 @@ export const SavedListCard = ({ sx, list, index, isSelected, onSelect, onDelete 
 
                 <Stack
                     direction={"row"}
-                    width={"55%"}
                     alignItems={"center"}
-                    gap={"rem"}
+                    gap={"0.3vw"}
                 >
 
                     <TopicIcon
-                        fontSize='medium'
                         sx={{
+                            fontSize: "1.7rem",
                             color: palette.text.disabled
                         }}
                     />
 
                     <Typography
+                        fontSize={"1.5rem"}
                         variant='subtitle1'
                         textOverflow={"ellipsis"}
                         sx={{
