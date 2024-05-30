@@ -220,16 +220,16 @@ const ResultsScreen = () => {
 
             const result = await createResumeResult(filters, fileID, userData.id)
 
-            return result
+            setBatchResults(prevResults => [result, ...prevResults])
         
         })
     
 
-        const { successfulValues: results } = await runPromisesInParallel(resultPromises)
+        await runPromisesInParallel(resultPromises)
 
-        return {results}
+        return;
 
-    }, [userData])
+    }, [userData, setBatchResults])
 
 
 
@@ -306,15 +306,15 @@ const ResultsScreen = () => {
 
         }
 
-    
 
-        getResultsFromFilters(fileIDs, selectedFilters).then(({results}) => {
+
+        if(batchResults.length > 0) setBatchResults([])
+
+        getResultsFromFilters(fileIDs, selectedFilters).then(() => {
 
             gettingResults.current = false
 
             updateFlag({flag: 'filters have changed', action: "deactivate"})
-
-            setBatchResults(results)
 
         })
 
@@ -591,6 +591,7 @@ const ResultsScreen = () => {
                                     </Typography>
                                 </Button>
 
+                                {!currentSavedList &&
                                 <Button
                                     variant="text"
                                     sx={{
@@ -606,31 +607,73 @@ const ResultsScreen = () => {
                                     >
                                         Upload New Batch
                                     </Typography>
-                                </Button>
+                                </Button>}
 
                             </ButtonGroup> }
 
                             { currentSavedList ?
 
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                disabled={( listMetadataSameAsBefore || badInput )}
-                                sx={{
-                                    alignSelf: "center",
-                                    p: "0.6vw",
-                                    px: "2vw"
-                                }}
-                                onMouseDown={() => savePreviousList()}
+                            <Stack
+                                
+                                direction={"row"}
+                                width={"100%"}
+                                justifyContent={"center"}
+                                gap={"2vw"}
+
                             >
-                                <Typography
+
+                                <Button
+                                    type="submit"
+                                    variant="text"
+                                    color="secondary"
                                     sx={{
-                                        fontSize: "2rem"
+                                        alignSelf: "center",
+                                        p: "0.6vw",
+                                        px: "2vw"
+                                    }}
+                                    onMouseDown={() => {
+
+                                        setCurrentSavedList(undefined)
+                                        
+                                        clearBatchContext()
+                                        clearSelectionContext()
+                                        clearFlags()
+                                        
+                                        navigate("/home/saved-lists")
+
                                     }}
                                 >
-                                    Save
-                                </Typography>
-                            </Button>
+                                    <Typography
+                                        sx={{
+                                            fontSize: "2rem"
+                                        }}
+                                    >
+                                        Back
+                                    </Typography>
+                                </Button>
+
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    disabled={( listMetadataSameAsBefore || badInput )}
+                                    sx={{
+                                        alignSelf: "center",
+                                        p: "0.6vw",
+                                        px: "2vw"
+                                    }}
+                                    onMouseDown={() => savePreviousList()}
+                                >
+                                    <Typography
+                                        sx={{
+                                            fontSize: "2rem"
+                                        }}
+                                    >
+                                        Save
+                                    </Typography>
+                                </Button>
+
+                            </Stack>
+
                             :
                             <Button
                                 type="submit"
