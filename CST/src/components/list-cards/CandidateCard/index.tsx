@@ -37,9 +37,7 @@ export const CandidateCard = ({ candidate, index, isSelected, onSelectCandidate 
 
     if(!candidate) return (
 
-        <div>
-            asdfasdf
-        </div>
+        <></>
 
     )
 

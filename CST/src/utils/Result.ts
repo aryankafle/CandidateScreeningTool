@@ -1,9 +1,8 @@
 import { mean } from "simple-statistics"
 
-import { Filter } from "./Filter"
 import { clamp } from "lodash"
-import { SavedList } from "./SavedList"
 import { getResumeResult } from "../requests/ResumeRequests"
+import { SavedList } from "./SavedList"
 
 
 

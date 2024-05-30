@@ -169,11 +169,22 @@ export const ResultSummary = (props: {result : WeighedResult | undefined, index 
                 }}
             />
 
-            <Typography
-                variant="h5"
-            >
-                Section Summaries:
-            </Typography>
+            <List>
+                
+                <ListItem
+                    key={result._id + Math.random()}
+                >
+
+                    <Typography
+                        variant="h5"
+                    >
+                        Section Summaries:
+                    </Typography>
+
+                </ListItem>
+
+            </List>
+
 
             <List>
 

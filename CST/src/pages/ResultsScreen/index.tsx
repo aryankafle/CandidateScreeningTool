@@ -213,13 +213,29 @@ const ResultsScreen = () => {
 
     const getResultsFromFilters = useCallback(async (fileIDs : (string | undefined)[], filters : Filter[]) => {
 
-        for(const fileID of fileIDs) {
+        for(let i = 0; i < fileIDs.length; i++) {
+
+            const fileID = fileIDs[i]
 
             if(!fileID) return undefined
 
             const result = await createResumeResult(filters, fileID, userData.id)
 
-            setBatchResults(prevResults => [result, ...prevResults])
+            setBatchResults(prevResults => {
+
+                const temp : (Result | undefined)[] = [...prevResults]
+
+                for(let j = temp.length - 1; j < i; j++) {
+
+                    temp.push(undefined)
+
+                }
+
+                temp[i] = result
+
+                return temp
+
+            })
 
         }
 

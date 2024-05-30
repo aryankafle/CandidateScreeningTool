@@ -90,7 +90,7 @@ export async function getSectionSummariesForResume(imageMessage, imageWidth, ima
     messages.push({
         role: "system",
         content: 
-        `Respond in the following JSON format: {summaries: [{section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, ... {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}]}`
+        `Respond in the following JSON format, storing your responses in the "summaries" array. { summaries: [ { section: <SECTION_NAME>, summary: <BRIEF_SUMMARY> }, { section: <SECTION_NAME>, summary: <BRIEF_SUMMARY> }, { section: <SECTION_NAME>, summary: <BRIEF_SUMMARY> }, { section: <SECTION_NAME>, summary: <BRIEF_SUMMARY> } ... { section: <SECTION_NAME>, summary: <BRIEF_SUMMARY> } ] }`
     })
 
 
@@ -157,7 +157,7 @@ export async function getApplicantFromResume (imageMessage, imageWidth, imageHei
 
     messages.push({
         role: "system",
-        content: "You are a helpful AI assitant that will help the user identify the name of the applicant in a resume."
+        content: "You are a helpful AI assitant that will help the user identify the author of a document."
     })
 
     messages.push(imageMessage)
