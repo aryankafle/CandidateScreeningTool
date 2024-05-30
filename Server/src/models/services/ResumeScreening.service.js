@@ -1,247 +1,12 @@
 import OpenAI from "openai";
 import openaiConfig, { scoring } from "../../config/openai.config.js";
-import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
-import { pdfToPng } from "pdf-to-png-converter";
-import WordExtractor from "word-extractor";
+import { retryAIRequestUntilRateLimitAllows } from "../utils/OpenAIQueryBatching.js";
 
 
 
 
 
-export function queryMessageFromImages(imageBuffers, query) {
-
-    const message = {
-
-        role: "user",
-        content: [
-            { type: "text", text: query }
-        ],
-
-    }
-
-    for(const buffer of imageBuffers) {
-
-        const imageObj = { 
-            type: "image_url",
-            image_url: {
-                url: `data:image/jpeg;base64,${buffer.toString('base64')}`
-            }
-        }
-
-
-
-        message.content.push(imageObj)
-
-    }
-
-
-
-
-
-    return message
-
-}
-
-async function turnPdfToPngs(pdfBuffer) {
-
-    const pngPages = await pdfToPng(pdfBuffer, {
-        viewportScale: 2.0,
-    });
-
-    return pngPages.map(page => page.content)
-
-}
-
-
-
-export async function queryMessageFromPdf(pdfBuffer, query) {
-
-    const buffers = await turnPdfToPngs(pdfBuffer)
-
-    return queryMessageFromImages(buffers)
-
-}
-
-
-
-export async function queryMessageFromDocx(docxBuffer, query) {
-
-    const extractor = new WordExtractor()
-
-    const extractionResult = await extractor.extract(docxBuffer)
-
-    const extractedText = extractionResult.getBody()    
-
-    const message = {
-
-        role: "user",
-        content: [
-            { type: "text", text: query },
-            { type: "text", text: extractedText }
-        ],
-
-    }
-
-}
-
-
-export async function getQueryAboutResume(scannedText, query, scores) {
-
-    const chatInstance = new OpenAI(openaiConfig.apiKey);
-
-
-    
-
-
-    const messages = []
-
-    messages.push({
-        role: "system",
-        content: "You are an AI resume screening assistant that has previously scored a resume. The user will ask you questions about the resume and the scores you provided."
-    })
-
-    messages.push({
-        role: "system",
-        content: `The contents of the resume's text-scan were as follows: 
-        <START_OF_RESUME_TEXT_SCAN> 
-        ${scannedText}
-        <END_OF_RESUME_TEXT_SCAN>
-        `
-    })
-
-    messages.push({
-        role: "system",
-        content: `The scores that you previously provided this resume are listed below: 
-        <START_OF_SCORES> 
-        ${JSON.stringify(scores)}
-        <END_OF_SCORES>
-        `
-    })
-
-    messages.push({
-        role: "user",
-        content: query
-    })
-
-    messages.push({
-        role: "system",
-        content: 
-        `Respond in the following JSON format: {response: <YOUR_RESPONSE>}`
-    })
-
-    const response = (await makeAIRequest(messages, chatInstance)).content
-
-    const JSONParsedResponse = JSON.parse(response) 
-
-    return JSONParsedResponse.response    
-
-}
-
-
-
-export async function resummarizeResumeOverall(scannedText, previousSummary, summaryQuery = undefined) {
-
-    const chatInstance = new OpenAI(openaiConfig.apiKey);
-
-
-    
-
-
-    const messages = []
-
-    messages.push({
-        role: "system",
-        content: "You are an AI resume screening assistant that previously attempted to assist the user in briefly summarizing the contents of a resume."
-    })
-
-    messages.push({
-        role: "system",
-        content: `The contents of the resume's text-scan were as follows: 
-        <START_OF_RESUME_TEXT_SCAN> 
-        ${scannedText}
-        <END_OF_RESUME_TEXT_SCAN>
-        `
-    })
-
-    messages.push({
-        role: "system",
-        content: `On your previous attempt to summarize, your responded: "${previousSummary}". The user was not content with this summary. The user will now tell you what you should do differently.`
-    })
-
-    if(summaryQuery) {
-
-        messages.push({
-            role: "user",
-            content: summaryQuery
-        })
-
-    }
-
-    messages.push({
-        role: "system",
-        content: 
-        `
-        Please provide an updated overall summary of the resume. Do not include any specific contact information in your response.
-        Respond in the following JSON format: {summary: <NEW_SUMMARY>}
-        `
-    })
-
-    const response = (await makeAIRequest(messages, chatInstance)).content
-
-    const JSONParsedResponse = JSON.parse(response) 
-
-    return JSONParsedResponse.name   
-
-}
-
-
-
-export async function renameResumeApplicant(scannedText, previousName) {
-
-    const chatInstance = new OpenAI(openaiConfig.apiKey);
-
-
-    
-
-
-    const messages = []
-
-    messages.push({
-        role: "system",
-        content: "You are an AI resume screening assistant that previously attempted to find the applicant's name from the text-scan of a resume."
-    })
-
-    messages.push({
-        role: "system",
-        content: `The contents of the resume's text-scan were as follows: 
-        <START_OF_RESUME_TEXT_SCAN> 
-        ${scannedText}
-        <END_OF_RESUME_TEXT_SCAN>
-        `
-    })
-
-    messages.push({
-        role: "system",
-        content: `You previously provided the name ${previousName}. This was the incorrect name. Please find the correct name.`
-    })
-
-    messages.push({
-        role: "system",
-        content: 
-        `Respond in the following JSON format: {name: <NEW_NAME>}`
-    })
-
-    const response = (await makeAIRequest(messages, chatInstance)).content
-
-    const JSONParsedResponse = JSON.parse(response) 
-
-    return JSONParsedResponse.name   
-
-}
-
-
-
-export async function rescoreOneResumeOneFilter(scannedText, filter, previousScore, isToBeHigher, reason = undefined) {
+export async function getFilterScoresForResume(imageMessage, filters, imageWidth, imageHeight) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -253,86 +18,14 @@ export async function rescoreOneResumeOneFilter(scannedText, filter, previousSco
 
     messages.push({
         role: "system",
-        content: "You are an AI resume screening assistant that has previously scored a resume based on user criteria."
+        content: `You are a helpful AI assistant that will score a resume based on the user's inputted filter criteria.`
     })
+
+    messages.push(imageMessage)
 
     messages.push({
         role: "system",
-        content: `The contents of the resume's text-scan were as follows: 
-        <START_OF_RESUME_TEXT_SCAN> 
-        ${scannedText}
-        <END_OF_RESUME_TEXT_SCAN>
-        `
-    })
-
-    messages.push({
-        role: "system",
-        content: `The criteria that the user wants rescored is: "${filter.query}".`
-    })
-
-    messages.push({
-        role: "user",
-        content: `I want the score to be ${isToBeHigher ? "higher" : "lower" + "."}.`
-    })
-
-    messages.push({
-        role: "user",
-        content: `I still want the score to be within the same range the criteria specifies."${filter.query}".`
-    })
-
-    if(reason) {
-
-        messages.push({
-            role: "user",
-            content: reason
-        })
-
-    }
-
-    messages.push({
-        role: "system",
-        content: 
-        `
-        Please responsd with an updated score for this resume based on the previous criteria.
-        Respond in the following JSON format: {score: <NEW_SCORE>}
-        `
-    })
-
-    const response = (await makeAIRequest(messages, chatInstance)).content
-
-    const JSONParsedResponse = JSON.parse(response) 
-
-    return JSONParsedResponse.score
-
-}
-
-
-
-export async function getFilterScoresForResume(scannedText, filters) {
-
-    const chatInstance = new OpenAI(openaiConfig.apiKey);
-
-
-
-    
-
-    const messages = []
-
-    messages.push({
-        role: "system",
-        content: `You are a helpful AI resume screening assistant. You will score the resume represented by the following text-scan, based on the filter criteria inputted by the user.`
-    })
-
-    messages.push({
-        role: "system",
-        content: `<textscan> 
-        ${scannedText}
-        </textscan>`
-    })
-
-    messages.push({
-        role: "system",
-        content: `Here are the scoring guidelines: ${JSON.stringify(scoring.scoringGuidlinesObject)}`
+        content: `Scoring guidelines: ${JSON.stringify(scoring.scoringGuidlinesObject)}`
     })
 
     messages.push({
@@ -356,7 +49,7 @@ export async function getFilterScoresForResume(scannedText, filters) {
 
     }
 
-    const response = (await makeAIRequest(messages, chatInstance)).content
+    const response = await retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight)
 
     const JSONParsedResponse = JSON.parse(response)
 
@@ -370,7 +63,7 @@ export async function getFilterScoresForResume(scannedText, filters) {
 
 
 
-export async function getSectionSummariesForResume(scannedText) {
+export async function getSectionSummariesForResume(imageMessage, imageWidth, imageHeight) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -382,15 +75,10 @@ export async function getSectionSummariesForResume(scannedText) {
 
     messages.push({
         role: "system",
-        content: "You are a helpful AI resume summarizing assistant. You will create brief section summaries for the resume represented by the following text-scan."
+        content: "You are a helpful AI assistant that wil create brief section summaries for the contents of a resume."
     })
 
-    messages.push({
-        role: "system",
-        content: `<textscan> 
-        ${scannedText}
-        </textscan>`
-    })
+    messages.push(imageMessage)
 
     messages.push({
         role: "system",
@@ -402,10 +90,12 @@ export async function getSectionSummariesForResume(scannedText) {
     messages.push({
         role: "system",
         content: 
-        `Respond in the following JSON format: {summaries: [{section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}, ... {section: <SECTION_NAME>: summary: <BRIEF_SUMMARY>}]}`
+        `Respond in the following JSON format: {summaries: [{section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}, ... {section: <SECTION_NAME>, summary: <BRIEF_SUMMARY>}]}`
     })
 
-    const response = (await makeAIRequest(messages, chatInstance)).content
+
+
+    const response = await retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight)
 
     var JSONParsedResponse = JSON.parse(response) 
 
@@ -415,7 +105,7 @@ export async function getSectionSummariesForResume(scannedText) {
 
 
 
-export async function getOverallSummaryForResume(scannedText) {
+export async function getOverallSummaryForResume(imageMessage, imageWidth, imageHeight) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -427,15 +117,10 @@ export async function getOverallSummaryForResume(scannedText) {
 
     messages.push({
         role: "system",
-        content: "You are a helpful AI resume summarizing assistant that will briefly summarize the resume reprsented by the following text scan."
+        content: "You are a helpful AI resume summarizing assistant that will help the user briefly summarize the contents of a resume."
     })
 
-    messages.push({
-        role: "system",
-        content: `<textscan> 
-        ${scannedText}
-        </textscan>`
-    })
+    messages.push(imageMessage)
 
     messages.push({
         role: "system",
@@ -450,7 +135,7 @@ export async function getOverallSummaryForResume(scannedText) {
         `Respond in the following JSON format: {summary: <BRIEF_SUMMARY>}`
     })
 
-    const response = (await makeAIRequest(messages, chatInstance)).content
+    const response = await retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight)
 
     const JSONParsedResponse = JSON.parse(response) 
 
@@ -460,7 +145,7 @@ export async function getOverallSummaryForResume(scannedText) {
 
 
 
-export async function getApplicantFromResume (scannedText) {
+export async function getApplicantFromResume (imageMessage, imageWidth, imageHeight) {
 
     const chatInstance = new OpenAI(openaiConfig.apiKey);
 
@@ -472,23 +157,18 @@ export async function getApplicantFromResume (scannedText) {
 
     messages.push({
         role: "system",
-        content: "You are a helpful AI assitant that will identify the name of the applicant in the resume represented by the following text scan."
+        content: "You are a helpful AI assitant that will help the user identify the name of the applicant in a resume."
     })
 
-    messages.push({
-        role: "system",
-        content: `<textscan> 
-        ${scannedText}
-        </textscan>`
-    })
+    messages.push(imageMessage)
 
     messages.push({
         role: "system",
         content: 
-        `If you cannot find a name, simply populate the neccesary field with "null". Be sure to ONLY respond in the following JSON format: {applicant: {name: <CANDIDATE_NAME>}}`
+        `If you are certain you cannot find a name, simply populate the neccesary field with the string "Name Not Found". Respond in the following JSON format: {applicant: {name: <CANDIDATE_NAME>}}`
     })
 
-    const response = (await makeAIRequest(messages, chatInstance)).content
+    const response = await retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight)
 
     const JSONParsedResponse = JSON.parse(response) 
 

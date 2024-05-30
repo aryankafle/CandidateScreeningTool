@@ -1,44 +1,86 @@
-import {
-    downloadFileMetadata
-} from "../models/services/DatabaseFiles.service.js"
-
-import {
-    getApplicantFromResume,
-    getFilterScoresForResume,
-    getOverallSummaryForResume,
-    getSectionSummariesForResume
-} from "../models/services/ResumeScreening.service.js"
-
+import sizeOf from "buffer-image-size";
+import { downloadFileMetadata, downloadFileReadStream } from "../models/services/DatabaseFiles.service.js";
+import { getApplicantFromResume, getFilterScoresForResume, getOverallSummaryForResume, getSectionSummariesForResume } from "../models/services/ResumeScreening.service.js";
+import { streamToBuffer, turnPdfToPngs } from "../models/utils/FileConversions.js";
+import { getImageMessageFromDocx, getImagesContextMsg } from "../models/utils/ImageMessages.js";
 
 
 
 
 export const createResultsForResume = async (req, res) => {
 
-    const fileID = req.body?.fileID
+    const {
 
-    const filters = req.body?.filters
+        fileID,
+        filters
+
+    } = req.body
 
 
 
 
 
-    const metadata = await downloadFileMetadata(fileID)
+    let imageContextMsg;
+    let imageWidth = 0
+    let imageHeight = 0
 
-    if(!metadata) {
+    try {
 
-        return res.status(404).send({
+        const stream = await downloadFileReadStream(fileID)
+        const metadata = await downloadFileMetadata(fileID)
 
-            error: true,
-            message: "File does not exist."
+        if(!stream || !metadata) throw Error("No data.")
 
-        })
+        const buffer = await streamToBuffer(stream)
+
+        if(metadata.file_type === "application/pdf") {
+
+            const pngsOfPages = await turnPdfToPngs(buffer)
+
+            const dimensions = sizeOf(pngsOfPages[0])
+
+            imageWidth = dimensions.width
+            imageHeight = dimensions.height
+
+            imageContextMsg = getImagesContextMsg(pngsOfPages)
+
+        }
+        else if(
+            ( metadata.file_type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ) ||
+            ( metadata.file_type === "application/msword" )
+        ) {
+
+            imageContextMsg = await getImageMessageFromDocx(buffer)
+
+        }
+        else if (metadata.file_type.includes("image/")) {
+
+            const dimensions = sizeOf(buffer)
+
+            imageWidth = dimensions.width
+            imageHeight = dimensions.height
+
+            const pngsOfPages = [buffer]
+
+            imageContextMsg = getImagesContextMsg(pngsOfPages)
+
+        }
+        else {
+
+            throw Error("File is not of a supported type.")
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send("Error creating query messages for file!")
 
     }
 
 
 
-    
+
 
     const [
 
@@ -49,12 +91,14 @@ export const createResultsForResume = async (req, res) => {
 
     ] = await Promise.allSettled([
 
-        getFilterScoresForResume(metadata.text_scan, filters),
-        getSectionSummariesForResume(metadata.text_scan, filters),
-        getOverallSummaryForResume(metadata.text_scan, filters),
-        getApplicantFromResume(metadata.text_scan, filters),
+        getFilterScoresForResume(imageContextMsg, filters, imageWidth, imageHeight),
+        getSectionSummariesForResume(imageContextMsg, imageWidth, imageHeight),
+        getOverallSummaryForResume(imageContextMsg, imageWidth, imageHeight),
+        getApplicantFromResume(imageContextMsg, imageWidth, imageHeight),
     
     ])
+
+
 
     if(filterScores.status === "rejected") {
 

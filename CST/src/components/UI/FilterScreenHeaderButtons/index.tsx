@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import { Filter } from "../../../utils/Filter";
 
-import BatchContext from '../../../context/BatchContext';
 import SelectionContext from "../../../context/SelectionContext";
 
 
@@ -12,7 +11,6 @@ import { useTheme } from '@mui/material';
 
 import StartIcon from '@mui/icons-material/Start';
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Icon from "@mui/material/Icon";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -31,8 +29,6 @@ export const FilterScreenHeaderButtons = () => {
     const { palette } = useTheme()
 
 
-
-    const { areAllTextScansReady } = useContext(BatchContext)
 
     const { updateFlag } = useContext(FlagContext)
     
@@ -102,17 +98,9 @@ export const FilterScreenHeaderButtons = () => {
                 direction={"row"}
             >
 
-                { !areAllTextScansReady &&
-                <CircularProgress 
-                    sx={{
-                        mx: "1rem"
-                    }}
-                />
-                }
-
                 <Button
                     variant="contained"
-                    disabled={ !areAllTextScansReady || (selectedFilters.length < 1) }
+                    disabled={selectedFilters.length < 1}
                     endIcon={
                     <Icon
                         sx={{

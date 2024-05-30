@@ -12,7 +12,6 @@ import {
     modifyResumeResult,
     modifySavedList,
     removeOldSavedList,
-    runTextScanOnResume,
 } from "../controllers/Resumes.controller.js";
 
 import { } from "../controllers/Uploads.controller.js";
@@ -26,8 +25,6 @@ import { } from "../controllers/Uploads.controller.js";
 const router = express.Router();
 
 
-
-router.put("/create-text-scan", runTextScanOnResume)
 
 router.post("/create-list", addNewSavedList)
 router.delete("/remove-list", removeOldSavedList)

@@ -86,7 +86,9 @@ const ResumeUploadScreen = () => {
 
     const loadingPercent = useMemo(() => {
 
-        const progresses = fileProgresses.map(progress => ( progress?.uploadProgress || 100 ) )
+        const progresses = fileProgresses.map(progress => ( progress?.uploadProgress || 0 ) )
+
+        console.log(progresses)
 
         const loadingPercent = progresses.length > 0 ? mean(progresses) : 0
 

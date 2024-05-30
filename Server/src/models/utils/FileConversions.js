@@ -31,3 +31,15 @@ export const convertPdfStreamToPngBuffers = async (pdfReadStream) => {
     return pngPages.map(page => page.content)
 
 };
+
+
+
+export async function turnPdfToPngs(pdfBuffer) {
+
+    const pngPages = await pdfToPng(pdfBuffer, {
+        viewportScale: 2.0,
+    });
+
+    return pngPages.map(page => page.content)
+
+}

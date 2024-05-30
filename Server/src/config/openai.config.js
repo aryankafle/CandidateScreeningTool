@@ -4,17 +4,19 @@ export default {
 
     apiKey: config.OPENAI_API_KEY,
     
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o",
     tokenEncoding: "cl100k_base",
     
 }
 
 export const tokenLimits = {
 
-    PER_MINUTE: 59000, // (exact 60000)
-    MEMORY_PER_REQUEST: 4000, // (exact 4096)
+    PER_MINUTE: 25000, // (exact 30000)
+    MEMORY_PER_REQUEST: 8000,
 
     SCAN_TOKEN_LIMIT: 2000,
+
+    MAX_TOKENS_RESPONSE: 500,
     
     defaults: {
     

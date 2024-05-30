@@ -1,13 +1,11 @@
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 
-import BatchContext from '../../context/BatchContext';
 import SelectionContext from '../../context/SelectionContext';
 
 
 
 import { useTheme } from "@mui/material";
 
-import LinearProgress from '@mui/material/LinearProgress';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
@@ -17,17 +15,13 @@ import { CandidateHasWorkedAtFilter } from '../../components/filters/CandidateHa
 import { DegreeFilter } from '../../components/filters/DegreeFilterComponent';
 import { KeywordBiasFilter } from '../../components/filters/KeywordBiasFilterComponent';
 import { YearsOfWorkExperienceFilter } from '../../components/filters/YearsOfWorkExperienceFilter';
-import { LoadingSnackbar } from '../../components/modals/LoadingSnackbar';
 import { DraggableFiltersView } from '../../components/views/DraggableFiltersView';
-import { Filter } from '../../utils/Filter';
 
 
 
 
 
 const FilterScreen = () => {
-
-    const filterCache = useRef<Filter[]>()
 
     const { palette } = useTheme()
 
@@ -37,14 +31,6 @@ const FilterScreen = () => {
         setSelectedFilters,
 
     } = useContext(SelectionContext)
-    
-    const {
-
-        fileIDs,
-        amountTextScanned,
-        areAllTextScansReady,
-
-    } = useContext(BatchContext)
 
 
 
@@ -58,26 +44,7 @@ const FilterScreen = () => {
             overflow={"auto"}
         >
 
-            <LoadingSnackbar
-                message="Creating text scans"
-                isLoading={!areAllTextScansReady}
-                loadingPercent={100 * amountTextScanned / fileIDs.length}
-            />
-
             <FilterScreenHeaderButtons />
-            
-            { !areAllTextScansReady &&
-            <LinearProgress
-                sx={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    bottom: 0
-                }}
-                variant='determinate'
-                value={100 * amountTextScanned / fileIDs.length}
-            />
-            }
 
             <Stack
                 direction={"row"}

@@ -6,10 +6,6 @@ import { getNumTokensFromRequest } from './OpenAIQueryHelpers.js';
 
 
 
-const queryStack = []
-
-
-
 let tokensRemainingThisMinute = tokenLimits.PER_MINUTE
 
 function resetTokenPerMinuteLimit() {
@@ -29,78 +25,49 @@ setInterval(resetTokenPerMinuteLimit, 1000*60) // Reset tokens every minute
 
 
 
-async function getQueryResponse (query) {
+function wait(ms) {
 
-    const index = queryStack.indexOf(query)
-
-    if(index === -1) throw new Error("Query not added to the OpenAI request stack!")
-
-    const response = await removeQueryFromStack(index)
-
-    return response
-
-}
-
-async function removeQueryFromStack(index) {
-
-    return new Promise((resolve, reject) => {
-
-        while(queryStack.length !== index + 1) continue
-
-        const query = queryStack[index]
-
-        while(tokensRemainingThisMinute <= query.numTokens) continue;
-
-        tokensRemainingThisMinute -= query.numTokens
-
-        console.log(
-            `
-            Requesting OpenAI...
-            Request Index: ${index};
-            `
-        )
-
-        makeChatGPTRequest(query.messages, query.chatInstance).then(
-            (GPTResponse) => {
-
-                queryStack.pop()
-
-                tokensRemainingThisMinute += query.numTokens
-                tokensRemainingThisMinute -= GPTResponse.totalTokensUsed
-
-                console.log(`Request Complete. Tokens Used: ${query.numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}`)
-
-                resolve(GPTResponse)
-            
-            },
-            (rejectReason) => {
-            
-                queryStack.pop()
-                reject(rejectReason)
-            
-            }
-        )
-
-    })
-
-}
-
-
-
-export function makeAIRequest (messages, chatInstance) {
-
-    const numTokens = getNumTokensFromRequest(messages)
-
-    const query = {
-
-        messages,
-        numTokens,
-        chatInstance
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
     
+}
+
+export async function retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight) {
+
+    try {
+
+        const response = ( await makeAIRequest(messages, chatInstance, imageWidth, imageHeight) ).content
+        
+        return response
+
+    } catch (error) {
+
+        await wait(1000*60);
+        
+        return await retryAIRequestUntilRateLimitAllows(messages, chatInstance, imageWidth, imageHeight);
+
     }
+}
 
-    queryStack.push(query)
 
-    return getQueryResponse(query)
+
+async function makeAIRequest (messages, chatInstance, imageWidth, imageHeight) {
+
+    const numTokens = getNumTokensFromRequest(messages, imageWidth, imageHeight)
+
+    const tokensToUse = numTokens + tokenLimits.MAX_TOKENS_RESPONSE
+    
+    tokensRemainingThisMinute -= tokensToUse
+
+    console.log(`AI Requested. Tokens Used: ${numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}`)
+
+    const GPTResponse = await makeChatGPTRequest(messages, chatInstance)
+
+    tokensRemainingThisMinute += (tokenLimits.MAX_TOKENS_RESPONSE - GPTResponse.totalTokensUsed)
+
+    console.log(`AI Response Generated. Tokens Used: ${numTokens}; Tokens Remaining: ${tokensRemainingThisMinute}`)
+
+    return GPTResponse
 
 }
