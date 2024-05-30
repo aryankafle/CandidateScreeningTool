@@ -274,8 +274,6 @@ export async function deleteUnusedFiles() {
 
 export async function modifySavedList(listToModify : SavedList, userID : string, newName : string, newDescription : string, newColor : string) {
 
-    console.log(newName)
-
     await axios.post(`${process.env.REACT_APP_SERVER_NAME}/resumes/modify-list`, {
         
         listID: listToModify._id,
@@ -330,7 +328,6 @@ export const getExternalList = async (listID : string) => {
         }
     })
 
-    console.log("response data: ", response.data)
     return savedListFromJSON(response.data)
 }
 

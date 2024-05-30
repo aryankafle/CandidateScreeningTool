@@ -112,12 +112,38 @@ const ResultsScreen = () => {
 
 
     const weighedResults = useWeighedScores(batchResults)
+
+    const sortedResultsWithFiles = useMemo(() => {
+
+        let filesAndResults = []
+
+        for(let i = 0; i < weighedResults.length; i++) {
+
+            filesAndResults.push({
+                result: weighedResults[i],
+                file: uploadedFiles[i]
+            })
+
+        }
+
+        filesAndResults.sort( (resA, resB) => {
+
+            if(!resA.result || !resB.result) return 1E9
+
+            return resB.result.overall - resA.result.overall
+
+        })
+
+        return filesAndResults
+
+    }, [uploadedFiles, weighedResults])
+
     const onlySuccessfulResults : Result[] = batchResults.filter(result => result !== undefined).map(result => result as Result)
 
     const [ currentlySelectedResultIndex, setCurrentlySelectedResultIndex ]= useState(-1)
     const [ viewingFile, setViewingFile ] = useState(false)
     
-    const currentlySelectedResult = useMemo(() => weighedResults[currentlySelectedResultIndex], [currentlySelectedResultIndex, weighedResults])
+    const currentlySelectedResult = useMemo(() => sortedResultsWithFiles[currentlySelectedResultIndex].result, [currentlySelectedResultIndex, weighedResults])
 
 
 
@@ -312,7 +338,7 @@ const ResultsScreen = () => {
         >
 
             <DocumentViewerModal
-                file={uploadedFiles[currentlySelectedResultIndex]}
+                file={sortedResultsWithFiles[currentlySelectedResultIndex].file}
                 open={viewingFile}
                 onClose={() => setViewingFile(false)}
             />
@@ -403,12 +429,12 @@ const ResultsScreen = () => {
                         
                         }
 
-                        {weighedResults.map((weighedResult, index) => {
+                        {sortedResultsWithFiles.map((resultAndFile, index) => {
 
                             return (
                             <CandidateCard
-                                key={index + ( weighedResult ? weighedResult.applicant.name : Math.random().toString() ) }
-                                candidate={weighedResult}
+                                key={index + ( resultAndFile.result ? resultAndFile.result.applicant.name : Math.random().toString() ) }
+                                candidate={resultAndFile.result}
                                 isSelected={currentlySelectedResultIndex === index}
                                 onSelectCandidate={changeCurrentlySelectedResult}
                                 index={index}

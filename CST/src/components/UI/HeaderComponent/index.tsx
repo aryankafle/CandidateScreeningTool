@@ -56,8 +56,6 @@ const HeaderComponent = () => {
 
                     if(flags.active.includes('batch results created')) {
 
-                        console.log(flags.active)
-
                         navigate("/results")
                         return;
 

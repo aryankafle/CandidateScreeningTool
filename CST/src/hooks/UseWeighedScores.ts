@@ -26,13 +26,6 @@ function useWeighedScores(results : (Result | undefined)[]) : (WeighedResult | u
             return weighedResult as WeighedResult
 
         })
-        .sort( (resA, resB) => {
-
-            if(!resA || !resB) return 1E9
-
-            return resB.overall - resA.overall
-
-        })
 
     }, [results])
 

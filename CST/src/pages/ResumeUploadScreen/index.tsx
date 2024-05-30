@@ -96,8 +96,6 @@ const ResumeUploadScreen = () => {
 
         const loadingPercent = progresses.length > 0 ? mean(progresses) : 0
 
-        console.log(loadingPercent)
-
         return loadingPercent
 
     }, [fileProgresses])
