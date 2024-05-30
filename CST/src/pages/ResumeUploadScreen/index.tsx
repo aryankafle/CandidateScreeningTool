@@ -86,11 +86,17 @@ const ResumeUploadScreen = () => {
 
     const loadingPercent = useMemo(() => {
 
-        const progresses = fileProgresses.map(progress => ( progress?.uploadProgress || 0 ) )
+        const progresses = fileProgresses.map(progress => {
 
-        console.log(progresses)
+            if(progress === undefined) return 100
+            
+            return ( progress.uploadProgress + progress.downloadProgress ) / 2
+
+        } )
 
         const loadingPercent = progresses.length > 0 ? mean(progresses) : 0
+
+        console.log(loadingPercent)
 
         return loadingPercent
 
@@ -182,6 +188,17 @@ const ResumeUploadScreen = () => {
                             
                             const temp = [...prevProgresses]
                             temp[index]!.uploadProgress = uploadPercent
+
+                            return temp
+
+                        })
+                    },
+                    (downloadPercent : number) => {
+
+                        setFileProgresses(prevProgresses => {
+                            
+                            const temp = [...prevProgresses]
+                            temp[index]!.downloadProgress = downloadPercent
 
                             return temp
 

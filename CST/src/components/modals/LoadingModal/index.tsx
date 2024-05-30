@@ -35,7 +35,7 @@ export const LoadingModal = ({ isLoading, loadingPercent } : LoadingModalProps) 
         >
             <LinearProgress
                 variant="determinate"
-                value={loadingPercent*100}
+                value={loadingPercent}
             />
         </Modal>
     );

@@ -12,6 +12,7 @@ export const uploadResumeToDatabase = (
     file: File,
     userID : string,
     uploadProgress? : ( percent: number ) => void,
+    downloadProgress? : ( percent: number ) => void,
 
 ) => new Promise<string>( async ( resolve, reject ) => {
 
@@ -31,7 +32,6 @@ export const uploadResumeToDatabase = (
         onUploadProgress: (progressEvent) => {
 
             const loaded = progressEvent.loaded
-            console.log(progressEvent.loaded)
 
             const total = progressEvent.total
 
@@ -41,6 +41,21 @@ export const uploadResumeToDatabase = (
 
 
             if(uploadProgress) uploadProgress(percentProgress)
+
+        },
+
+        onDownloadProgress: (progressEvent) => {
+
+            const loaded = progressEvent.loaded
+
+            const total = progressEvent.total
+
+            if(!total) throw Error("Progres Event has no total.")
+
+            const percentProgress = 100 * loaded / total
+
+
+            if(downloadProgress) downloadProgress(percentProgress)
 
         }
 

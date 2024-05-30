@@ -12,7 +12,8 @@ import SelectionContext from "./SelectionContext"
 type UploadProgress = {
 
     file : File,
-    uploadProgress : number
+    uploadProgress : number,
+    downloadProgress : number
 
 }
 
@@ -87,6 +88,7 @@ export const BatchContextProvider = (props: { children : ReactNode }) => {
                 
                 file,
                 uploadProgress: 0,
+                downloadProgress: 0
 
             }
 
