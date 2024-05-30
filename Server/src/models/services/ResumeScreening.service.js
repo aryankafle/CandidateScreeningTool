@@ -1,9 +1,88 @@
 import OpenAI from "openai";
 import openaiConfig, { scoring } from "../../config/openai.config.js";
 import { makeAIRequest } from "../utils/OpenAIQueryBatching.js";
+import { pdfToPng } from "pdf-to-png-converter";
+import WordExtractor from "word-extractor";
 
 
 
+
+
+export function queryMessageFromImages(imageBuffers, query) {
+
+    const message = {
+
+        role: "user",
+        content: [
+            { type: "text", text: query }
+        ],
+
+    }
+
+    for(const buffer of imageBuffers) {
+
+        const imageObj = { 
+            type: "image_url",
+            image_url: {
+                url: `data:image/jpeg;base64,${buffer.toString('base64')}`
+            }
+        }
+
+
+
+        message.content.push(imageObj)
+
+    }
+
+
+
+
+
+    return message
+
+}
+
+async function turnPdfToPngs(pdfBuffer) {
+
+    const pngPages = await pdfToPng(pdfBuffer, {
+        viewportScale: 2.0,
+    });
+
+    return pngPages.map(page => page.content)
+
+}
+
+
+
+export async function queryMessageFromPdf(pdfBuffer, query) {
+
+    const buffers = await turnPdfToPngs(pdfBuffer)
+
+    return queryMessageFromImages(buffers)
+
+}
+
+
+
+export async function queryMessageFromDocx(docxBuffer, query) {
+
+    const extractor = new WordExtractor()
+
+    const extractionResult = await extractor.extract(docxBuffer)
+
+    const extractedText = extractionResult.getBody()    
+
+    const message = {
+
+        role: "user",
+        content: [
+            { type: "text", text: query },
+            { type: "text", text: extractedText }
+        ],
+
+    }
+
+}
 
 
 export async function getQueryAboutResume(scannedText, query, scores) {
