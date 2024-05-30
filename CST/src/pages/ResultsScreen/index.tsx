@@ -265,15 +265,9 @@ const ResultsScreen = () => {
 
     useEffect(() => {
 
-        if(!filtersChanged) return;
-
         if(gettingResults.current) return;
 
         gettingResults.current = true
-
-
-
-
 
         if(currentSavedList) {
 
@@ -292,15 +286,14 @@ const ResultsScreen = () => {
 
         }
 
-        if(paramListID) {
-            
-            setCurrentListFromListID(paramListID)
 
+
+        if(!filtersChanged) {
+            
+            gettingResults.current = false
             return;
 
-        }
-
-
+        };
 
         if(batchResults.length > 0) setBatchResults([])
 
@@ -311,7 +304,7 @@ const ResultsScreen = () => {
             updateFlag({flag: 'filters have changed', action: "deactivate"})
 
         })
-
+        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -671,7 +664,7 @@ const ResultsScreen = () => {
                             :
                             <Button
                                 type="submit"
-                                disabled={( listMetadataSameAsBefore || badInput )}
+                                disabled={( listMetadataSameAsBefore || badInput || batchResults.length < fileIDs.length )}
                                 variant="contained"
                                 sx={{
                                     alignSelf: "center",

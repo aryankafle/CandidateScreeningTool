@@ -20,7 +20,9 @@ import Typography from "@mui/material/Typography";
 
 import { useMouse } from "@uidotdev/usehooks";
 import { SavedListCard } from "../../components/list-cards/SavedListCard";
+import BatchContext from "../../context/BatchContext";
 import FlagContext from "../../context/FlagContext";
+import SelectionContext from "../../context/SelectionContext";
 
 
 
@@ -37,6 +39,10 @@ const ViewSavedListsScreen = () => {
     const {savedLists, setSavedLists} = useContext(SavedListsContext)
 
     const { userData } = useContext(UserContext)
+
+    const { clearBatchContext } = useContext(BatchContext)
+
+    const { clearSelectionContext } = useContext(SelectionContext) 
 
     const { updateFlag, clearFlags } = useContext(FlagContext)
 
@@ -66,17 +72,20 @@ const ViewSavedListsScreen = () => {
 
         setCurrentSavedList(undefined)
 
+        clearFlags()
+        clearSelectionContext()
+        clearBatchContext()
+
+
     }, [])
 
     const sendToList = useCallback(async (list : SavedList) => {
-
-        updateFlag({flag: "filters have changed", action: "activate"})
 
         setCurrentSavedList(list)
         
         navigate("/results")
 
-    }, [navigate, setCurrentSavedList, updateFlag])
+    }, [navigate, setCurrentSavedList])
 
     const handleDeleteList = useCallback(async (index : number) => {
 
