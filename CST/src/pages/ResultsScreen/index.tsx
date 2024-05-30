@@ -143,7 +143,7 @@ const ResultsScreen = () => {
     const [ currentlySelectedResultIndex, setCurrentlySelectedResultIndex ]= useState(-1)
     const [ viewingFile, setViewingFile ] = useState(false)
     
-    const currentlySelectedResult = useMemo(() => sortedResultsWithFiles[currentlySelectedResultIndex].result, [currentlySelectedResultIndex, weighedResults])
+    const currentlySelectedResult = useMemo(() => sortedResultsWithFiles[currentlySelectedResultIndex]?.result, [currentlySelectedResultIndex, sortedResultsWithFiles])
 
 
 
@@ -338,7 +338,7 @@ const ResultsScreen = () => {
         >
 
             <DocumentViewerModal
-                file={sortedResultsWithFiles[currentlySelectedResultIndex].file}
+                file={sortedResultsWithFiles[currentlySelectedResultIndex]?.file}
                 open={viewingFile}
                 onClose={() => setViewingFile(false)}
             />

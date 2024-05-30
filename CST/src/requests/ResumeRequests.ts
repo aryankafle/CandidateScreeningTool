@@ -108,13 +108,22 @@ export const downloadResume = async (
 
     })
 
+    const { data: metadata } = await axios.get( `${process.env.REACT_APP_SERVER_NAME}/resumes/get-file-metadata`, {
+
+        params: {
+
+            fileID,
+            userID
+
+        }
+
+    })
+
     try {
 
-        const blob = new Blob([data])
+        let blob = new Blob([data])
 
-        const file = new File([blob], fileID)
-
-        console.log(file)
+        const file = new File([blob], fileID, {type: metadata.file_type})
         
         return file
 

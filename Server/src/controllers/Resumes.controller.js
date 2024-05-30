@@ -1,8 +1,6 @@
 import {
     addResultToFile,
     deleteFile,
-    deleteUnusedFileIDs,
-    downloadFileFilters,
     downloadFileMetadata,
     downloadFileReadStream
 } from "../models/services/DatabaseFiles.service.js";
@@ -147,8 +145,6 @@ export const getResumeResult = async (req, res) => {
 
 
 
-
-
 export const getResumeFile = async (req, res) => {
 
     const fileID = req.query?.fileID;
@@ -179,6 +175,38 @@ export const getResumeFile = async (req, res) => {
     }
 
 }
+
+
+
+export const getResumeFileMetadata = async (req, res) => {
+
+    const fileID = req.query?.fileID;
+
+
+
+
+
+    try {
+
+        const result = await downloadFileMetadata(fileID)
+        
+        return res.status(200).send(result)
+
+    }
+    catch (error) {
+
+        return res.status(500).json({
+
+            error: true,
+            message: "Error downloading resume file metadata."
+
+        })
+
+    }
+
+}
+
+
 
 
 
@@ -214,33 +242,6 @@ export const deleteResumeResult = async (req, res) => {
 
 
 
-export const getResumeFilters = async (req, res) => {
-
-    const fileID = req.query?.fileID;
-
-
-
-
-
-    try {
-
-        const resumeFillters = await downloadFileFilters(fileID)
-
-        res.status(200).send(resumeFillters)
-
-    }
-    catch (error) {
-
-        res.status(500).json({
-
-            error: true,
-            message: `Error retrieving resume filters for fileID: ${fileID}.`
-
-        })
-
-    }
-
-}
 
 export const modifyResumeResult = async (req, res) => {
     
@@ -297,32 +298,5 @@ export const modifySavedList = async (req, res) => {
         return res.status(500).send("Error changing list metadata.")
         
     }
-
-}
-
-
-
-
-export const deleteUnusedFiles = async (req, res) => {
-
-
-    try {
-
-        await deleteUnusedFileIDs()
-
-        res.status(200).send({
-            error: false,
-            message: `Successfully deleted files not in saved lists!`
-        })
-
-    }
-    catch (error) {
-
-        res.status(500).send({
-            error: true,
-            message: `Error deleting file with file.`
-        })
-
-    }  
 
 }
