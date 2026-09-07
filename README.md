@@ -1,2 +1,4 @@
 # CandidateScreeningTool
-Hosted on https://www.candidatescreeningtool.xyz
+Previously hosted on https://www.candidatescreeningtool.xyz
+
+Taken in-house by client.
